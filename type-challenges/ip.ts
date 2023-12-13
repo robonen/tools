@@ -17,6 +17,7 @@ type UnwrapNumbers<T extends string | string[] | number | number[]> = T extends 
       : [];
 
 type IPv4Octets = [number, number, number, number];
+type IPv6Octets = string[];
 
 type IPv4<CIDR extends string> = Split<CIDR, '/'> extends [
   infer IP extends string,
@@ -37,7 +38,7 @@ type IPv6<CIDR extends string> = Split<CIDR, '/'> extends [
   infer IP extends string,
   infer SUBNET extends string,
 ]
-  ? Split<IP, ':'> extends string[]
+  ? Split<IP, ':'> extends IPv6Octets
     ? UnwrapNumbers<SUBNET> extends never
       ? never
       : CIDR
@@ -53,7 +54,7 @@ type Test_6 = IPv4<'1.1.1.1'>;
 type Test_7 = IPv4<'1.1.1.1/'>;
 type Test_8 = IPv4<'1.1.1.1/a'>;
 
-type Test_9 = IPv6<'::/0'>;
+type Test_9 = IPv6<'::1/0'>;
 type Test_10 = IPv6<'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/128'>;
 type Test_11 = IPv6<'::1/128'>;
 type Test_12 = IPv6<'a'>;
@@ -61,3 +62,5 @@ type Test_13 = IPv6<'1:1:1:1:1:1:1:1/128'>;
 type Test_14 = IPv6<'1:1:1:1:1:1:1:1'>;
 type Test_15 = IPv6<'1:1:1:1:1:1:1:1/'>;
 type Test_16 = IPv6<'1:1:1:1:1:1:1:1/a'>;
+
+// TODO: fully-typed ipv6 (unwrap hex, full and abbreviated address representations)

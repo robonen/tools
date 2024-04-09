@@ -1,0 +1,25 @@
+# ide
+.idea
+.vscode
+
+# temp
+node_modules
+**/*~
+**/*.log
+**/.DS_Store
+**/Thumbs.db
+
+# build
+.output
+.nuxt
+.nitro
+.cache
+out
+build
+dist
+
+# test
+coverage
+
+# env
+.env*

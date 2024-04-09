@@ -1,0 +1,33 @@
+{
+  "name": "tools",
+  "private": true,
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "description": "Set of useful tools for web development",
+  "keywords": [
+    "tools",
+    "web",
+    "ui",
+    "utilities"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git"
+  },
+  "packageManager": "pnpm@8.15.6",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^20.12.6",
+    "citty": "^0.1.6",
+    "jiti": "^1.21.0",
+    "pathe": "^1.1.2",
+    "scule": "^1.3.0"
+  },
+  "scripts": {
+    "create": "jiti ./cli.ts"
+  }
+}

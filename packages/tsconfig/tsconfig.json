@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "Base TypeScript Configuration",
+    "compilerOptions": {
+        /* Basic Options */
+        "module": "Preserve",
+        "noEmit": true,
+        "moduleResolution": "Bundler",
+        "sourceMap": true,
+        "target": "ESNext",
+        
+        
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+        "isolatedModules": true,
+        "removeComments": true,
+        "verbatimModuleSyntax": true,
+        "useDefineForClassFields": true,
+
+        /* Strict Type-Checking Options */
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+
+        /* Library transpiling */
+        "declaration": true,
+        
+        /* Library in monorepo */
+        "composite": true,
+        "declarationMap": true
+    },
+    "exclude": ["node_modules", "dist"]
+}

@@ -10,7 +10,7 @@ pnpm install -D @robonen/tsconfig
 
 ```json
 {
-    "extends": "@robonen/tsconfig/tsconfig.json"
+  "extends": "@robonen/tsconfig/tsconfig.json"
 }
 ```
 

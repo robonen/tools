@@ -5,7 +5,7 @@
  * @param {string} b Second string
  * @returns {number} The Levenshtein distance between the two strings
  */
-export default function levenshteinDistance(a: string, b: string): number {
+export function levenshteinDistance(a: string, b: string): number {
     // If the strings are equal, the distance is 0
     if (a === b) return 0;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import levenshteinDistance from '.';
+import {levenshteinDistance} from '.';
   
 describe('levenshteinDistance', () => {
     it('should calculate edit distance between two strings', () => {  

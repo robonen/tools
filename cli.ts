@@ -30,13 +30,13 @@ const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
         },
         type: 'module',
         files: ['dist'],
-        main: './dist/index.cjs',
+        main: './dist/index.umd.js',
         module: './dist/index.js',
         types: './dist/index.d.ts',
         exports: {
             '.': {
                 import: './dist/index.js',
-                require: './dist/index.cjs',
+                require: './dist/index.umd.js',
                 types: './dist/index.d.ts',
             },
         },

@@ -39,7 +39,8 @@
   },
   "scripts": {
     "test": "vitest",
-    "coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage",
+    "test:bench": "vitest bench",
     "dev": "vite",
     "build": "vite build"
   },

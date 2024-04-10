@@ -1,0 +1,44 @@
+{
+  "name": "@robonen/stdlib",
+  "private": true,
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "description": "",
+  "keywords": [],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "packages/stdlib"
+  },
+  "packageManager": "pnpm@8.15.6",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@robonen/tsconfig": "workspace:*",
+    "vite": "^5.2.8",
+    "vite-plugin-dts": "^3.8.1",
+    "pathe": "^1.1.2"
+  }
+}

@@ -7,6 +7,7 @@ const PACKAGE_MANAGER = 'pnpm@8.15.6';
 const NODE_VERSION = '>=18.0.0';
 const VITE_VERSION = '^5.2.8';
 const VITE_DTS_VERSION = '^3.8.1';
+const PATHE_VERSION = '^1.1.2'
 const DEFAULT_DIR = 'packages';
 
 const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
@@ -51,7 +52,8 @@ const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
             '@robonen/tsconfig': 'workspace:*',
             ...(hasVite && {
               vite: VITE_VERSION,
-              'vite-plugin-dts': VITE_DTS_VERSION,     
+              'vite-plugin-dts': VITE_DTS_VERSION,
+               pathe: PATHE_VERSION,
             }),
         },
     };
@@ -61,6 +63,7 @@ const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
 
 const generateViteConfig = () => `import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { resolve } from 'pathe';
 
 export default defineConfig({
   resolve: {

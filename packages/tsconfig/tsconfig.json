@@ -6,9 +6,8 @@
         "module": "Preserve",
         "noEmit": true,
         "moduleResolution": "Bundler",
-        "sourceMap": true,
         "target": "ESNext",
-        
+        "outDir": "dist",
         
         "skipLibCheck": true,
         "esModuleInterop": true,
@@ -27,10 +26,9 @@
 
         /* Library transpiling */
         "declaration": true,
-        
-        /* Library in monorepo */
         "composite": true,
-        "declarationMap": true
+        "sourceMap": false,
+        "declarationMap": false
     },
     "exclude": ["node_modules", "dist"]
 }

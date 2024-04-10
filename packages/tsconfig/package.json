@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "license": "UNLICENSED",
-  "description": "",
+  "description": "Base typescript configuration for projects",
   "keywords": [
     "tsconfig",
     "typescript",
@@ -22,5 +22,8 @@
   },
   "files": [
     "**tsconfig.json"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "name": "tools",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": "UNLICENSED",
   "description": "Set of useful tools for web development",
   "keywords": [

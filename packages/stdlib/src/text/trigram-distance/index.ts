@@ -27,7 +27,7 @@ export function trigramProfile(text: string): Trigrams {
  * @param {Trigrams} right Second text trigram profile
  * @returns {number} The trigram distance between the two strings
  */
-export function trigramDistance(left: Trigrams, right: Trigrams) {
+export function trigramDistance(left: Trigrams, right: Trigrams): number {
     let distance = -4;
     let total = -4;
 

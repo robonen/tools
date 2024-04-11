@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { mapRange } from './index';
 
 describe('mapRange', () => {
-    it('should map values from one range to another', () => {
+    it('map values from one range to another', () => {
         // value at midpoint
         expect(mapRange(5, 0, 10, 0, 100)).toBe(50);
     
@@ -25,7 +25,7 @@ describe('mapRange', () => {
         expect(mapRange(-25, -50, 0, 0, 100)).toBe(50);
       });
     
-      it('should handle floating-point numbers correctly', () => {
+      it('handle floating-point numbers correctly', () => {
         // floating-point value
         expect(mapRange(3.5, 0, 10, 0, 100)).toBe(35);
     
@@ -39,7 +39,7 @@ describe('mapRange', () => {
         expect(mapRange(-1.25, -2.5, 0, 0, 100)).toBe(50);
       });
     
-      it('should handle edge cases', () => {
+      it('handle edge cases', () => {
         // input range is zero (should return output min)
         expect(mapRange(5, 0, 0, 0, 100)).toBe(0);
       });

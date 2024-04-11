@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {levenshteinDistance} from '.';
   
 describe('levenshteinDistance', () => {
-    it('should calculate edit distance between two strings', () => {  
+    it('calculate edit distance between two strings', () => {  
       // just one substitution I at the beginning
       expect(levenshteinDistance('islander', 'slander')).toBe(1);
   
@@ -22,11 +22,11 @@ describe('levenshteinDistance', () => {
       expect(levenshteinDistance('intention', 'execution')).toBe(5);
     });
 
-    it('should handle edge cases', () => {
-        expect(levenshteinDistance('', '')).toBe(0);
-        expect(levenshteinDistance('a', '')).toBe(1);
-        expect(levenshteinDistance('', 'a')).toBe(1);
-        expect(levenshteinDistance('abc', '')).toBe(3);
-        expect(levenshteinDistance('', 'abc')).toBe(3);
+    it('handle empty strings', () => {
+      expect(levenshteinDistance('', '')).toBe(0);
+      expect(levenshteinDistance('a', '')).toBe(1);
+      expect(levenshteinDistance('', 'a')).toBe(1);
+      expect(levenshteinDistance('abc', '')).toBe(3);
+      expect(levenshteinDistance('', 'abc')).toBe(3);
     });
   });

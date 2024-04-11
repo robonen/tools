@@ -2,7 +2,7 @@ import { describe,it, expect } from 'vitest';
 import { clamp } from '.';
 
 describe('clamp', () => {
-  it('should clamp a value within the given range', () => {
+  it('clamp a value within the given range', () => {
     // value < min
     expect(clamp(-10, 0, 100)).toBe(0);
 
@@ -22,7 +22,7 @@ describe('clamp', () => {
     expect(clamp(50, 100, 100)).toBe(100);
   });
 
-  it('should handle floating-point numbers correctly', () => {
+  it('handle floating-point numbers correctly', () => {
     // floating-point value within range
     expect(clamp(3.14, 0, 5)).toBe(3.14);
 
@@ -33,7 +33,7 @@ describe('clamp', () => {
     expect(clamp(15.75, 0, 10)).toBe(10);
   });
 
-  it('should handle edge cases', () => {
+  it('handle edge cases', () => {
     // all values are the same
     expect(clamp(5, 5, 5)).toBe(5);
 

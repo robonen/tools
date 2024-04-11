@@ -14,7 +14,7 @@ const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
     const data = {
         name,
         private: true,
-        version: '1.0.0',
+        version: '0.0.0',
         license: 'UNLICENSED',
         description: '',
         keywords: [],
@@ -61,6 +61,16 @@ const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
     return JSON.stringify(data, null, 2);
 };
 
+const generateJsrJson = (name: string) => {
+    const data = {
+        name,
+        version: '0.0.0',
+        exports: './src/index.ts',
+    };
+
+    return JSON.stringify(data, null, 2);
+};
+
 const generateViteConfig = () => `import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'pathe';
@@ -72,7 +82,10 @@ export default defineConfig({
     },
   },
   plugins: [
-    dts({ insertTypesEntry: true }),
+    dts({
+      insertTypesEntry: true,
+      exclude: '**/*.test.ts',
+    }),
   ],
 });
 `;
@@ -120,6 +133,7 @@ const createCommand = defineCommand({
         await mkdir(resolvedPath, { recursive: true });
         
         writeFile(`${resolvedPath}/package.json`, generatePackageJson(args.name, path, hasVite));
+        writeFile(`${resolvedPath}/jsr.json`, generateJsrJson(args.name));
         writeFile(`${resolvedPath}/tsconfig.json`, generateTsConfig());
         writeFile(`${resolvedPath}/README.md`, generateReadme(args.name));
 

@@ -1,0 +1,55 @@
+{
+  "name": "@robonen/stdlib",
+  "private": true,
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "description": "",
+  "keywords": [
+    "stdlib",
+    "utils",
+    "tools",
+    "helpers",
+    "math",
+    "algorithms",
+    "data-structures"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "packages/stdlib"
+  },
+  "packageManager": "pnpm@8.15.6",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/stdlib.umd.js",
+  "module": "./dist/stdlib.js",
+  "types": "./dist/stdlib.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/stdlib.js",
+      "require": "./dist/stdlib.umd.js",
+      "types": "./dist/stdlib.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:bench": "vitest bench",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@robonen/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "^1.4.0",
+    "pathe": "^1.1.2",
+    "vite": "^5.2.8",
+    "vite-plugin-dts": "^3.8.1",
+    "vitest": "^1.4.0"
+  }
+}

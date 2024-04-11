@@ -1,0 +1,3 @@
+{
+  "extends": "@robonen/tsconfig/tsconfig.json",
+}

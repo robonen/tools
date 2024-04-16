@@ -45,10 +45,10 @@
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/coverage-v8": "^1.5.0",
     "pathe": "^1.1.2",
     "vite": "^5.2.8",
     "vite-plugin-dts": "^3.8.1",
-    "vitest": "^1.4.0"
+    "vitest": "^1.5.0"
   }
 }

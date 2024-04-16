@@ -1,13 +1,35 @@
 export type Subscriber = (...args: any[]) => void;
 export type EventsRecord = Record<string, Subscriber>;
 
+/**
+ * Simple PubSub implementation
+ * 
+ * @template {EventsRecord} Events
+ */
 export class PubSub<Events extends EventsRecord> {
+  /**
+   * Events map
+   * 
+   * @private
+   * @type {Map<keyof Events, Set<Events[keyof Events]>>}
+   */
   private events: Map<keyof Events, Set<Events[keyof Events]>>;
 
+  /**
+   * Creates an instance of PubSub
+   */
   constructor() {
     this.events = new Map();
   }
 
+  /**
+   * Subscribe to an event
+   * 
+   * @template {keyof Events} K
+   * @param {K} event Name of the event
+   * @param {Events[K]} listener Listener function
+   * @returns {this}
+   */
   public on<K extends keyof Events>(event: K, listener: Events[K]) {
     const listeners = this.events.get(event);
 
@@ -19,6 +41,14 @@ export class PubSub<Events extends EventsRecord> {
     return this;
   }
 
+  /**
+   * Unsubscribe from an event
+   * 
+   * @template {keyof Events} K
+   * @param {K} event Name of the event
+   * @param {Events[K]} listener Listener function
+   * @returns {this}
+   */
   public off<K extends keyof Events>(event: K, listener: Events[K]) {
     const listeners = this.events.get(event);
 
@@ -28,6 +58,14 @@ export class PubSub<Events extends EventsRecord> {
     return this;
   }
 
+  /**
+   * Subscribe to an event only once
+   * 
+   * @template {keyof Events} K
+   * @param {K} event Name of the event
+   * @param {Events[K]} listener Listener function
+   * @returns {this}
+   */
   public once<K extends keyof Events>(event: K, listener: Events[K]) {
     const onceListener = (...args: Parameters<Events[K]>) => {
         this.off(event, onceListener as Events[K]);
@@ -39,6 +77,14 @@ export class PubSub<Events extends EventsRecord> {
     return this;
   }
 
+  /**
+   * Emit an event
+   * 
+   * @template {keyof Events} K
+   * @param {K} event Name of the event
+   * @param {...Parameters<Events[K]>} args Arguments for the listener
+   * @returns {boolean}
+   */
   public emit<K extends keyof Events>(event: K, ...args: Parameters<Events[K]>): boolean {
     const listeners = this.events.get(event);
 
@@ -50,6 +96,13 @@ export class PubSub<Events extends EventsRecord> {
     return true;
   }
 
+  /**
+   * Clear all listeners for an event
+   * 
+   * @template {keyof Events} K
+   * @param {K} event Name of the event
+   * @returns {this}
+   */
   public clear<K extends keyof Events>(event: K) {
     this.events.delete(event);
 

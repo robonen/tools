@@ -21,7 +21,7 @@ describe('flagsGenerator', () => {
       generateFlag();
     }
 
-    expect(() => generateFlag()).toThrow(RangeError);
+    expect(() => generateFlag()).toThrow(new RangeError('Cannot create more than 31 flags'));
   });
 });
 

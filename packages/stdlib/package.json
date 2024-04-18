@@ -18,7 +18,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/stdlib"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@9.0.1",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -40,7 +40,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:bench": "vitest bench",
-    "dev": "vite",
+    "dev": "vite build --watch",
     "build": "vite build"
   },
   "devDependencies": {

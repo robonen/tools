@@ -110,7 +110,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * @returns {T[]}
      */
     public toArray(): T[] {
-        return this.stack.slice();
+        return this.stack.toReversed();
     }
 
     /**
@@ -119,7 +119,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * @returns {string}
      */
     public toString() {
-        return this.stack.reverse().toString();
+        return this.toArray().toString();
     }
 
     /**
@@ -128,7 +128,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * @returns {IterableIterator<T>}
      */
     public [Symbol.iterator]() {
-        return this.stack.reverse()[Symbol.iterator]();
+        return this.toArray()[Symbol.iterator]();
     }
 
     /**
@@ -137,7 +137,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * @returns {AsyncIterableIterator<T>}
      */
     public async *[Symbol.asyncIterator]() {
-        for (const element of this.stack.reverse()) {
+        for (const element of this.toArray()) {
             yield element;
         }
     }

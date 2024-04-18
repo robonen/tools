@@ -26,29 +26,28 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/stdlib.umd.js",
-  "module": "./dist/stdlib.js",
-  "types": "./dist/stdlib.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/stdlib.js",
-      "require": "./dist/stdlib.umd.js",
-      "types": "./dist/stdlib.d.ts"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:bench": "vitest bench",
-    "dev": "vite build --watch",
-    "build": "vite build"
+    "dev": "vitest",
+    "build": "unbuild"
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^1.5.0",
     "pathe": "^1.1.2",
-    "vite": "^5.2.9",
-    "vite-plugin-dts": "^3.8.3",
-    "vitest": "^1.5.0"
+    "vitest": "^1.5.0",
+    "unbuild": "^2.0.0"
   }
 }

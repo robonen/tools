@@ -5,6 +5,7 @@
         /* Basic Options */
         "module": "Preserve",
         "noEmit": true,
+        "lib": ["ESNext"],
         "moduleResolution": "Bundler",
         "target": "ESNext",
         "outDir": "dist",
@@ -26,7 +27,7 @@
 
         /* Library transpiling */
         "declaration": true,
-        "composite": true,
+        // "composite": true,
         "sourceMap": false,
         "declarationMap": false
     },

@@ -29,6 +29,7 @@
     "vitepress": "^1.1.3"
   },
   "scripts": {
+    "all:test": "pnpm -r test",
     "create": "jiti ./cli.ts",
     "docs:dev": "vitepress dev .",
     "docs:build": "vitepress build .",

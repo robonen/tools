@@ -37,10 +37,8 @@
     }
   },
   "scripts": {
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "test:bench": "vitest bench",
-    "dev": "vitest",
+    "test": "vitest run",
+    "dev": "vitest dev",
     "build": "unbuild"
   },
   "devDependencies": {

@@ -1,0 +1,31 @@
+{
+  "name": "@robonen/renovate",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "description": "Base configuration for renovate bot",
+  "keywords": [
+    "renovate",
+    "bot",
+    "configuration",
+    "tools"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "packages/renovate"
+  },
+  "packageManager": "pnpm@9.0.6",
+  "engines": {
+    "node": ">=20.12.2"
+  },
+  "files": [
+    "default.json"
+  ],
+  "scripts": {
+    "test": "renovate-config-validator ./default.json"
+  },
+  "devDependencies": {
+    "renovate": "^37.323.1"
+  }
+}

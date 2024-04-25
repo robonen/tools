@@ -22,5 +22,8 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
 
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Test
         run: pnpm run all:test

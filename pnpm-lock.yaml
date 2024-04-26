@@ -53,6 +53,12 @@ importers:
 
   packages/tsconfig: {}
 
+  packages/ui:
+    devDependencies:
+      '@robonen/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+
 packages:
 
   '@algolia/autocomplete-core@1.9.3':

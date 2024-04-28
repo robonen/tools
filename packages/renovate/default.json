@@ -18,6 +18,7 @@
                 "pin",
                 "digest"
             ],
+            "autoApprove": true,
             "automerge": true,
             "automergeSchedule": [
                 "after 1am and before 2am"

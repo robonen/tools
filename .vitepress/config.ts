@@ -5,7 +5,7 @@ export default defineConfig({
   title: "Tools",
   description: "A set of tools and utilities for web development",
   rewrites: {
-    'packages/:pkg/README.md': 'packages/:pkg/index.md'
+    'packages/:pkg/README.md': 'packages/:pkg/index.md',
   },
   themeConfig: {
     sidebar: [
@@ -13,6 +13,8 @@ export default defineConfig({
         text: 'Пакеты',
         items: [
           { text: '@robonen/tsconfig', link: '/packages/tsconfig/' },
+          { text: '@robonen/renovate', link: '/packages/renovate/' },
+          { text: '@robonen/stdlib', link: '/packages/stdlib/' },
         ],
       },
     ],

@@ -1,6 +1,7 @@
 {
   "name": "@robonen/renovate",
   "version": "0.0.1",
+  "private": true,
   "license": "UNLICENSED",
   "description": "Base configuration for renovate bot",
   "keywords": [

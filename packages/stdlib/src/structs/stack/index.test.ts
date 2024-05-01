@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Stack } from './index';
 
-describe('Stack', () => {
+describe('stack', () => {
   describe('constructor', () => {
     it('create an empty stack if no initial values are provided', () => {
       const stack = new Stack<number>();

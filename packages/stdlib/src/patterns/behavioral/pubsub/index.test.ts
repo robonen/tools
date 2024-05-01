@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PubSub } from './index';
 
-describe('PubSub', () => {
+describe('pubsub', () => {
   let eventBus: PubSub<{
     event1: (arg: string) => void;
     event2: () => void

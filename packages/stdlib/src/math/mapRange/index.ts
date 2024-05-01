@@ -1,4 +1,4 @@
-import { clamp } from "../clamp";
+import { clamp } from '../clamp';
 
 /**
  * Map a value from one range to another

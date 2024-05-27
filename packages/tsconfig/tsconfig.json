@@ -17,7 +17,7 @@
         "resolveJsonModule": true,
         "moduleDetection": "force",
         "isolatedModules": true,
-        "removeComments": true,
+        "removeComments": false,
         "verbatimModuleSyntax": true,
         "useDefineForClassFields": true,
 

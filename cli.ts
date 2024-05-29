@@ -3,10 +3,10 @@ import { defineCommand, runMain } from 'citty';
 import { resolve } from 'pathe';
 import { splitByCase } from 'scule';
 
-const PACKAGE_MANAGER = 'pnpm@9.0.6';
+const PACKAGE_MANAGER = 'pnpm@9.1.0';
 const NODE_VERSION = '>=20.12.2';
-const VITE_VERSION = '^5.2.8';
-const VITE_DTS_VERSION = '^3.8.1';
+const VITE_VERSION = '^5.2.11';
+const VITE_DTS_VERSION = '^3.9.1';
 const PATHE_VERSION = '^1.1.2'
 const DEFAULT_DIR = 'packages';
 

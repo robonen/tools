@@ -18,9 +18,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/stdlib"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.1.2",
   "engines": {
-    "node": ">=20.12.2"
+    "node": ">=20.13.1"
   },
   "type": "module",
   "files": [
@@ -43,9 +43,9 @@
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "@vitest/coverage-v8": "^1.5.3",
+    "@vitest/coverage-v8": "^1.6.0",
     "pathe": "^1.1.2",
-    "vitest": "^1.5.3",
+    "vitest": "^1.6.0",
     "unbuild": "^2.0.0"
   }
 }

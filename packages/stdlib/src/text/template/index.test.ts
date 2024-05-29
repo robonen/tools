@@ -33,10 +33,16 @@ describe('templateObject', () => {
   // });
 
   it('replace template placeholders with nested values from args', () => {
-      const template = 'Hello, {user.name}!';
-      const args = { user: { name: 'John' } };
-      const result = templateObject(template, args);
+      const result = templateObject('Hello {{user.name}, your address {user.addresses.0.street}', {
+        user: {
+         name: 'John Doe',
+         addresses: [
+           { street: '123 Main St', city: 'Springfield'},
+           { street: '456 Elm St', city: 'Shelbyville'}
+         ]
+       }
+     });
 
-      expect(result).toBe('Hello, John!');
+      expect(result).toBe('Hello {John Doe, your address 123 Main St');
   });
 });

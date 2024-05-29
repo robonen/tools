@@ -1,4 +1,5 @@
 import { getByPath, type Generate } from '../../arrays';
+import { isFunction } from '../../types';
 
 /**
  * Type of a value that will be used to replace a placeholder in a template.
@@ -20,6 +21,13 @@ type TemplateArgsObject = StringPrimitive[] | { [key: string]: TemplateArgsObjec
  */
 const TEMPLATE_PLACEHOLDER = /{([^{}]+)}/gm;
 
+/**
+ * Removes the placeholder syntax from a template string.
+ * 
+ * @example
+ * type Base = ClearPlaceholder<'{user.name}'>; // 'user.name'
+ * type Unbalanced = ClearPlaceholder<'{user.name'>; // 'user.name'
+ */
 export type ClearPlaceholder<T extends string> =
   T extends `${string}{${infer Template}`
     ? ClearPlaceholder<Template>
@@ -27,6 +35,12 @@ export type ClearPlaceholder<T extends string> =
       ? ClearPlaceholder<Template>
       : T;
 
+/**
+ * Extracts all placeholders from a template string.
+ * 
+ * @example
+ * type Base = ExtractPlaceholders<'Hello {user.name}, {user.addresses.0.street}'>; // 'user.name' | 'user.addresses.0.street'
+ */
 export type ExtractPlaceholders<T extends string> =
   T extends `${infer Before}}${infer After}`
     ? Before extends `${string}{${infer Placeholder}`
@@ -35,18 +49,18 @@ export type ExtractPlaceholders<T extends string> =
     : never;
 
 export function templateObject<T extends string, A extends Generate<ExtractPlaceholders<T>>>(template: T, args: A, fallback?: TemplateFallback): string {
-    return template.replace(TEMPLATE_PLACEHOLDER, (subs, key) => {
-        return getByPath(args, key) as string;
-        // return value !== undefined ? value : (isFunction(fallback) ? fallback(key) : fallback);
+    return template.replace(TEMPLATE_PLACEHOLDER, (_, key) => {    
+        const value = getByPath(args, key) as string;
+        return value !== undefined ? value : (isFunction(fallback) ? fallback(key) : '');
     });
 }
 
-templateObject('Hello {user.name}, your address {user.addresses.0}', {
+templateObject('Hello {user.name}, your address {user.addresses.0.street}', {
    user: {
     name: 'John Doe',
     addresses: [
       { street: '123 Main St', city: 'Springfield'},
-      { street: '456 Elm St', city: 'Shelbyville'}
-    ]
-  }
+      { street: '456 Elm St', city: 'Shelbyville'},
+    ],
+  },
 });

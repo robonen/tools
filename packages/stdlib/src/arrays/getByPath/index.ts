@@ -44,7 +44,7 @@ type Path<T> = T extends `${infer Key}.${infer Rest}`
 // Output: { a: { b: { c: PropertyKey } } }
 
 export type UnionToIntersection<Union> = (
- Union extends unknown
+  Union extends unknown
 		? (distributedUnion: Union) => void
 		: never
 ) extends ((mergedIntersection: infer Intersection) => void)
@@ -62,7 +62,7 @@ type PathToType<T extends string[]> = T extends [infer Head, ...infer Rest]
         ? { [K in Head & string]: PathToType<Rest> }
         : never
     : never
-  : unknown;
+  : string;
 
 export type Generate<T extends string> = UnionToIntersection<PathToType<Path<T>>>;
 type Get<O, K> = GetWithArray<O, Path<K>>;

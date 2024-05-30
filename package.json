@@ -31,8 +31,8 @@
   "scripts": {
     "all:test": "pnpm -r test",
     "create": "jiti ./cli.ts",
-    "docs:dev": "vitepress dev .",
-    "docs:build": "vitepress build .",
-    "docs:preview": "vitepress preview ."
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   }
 }

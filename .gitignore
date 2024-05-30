@@ -17,6 +17,7 @@ node_modules
 .nuxt
 .nitro
 .cache
+cache
 out
 build
 dist

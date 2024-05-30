@@ -1,9 +1,18 @@
-import { ref, unref, type MaybeRef } from 'vue';
+import { ref, unref, type MaybeRef, type Ref } from 'vue';
 import { clamp } from '@robonen/stdlib';
 
 export interface UseCounterOptions {
     min?: number;
     max?: number;
+}
+
+export interface UseConterReturn {
+    count: Ref<number>;
+    increment: (delta?: number) => void;
+    decrement: (delta?: number) => void;
+    set: (value: number) => void;
+    get: () => number;
+    reset: (value?: number) => void;
 }
 
 /**
@@ -15,6 +24,7 @@ export interface UseCounterOptions {
  * @param {UseCounterOptions} [options={}] The options for the counter
  * @param {number} [options.min=Number.MIN_SAFE_INTEGER] The minimum value of the counter
  * @param {number} [options.max=Number.MAX_SAFE_INTEGER] The maximum value of the counter
+ * @returns {UseConterReturn} The counter object
  * 
  * @example
  * const { count, increment } = useCounter(0);
@@ -22,7 +32,10 @@ export interface UseCounterOptions {
  * @example
  * const { count, increment, decrement, set, get, reset } = useCounter(0, { min: 0, max: 10 });
  */
-export function useCounter(initialValue: MaybeRef<number> = 0, options: UseCounterOptions = {}) {
+export function useCounter(
+    initialValue: MaybeRef<number> = 0,
+    options: UseCounterOptions = {},
+): UseConterReturn {
     let _initialValue = unref(initialValue);
     const count = ref(initialValue);
 

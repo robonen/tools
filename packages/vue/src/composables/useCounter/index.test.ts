@@ -1,6 +1,6 @@
 import { it, expect, describe } from 'vitest';
-import { useCounter } from '.';
 import { ref } from 'vue';
+import { useCounter } from '.';
 
 describe('useCounter', () => {
   it('initialize count with the provided initial value', () => {

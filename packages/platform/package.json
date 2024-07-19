@@ -1,5 +1,5 @@
 {
-  "name": "@robonen/vue",
+  "name": "@robonen/platform",
   "private": true,
   "version": "0.0.0",
   "license": "UNLICENSED",
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/robonen/tools.git",
-    "directory": "./packages/vue"
+    "directory": "./packages/platform"
   },
   "packageManager": "pnpm@9.4.0",
   "engines": {
@@ -30,17 +30,9 @@
     }
   },
   "scripts": {
-    "test": "vitest run",
-    "dev": "vitest dev"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@robonen/tsconfig": "workspace:*",
-    "@vue/test-utils": "^2.4.6",
-    "jsdom": "^24.1.0",
-    "vitest": "^1.6.0"
-  },
-  "dependencies": {
-    "@robonen/stdlib": "workspace:*",
-    "vue": "^3.4.30"
+    "@robonen/tsconfig": "workspace:*"
   }
 }

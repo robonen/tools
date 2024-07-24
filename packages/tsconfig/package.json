@@ -16,9 +16,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/tsconfig"
   },
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.6.0",
   "engines": {
-    "node": ">=20.15.1"
+    "node": ">=20.16.0"
   },
   "files": [
     "**tsconfig.json"

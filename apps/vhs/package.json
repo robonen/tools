@@ -1,0 +1,26 @@
+{
+  "name": "@robonen/vhs",
+  "private": true,
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "description": "",
+  "keywords": [],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "./apps/vhs"
+  },
+  "packageManager": "pnpm@9.11.0",
+  "engines": {
+    "bun": ">=1.1.27"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts"
+  },
+  "devDependencies": {
+    "@robonen/tsconfig": "workspace:*",
+    "@types/bun": "^1.1.10"
+  }
+}

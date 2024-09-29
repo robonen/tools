@@ -31,7 +31,7 @@ pnpm install -D @robonen/tsconfig
   "resolveJsonModule": true,              // разрешить импортировать файлы JSON
   "moduleDetection": "force",             // заставляет TypeScript рассматривать все файлы как модули. Это помогает избежать ошибок cannot redeclare block-scoped variable»
   "isolatedModules": true,                // орабатывать каждый файл, как отдельный изолированный модуль
-  "removeComments": true,                 // удалять комментарии из исходного кода
+  "removeComments": false,                 // удалять комментарии из исходного кода
   "verbatimModuleSyntax": true,           // сохранять синтаксис модулей в исходном коде (важно при импорте типов)
   "useDefineForClassFields": true,        // использование классов стандарта TC39, а не TypeScript  
   "strict": true,                         // включить все строгие проверки (noImplicitAny, noImplicitThis, alwaysStrict, strictNullChecks, strictFunctionTypes, strictPropertyInitialization)

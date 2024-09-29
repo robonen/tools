@@ -5,6 +5,8 @@ export type Trigrams = Map<string, number>;
  * 
  * @param {string} text The text to extract trigrams
  * @returns {Trigrams} A map of trigram to count
+ *
+ * @since 0.0.1
  */
 export function trigramProfile(text: string): Trigrams {
     text = '\n\n' + text + '\n\n';
@@ -26,6 +28,8 @@ export function trigramProfile(text: string): Trigrams {
  * @param {Trigrams} left First text trigram profile
  * @param {Trigrams} right Second text trigram profile
  * @returns {number} The trigram distance between the two strings
+ *
+ * @since 0.0.1
  */
 export function trigramDistance(left: Trigrams, right: Trigrams): number {
     let distance = -4;

@@ -3,6 +3,8 @@ export type EventsRecord = Record<string, Subscriber>;
 
 /**
  * Simple PubSub implementation
+ *
+ * @since 0.0.2
  * 
  * @template {EventsRecord} Events
  */
@@ -85,7 +87,7 @@ export class PubSub<Events extends EventsRecord> {
    * @param {...Parameters<Events[K]>} args Arguments for the listener
    * @returns {boolean}
    */
-  public emit<K extends keyof Events>(event: K, ...args: Parameters<Events[K]>): boolean {
+  public emit<K extends keyof Events>(event: K, ...args: Parameters<Events[K]>) {
     const listeners = this.events.get(event);
 
     if (!listeners)

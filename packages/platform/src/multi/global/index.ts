@@ -1,7 +1,11 @@
+// TODO: tests
+
 /**
  * @name _global
  * @category Multi
  * @description Global object that works in any environment
+ *
+ * @since 0.0.2
  */
 export const _global =
   typeof globalThis !== 'undefined'
@@ -12,4 +16,4 @@ export const _global =
         ? global
         : typeof self !== 'undefined'
           ? self
-          : {};
+          : undefined;

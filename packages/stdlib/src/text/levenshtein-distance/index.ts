@@ -4,12 +4,12 @@
  * @param {string} left First string
  * @param {string} right Second string
  * @returns {number} The Levenshtein distance between the two strings
+ *
+ * @since 0.0.1
  */
 export function levenshteinDistance(left: string, right: string): number {
-    // If the strings are equal, the distance is 0
     if (left === right) return 0;
 
-    // If either string is empty, the distance is the length of the other string
     if (left.length === 0) return right.length;
     if (right.length === 0) return left.length;
 

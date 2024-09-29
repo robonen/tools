@@ -3,7 +3,7 @@
     "display": "Base TypeScript Configuration",
     "compilerOptions": {
         /* Basic Options */
-        "module": "Preserve",
+        "module": "ESNext",
         "noEmit": true,
         "lib": ["ESNext"],
         "moduleResolution": "Bundler",

@@ -1,2 +1,10 @@
 packages:
   - packages/*
+catalog:
+  '@vitest/coverage-v8': ^2.1.1
+  '@vue/test-utils': ^2.4.6
+  jsdom: ^25.0.1
+  pathe: ^1.1.2
+  unbuild: 3.0.0-rc.8
+  vitest: ^2.1.1
+  vue: ^3.5.10

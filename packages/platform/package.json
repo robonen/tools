@@ -1,0 +1,36 @@
+{
+  "name": "@robonen/platform",
+  "private": true,
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "description": "",
+  "keywords": [],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "./packages/platform"
+  },
+  "packageManager": "pnpm@9.11.0",
+  "engines": {
+    "node": ">=20.13.1"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {},
+  "devDependencies": {
+    "@robonen/tsconfig": "workspace:*"
+  }
+}

@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   lang: 'ru-RU',
-  title: "Tools",
-  description: "A set of tools and utilities for web development",
+  title: "Toolkit",
+  description: "A collection of typescript and javascript development tools",
   rewrites: {
     'packages/:pkg/README.md': 'packages/:pkg/index.md',
   },

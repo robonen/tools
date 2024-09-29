@@ -4,6 +4,9 @@ export type StackOptions = {
 
 /**
  * Represents a stack data structure
+ *
+ * @since 0.0.2
+ *
  * @template T The type of elements stored in the stack
  */
 export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
@@ -13,7 +16,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * @private
      * @type {number}
      */
-    private maxSize: number;
+    private readonly maxSize: number;
 
     /**
      * The stack data structure
@@ -21,7 +24,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * @private
      * @type {T[]}
      */
-    private stack: T[];
+    private readonly stack: T[];
 
     /**
      * Creates an instance of Stack
@@ -39,7 +42,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * Gets the number of elements in the stack
      * @returns {number} The number of elements in the stack
      */
-    public get length(): number {
+    public get length() {
         return this.stack.length;
     }
 
@@ -47,7 +50,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * Checks if the stack is empty
      * @returns {boolean} `true` if the stack is empty, `false` otherwise
      */
-    public get isEmpty(): boolean {
+    public get isEmpty() {
         return this.stack.length === 0;
     }
 
@@ -55,7 +58,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * Checks if the stack is full
      * @returns {boolean} `true` if the stack is full, `false` otherwise
      */
-    public get isFull(): boolean {
+    public get isFull() {
         return this.stack.length === this.maxSize;
     }
 
@@ -78,7 +81,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * Pops an element from the stack
      * @returns {T} The element popped from the stack
      */
-    public pop(): T | undefined {
+    public pop() {
         return this.stack.pop();
     }
 
@@ -86,7 +89,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * Peeks at the top element of the stack
      * @returns {T} The top element of the stack
      */
-    public peek(): T | undefined {
+    public peek() {
         if (this.isEmpty)
             throw new RangeError('Stack is empty');
         
@@ -109,7 +112,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      * 
      * @returns {T[]}
      */
-    public toArray(): T[] {
+    public toArray() {
         return this.stack.toReversed();
     }
 

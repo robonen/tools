@@ -27,6 +27,6 @@
     "test": "renovate-config-validator ./default.json"
   },
   "devDependencies": {
-    "renovate": "^38.100.0"
+    "renovate": "^38.101.1"
   }
 }

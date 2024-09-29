@@ -1,3 +1,4 @@
 export * from './levenshtein-distance';
 export * from './trigram-distance';
-export * from './template';
+// TODO: Template is not implemented yet
+// export * from './template';

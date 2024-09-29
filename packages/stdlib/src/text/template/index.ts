@@ -55,12 +55,12 @@ export function templateObject<T extends string, A extends Generate<ExtractPlace
     });
 }
 
-templateObject('Hello {user.name}, your address {user.addresses.0.street}', {
-   user: {
-    name: 'John Doe',
-    addresses: [
-      { street: '123 Main St', city: 'Springfield'},
-      { street: '456 Elm St', city: 'Shelbyville'},
-    ],
-  },
-});
+// templateObject('Hello {user.name}, your address {user.addresses.0.street}', {
+//    user: {
+//     name: 'John Doe',
+//     addresses: [
+//       { street: '123 Main St', city: 'Springfield'},
+//       { street: '456 Elm St', city: 'Shelbyville'},
+//     ],
+//   },
+// });

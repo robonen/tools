@@ -43,9 +43,9 @@
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "@vitest/coverage-v8": "^2.1.1",
-    "pathe": "^1.1.2",
-    "unbuild": "^2.0.0",
-    "vitest": "^2.1.1"
+    "@vitest/coverage-v8": "catalog:",
+    "pathe": "catalog:",
+    "unbuild": "catalog:",
+    "vitest": "catalog:"
   }
 }

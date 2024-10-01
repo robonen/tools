@@ -51,6 +51,15 @@ importers:
         specifier: ^1.3.4
         version: 1.3.4(@algolia/client-search@4.23.2)(@types/node@20.16.10)(postcss@8.4.47)(search-insights@2.13.0)(typescript@5.4.4)
 
+  apps/vhs:
+    devDependencies:
+      '@robonen/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      '@types/bun':
+        specifier: ^1.1.10
+        version: 1.1.10
+
   packages/platform:
     devDependencies:
       '@robonen/tsconfig':
@@ -1753,6 +1762,9 @@ packages:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
 
+  '@types/bun@1.1.10':
+    resolution: {integrity: sha512-76KYVSwrHwr9zsnk6oLXOGs9KvyBg3U066GLO4rk6JZk1ypEPGCUDZ5yOiESyIHWs9cx9iC8r01utYN32XdmgA==}
+
   '@types/bunyan@1.8.9':
     resolution: {integrity: sha512-ZqS9JGpBxVOvsawzmVt30sP++gSQMTejCkIAQ3VdadOcRE8izTyW66hufvwLeH+YEGP6Js2AW7Gz+RMyvrEbmw==}
 
@@ -1795,6 +1807,9 @@ packages:
   '@types/moo@0.5.5':
     resolution: {integrity: sha512-eXQpwnkI4Ntw5uJg6i2PINdRFWLr55dqjuYQaLHNjvqTzF14QdNWbCbml9sza0byyXNA0hZlHtcdN+VNDcgVHA==}
 
+  '@types/node@20.12.14':
+    resolution: {integrity: sha512-scnD59RpYD91xngrQQLGkE+6UrHUPzeKZWhhjBSa3HSkwjbQc38+q3RoIVEwxQGRw3M+j5hpNAM+lgV3cVormg==}
+
   '@types/node@20.16.10':
     resolution: {integrity: sha512-vQUKgWTjEIRFCvK6CyriPH3MZYiYlNy0fKiEYHWbcoWLEgs4opurGGKlebrTLqdSMIbXImH6XExNiIyNUv3WpA==}
 
@@ -1821,6 +1836,9 @@ packages:
 
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
+
+  '@types/ws@8.5.12':
+    resolution: {integrity: sha512-3tPRkv1EtkDpzlgyKyI8pGsGZAGPEaXeu0DOj5DI25Ja91bdAYddYHbADRYVrZMRbfW+1l5YwXVDKohDJNQxkQ==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -2191,6 +2209,9 @@ packages:
 
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
+
+  bun-types@1.1.29:
+    resolution: {integrity: sha512-En3/TzSPMPyl5UlUB1MHzHpcrZDakTm7mS203eLoX1fBoEa3PW+aSS8GAqVJ7Is/m34Z5ogL+ECniLY0uDaCPw==}
 
   bunyan@1.8.15:
     resolution: {integrity: sha512-0tECWShh6wUysgucJcBAoYegf3JJoZWibxdqhTm7OHPeT42qdjkZ29QCMcKwbgU1kiH+auSIasNRXMLWXafXig==}
@@ -4624,6 +4645,9 @@ packages:
 
   underscore@1.13.6:
     resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
+
+  undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
@@ -7167,6 +7191,10 @@ snapshots:
 
   '@trysound/sax@0.2.0': {}
 
+  '@types/bun@1.1.10':
+    dependencies:
+      bun-types: 1.1.29
+
   '@types/bunyan@1.8.9':
     dependencies:
       '@types/node': 20.16.10
@@ -7211,6 +7239,10 @@ snapshots:
 
   '@types/moo@0.5.5': {}
 
+  '@types/node@20.12.14':
+    dependencies:
+      undici-types: 5.26.5
+
   '@types/node@20.16.10':
     dependencies:
       undici-types: 6.19.8
@@ -7232,6 +7264,10 @@ snapshots:
   '@types/unist@2.0.10': {}
 
   '@types/web-bluetooth@0.0.20': {}
+
+  '@types/ws@8.5.12':
+    dependencies:
+      '@types/node': 20.16.10
 
   '@types/yauzl@2.10.3':
     dependencies:
@@ -7712,6 +7748,11 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
     optional: true
+
+  bun-types@1.1.29:
+    dependencies:
+      '@types/node': 20.12.14
+      '@types/ws': 8.5.12
 
   bunyan@1.8.15:
     optionalDependencies:
@@ -10528,6 +10569,8 @@ snapshots:
       - vue-tsc
 
   underscore@1.13.6: {}
+
+  undici-types@5.26.5: {}
 
   undici-types@6.19.8: {}
 

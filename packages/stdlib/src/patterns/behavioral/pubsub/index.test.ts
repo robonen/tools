@@ -92,4 +92,15 @@ describe('pubsub', () => {
 
     expect(result).toBe(false);
   });
+
+  it('calls listener only once when the same function is registered multiple times', () => {
+    const listener = vi.fn();
+
+    eventBus.on('event1', listener);
+    eventBus.on('event1', listener);
+    eventBus.on('event1', listener);
+    eventBus.emit('event1', 'Hello');
+
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
 });

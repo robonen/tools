@@ -1,6 +1,3 @@
 <div>
-    <img src="./robot.gif" width="64">
-    <strong>
-        Tools
-    </strong>
+    <img src="./cover.png">
 </div>

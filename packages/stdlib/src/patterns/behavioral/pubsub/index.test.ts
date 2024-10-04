@@ -2,9 +2,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PubSub } from './index';
 
 describe('pubsub', () => {
+  const event3 = Symbol('event3');
+
   let eventBus: PubSub<{
     event1: (arg: string) => void;
-    event2: () => void
+    event2: () => void;
+    [event3]: () => void;
   }>;
 
   beforeEach(() => {
@@ -30,6 +33,15 @@ describe('pubsub', () => {
 
     expect(listener1).toHaveBeenCalledWith('Hello');
     expect(listener2).toHaveBeenCalledWith('Hello');
+  });
+
+  it('emit symbol event', () => {
+    const listener = vi.fn();
+
+    eventBus.on(event3, listener);
+    eventBus.emit(event3);
+
+    expect(listener).toHaveBeenCalled();
   });
 
   it('add a one-time listener and emit an event', () => {

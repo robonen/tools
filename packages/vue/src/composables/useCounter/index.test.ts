@@ -13,6 +13,11 @@ describe('useCounter', () => {
     expect(count.value).toBe(5);
   });
 
+  it('initialize count with the provided initial value from a getter', () => {
+    const { count } = useCounter(() => 5);
+    expect(count.value).toBe(5);
+  });
+
   it('increment count by 1 by default', () => {
     const { count, increment } = useCounter(0);
     increment();

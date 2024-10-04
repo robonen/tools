@@ -1,4 +1,4 @@
-import { ref, watch, type Ref, type WatchOptions } from 'vue';
+import { ref, watch, toValue, type MaybeRefOrGetter, type Ref, type WatchOptions } from 'vue';
 
 export type Comparator<Value> = (a: Value, b: Value) => boolean;
 
@@ -21,13 +21,13 @@ export type Comparator<Value> = (a: Value, b: Value) => boolean;
  * const cachedValue = useCached(externalValue, (a, b) => a === b, { immediate: true });
  */
 export function useCached<Value = unknown>(
-    externalValue: Ref<Value>,
+    externalValue: MaybeRefOrGetter<Value>,
     comparator: Comparator<Value> = (a, b) => a === b,
     watchOptions?: WatchOptions,
 ): Ref<Value> {
-    const cached = ref(externalValue.value) as Ref<Value>;
+    const cached = ref(toValue(externalValue)) as Ref<Value>;
 
-    watch(() => externalValue.value, (value) => {
+    watch(() => toValue(externalValue), (value) => {
         if (!comparator(value, cached.value))
             cached.value = value;
     }, watchOptions);

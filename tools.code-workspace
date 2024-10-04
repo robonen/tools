@@ -4,7 +4,14 @@
 			"path": "."
 		},
 		{
+			"path": "packages/platform"
+		},
+
+		{
 			"path": "packages/stdlib"
+		},
+		{
+			"path": "packages/vue"
 		}
 	]
 }

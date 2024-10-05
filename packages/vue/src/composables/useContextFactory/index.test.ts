@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { defineComponent } from 'vue';
-import { useContextFactory } from './index';
+import { useContextFactory } from '.';
 import { mount } from '@vue/test-utils';
 import { VueToolsError } from '../../utils';
 

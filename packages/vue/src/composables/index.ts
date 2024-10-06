@@ -6,4 +6,3 @@ export * from './useMounted';
 export * from './useRenderCount';
 export * from './useSupported';
 export * from './useSyncRefs';
-export * from './useToggle';

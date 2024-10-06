@@ -110,6 +110,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 25.0.1
+      unbuild:
+        specifier: 'catalog:'
+        version: 3.0.0-rc.8(typescript@5.4.4)
       vitest:
         specifier: 'catalog:'
         version: 2.1.2(@types/node@20.16.10)(jsdom@25.0.1)

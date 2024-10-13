@@ -11,7 +11,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "./apps/vhs"
   },
-  "packageManager": "pnpm@9.12.0",
+  "packageManager": "pnpm@9.12.2",
   "engines": {
     "bun": ">=1.1.27"
   },
@@ -21,6 +21,6 @@
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "@types/bun": "^1.1.10"
+    "@types/bun": "^1.1.12"
   }
 }

@@ -11,7 +11,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "./packages/platform"
   },
-  "packageManager": "pnpm@9.12.0",
+  "packageManager": "pnpm@9.12.2",
   "engines": {
     "node": ">=20.18.0"
   },
@@ -29,8 +29,13 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "test": "vitest run",
+    "dev": "vitest dev",
+    "build": "unbuild"
+  },
   "devDependencies": {
-    "@robonen/tsconfig": "workspace:*"
+    "@robonen/tsconfig": "workspace:*",
+    "unbuild": "catalog:"
   }
 }

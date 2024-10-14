@@ -17,3 +17,12 @@ export const _global =
         : typeof self !== 'undefined'
           ? self
           : undefined;
+
+/**
+ * @name isClient
+ * @category Multi
+ * @description Check if the current environment is the client
+ * 
+ * @since 0.0.2
+ */
+export const isClient = typeof window !== 'undefined' && typeof document !== 'undefined';

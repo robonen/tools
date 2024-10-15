@@ -2,7 +2,9 @@ export type Subscriber = (...args: any[]) => void;
 export type EventsRecord = Record<string | symbol, Subscriber>;
 
 /**
- * Simple PubSub implementation
+ * @name PubSub
+ * @category Patterns
+ * @description Simple PubSub implementation
  *
  * @since 0.0.2
  * 

@@ -2,7 +2,9 @@ import { clamp } from '../clamp';
 import {inverseLerp, lerp} from '../lerp';
 
 /**
- * Map a value from one range to another
+ * @name remap
+ * @category Math
+ * @description Map a value from one range to another
  * 
  * @param {number} value The value to map
  * @param {number} in_min The minimum value of the input range

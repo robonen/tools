@@ -2,7 +2,9 @@ import {minBigInt} from '../minBigInt';
 import {maxBigInt} from '../maxBigInt';
 
 /**
- * Clamps a bigint between a minimum and maximum value
+ * @name clampBigInt
+ * @category Math
+ * @description Clamps a bigint between a minimum and maximum value
  *
  * @param {bigint} value The number to clamp
  * @param {bigint} min Minimum value

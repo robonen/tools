@@ -1,7 +1,9 @@
 export type Trigrams = Map<string, number>;
 
 /**
- * Extracts trigrams from a text and returns a map of trigram to count
+ * @name trigramProfile
+ * @category Text
+ * @description Extracts trigrams from a text and returns a map of trigram to count
  * 
  * @param {string} text The text to extract trigrams
  * @returns {Trigrams} A map of trigram to count
@@ -23,7 +25,9 @@ export function trigramProfile(text: string): Trigrams {
 }
 
 /**
- * Calculates the trigram distance between two strings
+ * @name trigramDistance
+ * @category Text
+ * @description Calculates the trigram distance between two strings
  * 
  * @param {Trigrams} left First text trigram profile
  * @param {Trigrams} right Second text trigram profile

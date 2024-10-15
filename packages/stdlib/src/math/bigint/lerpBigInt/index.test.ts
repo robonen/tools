@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {inverseLerpBigInt, lerpBigInt} from './index';
+import {inverseLerpBigInt, lerpBigInt} from '.';
 
 const MAX_SAFE_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
 

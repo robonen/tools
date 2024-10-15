@@ -1,5 +1,7 @@
 /**
- * Calculate the Levenshtein distance between two strings
+ * @name levenshteinDistance
+ * @category Text
+ * @description Calculate the Levenshtein distance between two strings
  * 
  * @param {string} left First string
  * @param {string} right Second string

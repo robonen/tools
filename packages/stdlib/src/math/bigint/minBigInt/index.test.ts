@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {minBigInt} from './index';
+import {minBigInt} from '.';
 
 describe('minBigInt', () => {
   it('returns Infinity when no values are provided', () => {

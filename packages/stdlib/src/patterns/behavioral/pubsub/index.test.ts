@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { PubSub } from './index';
+import { PubSub } from '.';
 
 describe('pubsub', () => {
   const event3 = Symbol('event3');

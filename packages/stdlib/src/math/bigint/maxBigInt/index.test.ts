@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { maxBigInt } from './index';
+import { maxBigInt } from '.';
 
 describe('maxBigInt', () => {
   it('returns -Infinity when no values are provided', () => {

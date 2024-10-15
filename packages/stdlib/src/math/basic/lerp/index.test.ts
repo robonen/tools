@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {inverseLerp, lerp} from './index';
+import {inverseLerp, lerp} from '.';
 
 describe('lerp', () => {
   it('interpolates between two values', () => {

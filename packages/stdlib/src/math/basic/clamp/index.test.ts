@@ -43,4 +43,39 @@ describe('clamp', () => {
     // negative range and value
     expect(clamp(-10, -100, -5)).toBe(-10);
   });
+
+  it('handle NaN and Infinity', () => {
+    // value is NaN
+    expect(clamp(NaN, 0, 100)).toBe(NaN);
+
+    // min is NaN
+    expect(clamp(50, NaN, 100)).toBe(NaN);
+
+    // max is NaN
+    expect(clamp(50, 0, NaN)).toBe(NaN);
+
+    // value is Infinity
+    expect(clamp(Infinity, 0, 100)).toBe(100);
+
+    // min is Infinity
+    expect(clamp(50, Infinity, 100)).toBe(100);
+
+    // max is Infinity
+    expect(clamp(50, 0, Infinity)).toBe(50);
+
+    // min and max are Infinity
+    expect(clamp(50, Infinity, Infinity)).toBe(Infinity);
+
+    // value is -Infinity
+    expect(clamp(-Infinity, 0, 100)).toBe(0);
+
+    // min is -Infinity
+    expect(clamp(50, -Infinity, 100)).toBe(50);
+
+    // max is -Infinity
+    expect(clamp(50, 0, -Infinity)).toBe(-Infinity);
+
+    // min and max are -Infinity
+    expect(clamp(50, -Infinity, -Infinity)).toBe(-Infinity);
+  });
 });

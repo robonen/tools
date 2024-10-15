@@ -1,5 +1,7 @@
 /**
- * Linearly interpolates between bigint values
+ * @name lerpBigInt
+ * @category Math
+ * @description Linearly interpolates between bigint values
  *
  * @param {bigint} start The start value
  * @param {bigint} end The end value
@@ -13,7 +15,9 @@ export function lerpBigInt(start: bigint, end: bigint, t: number) {
 }
 
 /**
- * Inverse linear interpolation between two bigint values
+ * @name inverseLerpBigInt
+ * @category Math
+ * @description Inverse linear interpolation between two bigint values
  *
  * @param {bigint} start The start value
  * @param {bigint} end The end value

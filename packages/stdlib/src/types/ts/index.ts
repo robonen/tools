@@ -1,2 +1,3 @@
 export * from './string';
-export * from './functions';
+export * from './function';
+export * from './array';

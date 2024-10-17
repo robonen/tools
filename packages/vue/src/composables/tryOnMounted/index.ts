@@ -1,5 +1,8 @@
 import { onMounted, nextTick, type ComponentInternalInstance } from 'vue';
-import { getLifeCycleTarger } from '../../utils';
+import { getLifeCycleTarger } from '../..';
+import type { VoidFunction } from '@robonen/stdlib';
+
+// TODO: tests
 
 export interface TryOnMountedOptions {
   sync?: boolean;
@@ -9,10 +12,12 @@ export interface TryOnMountedOptions {
 /**
  * @name tryOnMounted
  * @category Components
- * @description Calls a function if it's inside a component lifecycle hook, otherwise just calls it
+ * @description Call onMounted if it's inside a component lifecycle hook, otherwise just calls it
  * 
- * @param {Function} fn The function to call
- * @param {TryOnMountedOptions} [options={}] The options for the try on mounted function
+ * @param {VoidFunction} fn The function to call
+ * @param {TryOnMountedOptions} options The options to use
+ * @param {boolean} [options.sync=true] If the function should be called synchronously
+ * @param {ComponentInternalInstance} [options.target] The target instance to use
  * @returns {void}
  * 
  * @example
@@ -21,16 +26,16 @@ export interface TryOnMountedOptions {
  * @example
  * tryOnMounted(() => console.log('Mounted!'), { sync: false });
  */
-export function tryOnMounted(fn: () => void, options: TryOnMountedOptions = {}) {
-  const instance = getLifeCycleTarger();
-
+export function tryOnMounted(fn: VoidFunction, options: TryOnMountedOptions = {}) {
   const {
     sync = true,
     target,
   } = options;
 
-  if (instance)
-    onMounted(fn, target);
+  const instance = getLifeCycleTarger(target);
+
+  if (instance)  
+    onMounted(fn, instance);
   else if (sync)
     fn();
   else

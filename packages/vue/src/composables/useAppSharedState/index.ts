@@ -1,5 +1,5 @@
 import type { AnyFunction } from '@robonen/stdlib';
-import { effectScope, onScopeDispose } from 'vue';
+import { effectScope } from 'vue';
 
 // TODO: maybe we should control subscriptions and dispose them when the child scope is disposed
 
@@ -8,8 +8,8 @@ import { effectScope, onScopeDispose } from 'vue';
  * @category State
  * @description Provides a shared state object for use across Vue instances
  * 
- * @param {Function} stateFactory The factory function to create the shared state
- * @returns {Function} The shared state object
+ * @param {Function} stateFactory A factory function that returns the shared state object
+ * @returns {Function} A function that returns the shared state object
  * 
  * @example
  * const useSharedState = useAppSharedState((initValue?: number) => {

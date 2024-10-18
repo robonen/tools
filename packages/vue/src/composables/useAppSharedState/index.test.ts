@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue';
 import { useAppSharedState } from '.';
 
 describe('useAppSharedState', () => {
-  it('should initialize state only once', () => {
+  it('initialize state only once', () => {
     const stateFactory = (initValue?: number) => {
       const count = ref(initValue ?? 0);
       return { count };
@@ -19,7 +19,7 @@ describe('useAppSharedState', () => {
     expect(state1).toBe(state2);
   });
 
-  it('should return the same state object across different calls', () => {
+  it('return the same state object across different calls', () => {
     const stateFactory = () => {
       const state = reactive({ count: 0 });
       const increment = () => state.count++;

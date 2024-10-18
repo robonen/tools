@@ -1,5 +1,5 @@
 import { onMounted, readonly, ref, type ComponentInternalInstance } from 'vue';
-import { getLifeCycleTarger } from '../../utils';
+import { getLifeCycleTarger } from '../..';
 
 /**
  * @name useMounted

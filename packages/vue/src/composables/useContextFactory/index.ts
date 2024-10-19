@@ -1,5 +1,5 @@
 import { inject, provide, type InjectionKey } from 'vue';
-import { VueToolsError } from '../../utils';
+import { VueToolsError } from '../..';
 
 /**
  * @name useContextFactory

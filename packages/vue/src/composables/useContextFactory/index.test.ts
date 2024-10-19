@@ -37,7 +37,7 @@ function testFactory<Data>(
 // TODO: maybe replace template with passing mock functions to setup
 
 describe('useContextFactory', () => {
-  it('should provide and inject context correctly', () => {
+  it('provide and inject context correctly', () => {
     const { Parent } = testFactory('test');
 
     const component = mount(Parent);
@@ -45,13 +45,13 @@ describe('useContextFactory', () => {
     expect(component.text()).toBe('test');
   });
 
-  it('should throw an error when context is not provided', () => {
+  it('throw an error when context is not provided', () => {
     const { Child } = testFactory('test');
 
     expect(() => mount(Child)).toThrow(VueToolsError);
   });
 
-  it('should inject a fallback value when context is not provided', () => {
+  it('inject a fallback value when context is not provided', () => {
     const { Child } = testFactory('test', { fallback: 'fallback' });
 
     const component = mount(Child);
@@ -59,7 +59,7 @@ describe('useContextFactory', () => {
     expect(component.text()).toBe('fallback');
   });
 
-  it('should correctly handle null values', () => {
+  it('correctly handle null values', () => {
     const { Parent } = testFactory(null);
 
     const component = mount(Parent);

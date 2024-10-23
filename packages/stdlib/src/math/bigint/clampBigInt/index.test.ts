@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {clampBigInt} from './index';
+import {clampBigInt} from '.';
 
 describe('clampBigInt', () => {
   it('clamp a value within the given range', () => {

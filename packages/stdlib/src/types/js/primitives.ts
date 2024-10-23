@@ -1,65 +1,97 @@
 import { toString } from '.';
 
 /**
- * Check if a value is a boolean.
+ * @name isObject
+ * @category Types
+ * @description Check if a value is a boolean
  * 
  * @param {any} value
  * @returns {value is boolean}
+ * 
+ * @since 0.0.2
  */
 export const isBoolean = (value: any): value is boolean => typeof value === 'boolean';
 
 /**
- * Check if a value is a function.
+ * @name isFunction
+ * @category Types
+ * @description Check if a value is a function
  * 
  * @param {any} value
  * @returns {value is Function}
+ * 
+ * @since 0.0.2
  */
 export const isFunction = <T extends Function>(value: any): value is T => typeof value === 'function';
 
 /**
- * Check if a value is a number.
+ * @name isNumber
+ * @category Types
+ * @description Check if a value is a number
  * 
  * @param {any} value
  * @returns {value is number}
+ * 
+ * @since 0.0.2
  */
 export const isNumber = (value: any): value is number => typeof value === 'number';
 
 /**
- * Check if a value is a bigint.
+ * @name isBigInt
+ * @category Types
+ * @description Check if a value is a bigint
  * 
  * @param {any} value
  * @returns {value is bigint}
+ * 
+ * @since 0.0.2
  */
 export const isBigInt = (value: any): value is bigint => typeof value === 'bigint';
 
 /**
- * Check if a value is a string.
+ * @name isString
+ * @category Types
+ * @description Check if a value is a string
  * 
  * @param {any} value
  * @returns {value is string}
+ * 
+ * @since 0.0.2
  */
 export const isString = (value: any): value is string => typeof value === 'string';
 
 /**
- * Check if a value is a symbol.
+ * @name isSymbol
+ * @category Types
+ * @description Check if a value is a symbol
  * 
  * @param {any} value
  * @returns {value is symbol}
+ * 
+ * @since 0.0.2
  */
 export const isSymbol = (value: any): value is symbol => typeof value === 'symbol';
 
 /**
- * Check if a value is a undefined.
+ * @name isUndefined
+ * @category Types
+ * @description Check if a value is a undefined
  * 
  * @param {any} value
  * @returns {value is undefined}
+ * 
+ * @since 0.0.2
  */
 export const isUndefined = (value: any): value is undefined => toString(value) === '[object Undefined]';
 
 /**
- * Check if a value is a null.
+ * @name isNull
+ * @category Types
+ * @description Check if a value is a null
  * 
  * @param {any} value
  * @returns {value is null}
+ * 
+ * @since 0.0.2
  */
 export const isNull = (value: any): value is null => toString(value) === '[object Null]';

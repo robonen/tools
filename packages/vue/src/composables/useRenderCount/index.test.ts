@@ -19,20 +19,20 @@ describe('useRenderCount', () => {
         const component = mount(ComponentStub);
         
         // Initial render
-        expect(component.vm.count).toBe(0);
+        expect(component.vm.count).toBe(1);
 
         component.vm.hiddenCount = 1;
         await nextTick();
         
         // Will not trigger a render
-        expect(component.vm.count).toBe(0);
+        expect(component.vm.count).toBe(1);
         expect(component.text()).toBe('0');
 
         component.vm.visibleCount++;
         await nextTick();
 
         // Will trigger a render
-        expect(component.vm.count).toBe(1);
+        expect(component.vm.count).toBe(2);
         expect(component.text()).toBe('1');
 
         component.vm.visibleCount++;
@@ -40,7 +40,7 @@ describe('useRenderCount', () => {
         await nextTick();
 
         // Will trigger a single render for both updates
-        expect(component.vm.count).toBe(2);
+        expect(component.vm.count).toBe(3);
         expect(component.text()).toBe('3');
     });
 
@@ -50,7 +50,7 @@ describe('useRenderCount', () => {
 
         const count = useRenderCount(instance);
 
-        // Initial render
+        // Initial render (should be zero because the component has already rendered on mount)
         expect(count.value).toBe(0);
 
         component.vm.hiddenCount = 1;

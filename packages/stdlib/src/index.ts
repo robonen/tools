@@ -5,3 +5,4 @@ export * from './bits';
 export * from './structs';
 export * from './arrays';
 export * from './types';
+export * from './utils'

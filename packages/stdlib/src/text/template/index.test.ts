@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { templateObject } from './index';
+import { templateObject } from '.';
 
 describe('templateObject', () => {
   // it('replace template placeholders with corresponding values from args', () => {

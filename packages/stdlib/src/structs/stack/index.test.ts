@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Stack } from './index';
+import { Stack } from '.';
 
 describe('stack', () => {
   describe('constructor', () => {

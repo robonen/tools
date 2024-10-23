@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {remap} from './index';
+import {remap} from '.';
 
 describe('remap', () => {
   it('map values from one range to another', () => {

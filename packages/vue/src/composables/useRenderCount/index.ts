@@ -1,6 +1,6 @@
-import { onUpdated, readonly, type ComponentInternalInstance } from 'vue';
+import { onMounted, onUpdated, readonly, type ComponentInternalInstance } from 'vue';
 import { useCounter } from '../useCounter';
-import { getLifeCycleTarger } from '../../utils';
+import { getLifeCycleTarger } from '../..';
 
 /**
  * @name useRenderCount
@@ -15,11 +15,15 @@ import { getLifeCycleTarger } from '../../utils';
  * 
  * @example
  * const count = useRenderCount(getCurrentInstance());
+ * 
+ * @since 0.0.1
  */
 export function useRenderCount(instance?: ComponentInternalInstance) {
     const { count, increment } = useCounter(0);
+    const target = getLifeCycleTarger(instance);
 
-    onUpdated(increment, getLifeCycleTarger(instance));
+    onMounted(increment, target);
+    onUpdated(increment, target);
 
     return readonly(count);
 }

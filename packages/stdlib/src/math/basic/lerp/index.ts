@@ -1,5 +1,7 @@
 /**
- * Linearly interpolates between two values
+ * @name lerp
+ * @category Math
+ * @description Linearly interpolates between two values
  *
  * @param {number} start The start value
  * @param {number} end The end value
@@ -13,7 +15,9 @@ export function lerp(start: number, end: number, t: number) {
 }
 
 /**
- * Inverse linear interpolation between two values
+ * @name inverseLerp
+ * @category Math
+ * @description Inverse linear interpolation between two values
  *
  * @param {number} start The start value
  * @param {number} end The end value

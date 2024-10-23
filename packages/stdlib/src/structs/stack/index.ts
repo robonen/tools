@@ -3,7 +3,9 @@ export type StackOptions = {
 };
 
 /**
- * Represents a stack data structure
+ * @name Stack
+ * @category Data Structures
+ * @description Represents a stack data structure
  *
  * @since 0.0.2
  *

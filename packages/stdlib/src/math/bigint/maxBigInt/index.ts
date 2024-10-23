@@ -1,5 +1,7 @@
 /**
- * Like `Math.max` but for BigInts
+ * @name maxBigInt
+ * @category Math
+ * @description Like `Math.max` but for BigInts
  *
  * @param {...bigint} values The values to compare
  * @returns {bigint} The largest value

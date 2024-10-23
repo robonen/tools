@@ -1,5 +1,7 @@
 /**
- * Like `Math.min` but for BigInts
+ * @name minBigInt
+ * @category Math
+ * @description Like `Math.min` but for BigInts
  *
  * @param {...bigint} values The values to compare
  * @returns {bigint} The smallest value

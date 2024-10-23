@@ -1,3 +1,6 @@
 {
-  "extends": "@robonen/tsconfig/tsconfig.json"
+  "extends": "@robonen/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["DOM"]
+  }
 }

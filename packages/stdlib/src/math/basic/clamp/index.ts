@@ -1,5 +1,7 @@
 /**
- * Clamps a number between a minimum and maximum value
+ * @name clamp
+ * @category Math
+ * @description Clamps a number between a minimum and maximum value
  * 
  * @param {number} value The number to clamp
  * @param {number} min Minimum value

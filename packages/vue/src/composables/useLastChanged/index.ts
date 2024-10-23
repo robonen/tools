@@ -24,6 +24,8 @@ export interface UseLastChangedOptions<
  * @example
  * const value = ref(0);
  * const lastChanged = useLastChanged(value, { immediate: true });
+ * 
+ * @since 0.0.1
  */
 export function useLastChanged(source: WatchSource, options?: UseLastChangedOptions<false>): Ref<number | null>;
 export function useLastChanged(source: WatchSource, options: UseLastChangedOptions<true> | UseLastChangedOptions<boolean, number>): Ref<number>

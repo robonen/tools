@@ -1,3 +1,4 @@
+import { timestamp } from '@robonen/stdlib';
 import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, readonly, ref, type ComponentInternalInstance } from 'vue';
 import { useRenderCount } from '../useRenderCount';
 import { getLifeCycleTarger } from '../..';
@@ -15,6 +16,8 @@ import { getLifeCycleTarger } from '../..';
  * 
  * @example
  * const { component, count, duration, lastRendered } = useRenderInfo(getCurrentInstance());
+ * 
+ * @since 0.0.1
  */
 export function useRenderInfo(instance?: ComponentInternalInstance) {
     const target = getLifeCycleTarger(instance);
@@ -33,6 +36,6 @@ export function useRenderInfo(instance?: ComponentInternalInstance) {
         component: target?.type.name ?? target?.uid,
         count: useRenderCount(instance),
         duration: readonly(duration),
-        lastRendered: Date.now(),
+        lastRendered: timestamp(),
     };
 }

@@ -18,6 +18,8 @@ import { computed, isReadonly, ref, toValue, type ComputedRef, type MaybeRef, ty
  * @example
  * const value = ref(10);
  * const clampedValue = useClamp(value, () => 0, () => 5);
+ * 
+ * @since 0.0.1
  */
 export function useClamp(value: MaybeRef<number>, min: MaybeRefOrGetter<number>, max: MaybeRefOrGetter<number>): WritableComputedRef<number>;
 export function useClamp(value: MaybeRefOrGetter<number>, min: MaybeRefOrGetter<number>, max: MaybeRefOrGetter<number>): ComputedRef<number> {

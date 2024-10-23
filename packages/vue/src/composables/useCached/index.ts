@@ -19,6 +19,8 @@ export type Comparator<Value> = (a: Value, b: Value) => boolean;
  * @example
  * const externalValue = ref(0);
  * const cachedValue = useCached(externalValue, (a, b) => a === b, { immediate: true });
+ * 
+ * @since 0.0.1
  */
 export function useCached<Value = unknown>(
     externalValue: MaybeRefOrGetter<Value>,

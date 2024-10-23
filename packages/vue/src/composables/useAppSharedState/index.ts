@@ -23,6 +23,8 @@ import { effectScope } from 'vue';
  *   const increment = () => state.count++;
  *   return { state, increment };
  * });
+ * 
+ * @since 0.0.1
  */
 export function useAppSharedState<Fn extends AnyFunction>(stateFactory: Fn) {
   let initialized = false;

@@ -25,6 +25,8 @@ export interface TryOnMountedOptions {
  * 
  * @example
  * tryOnMounted(() => console.log('Mounted!'), { sync: false });
+ * 
+ * @since 0.0.1
  */
 export function tryOnMounted(fn: VoidFunction, options: TryOnMountedOptions = {}) {
   const {

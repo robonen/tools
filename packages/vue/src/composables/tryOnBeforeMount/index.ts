@@ -25,6 +25,8 @@ export interface TryOnBeforeMountOptions {
  * 
  * @example
  * tryOnBeforeMount(() => console.log('Before mount async'), { sync: false });
+ * 
+ * @since 0.0.1
  */
 export function tryOnBeforeMount(fn: VoidFunction, options: TryOnBeforeMountOptions = {}) {
   const {

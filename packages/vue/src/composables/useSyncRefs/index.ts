@@ -21,6 +21,8 @@ import { isArray } from '@robonen/stdlib';
  * const source = ref(0);
  * const target1 = ref(0);
  * useSyncRefs(source, target1, { immediate: true });
+ * 
+ * @since 0.0.1
  */
 export function useSyncRefs<T = unknown>(
     source: WatchSource<T>,

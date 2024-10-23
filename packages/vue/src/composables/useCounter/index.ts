@@ -31,6 +31,8 @@ export interface UseConterReturn {
  * 
  * @example
  * const { count, increment, decrement, set, get, reset } = useCounter(0, { min: 0, max: 10 });
+ * 
+ * @since 0.0.1
  */
 export function useCounter(
     initialValue: MaybeRefOrGetter<number> = 0,

@@ -14,6 +14,8 @@ import { useMounted } from '../useMounted';
  * 
  * @example
  * const isSupported = useSupported(() => 'ResizeObserver' in window);
+ * 
+ * @since 0.0.1
  */
 export function useSupported(feature: () => unknown) {
     const isMounted = useMounted();

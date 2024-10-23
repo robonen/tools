@@ -63,6 +63,8 @@ export type UseOffsetPaginationInfinityReturn = Omit<UseOffsetPaginationReturn, 
  *  onPageSizeChange: ({ currentPageSize }) => console.log(currentPageSize),
  *  onTotalPagesChange: ({ totalPages }) => console.log(totalPages),
  * });
+ * 
+ * @since 0.0.1
  */
 export function useOffsetPagination(options: Omit<UseOffsetPaginationOptions, 'total'>): UseOffsetPaginationInfinityReturn;
 export function useOffsetPagination(options: UseOffsetPaginationOptions): UseOffsetPaginationReturn;

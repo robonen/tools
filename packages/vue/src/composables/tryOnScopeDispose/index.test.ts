@@ -14,6 +14,7 @@ const ComponentStub = defineComponent({
   setup(props) {
     tryOnScopeDispose(props.callback);
   },
+  template: '<div></div>',
 });
 
 describe('tryOnScopeDispose', () => {

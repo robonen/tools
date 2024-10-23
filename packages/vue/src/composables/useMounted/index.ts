@@ -14,6 +14,8 @@ import { getLifeCycleTarger } from '../..';
  * 
  * @example
  * const isMounted = useMounted(getCurrentInstance());
+ * 
+ * @since 0.0.1
  */
 export function useMounted(instance?: ComponentInternalInstance) {
   const isMounted = ref(false);

@@ -15,6 +15,8 @@ import { getLifeCycleTarger } from '../..';
  * 
  * @example
  * const count = useRenderCount(getCurrentInstance());
+ * 
+ * @since 0.0.1
  */
 export function useRenderCount(instance?: ComponentInternalInstance) {
     const { count, increment } = useCounter(0);

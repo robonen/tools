@@ -11,6 +11,8 @@ import { getCurrentScope, onScopeDispose } from 'vue';
  * 
  * @example
  * tryOnScopeDispose(() => console.log('Scope disposed'));
+ * 
+ * @since 0.0.1
  */
 export function tryOnScopeDispose(callback: VoidFunction) {
   if (getCurrentScope()) {

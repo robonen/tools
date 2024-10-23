@@ -12,6 +12,8 @@ import { VueToolsError } from '../..';
  * 
  * @example
  * const [injectContext, provideContext] = useContextFactory('MyContext');
+ * 
+ * @since 0.0.1
  */
 export function useContextFactory<ContextValue>(name: string) {  
     const injectionKey: InjectionKey<ContextValue> = Symbol(name);

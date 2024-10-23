@@ -1,15 +1,22 @@
 {
   "name": "@robonen/platform",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "UNLICENSED",
-  "description": "",
-  "keywords": [],
+  "description": "Platform dependent utilities for javascript development",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "browser",
+    "platform",
+    "node",
+    "bun",
+    "deno"
+  ],
   "author": "Robonen Andrew <robonenandrew@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/robonen/tools.git",
-    "directory": "./packages/platform"
+    "directory": "packages/platform"
   },
   "packageManager": "pnpm@9.12.2",
   "engines": {
@@ -19,13 +26,13 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.umd.js",
-  "module": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.umd.js",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     }
   },

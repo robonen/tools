@@ -37,8 +37,6 @@
     }
   },
   "scripts": {
-    "test": "vitest run",
-    "dev": "vitest dev",
     "build": "unbuild"
   },
   "devDependencies": {

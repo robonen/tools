@@ -1,4 +1,5 @@
 {
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
   "name": "@robonen/platform",
   "license": "Apache-2.0",
   "version": "0.0.2",

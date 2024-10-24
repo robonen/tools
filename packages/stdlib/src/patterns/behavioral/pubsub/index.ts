@@ -1,4 +1,6 @@
-export type Subscriber = (...args: any[]) => void;
+import type { AnyFunction } from '../../../types';
+
+export type Subscriber = AnyFunction;
 export type EventsRecord = Record<string | symbol, Subscriber>;
 
 /**

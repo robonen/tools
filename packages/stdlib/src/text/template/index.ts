@@ -1,4 +1,4 @@
-import { getByPath, type Generate } from '../../arrays';
+import { getByPath, type Generate } from '../../collections';
 import { isFunction } from '../../types';
 
 /**
@@ -56,11 +56,10 @@ export function templateObject<T extends string, A extends Generate<ExtractPlace
 }
 
 // templateObject('Hello {user.name}, your address {user.addresses.0.street}', {
-//    user: {
-//     name: 'John Doe',
+//   user: {
+//     name: 'John',
 //     addresses: [
-//       { street: '123 Main St', city: 'Springfield'},
-//       { street: '456 Elm St', city: 'Shelbyville'},
+//       { city: 'New York', street: '5th Avenue' },
 //     ],
 //   },
 // });

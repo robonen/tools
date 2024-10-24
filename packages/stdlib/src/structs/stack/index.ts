@@ -1,3 +1,6 @@
+import { last } from '../../arrays';
+import { isArray } from '../../types';
+
 export type StackOptions = {
     maxSize?: number;
 };
@@ -37,7 +40,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      */
     constructor(initialValues?: T[] | T, options?: StackOptions) {
         this.maxSize = options?.maxSize ?? Infinity;
-        this.stack = Array.isArray(initialValues) ? initialValues : initialValues ? [initialValues] : [];
+        this.stack = isArray(initialValues) ? initialValues : initialValues ? [initialValues] : [];
     }
     
     /**
@@ -95,7 +98,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
         if (this.isEmpty)
             throw new RangeError('Stack is empty');
         
-        return this.stack[this.stack.length - 1];
+        return last(this.stack);
     }
 
     /**

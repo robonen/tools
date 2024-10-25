@@ -96,7 +96,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
      */
     public peek() {
         if (this.isEmpty)
-            throw new RangeError('Stack is empty');
+            return undefined;
         
         return last(this.stack);
     }

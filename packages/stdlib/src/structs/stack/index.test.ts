@@ -79,9 +79,11 @@ describe('stack', () => {
       expect(stack.length).toBe(3);
     });
 
-    it('throw an error if the stack is empty', () => {
+    it('return undefined if the stack is empty', () => {
       const stack = new Stack<number>();
-      expect(() => stack.peek()).toThrow(new RangeError('Stack is empty'));
+      const topElement = stack.peek();
+
+      expect(topElement).toBeUndefined();
     });
   });
 

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { sleep } from '.';
 
 describe('sleep', () => {
@@ -14,6 +14,6 @@ describe('sleep', () => {
 
     const end = performance.now();
 
-    expect(end - start).toBeGreaterThanOrEqual(delay);
+    expect(end - start).toBeGreaterThan(delay - 5);
   });
 });

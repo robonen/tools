@@ -33,8 +33,8 @@ importers:
   .:
     devDependencies:
       '@types/node':
-        specifier: ^20.16.14
-        version: 20.16.14
+        specifier: ^20.17.1
+        version: 20.17.1
       citty:
         specifier: ^0.1.6
         version: 0.1.6
@@ -49,7 +49,7 @@ importers:
         version: 1.3.0
       vitepress:
         specifier: ^1.4.1
-        version: 1.4.1(@algolia/client-search@4.23.2)(@types/node@20.16.14)(postcss@8.4.47)(search-insights@2.13.0)(typescript@5.4.4)
+        version: 1.4.1(@algolia/client-search@4.23.2)(@types/node@20.17.1)(postcss@8.4.47)(search-insights@2.13.0)(typescript@5.4.4)
 
   apps/vhs:
     devDependencies:
@@ -72,8 +72,8 @@ importers:
   packages/renovate:
     devDependencies:
       renovate:
-        specifier: ^38.130.0
-        version: 38.130.0(@aws-sdk/client-sso-oidc@3.658.1(@aws-sdk/client-sts@3.658.1))(encoding@0.1.13)(typanion@3.14.0)
+        specifier: ^38.131.2
+        version: 38.131.2(@aws-sdk/client-sso-oidc@3.658.1(@aws-sdk/client-sts@3.658.1))(encoding@0.1.13)(typanion@3.14.0)
 
   packages/stdlib:
     devDependencies:
@@ -82,7 +82,7 @@ importers:
         version: link:../tsconfig
       '@vitest/coverage-v8':
         specifier: 'catalog:'
-        version: 2.1.3(vitest@2.1.3(@types/node@20.16.14)(jsdom@25.0.1))
+        version: 2.1.3(vitest@2.1.3(@types/node@20.17.1)(jsdom@25.0.1))
       pathe:
         specifier: 'catalog:'
         version: 1.1.2
@@ -91,7 +91,7 @@ importers:
         version: 3.0.0-rc.11(typescript@5.4.4)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.3(@types/node@20.16.14)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@20.17.1)(jsdom@25.0.1)
 
   packages/tsconfig: {}
 
@@ -121,7 +121,7 @@ importers:
         version: 3.0.0-rc.11(typescript@5.4.4)
       vitest:
         specifier: 'catalog:'
-        version: 2.1.3(@types/node@20.16.14)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@20.17.1)(jsdom@25.0.1)
 
 packages:
 
@@ -1679,8 +1679,8 @@ packages:
   '@types/node@20.12.14':
     resolution: {integrity: sha512-scnD59RpYD91xngrQQLGkE+6UrHUPzeKZWhhjBSa3HSkwjbQc38+q3RoIVEwxQGRw3M+j5hpNAM+lgV3cVormg==}
 
-  '@types/node@20.16.14':
-    resolution: {integrity: sha512-vtgGzjxLF7QT88qRHtXMzCWpAAmwonE7fwgVjFtXosUva2oSpnIEc3gNO9P7uIfOxKnii2f79/xtOnfreYtDaA==}
+  '@types/node@20.17.1':
+    resolution: {integrity: sha512-j2VlPv1NnwPJbaCNv69FO/1z4lId0QmGvpT41YxitRtWlg96g/j8qcv2RKsLKe2F6OJgyXhupN1Xo17b2m139Q==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -1855,8 +1855,8 @@ packages:
   '@vueuse/shared@11.1.0':
     resolution: {integrity: sha512-YUtIpY122q7osj+zsNMFAfMTubGz0sn5QzE5gPzAIiCmtt2ha3uQUY1+JPyL4gRCTsLPX82Y9brNbo/aqlA91w==}
 
-  '@yarnpkg/core@4.1.3':
-    resolution: {integrity: sha512-s9CBcIgrqZOzWXt6m2Q8vuv0Wu+Oz8NFkvxoR5qLtH1Du/el8ZPtrh0Gw38iBe4hXav5/jmuZ9qg8jo6prezKg==}
+  '@yarnpkg/core@4.1.4':
+    resolution: {integrity: sha512-aaftrtm5sfwMlqmj3CYqp1a1Lbd0UR7dOk3K5pMCV3VTDwXWQWw9uwGm4QpE5YairVG30jpOdbTLUcoota55HQ==}
     engines: {node: '>=18.12.0'}
 
   '@yarnpkg/fslib@3.1.0':
@@ -1994,8 +1994,8 @@ packages:
   before-after-hook@2.2.3:
     resolution: {integrity: sha512-NzUnlZexiaH/46WDhANlyR2bXRopNg4F/zuSA3OpZnllCUgRaOF2znDioDWrmbNVsuZk6l9pMquQB38cfBZwkQ==}
 
-  better-sqlite3@11.3.0:
-    resolution: {integrity: sha512-iHt9j8NPYF3oKCNOO5ZI4JwThjt3Z6J6XrcwG85VNMVzv1ByqrHWv5VILEbCMFWDsoHhXvQ7oC8vgRXFAKgl9w==}
+  better-sqlite3@11.4.0:
+    resolution: {integrity: sha512-B7C9y2aSvtTwDJIz34iUxMjQWmbAYFmpq0Rwf9weYTtx6jUYsUKVt5ePPYlGyLVBoySppPa41PBrzl1ipMhG7A==}
 
   bignumber.js@9.1.2:
     resolution: {integrity: sha512-2/mKyZH9K85bzOEfhXDBFZTGd1CTs+5IHpeFQo9luiBG7hghdC851Pj2WAhb6E3R6b9tZj/XKhbg4fum+Kepug==}
@@ -4039,8 +4039,8 @@ packages:
   remark@13.0.0:
     resolution: {integrity: sha512-HDz1+IKGtOyWN+QgBiAT0kn+2s6ovOxHyPAFGKVE81VSzJ+mq7RwHFledEvB5F1p4iJvOah/LOKdFuzvRnNLCA==}
 
-  renovate@38.130.0:
-    resolution: {integrity: sha512-a2HCjurq+pDrobpr33lOItPIhtRavUPuMsONYQ5loVfgo2ZeIZhK/RYTzh2Ml2ls+kMR0k7Uz3i5kG5r76N4vg==}
+  renovate@38.131.2:
+    resolution: {integrity: sha512-SCF3wqeKjamHD90FxWSYoDfCEsjUE7kZ20pln7VACB1LSj/N9LFqGEvScg2UExZJ40ayG56ZkRySP4gbCmtYHQ==}
     engines: {node: ^20.15.1, pnpm: ^9.0.0}
     hasBin: true
 
@@ -5801,6 +5801,7 @@ snapshots:
     dependencies:
       '@babel/highlight': 7.24.2
       picocolors: 1.1.0
+    optional: true
 
   '@babel/code-frame@7.25.9':
     dependencies:
@@ -5889,6 +5890,7 @@ snapshots:
       chalk: 2.4.2
       js-tokens: 4.0.0
       picocolors: 1.1.0
+    optional: true
 
   '@babel/highlight@7.25.9':
     dependencies:
@@ -7069,13 +7071,13 @@ snapshots:
 
   '@types/bunyan@1.8.9':
     dependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
 
   '@types/cacheable-request@6.0.3':
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
       '@types/responselike': 1.0.3
 
   '@types/emscripten@1.39.10': {}
@@ -7090,7 +7092,7 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
 
   '@types/linkify-it@5.0.0': {}
 
@@ -7117,7 +7119,7 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@20.16.14':
+  '@types/node@20.17.1':
     dependencies:
       undici-types: 6.19.8
 
@@ -7127,7 +7129,7 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
 
   '@types/semver@7.5.8': {}
 
@@ -7143,21 +7145,21 @@ snapshots:
 
   '@types/ws@8.5.12':
     dependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
     optional: true
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-vue@5.1.4(vite@5.4.9(@types/node@20.16.14))(vue@3.5.12(typescript@5.4.4))':
+  '@vitejs/plugin-vue@5.1.4(vite@5.4.9(@types/node@20.17.1))(vue@3.5.12(typescript@5.4.4))':
     dependencies:
-      vite: 5.4.9(@types/node@20.16.14)
+      vite: 5.4.9(@types/node@20.17.1)
       vue: 3.5.12(typescript@5.4.4)
 
-  '@vitest/coverage-v8@2.1.3(vitest@2.1.3(@types/node@20.16.14)(jsdom@25.0.1))':
+  '@vitest/coverage-v8@2.1.3(vitest@2.1.3(@types/node@20.17.1)(jsdom@25.0.1))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -7171,7 +7173,7 @@ snapshots:
       std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.3(@types/node@20.16.14)(jsdom@25.0.1)
+      vitest: 2.1.3(@types/node@20.17.1)(jsdom@25.0.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -7182,13 +7184,13 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(vite@5.4.2(@types/node@20.16.14))':
+  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(vite@5.4.2(@types/node@20.17.1))':
     dependencies:
       '@vitest/spy': 2.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.4.2(@types/node@20.16.14)
+      vite: 5.4.2(@types/node@20.17.1)
 
   '@vitest/pretty-format@2.1.3':
     dependencies:
@@ -7322,7 +7324,7 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@yarnpkg/core@4.1.3(typanion@3.14.0)':
+  '@yarnpkg/core@4.1.4(typanion@3.14.0)':
     dependencies:
       '@arcanis/slice-ansi': 1.1.1
       '@types/semver': 7.5.8
@@ -7500,7 +7502,7 @@ snapshots:
 
   before-after-hook@2.2.3: {}
 
-  better-sqlite3@11.3.0:
+  better-sqlite3@11.4.0:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -9350,7 +9352,7 @@ snapshots:
 
   parse-json@5.2.0:
     dependencies:
-      '@babel/code-frame': 7.24.2
+      '@babel/code-frame': 7.25.9
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
@@ -9635,7 +9637,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
       long: 5.2.3
 
   protocols@2.0.1: {}
@@ -9761,7 +9763,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@38.130.0(@aws-sdk/client-sso-oidc@3.658.1(@aws-sdk/client-sts@3.658.1))(encoding@0.1.13)(typanion@3.14.0):
+  renovate@38.131.2(@aws-sdk/client-sso-oidc@3.658.1(@aws-sdk/client-sts@3.658.1))(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.658.1
       '@aws-sdk/client-ec2': 3.658.1
@@ -9788,7 +9790,7 @@ snapshots:
       '@renovatebot/pep440': 3.0.20
       '@renovatebot/ruby-semver': 3.0.23
       '@sindresorhus/is': 4.6.0
-      '@yarnpkg/core': 4.1.3(typanion@3.14.0)
+      '@yarnpkg/core': 4.1.4(typanion@3.14.0)
       '@yarnpkg/parsers': 3.0.2
       agentkeepalive: 4.5.0
       aggregate-error: 3.1.0
@@ -9871,7 +9873,7 @@ snapshots:
       yaml: 2.6.0
       zod: 3.23.8
     optionalDependencies:
-      better-sqlite3: 11.3.0
+      better-sqlite3: 11.4.0
       openpgp: 5.11.2
       re2: 1.21.4
     transitivePeerDependencies:
@@ -10552,12 +10554,12 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite-node@2.1.3(@types/node@20.16.14):
+  vite-node@2.1.3(@types/node@20.17.1):
     dependencies:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.2(@types/node@20.16.14)
+      vite: 5.4.2(@types/node@20.17.1)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -10569,25 +10571,25 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.4.2(@types/node@20.16.14):
+  vite@5.4.2(@types/node@20.17.1):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.22.5
     optionalDependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
       fsevents: 2.3.3
 
-  vite@5.4.9(@types/node@20.16.14):
+  vite@5.4.9(@types/node@20.17.1):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.22.5
     optionalDependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
       fsevents: 2.3.3
 
-  vitepress@1.4.1(@algolia/client-search@4.23.2)(@types/node@20.16.14)(postcss@8.4.47)(search-insights@2.13.0)(typescript@5.4.4):
+  vitepress@1.4.1(@algolia/client-search@4.23.2)(@types/node@20.17.1)(postcss@8.4.47)(search-insights@2.13.0)(typescript@5.4.4):
     dependencies:
       '@docsearch/css': 3.6.2
       '@docsearch/js': 3.6.2(@algolia/client-search@4.23.2)(search-insights@2.13.0)
@@ -10595,7 +10597,7 @@ snapshots:
       '@shikijs/transformers': 1.22.0
       '@shikijs/types': 1.22.0
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 5.1.4(vite@5.4.9(@types/node@20.16.14))(vue@3.5.12(typescript@5.4.4))
+      '@vitejs/plugin-vue': 5.1.4(vite@5.4.9(@types/node@20.17.1))(vue@3.5.12(typescript@5.4.4))
       '@vue/devtools-api': 7.5.3
       '@vue/shared': 3.5.12
       '@vueuse/core': 11.1.0(vue@3.5.12(typescript@5.4.4))
@@ -10604,7 +10606,7 @@ snapshots:
       mark.js: 8.11.1
       minisearch: 7.1.0
       shiki: 1.22.0
-      vite: 5.4.9(@types/node@20.16.14)
+      vite: 5.4.9(@types/node@20.17.1)
       vue: 3.5.12(typescript@5.4.4)
     optionalDependencies:
       postcss: 8.4.47
@@ -10636,10 +10638,10 @@ snapshots:
       - typescript
       - universal-cookie
 
-  vitest@2.1.3(@types/node@20.16.14)(jsdom@25.0.1):
+  vitest@2.1.3(@types/node@20.17.1)(jsdom@25.0.1):
     dependencies:
       '@vitest/expect': 2.1.3
-      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.2(@types/node@20.16.14))
+      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.2(@types/node@20.17.1))
       '@vitest/pretty-format': 2.1.3
       '@vitest/runner': 2.1.3
       '@vitest/snapshot': 2.1.3
@@ -10654,11 +10656,11 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.0
       tinyrainbow: 1.2.0
-      vite: 5.4.2(@types/node@20.16.14)
-      vite-node: 2.1.3(@types/node@20.16.14)
+      vite: 5.4.2(@types/node@20.17.1)
+      vite-node: 2.1.3(@types/node@20.17.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 20.16.14
+      '@types/node': 20.17.1
       jsdom: 25.0.1
     transitivePeerDependencies:
       - less

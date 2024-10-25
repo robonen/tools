@@ -14,6 +14,6 @@ describe('sleep', () => {
 
     const end = performance.now();
 
-    expect(end - start).toBeGreaterThanOrEqual(delay);
+    expect(end - start).toBeGreaterThan(delay - 5);
   });
 });

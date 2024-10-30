@@ -2,6 +2,7 @@ export * from './arrays';
 export * from './async';
 export * from './bits';
 export * from './math';
+export * from './objects';
 export * from './patterns';
 export * from './structs';
 export * from './text';

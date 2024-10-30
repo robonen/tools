@@ -84,7 +84,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
 
     /**
      * Pops an element from the stack
-     * @returns {T} The element popped from the stack
+     * @returns {T | undefined} The element popped from the stack
      */
     public pop() {
         return this.stack.pop();
@@ -92,7 +92,7 @@ export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
 
     /**
      * Peeks at the top element of the stack
-     * @returns {T} The top element of the stack
+     * @returns {T | undefined} The top element of the stack
      */
     public peek() {
         if (this.isEmpty)

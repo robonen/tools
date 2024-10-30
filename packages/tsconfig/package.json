@@ -1,8 +1,7 @@
 {
   "name": "@robonen/tsconfig",
-  "private": true,
   "version": "0.0.1",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "description": "Base typescript configuration for projects",
   "keywords": [
     "tsconfig",
@@ -16,7 +15,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/tsconfig"
   },
-  "packageManager": "pnpm@9.12.2",
+  "packageManager": "pnpm@9.12.3",
   "engines": {
     "node": ">=20.18.0"
   },

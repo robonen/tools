@@ -29,7 +29,7 @@
         },
         {
             "matchPackageNames": ["php"],
-            "matchUpdateTypes": "patch",
+            "matchUpdateTypes": ["patch"],
             "separateMinorPatch": true,
             "enabled": false
         }

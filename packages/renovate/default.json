@@ -26,6 +26,12 @@
             "schedule": [
                 "after 2am and before 3am"
             ]
+        },
+        {
+            "matchPackageNames": ["php"],
+            "matchUpdateTypes": "patch",
+            "separateMinorPatch": true,
+            "enabled": false
         }
     ]
 }

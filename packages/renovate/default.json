@@ -28,10 +28,9 @@
             ]
         },
         {
+            "enabled": false,
             "matchPackageNames": ["php"],
-            "matchUpdateTypes": ["patch"],
-            "separateMinorPatch": true,
-            "enabled": false
+            "matchUpdateTypes": ["patch"]
         }
     ]
 }

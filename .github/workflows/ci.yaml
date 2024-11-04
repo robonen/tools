@@ -13,9 +13,6 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    strategy:
-      matrix:
-        command: ['all:build && all:test']
     steps:
       - uses: actions/checkout@v4
 
@@ -33,4 +30,4 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: pnpm ${{ matrix.command }}
+        run: pnpm all:build && pnpm all:test

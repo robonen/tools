@@ -15,7 +15,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        command: ['all:test', 'all:build']
+        command: ['all:build && all:test']
     steps:
       - uses: actions/checkout@v4
 

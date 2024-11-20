@@ -1,6 +1,6 @@
 {
   "name": "@robonen/platform",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "Apache-2.0",
   "description": "Platform dependent utilities for javascript development",
   "keywords": [
@@ -26,21 +26,27 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+    "./browsers": {
+      "import": "./dist/browsers.mjs",
+      "require": "./dist/browsers.cjs",
+      "types": "./dist/browsers.d.ts"
+    },
+    "./multi": {
+      "import": "./dist/multi.mjs",
+      "require": "./dist/multi.cjs",
+      "types": "./dist/multi.d.ts"
     }
   },
   "scripts": {
+    "test": "vitest run",
+    "dev": "vitest dev",
     "build": "unbuild"
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "unbuild": "catalog:"
+    "jsdom": "catalog:",
+    "unbuild": "catalog:",
+    "vitest": "catalog:"
   }
 }

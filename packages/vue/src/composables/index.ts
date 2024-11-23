@@ -6,6 +6,7 @@ export * from './useCached';
 export * from './useClamp';
 export * from './useContextFactory';
 export * from './useCounter';
+export * from './useFocusGuard';
 export * from './useLastChanged';
 export * from './useMounted';
 export * from './useOffsetPagination';

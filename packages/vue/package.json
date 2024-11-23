@@ -40,6 +40,8 @@
     "build": "unbuild"
   },
   "devDependencies": {
+    "@robonen/platform": "workspace:*",
+    "@robonen/stdlib": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@vue/test-utils": "catalog:",
     "jsdom": "catalog:",
@@ -47,8 +49,6 @@
     "vitest": "catalog:"
   },
   "dependencies": {
-    "@robonen/platform": "workspace:*",
-    "@robonen/stdlib": "workspace:*",
     "vue": "catalog:"
   }
 }

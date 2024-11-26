@@ -9,7 +9,7 @@ function testFactory<Data>(
   context: ReturnType<typeof useContextFactory<Data>>,
   fallback?: Data,
 ) {
-  const [inject, provide] = context;
+  const { inject, provide } = context;
 
   const Child = defineComponent({
     setup() {
@@ -72,7 +72,7 @@ describe('useContextFactory', () => {
 
     const childComponent = mount(Child, {
       global: {
-        plugins: [app => context[1]('test', app)],
+        plugins: [app => context.provide('test', app)],
       },
     });
 

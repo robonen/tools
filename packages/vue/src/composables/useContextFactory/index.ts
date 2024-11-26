@@ -7,17 +7,17 @@ import { VueToolsError } from '../..';
  * @description A composable that provides a factory for creating context with unique key
  * 
  * @param {string} name The name of the context
- * @returns {readonly [injectContext, provideContext]} The context factory
+ * @returns {Object} An object with `inject`, `provide` and `key` properties
  * @throws {VueToolsError} when the context is not provided
  * 
  * @example
- * const [injectContext, provideContext] = useContextFactory('MyContext');
+ * const { inject, provide } = useContextFactory('MyContext');
  *
- * const context = provideContext('Hello World');
- * const value = injectContext();
+ * provide('Hello World');
+ * const value = inject();
  *
  * @example
- * const [injectContext, provideContext] = useContextFactory('MyContext');
+ * const { inject: injectContext, provide: provideContext } = useContextFactory('MyContext');
  *
  * // In a plugin
  * {
@@ -44,9 +44,13 @@ export function useContextFactory<ContextValue>(name: string) {
     };
 
     const provideContext = (context: ContextValue, app?: App) => {
-        (app ? app.provide : provide)(injectionKey, context);
+        (app?.provide ?? provide)(injectionKey, context);
         return context;
     };
 
-    return [injectContext, provideContext] as const;
+    return {
+        inject: injectContext,
+        provide: provideContext,
+        key: injectionKey,
+    }
 }

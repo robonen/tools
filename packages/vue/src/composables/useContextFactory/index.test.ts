@@ -6,15 +6,14 @@ import { VueToolsError } from '../../utils';
 
 function testFactory<Data>(
   data: Data,
-  options?: { contextName?: string, fallback?: Data },
+  context: ReturnType<typeof useContextFactory<Data>>,
+  fallback?: Data,
 ) {
-  const contextName = options?.contextName ?? 'TestContext';
-
-  const [inject, provide] = useContextFactory(contextName);
+  const [inject, provide] = context;
 
   const Child = defineComponent({
     setup() {
-      const value = inject(options?.fallback);
+      const value = inject(fallback);
       return { value };
     },
     template: `{{ value }}`,
@@ -38,7 +37,7 @@ function testFactory<Data>(
 
 describe('useContextFactory', () => {
   it('provide and inject context correctly', () => {
-    const { Parent } = testFactory('test');
+    const { Parent } = testFactory('test', useContextFactory('TestContext'));
 
     const component = mount(Parent);
 
@@ -46,13 +45,13 @@ describe('useContextFactory', () => {
   });
 
   it('throw an error when context is not provided', () => {
-    const { Child } = testFactory('test');
+    const { Child } = testFactory('test', useContextFactory('TestContext'));
 
     expect(() => mount(Child)).toThrow(VueToolsError);
   });
 
   it('inject a fallback value when context is not provided', () => {
-    const { Child } = testFactory('test', { fallback: 'fallback' });
+    const { Child } = testFactory('test', useContextFactory('TestContext'), 'fallback');
 
     const component = mount(Child);
 
@@ -60,10 +59,23 @@ describe('useContextFactory', () => {
   });
 
   it('correctly handle null values', () => {
-    const { Parent } = testFactory(null);
+    const { Parent } = testFactory(null, useContextFactory('TestContext'));
 
     const component = mount(Parent);
 
     expect(component.text()).toBe('');
+  });
+
+  it('provide context globally with app', () => {
+    const context = useContextFactory('TestContext');
+    const { Child } = testFactory(null, context);
+
+    const childComponent = mount(Child, {
+      global: {
+        plugins: [app => context[1]('test', app)],
+      },
+    });
+
+    expect(childComponent.text()).toBe('test');
   });
 });

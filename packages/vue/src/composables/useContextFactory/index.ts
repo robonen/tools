@@ -1,4 +1,4 @@
-import { inject, provide, type InjectionKey } from 'vue';
+import {inject, provide, type InjectionKey, type App} from 'vue';
 import { VueToolsError } from '../..';
 
 /**
@@ -12,7 +12,23 @@ import { VueToolsError } from '../..';
  * 
  * @example
  * const [injectContext, provideContext] = useContextFactory('MyContext');
- * 
+ *
+ * const context = provideContext('Hello World');
+ * const value = injectContext();
+ *
+ * @example
+ * const [injectContext, provideContext] = useContextFactory('MyContext');
+ *
+ * // In a plugin
+ * {
+ *   install(app) {
+ *      provideContext('Hello World', app);
+ *   }
+ * }
+ *
+ * // In a component
+ * const value = injectContext();
+ *
  * @since 0.0.1
  */
 export function useContextFactory<ContextValue>(name: string) {  
@@ -27,10 +43,10 @@ export function useContextFactory<ContextValue>(name: string) {
         throw new VueToolsError(`useContextFactory: '${name}' context is not provided`);
     };
 
-    const provideContext = (context: ContextValue) => {
-        provide(injectionKey, context);
+    const provideContext = (context: ContextValue, app?: App) => {
+        (app ? app.provide : provide)(injectionKey, context);
         return context;
     };
 
     return [injectContext, provideContext] as const;
-  }
+}

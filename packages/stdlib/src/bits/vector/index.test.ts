@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { BitVector } from '.';
 
 describe('BitVector', () => {
-  it('should initialize with the correct size', () => {
+  it('initialize with the correct size', () => {
     const size = 16;
     const expectedSize = Math.ceil(size / 8);
     const bitVector = new BitVector(size);
@@ -10,7 +10,7 @@ describe('BitVector', () => {
     expect(bitVector.length).toBe(expectedSize);
   });
 
-  it('should set and get bits correctly', () => {
+  it('set and get bits correctly', () => {
     const bitVector = new BitVector(16);
     bitVector.setBit(5);
     
@@ -18,7 +18,13 @@ describe('BitVector', () => {
     expect(bitVector.getBit(4)).toBe(false);
   });
 
-  it('should clear bits correctly', () => {
+  it('get out of bounds bits correctly', () => {
+    const bitVector = new BitVector(16);
+
+    expect(bitVector.getBit(155)).toBe(false);
+  });
+
+  it('clear bits correctly', () => {
     const bitVector = new BitVector(16);
     bitVector.setBit(5);
 
@@ -29,7 +35,7 @@ describe('BitVector', () => {
     expect(bitVector.getBit(5)).toBe(false);
   });
 
-  it('should find the previous bit correctly', () => {
+  it('find the previous bit correctly', () => {
     const bitVector = new BitVector(100);
     const indices = [99, 88, 66, 65, 64, 63, 15, 14, 1, 0];
     const result = [];
@@ -42,13 +48,13 @@ describe('BitVector', () => {
     expect(result).toEqual(indices);
   });
 
-  it('should return -1 when no previous bit is found', () => {
+  it('return -1 when no previous bit is found', () => {
     const bitVector = new BitVector(16);
 
     expect(bitVector.previousBit(0)).toBe(-1);
   });
 
-  it('should throw RangeError when previousBit is called with an unreachable value', () => {
+  it('throw RangeError when previousBit is called with an unreachable value', () => {
     const bitVector = new BitVector(16);
     bitVector.setBit(5);
 

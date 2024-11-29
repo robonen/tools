@@ -1,3 +1,4 @@
-export * from './string';
-export * from './function';
 export * from './array';
+export * from './function';
+export * from  './promise';
+export * from './string';

@@ -16,7 +16,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/renovate"
   },
-  "packageManager": "pnpm@9.15.1",
+  "packageManager": "pnpm@9.15.2",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -27,6 +27,6 @@
     "test": "renovate-config-validator ./default.json"
   },
   "devDependencies": {
-    "renovate": "^39.83.3"
+    "renovate": "^39.86.1"
   }
 }

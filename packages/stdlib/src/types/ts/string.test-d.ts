@@ -1,7 +1,18 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import type { HasSpaces, Trim } from './string';
+import type { HasSpaces, Trim, Stringable } from './string';
 
 describe('string', () => {
+    describe('Stringable', () => {
+      it('should be a string', () => {
+        expectTypeOf(Number(1)).toMatchTypeOf<Stringable>();
+        expectTypeOf(String(1)).toMatchTypeOf<Stringable>();
+        expectTypeOf(Symbol()).toMatchTypeOf<Stringable>();
+        expectTypeOf(new Array(1)).toMatchTypeOf<Stringable>();
+        expectTypeOf(new Object()).toMatchTypeOf<Stringable>();
+        expectTypeOf(new Date()).toMatchTypeOf<Stringable>();
+      });
+    });
+
     describe('Trim', () => {
       it('remove leading and trailing spaces from a string', () => {
         type actual = Trim<'  hello  '>;

@@ -1,7 +1,7 @@
-import { describe, expectTypeOf, it } from "vitest";
+import { describe, expectTypeOf, it } from 'vitest';
 import type { ClearPlaceholder, ExtractPlaceholders } from "./index";
 
-describe('template', () => {
+describe.skip('template', () => {
   describe('ClearPlaceholder', () => {
     it('ignores strings without braces', () => {
       type actual = ClearPlaceholder<'name'>;

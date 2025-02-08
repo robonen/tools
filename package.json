@@ -15,13 +15,13 @@
     "type": "git",
     "url": "git+https://github.com/robonen/tools.git"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@9.15.5",
   "engines": {
     "node": ">=22.13.1"
   },
   "type": "module",
   "devDependencies": {
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.13.1",
     "citty": "^0.1.6",
     "jiti": "^2.4.2",
     "pathe": "^2.0.2",

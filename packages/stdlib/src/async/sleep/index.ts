@@ -13,6 +13,8 @@
  * sleep(1000).then(() => {
  *  console.log('Hello, World!');
  * });
+ * 
+ * @since 0.0.3
  */
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));

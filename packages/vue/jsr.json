@@ -2,6 +2,6 @@
   "$schema": "https://jsr.io/schema/config-file.v1.json",
   "name": "@robonen/vue",
   "license": "Apache-2.0",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "exports": "./src/index.ts"
 }

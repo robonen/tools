@@ -72,7 +72,7 @@ describe('useContextFactory', () => {
 
     const childComponent = mount(Child, {
       global: {
-        plugins: [app => context.provide('test', app)],
+        plugins: [app => context.appProvide(app)('test')],
       },
     });
 

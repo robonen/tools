@@ -51,15 +51,6 @@ importers:
         specifier: ^1.6.3
         version: 1.6.3(@algolia/client-search@5.20.0)(@types/node@22.13.1)(postcss@8.5.1)(search-insights@2.13.0)(typescript@5.4.4)
 
-  apps/vhs:
-    devDependencies:
-      '@robonen/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      '@types/bun':
-        specifier: ^1.2.2
-        version: 1.2.2
-
   packages/platform:
     devDependencies:
       '@robonen/tsconfig':
@@ -1817,9 +1808,6 @@ packages:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
 
-  '@types/bun@1.2.2':
-    resolution: {integrity: sha512-tr74gdku+AEDN5ergNiBnplr7hpDp3V1h7fqI2GcR/rsUaM39jpSeKH0TFibRvU0KwniRx5POgaYnaXbk0hU+w==}
-
   '@types/bunyan@1.8.9':
     resolution: {integrity: sha512-ZqS9JGpBxVOvsawzmVt30sP++gSQMTejCkIAQ3VdadOcRE8izTyW66hufvwLeH+YEGP6Js2AW7Gz+RMyvrEbmw==}
 
@@ -1897,9 +1885,6 @@ packages:
 
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
-
-  '@types/ws@8.5.12':
-    resolution: {integrity: sha512-3tPRkv1EtkDpzlgyKyI8pGsGZAGPEaXeu0DOj5DI25Ja91bdAYddYHbADRYVrZMRbfW+1l5YwXVDKohDJNQxkQ==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -2233,9 +2218,6 @@ packages:
 
   builtins@5.1.0:
     resolution: {integrity: sha512-SW9lzGTLvWTP1AY8xeAMZimqDrIaSdLQUcVr9DMef51niJ022Ri87SwRRKYm4A6iHfkPaiVUu/Duw2Wc4J7kKg==}
-
-  bun-types@1.2.2:
-    resolution: {integrity: sha512-RCbMH5elr9gjgDGDhkTTugA21XtJAy/9jkKe/G3WR2q17VPGhcquf9Sir6uay9iW+7P/BV0CAHA1XlHXMAVKHg==}
 
   bunyan@1.8.15:
     resolution: {integrity: sha512-0tECWShh6wUysgucJcBAoYegf3JJoZWibxdqhTm7OHPeT42qdjkZ29QCMcKwbgU1kiH+auSIasNRXMLWXafXig==}
@@ -7314,10 +7296,6 @@ snapshots:
 
   '@trysound/sax@0.2.0': {}
 
-  '@types/bun@1.2.2':
-    dependencies:
-      bun-types: 1.2.2
-
   '@types/bunyan@1.8.9':
     dependencies:
       '@types/node': 22.13.1
@@ -7391,10 +7369,6 @@ snapshots:
   '@types/uuid@9.0.8': {}
 
   '@types/web-bluetooth@0.0.20': {}
-
-  '@types/ws@8.5.12':
-    dependencies:
-      '@types/node': 22.13.1
 
   '@types/yauzl@2.10.3':
     dependencies:
@@ -7796,11 +7770,6 @@ snapshots:
   builtins@5.1.0:
     dependencies:
       semver: 7.7.0
-
-  bun-types@1.2.2:
-    dependencies:
-      '@types/node': 22.13.1
-      '@types/ws': 8.5.12
 
   bunyan@1.8.15:
     optionalDependencies:

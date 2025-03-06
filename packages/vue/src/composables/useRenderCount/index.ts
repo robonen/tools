@@ -1,6 +1,7 @@
 import { onMounted, onUpdated, readonly, type ComponentInternalInstance } from 'vue';
 import { useCounter } from '../useCounter';
 import { getLifeCycleTarger } from '../..';
+import { SyncMutex } from '@robonen/stdlib';
 
 /**
  * @name useRenderCount
@@ -19,11 +20,22 @@ import { getLifeCycleTarger } from '../..';
  * @since 0.0.1
  */
 export function useRenderCount(instance?: ComponentInternalInstance) {
+    const mutex = new SyncMutex();
     const { count, increment } = useCounter(0);
     const target = getLifeCycleTarger(instance);
 
-    onMounted(increment, target);
-    onUpdated(increment, target);
+    const incrementEffect = () => {
+        if (mutex.isLocked) {
+            mutex.unlock();
+            return;
+        }
+
+        mutex.lock();
+        increment();
+    };
+
+    onMounted(incrementEffect, target);
+    onUpdated(incrementEffect, target);
 
     return readonly(count);
 }

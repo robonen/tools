@@ -18,7 +18,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/platform"
   },
-  "packageManager": "pnpm@9.15.6",
+  "packageManager": "pnpm@10.10.0",
   "engines": {
     "node": ">=22.14.0"
   },

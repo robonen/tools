@@ -21,7 +21,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "@types/node": "^22.15.3",
+    "@types/node": "^22.15.15",
     "citty": "^0.1.6",
     "jiti": "^2.4.2",
     "pathe": "^2.0.3",

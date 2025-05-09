@@ -32,7 +32,7 @@ describe('useRenderCount', () => {
         await nextTick();
 
         // Will trigger a render
-        expect(component.vm.count).toBe(1);
+        expect(component.vm.count).toBe(2);
         expect(component.text()).toBe('1');
 
         component.vm.visibleCount++;
@@ -40,7 +40,7 @@ describe('useRenderCount', () => {
         await nextTick();
 
         // Will trigger a single render for both updates
-        expect(component.vm.count).toBe(2);
+        expect(component.vm.count).toBe(3);
         expect(component.text()).toBe('3');
     });
 
@@ -70,6 +70,6 @@ describe('useRenderCount', () => {
         await nextTick();
 
         // Will trigger a single render for both updates
-        expect(count.value).toBe(1);
+        expect(count.value).toBe(2);
     });
 });

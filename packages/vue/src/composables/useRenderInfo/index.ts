@@ -22,12 +22,12 @@ import { getLifeCycleTarger } from '../..';
 export function useRenderInfo(instance?: ComponentInternalInstance) {
     const target = getLifeCycleTarger(instance);
     const duration = ref(0);
-    let startTime = 0;
+    let renderStartTime = 0;
 
-    const startMark = () => startTime = performance.now();
+    const startMark = () => renderStartTime = performance.now();
     const endMark = () => {
-        duration.value = Math.max(performance.now() - startTime, 0);
-        startTime = 0;
+        duration.value = Math.max(performance.now() - renderStartTime, 0);
+        renderStartTime = 0;
     };
 
     onBeforeMount(startMark, target);

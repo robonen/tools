@@ -1,6 +1,6 @@
 {
   "name": "@robonen/stdlib",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "Apache-2.0",
   "description": "A collection of tools, utilities, and helpers for TypeScript",
   "keywords": [

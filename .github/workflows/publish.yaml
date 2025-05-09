@@ -61,7 +61,7 @@ jobs:
               echo "Version changed for $PACKAGE_NAME: $NPM_VERSION → $CURRENT_VERSION"
               echo "Publishing $PACKAGE_NAME@$CURRENT_VERSION"
               cd $PACKAGE_DIR
-              npm publish --access public
+              pnpm publish --access public --no-git-checks
               cd -
             else
               echo "No version change detected for $PACKAGE_NAME"

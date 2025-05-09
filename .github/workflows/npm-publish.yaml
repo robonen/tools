@@ -1,0 +1,68 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: 22.x
+
+jobs:
+  check-and-publish:
+    name: Check version changes and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm all:build
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: packages/*/package.json
+
+      - name: Check for version changes and publish
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            PACKAGE_DIR=$(dirname $file)
+            echo "Checking $PACKAGE_DIR for version changes..."
+            
+            # Get the latest published version from npm
+            PACKAGE_NAME=$(node -p "require('./$file').name")
+            CURRENT_VERSION=$(node -p "require('./$file').version")
+            
+            # Check if package exists on npm
+            NPM_VERSION=$(npm view $PACKAGE_NAME version 2>/dev/null || echo "0.0.0")
+            
+            # Compare versions
+            if [ "$CURRENT_VERSION" != "$NPM_VERSION" ]; then
+              echo "Version changed for $PACKAGE_NAME: $NPM_VERSION → $CURRENT_VERSION"
+              echo "Publishing $PACKAGE_NAME@$CURRENT_VERSION"
+              cd $PACKAGE_DIR
+              npm publish --access public
+              cd -
+            else
+              echo "No version change detected for $PACKAGE_NAME"
+            fi
+          done

@@ -49,9 +49,16 @@ jobs:
             PACKAGE_DIR=$(dirname $file)
             echo "Checking $PACKAGE_DIR for version changes..."
             
-            # Get the latest published version from npm
+            # Get package details
             PACKAGE_NAME=$(node -p "require('./$file').name")
             CURRENT_VERSION=$(node -p "require('./$file').version")
+            IS_PRIVATE=$(node -p "require('./$file').private || false")
+            
+            # Skip private packages
+            if [ "$IS_PRIVATE" == "true" ]; then
+              echo "Skipping private package $PACKAGE_NAME"
+              continue
+            fi
             
             # Check if package exists on npm
             NPM_VERSION=$(npm view $PACKAGE_NAME version 2>/dev/null || echo "0.0.0")

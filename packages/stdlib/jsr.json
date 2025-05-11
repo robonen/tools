@@ -1,6 +1,6 @@
 {
     "$schema": "https://jsr.io/schema/config-file.v1.json",
     "name": "@robonen/stdlib",
-    "version": "0.0.4",
+    "version": "0.0.7",
     "exports": "./src/index.ts"
 }

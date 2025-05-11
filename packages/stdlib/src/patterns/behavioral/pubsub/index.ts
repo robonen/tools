@@ -1,7 +1,8 @@
 import type { AnyFunction } from '../../../types';
 
 export type Subscriber = AnyFunction;
-export type EventsRecord = Record<string | symbol, Subscriber>;
+
+export type EventHandlerMap = Record<PropertyKey, Subscriber>;
 
 /**
  * @name PubSub
@@ -10,9 +11,9 @@ export type EventsRecord = Record<string | symbol, Subscriber>;
  *
  * @since 0.0.2
  * 
- * @template {EventsRecord} Events
+ * @template Events - Event map where all values are function types
  */
-export class PubSub<Events extends EventsRecord> {
+export class PubSub<Events extends EventHandlerMap> {
   /**
    * Events map
    * 

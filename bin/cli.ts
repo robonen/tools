@@ -1,16 +1,55 @@
+#!/usr/bin/env node
+
 import { mkdir, writeFile } from 'node:fs/promises';
 import { defineCommand, runMain } from 'citty';
-import { resolve } from 'pathe';
+import { resolve } from 'node:path';
 import { splitByCase } from 'scule';
 
-const PACKAGE_MANAGER = 'pnpm@9.11.0';
-const NODE_VERSION = '>=20.17.0';
-const VITE_VERSION = '^5.4.8';
-const VITE_DTS_VERSION = '^4.2.2';
-const PATHE_VERSION = '^1.1.2'
+async function getLatestPackageVersion(packageName: string) {
+  try {
+    const response = await fetch(`https://registry.npmjs.org/${packageName}`);
+    const data = await response.json();
+    
+    if (!response.ok) {
+      console.warn(`Failed to fetch latest version for ${packageName}, using fallback`);
+      return null;
+    }
+    
+    const latestVersion = data['dist-tags']?.latest as string | undefined;
+
+    if (!latestVersion)
+        return null;
+
+    return {
+      version: latestVersion,
+      versionRange: `^${latestVersion}`,
+    };
+  } catch (error) {
+    console.warn(`Error fetching version for ${packageName}: ${error.message}`);
+    return null;
+  }
+}
+
+const PACKAGE_MANAGER_DEFAULT = 'pnpm@10.10.0';
+const NODE_VERSION = '>=22.15.0';
+const VITE_VERSION_DEFAULT = '^5.4.8';
+const VITE_DTS_VERSION_DEFAULT = '^4.2.2';
+const PATHE_VERSION_DEFAULT = '^1.1.2';
 const DEFAULT_DIR = 'packages';
 
-const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
+const generatePackageJson = async (name: string, path: string, hasVite: boolean) => {
+    const [
+        packageManagerVersion,
+        viteVersion,
+        viteDtsVersion,
+        patheVersion,
+    ] = await Promise.all([
+      getLatestPackageVersion('pnpm').then(v => v?.version || PACKAGE_MANAGER_DEFAULT),
+      hasVite ? getLatestPackageVersion('vite').then(v => v?.versionRange || VITE_VERSION_DEFAULT) : VITE_VERSION_DEFAULT,
+      hasVite ? getLatestPackageVersion('vite-plugin-dts').then(v => v?.versionRange || VITE_DTS_VERSION_DEFAULT) : VITE_DTS_VERSION_DEFAULT,
+      hasVite ? getLatestPackageVersion('pathe').then(v => v?.versionRange || PATHE_VERSION_DEFAULT) : PATHE_VERSION_DEFAULT,
+    ]);
+
     const data = {
         name,
         private: true,
@@ -24,7 +63,7 @@ const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
             url: 'git+https://github.com/robonen/tools.git',
             directory: path,
         },
-        packageManager: PACKAGE_MANAGER,
+        packageManager: `pnpm@${packageManagerVersion}`,
         engines: {
             node: NODE_VERSION,
         },
@@ -51,9 +90,9 @@ const generatePackageJson = (name: string, path: string, hasVite: boolean) => {
         devDependencies: {
             '@robonen/tsconfig': 'workspace:*',
             ...(hasVite && {
-              vite: VITE_VERSION,
-              'vite-plugin-dts': VITE_DTS_VERSION,
-               pathe: PATHE_VERSION,
+              vite: viteVersion,
+              'vite-plugin-dts': viteDtsVersion,
+               pathe: patheVersion,
             }),
         },
     };
@@ -132,14 +171,15 @@ const createCommand = defineCommand({
 
         await mkdir(resolvedPath, { recursive: true });
         
-        writeFile(`${resolvedPath}/package.json`, generatePackageJson(args.name, path, hasVite));
-        writeFile(`${resolvedPath}/jsr.json`, generateJsrJson(args.name));
-        writeFile(`${resolvedPath}/tsconfig.json`, generateTsConfig());
-        writeFile(`${resolvedPath}/README.md`, generateReadme(args.name));
+        const packageJson = await generatePackageJson(args.name, path, hasVite);
+        await writeFile(`${resolvedPath}/package.json`, packageJson);
+        await writeFile(`${resolvedPath}/jsr.json`, generateJsrJson(args.name));
+        await writeFile(`${resolvedPath}/tsconfig.json`, generateTsConfig());
+        await writeFile(`${resolvedPath}/README.md`, generateReadme(args.name));
 
         if (hasVite) {
-            mkdir(`${resolvedPath}/src`, { recursive: true });
-            writeFile(`${resolvedPath}/vite.config.ts`, generateViteConfig());
+            await mkdir(`${resolvedPath}/src`, { recursive: true });
+            await writeFile(`${resolvedPath}/vite.config.ts`, generateViteConfig());
         }
 
         console.log(`Project created successfully`);

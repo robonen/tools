@@ -1,6 +1,7 @@
 {
   "name": "tools",
   "private": true,
+  "types": "module",
   "version": "0.0.1",
   "license": "UNLICENSED",
   "description": "Set of useful tools for web development",
@@ -24,14 +25,13 @@
     "@types/node": "^22.15.17",
     "citty": "^0.1.6",
     "jiti": "^2.4.2",
-    "pathe": "^2.0.3",
     "scule": "^1.3.0",
     "vitepress": "^1.6.3"
   },
   "scripts": {
     "all:build": "pnpm -r build",
     "all:test": "pnpm -r test",
-    "create": "jiti ./cli.ts",
+    "create": "jiti ./bin/cli.ts",
     "docs:dev": "vitepress dev .",
     "docs:build": "vitepress build .",
     "docs:preview": "vitepress preview ."

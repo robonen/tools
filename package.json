@@ -1,7 +1,6 @@
 {
   "name": "tools",
   "private": true,
-  "types": "module",
   "version": "0.0.1",
   "license": "UNLICENSED",
   "description": "Set of useful tools for web development",
@@ -16,7 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/robonen/tools.git"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "engines": {
     "node": ">=22.15.0"
   },

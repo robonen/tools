@@ -69,14 +69,11 @@ const generatePackageJson = async (name: string, path: string, hasVite: boolean)
         },
         type: 'module',
         files: ['dist'],
-        main: './dist/index.umd.js',
-        module: './dist/index.js',
-        types: './dist/index.d.ts',
         exports: {
             '.': {
+                types: './dist/index.d.ts',
                 import: './dist/index.js',
                 require: './dist/index.umd.js',
-                types: './dist/index.d.ts',
             },
         },
         scripts: {

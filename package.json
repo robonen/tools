@@ -25,14 +25,14 @@
     "citty": "^0.1.6",
     "jiti": "^2.4.2",
     "scule": "^1.3.0",
-    "vitepress": "^1.6.3"
+    "jsdom": "catalog:",
+    "vitest": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:"
   },
   "scripts": {
-    "all:build": "pnpm -r build",
-    "all:test": "pnpm -r test",
-    "create": "jiti ./bin/cli.ts",
-    "docs:dev": "vitepress dev .",
-    "docs:build": "vitepress build .",
-    "docs:preview": "vitepress preview ."
+    "build": "pnpm -r build",
+    "test": "vitest",
+    "create": "jiti ./bin/cli.ts"
   }
 }

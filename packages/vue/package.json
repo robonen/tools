@@ -24,14 +24,11 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "scripts": {
@@ -44,9 +41,7 @@
     "@robonen/stdlib": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@vue/test-utils": "catalog:",
-    "jsdom": "catalog:",
-    "unbuild": "catalog:",
-    "vitest": "catalog:"
+    "unbuild": "catalog:"
   },
   "dependencies": {
     "vue": "catalog:"

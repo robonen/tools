@@ -26,14 +26,11 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     }
   },
   "scripts": {
@@ -43,9 +40,7 @@
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "@vitest/coverage-v8": "catalog:",
     "pathe": "catalog:",
-    "unbuild": "catalog:",
-    "vitest": "catalog:"
+    "unbuild": "catalog:"
   }
 }

@@ -28,14 +28,14 @@
   ],
   "exports": {
     "./browsers": {
+      "types": "./dist/browsers.d.ts",
       "import": "./dist/browsers.mjs",
-      "require": "./dist/browsers.cjs",
-      "types": "./dist/browsers.d.ts"
+      "require": "./dist/browsers.cjs"
     },
     "./multi": {
+      "types": "./dist/multi.d.ts",
       "import": "./dist/multi.mjs",
-      "require": "./dist/multi.cjs",
-      "types": "./dist/multi.d.ts"
+      "require": "./dist/multi.cjs"
     }
   },
   "scripts": {
@@ -45,8 +45,6 @@
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "jsdom": "catalog:",
-    "unbuild": "catalog:",
-    "vitest": "catalog:"
+    "unbuild": "catalog:"
   }
 }

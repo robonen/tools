@@ -1,5 +1,8 @@
 packages:
-  - packages/*
+  - configs/*
+  - core/*
+  - infra/*
+  - web/*
 
 catalog:
   '@vitest/coverage-v8': ^3.1.3

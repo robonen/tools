@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { mkdir, writeFile } from 'node:fs/promises';
 import { defineCommand, runMain } from 'citty';
 import { resolve } from 'node:path';

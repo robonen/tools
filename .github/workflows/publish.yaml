@@ -34,29 +34,31 @@ jobs:
       - name: Build & Test
         run: pnpm build && pnpm test
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v46
-        with:
-          files: packages/*/package.json
-
       - name: Check for version changes and publish
-        if: steps.changed-files.outputs.any_changed == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          # Find all package.json files (excluding node_modules)
+          PACKAGE_FILES=$(find . -path "*/package.json" -not -path "*/node_modules/*")
+          
+          for file in $PACKAGE_FILES; do
             PACKAGE_DIR=$(dirname $file)
             echo "Checking $PACKAGE_DIR for version changes..."
             
             # Get package details
-            PACKAGE_NAME=$(node -p "require('./$file').name")
-            CURRENT_VERSION=$(node -p "require('./$file').version")
-            IS_PRIVATE=$(node -p "require('./$file').private || false")
+            PACKAGE_NAME=$(node -p "require('$file').name")
+            CURRENT_VERSION=$(node -p "require('$file').version")
+            IS_PRIVATE=$(node -p "require('$file').private || false")
             
             # Skip private packages
             if [ "$IS_PRIVATE" == "true" ]; then
               echo "Skipping private package $PACKAGE_NAME"
+              continue
+            fi
+            
+            # Skip root package
+            if [ "$PACKAGE_DIR" == "." ]; then
+              echo "Skipping root package"
               continue
             fi
             

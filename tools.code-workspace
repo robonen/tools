@@ -4,14 +4,19 @@
 			"path": "."
 		},
 		{
-			"path": "packages/platform"
-		},
-
-		{
-			"path": "packages/stdlib"
+			"path": "configs/tsconfig"
 		},
 		{
-			"path": "packages/vue"
+			"path": "core/platform"
+		},
+		{
+			"path": "core/stdlib"
+		},
+		{
+			"path": "infra/renovate"
+		},
+		{
+			"path": "web/vue"
 		}
 	]
 }

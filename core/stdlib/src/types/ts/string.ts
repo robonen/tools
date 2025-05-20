@@ -1,4 +1,11 @@
 /**
+ * Stringable type
+ */
+export interface Stringable {
+  toString(): string;
+}
+
+/**
  * Trim leading and trailing whitespace from `S`
  */
 export type Trim<S extends string> = S extends ` ${infer R}` ? Trim<R> : S extends `${infer L} ` ? Trim<L> : S;

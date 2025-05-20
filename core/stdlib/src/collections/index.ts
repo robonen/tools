@@ -1,1 +1,1 @@
-export * from './getByPath';
+export * from './get';

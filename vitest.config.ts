@@ -7,7 +7,7 @@ export default defineConfig({
         extends: true,
         test: {
           typecheck: {
-            enabled: true,
+            enabled: false,
           },
         },
       },

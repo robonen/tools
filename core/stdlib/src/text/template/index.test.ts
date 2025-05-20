@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { templateObject } from '.';
 
-describe.todo('templateObject', () => {
+describe.skip('templateObject', () => {
   it('replace template placeholders with corresponding values from args', () => {
     const template = 'Hello, {names.0}!';
     const args = { names: ['John'] };

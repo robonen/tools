@@ -2,14 +2,17 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    workspace: [
+    projects: [
       {
-        extends: true, 
-        test: { 
-          environment: 'jsdom', 
-        }, 
-      }, 
+        extends: true,
+        test: {
+          typecheck: {
+            enabled: false,
+          },
+        },
+      },
     ],
+    environment: 'jsdom',
     coverage: {
       provider: 'v8',
       include: ['core/*', 'web/*'],

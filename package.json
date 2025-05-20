@@ -32,7 +32,8 @@
   },
   "scripts": {
     "build": "pnpm -r build",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
     "create": "jiti ./bin/cli.ts"
   }
 }

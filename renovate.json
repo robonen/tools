@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
-        "local>robonen/tools//packages/renovate/default"
+        "local>robonen/tools//infra/renovate/default"
     ]
 }

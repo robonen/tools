@@ -18,7 +18,7 @@
   },
   "packageManager": "pnpm@10.11.0",
   "engines": {
-    "node": ">=22.15.1"
+    "node": ">=22.16.0"
   },
   "files": [
     "default.json"
@@ -27,6 +27,6 @@
     "test": "renovate-config-validator ./default.json"
   },
   "devDependencies": {
-    "renovate": "^40.14.6"
+    "renovate": "^40.26.2"
   }
 }

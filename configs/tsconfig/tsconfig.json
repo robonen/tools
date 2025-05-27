@@ -13,6 +13,7 @@
         "skipLibCheck": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
+        "allowImportingTsExtensions": true,
         "allowJs": true,
         "resolveJsonModule": true,
         "moduleDetection": "force",

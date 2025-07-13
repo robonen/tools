@@ -16,7 +16,7 @@ export interface UseAsyncStateReturnBase<Data, Params extends any[], Shallow ext
   isLoading: Ref<boolean>;
   isReady: Ref<boolean>;
   error: Ref<unknown | null>;
-  execute: (delay: number, ...params: Params) => Promise<Data>;
+  execute: (delay?: number, ...params: Params) => Promise<Data>;
   executeImmediately: (...params: Params) => Promise<Data>;
 }
 
@@ -34,21 +34,31 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
   initialState: Data,
   options?: UseAsyncStateOptions<Shallow, Data>,
 ): UseAsyncStateReturn<Data, Params, Shallow> {
-  const state = options?.shallow ? shallowRef(initialState) : ref(initialState);
+  const {
+    delay = 0,
+    shallow = true,
+    immediate = true,
+    resetOnExecute = false,
+    throwError = false,
+    onError,
+    onSuccess,
+  } = options ?? {};
+
+  const state = shallow ? shallowRef(initialState) : ref(initialState);
   const error = ref<unknown | null>(null);
   const isLoading = ref(false);
   const isReady = ref(false);
 
-  const execute = async (delay = options?.delay ?? 0, ...params: any[]) => {
-    if (options?.resetOnExecute)
+  const execute = async (actualDelay = delay, ...params: any[]) => {
+    if (resetOnExecute)
       state.value = initialState;
 
     isLoading.value = true;
     isReady.value = false;
     error.value = null;
 
-    if (delay > 0)
-      await sleep(delay);
+    if (actualDelay > 0)
+      await sleep(actualDelay);
 
     const promise = isFunction(maybePromise) ? maybePromise(...params as Params) : maybePromise;
 
@@ -56,14 +66,14 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
       const data = await promise;
       state.value = data;
       isReady.value = true;
-      options?.onSuccess?.(data);
+      onSuccess?.(data);
     }
     catch (e: unknown) {
       error.value = e;
-      options?.onError?.(e);
+      onError?.(e);
 
-      if (options?.throwError)
-        throw error;
+      if (throwError)
+        throw e;
     }
     finally {
       isLoading.value = false;
@@ -76,7 +86,7 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
     return execute(0, ...params);
   };
 
-  if (options?.immediate)
+  if (immediate)
     execute();
 
   const shell = {

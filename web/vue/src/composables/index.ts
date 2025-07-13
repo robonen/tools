@@ -2,6 +2,7 @@ export * from './tryOnBeforeMount';
 export * from './tryOnMounted';
 export * from './tryOnScopeDispose';
 export * from './useAppSharedState';
+export * from './useAsyncState';
 export * from './useCached';
 export * from './useClamp';
 export * from './useContextFactory';

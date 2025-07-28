@@ -38,6 +38,7 @@ const RetryEarlyExit = Symbol('RetryEarlyExit');
  *    .then(response => response.json())
  * }, { times: 3, delay: 1000 });
  * 
+ * @since 0.0.8
  */
 export async function retry<Return>(
   fn: RetryFunction<Return>,

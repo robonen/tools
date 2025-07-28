@@ -1,8 +1,21 @@
+import { tryIt } from '../tryIt';
+import { sleep } from '../sleep';
+import { isFunction } from '../../types';
+
 export interface RetryOptions {
   times?: number;
-  delay?: number;
-  backoff: (options: RetryOptions & { count: number }) => number;
+  delay?: number | ((count: number) => number);
+  shouldRetry?: (error: Error, count: number) => boolean;
 }
+
+export type RetryFunction<Return> = (
+  args: { 
+    count: number;
+    stop: (error: any) => void;
+  },
+) => Promise<Return>;
+
+const RetryEarlyExit = Symbol('RetryEarlyExit');
 
 /**
  * @name retry
@@ -27,12 +40,48 @@ export interface RetryOptions {
  * 
  */
 export async function retry<Return>(
-  fn: () => Promise<Return>,
-  options: RetryOptions
-) {
+  fn: RetryFunction<Return>,
+  options: RetryOptions = {},
+): Promise<Return> {
   const {
-    times = 3,
+    times = 2,
+    delay = 0,
+    shouldRetry,
   } = options;
 
-  let count = 0;
+  let count = 1;
+  let lastError: Error = new Error('Retry failed');
+
+  while (count <= times) {
+    const metadata = {
+      count,
+      stop: (error?: any) => {
+        throw { [RetryEarlyExit]: error };
+      },
+    };
+
+    const { error, data } = await tryIt(fn)(metadata);
+
+    if (!error)
+      return data;
+
+    if (RetryEarlyExit in error)
+      throw error[RetryEarlyExit];
+
+    if (shouldRetry && !shouldRetry(error, count))
+      throw error;
+
+    lastError = error;
+    count++;
+
+    // Don't delay after the last attempt
+    if (count <= times) {
+      const delayMs = isFunction(delay) ? delay(count) : delay;
+      
+      if (delayMs > 0)
+        await sleep(delayMs);
+    }
+  }
+
+  throw lastError;
 }

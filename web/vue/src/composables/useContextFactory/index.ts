@@ -1,4 +1,4 @@
-import { inject, provide, type InjectionKey, type App } from 'vue';
+import { inject as vueInject, provide as vueProvide, type InjectionKey, type App } from 'vue';
 import { VueToolsError } from '../..';
 
 /**
@@ -34,8 +34,8 @@ import { VueToolsError } from '../..';
 export function useContextFactory<ContextValue>(name: string) {
     const injectionKey: InjectionKey<ContextValue> = Symbol(name);
 
-    const injectContext = <Fallback extends ContextValue = ContextValue>(fallback?: Fallback) => {
-        const context = inject(injectionKey, fallback);
+    const inject = <Fallback extends ContextValue = ContextValue>(fallback?: Fallback) => {
+        const context = vueInject(injectionKey, fallback);
 
         if (context !== undefined)
             return context;
@@ -43,8 +43,8 @@ export function useContextFactory<ContextValue>(name: string) {
         throw new VueToolsError(`useContextFactory: '${name}' context is not provided`);
     };
 
-    const provideContext = (context: ContextValue) => {
-        provide(injectionKey, context);
+    const provide = (context: ContextValue) => {
+        vueProvide(injectionKey, context);
         return context;
     };
 
@@ -54,8 +54,8 @@ export function useContextFactory<ContextValue>(name: string) {
     };
 
     return {
-        inject: injectContext,
-        provide: provideContext,
+        inject,
+        provide,
         appProvide,
         key: injectionKey,
     }

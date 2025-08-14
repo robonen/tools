@@ -18,11 +18,11 @@ export type UnRefElementReturn<T extends MaybeElement = MaybeElement> = T extend
  * @returns {UnRefElementReturn<El>} - The unwrapped element or undefined.
  *
  * @example
- * const element = useTemplateRef('element');
+ * const element = useTemplateRef<HTMLElement>('element');
  * const result = unrefElement(element); // result is the element instance
  *
  * @example
- * const component = useTemplateRef('component');
+ * const component = useTemplateRef<Component>('component');
  * const result = unrefElement(component); // result is the component instance
  * 
  * @since 0.0.11

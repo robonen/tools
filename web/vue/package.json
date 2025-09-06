@@ -16,7 +16,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "./packages/vue"
   },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.15.1",
   "engines": {
     "node": ">=22.18.0"
   },
@@ -37,13 +37,13 @@
     "build": "unbuild"
   },
   "devDependencies": {
-    "@robonen/platform": "workspace:*",
-    "@robonen/stdlib": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@vue/test-utils": "catalog:",
     "unbuild": "catalog:"
   },
   "dependencies": {
+    "@robonen/platform": "workspace:*",
+    "@robonen/stdlib": "workspace:*",
     "vue": "catalog:"
   }
 }

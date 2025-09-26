@@ -18,9 +18,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/stdlib"
   },
-  "packageManager": "pnpm@10.16.1",
+  "packageManager": "pnpm@10.17.1",
   "engines": {
-    "node": ">=22.19.0"
+    "node": ">=22.20.0"
   },
   "type": "module",
   "files": [

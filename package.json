@@ -15,13 +15,13 @@
     "type": "git",
     "url": "git+https://github.com/robonen/tools.git"
   },
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.20.0",
   "engines": {
-    "node": ">=22.21.0"
+    "node": ">=22.21.1"
   },
   "type": "module",
   "devDependencies": {
-    "@types/node": "^22.18.12",
+    "@types/node": "^22.18.13",
     "@vitest/coverage-v8": "catalog:",
     "@vitest/ui": "catalog:",
     "citty": "^0.1.6",

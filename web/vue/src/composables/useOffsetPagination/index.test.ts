@@ -69,7 +69,7 @@ describe('useOffsetPagination', () => {
     await nextTick();
     
     expect(onPageChange).toHaveBeenCalledTimes(1);
-    expect(onPageChange).toHaveBeenCalledWith(expect.objectContaining({ currentPage: currentPage.value }));
+    expect(onPageChange.mock.calls[0]![0]).toHaveProperty('currentPage', currentPage.value);
   });
 
   it('call onPageSizeChange callback', async () => {
@@ -81,7 +81,7 @@ describe('useOffsetPagination', () => {
     await nextTick();
 
     expect(onPageSizeChange).toHaveBeenCalledTimes(1);
-    expect(onPageSizeChange).toHaveBeenCalledWith(expect.objectContaining({ currentPageSize: currentPageSize.value }));
+    expect(onPageSizeChange.mock.calls[0]![0]).toHaveProperty('currentPageSize', currentPageSize.value);
   });
 
   it('call onPageCountChange callback', async () => {
@@ -93,7 +93,7 @@ describe('useOffsetPagination', () => {
     await nextTick();
 
     expect(onTotalPagesChange).toHaveBeenCalledTimes(1);
-    expect(onTotalPagesChange).toHaveBeenCalledWith(expect.objectContaining({ totalPages: totalPages.value }));
+    expect(onTotalPagesChange.mock.calls[0]![0]).toHaveProperty('totalPages', totalPages.value);
   });
 
   it('handle complex reactive options', async () => {

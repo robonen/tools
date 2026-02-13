@@ -29,18 +29,17 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
   },
   "scripts": {
     "test": "vitest run",
     "dev": "vitest dev",
-    "build": "unbuild"
+    "build": "tsdown"
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "pathe": "catalog:",
-    "unbuild": "catalog:"
+    "tsdown": "catalog:"
   }
 }

@@ -1,51 +1,39 @@
 import { isRef, ref, toValue, type MaybeRefOrGetter, type MaybeRef, type Ref } from 'vue';
 
-// TODO: wip
-
-export interface UseToggleOptions<Enabled, Disabled> {
-    enabledValue?: MaybeRefOrGetter<Enabled>,
-    disabledValue?: MaybeRefOrGetter<Disabled>,
+export interface UseToggleOptions<Truthy, Falsy> {
+    truthyValue?: MaybeRefOrGetter<Truthy>,
+    falsyValue?: MaybeRefOrGetter<Falsy>,
 }
 
-// two overloads
-// 1. const [state, toggle] = useToggle(nonRefValue, options)
-// 2. const toggle = useToggle(refValue, options)
-// 3. const [state, toggle] = useToggle() // true, false by default
+export function useToggle<Truthy = true, Falsy = false>(
+    initialValue?: MaybeRef<Truthy | Falsy>,
+    options?: UseToggleOptions<Truthy, Falsy>,
+): { value: Ref<Truthy | Falsy>, toggle: (value?: Truthy | Falsy) => Truthy | Falsy };
 
-export function useToggle<V extends Enabled | Disabled, Enabled = true, Disabled = false>(
-    initialValue: Ref<V>,
-    options?: UseToggleOptions<Enabled, Disabled>,
-): (value?: V) => V;
-
-export function useToggle<V extends Enabled | Disabled, Enabled = true, Disabled = false>(
-    initialValue?: V,
-    options?: UseToggleOptions<Enabled, Disabled>,
-): [Ref<V>, (value?: V) => V];
-
-export function useToggle<V extends Enabled | Disabled, Enabled = true, Disabled = false>(
-    initialValue: MaybeRef<V> = false,
-    options: UseToggleOptions<Enabled, Disabled> = {},
+export function useToggle<Truthy = true, Falsy = false>(
+    initialValue: MaybeRef<Truthy | Falsy> = false as Truthy | Falsy,
+    options: UseToggleOptions<Truthy, Falsy> = {},
 ) {
     const {
-        enabledValue = false,
-        disabledValue = true,
+        truthyValue = true as Truthy,
+        falsyValue = false as Falsy,
     } = options;
 
-    const state = ref(initialValue) as Ref<V>;
+    const value = ref(initialValue) as Ref<Truthy | Falsy>;
 
-    const toggle = (value?: V) => {
-        if (arguments.length) {
-            state.value = value!;
-            return state.value;
+    const toggle = (newValue?: Truthy | Falsy) => {
+        if (newValue !== undefined) {
+            value.value = newValue;
+            return value.value;
         }
         
-        const enabled = toValue(enabledValue);
-        const disabled = toValue(disabledValue);
+        const truthy = toValue(truthyValue);
+        const falsy = toValue(falsyValue);
 
-        state.value = state.value === enabled ? disabled : enabled;
+        value.value = value.value === truthy ? falsy : truthy;
 
-        return state.value;
+        return value.value;
     };
 
-    return isRef(initialValue) ? toggle : [state, toggle];
+    return { value, toggle };
 }

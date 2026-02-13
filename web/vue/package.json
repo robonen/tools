@@ -16,7 +16,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "./packages/vue"
   },
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.29.3",
   "engines": {
     "node": ">=22.18.0"
   },
@@ -27,19 +27,19 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
   },
   "scripts": {
     "test": "vitest run",
     "dev": "vitest dev",
-    "build": "unbuild"
+    "build": "tsdown"
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
     "@vue/test-utils": "catalog:",
-    "unbuild": "catalog:"
+    "tsdown": "catalog:"
   },
   "dependencies": {
     "@robonen/platform": "workspace:*",

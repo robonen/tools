@@ -18,7 +18,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/platform"
   },
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.29.3",
   "engines": {
     "node": ">=22.18.0"
   },
@@ -29,22 +29,22 @@
   "exports": {
     "./browsers": {
       "types": "./dist/browsers.d.ts",
-      "import": "./dist/browsers.mjs",
+      "import": "./dist/browsers.js",
       "require": "./dist/browsers.cjs"
     },
     "./multi": {
       "types": "./dist/multi.d.ts",
-      "import": "./dist/multi.mjs",
+      "import": "./dist/multi.js",
       "require": "./dist/multi.cjs"
     }
   },
   "scripts": {
     "test": "vitest run",
     "dev": "vitest dev",
-    "build": "unbuild"
+    "build": "tsdown"
   },
   "devDependencies": {
     "@robonen/tsconfig": "workspace:*",
-    "unbuild": "catalog:"
+    "tsdown": "catalog:"
   }
 }

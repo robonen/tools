@@ -12,28 +12,25 @@ export class BaseStateMachine<
   Context,
   NodeConfig,
 > {
-  protected _current: States;
-  protected _context: Context;
-  protected _states: Record<string, NodeConfig>;
+  protected currentState: States;
+  protected readonly states: Record<string, NodeConfig>;
+
+  /** Machine context */
+  readonly context: Context;
 
   constructor(
     initial: States,
     states: Record<string, NodeConfig>,
     context: Context,
   ) {
-    this._current = initial;
-    this._context = context;
-    this._states = states;
+    this.currentState = initial;
+    this.context = context;
+    this.states = states;
   }
 
   /** Current state of the machine */
   get current(): States {
-    return this._current;
-  }
-
-  /** Machine context */
-  get context(): Context {
-    return this._context;
+    return this.currentState;
   }
 
   /**
@@ -42,6 +39,6 @@ export class BaseStateMachine<
    * @param state - State to check
    */
   matches(state: States): boolean {
-    return this._current === state;
+    return this.currentState === state;
   }
 }

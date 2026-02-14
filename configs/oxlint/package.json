@@ -1,6 +1,6 @@
 {
   "name": "@robonen/oxlint",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "Apache-2.0",
   "description": "Composable oxlint configuration presets",
   "keywords": [
@@ -40,6 +40,7 @@
   "devDependencies": {
     "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
     "oxlint": "catalog:",
     "tsdown": "catalog:"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@robonen/stdlib",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "Apache-2.0",
   "description": "A collection of tools, utilities, and helpers for TypeScript",
   "keywords": [
@@ -42,6 +42,7 @@
   "devDependencies": {
     "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
     "oxlint": "catalog:",
     "tsdown": "catalog:"
   }

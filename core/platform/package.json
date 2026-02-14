@@ -1,6 +1,6 @@
 {
   "name": "@robonen/platform",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "Apache-2.0",
   "description": "Platform dependent utilities for javascript development",
   "keywords": [
@@ -47,6 +47,7 @@
   "devDependencies": {
     "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
     "oxlint": "catalog:",
     "tsdown": "catalog:"
   }

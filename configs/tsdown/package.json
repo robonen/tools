@@ -1,0 +1,30 @@
+{
+  "name": "@robonen/tsdown",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Shared tsdown configuration for @robonen packages",
+  "keywords": [
+    "tsdown",
+    "config",
+    "build"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "configs/tsdown"
+  },
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=24.13.1"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@robonen/tsconfig": "workspace:*",
+    "tsdown": "catalog:"
+  }
+}

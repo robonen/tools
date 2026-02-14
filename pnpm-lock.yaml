@@ -68,6 +68,9 @@ importers:
       '@robonen/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@robonen/tsdown':
+        specifier: workspace:*
+        version: link:../tsdown
       oxlint:
         specifier: 'catalog:'
         version: 1.47.0
@@ -77,6 +80,15 @@ importers:
 
   configs/tsconfig: {}
 
+  configs/tsdown:
+    devDependencies:
+      '@robonen/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.12.9(typescript@5.8.3)
+
   core/platform:
     devDependencies:
       '@robonen/oxlint':
@@ -85,6 +97,9 @@ importers:
       '@robonen/tsconfig':
         specifier: workspace:*
         version: link:../../configs/tsconfig
+      '@robonen/tsdown':
+        specifier: workspace:*
+        version: link:../../configs/tsdown
       oxlint:
         specifier: 'catalog:'
         version: 1.47.0
@@ -100,6 +115,9 @@ importers:
       '@robonen/tsconfig':
         specifier: workspace:*
         version: link:../../configs/tsconfig
+      '@robonen/tsdown':
+        specifier: workspace:*
+        version: link:../../configs/tsdown
       oxlint:
         specifier: 'catalog:'
         version: 1.47.0
@@ -131,6 +149,9 @@ importers:
       '@robonen/tsconfig':
         specifier: workspace:*
         version: link:../../configs/tsconfig
+      '@robonen/tsdown':
+        specifier: workspace:*
+        version: link:../../configs/tsdown
       '@vue/test-utils':
         specifier: 'catalog:'
         version: 2.4.6

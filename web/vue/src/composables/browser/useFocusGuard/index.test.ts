@@ -17,7 +17,7 @@ const setupFocusGuard = (namespace?: string) => {
 const getFocusGuards = (namespace: string) =>
   document.querySelectorAll(`[data-${namespace}]`);
 
-describe('useFocusGuard', () => {
+describe(useFocusGuard, () => {
   let component: ReturnType<typeof setupFocusGuard>;
   const namespace = 'test-guard';
 
@@ -33,7 +33,7 @@ describe('useFocusGuard', () => {
     component = setupFocusGuard(namespace);
 
     const guards = getFocusGuards(namespace);
-    expect(guards.length).toBe(2);
+    expect(guards).toHaveLength(2);
 
     guards.forEach((guard) => {
       expect(guard.getAttribute('tabindex')).toBe('0');
@@ -46,7 +46,7 @@ describe('useFocusGuard', () => {
 
     component.unmount();
 
-    expect(getFocusGuards(namespace).length).toBe(0);
+    expect(getFocusGuards(namespace)).toHaveLength(0);
   });
 
   it('correctly manage multiple instances with the same namespace', () => {
@@ -54,16 +54,16 @@ describe('useFocusGuard', () => {
     const wrapper2 = setupFocusGuard(namespace);
 
     // Guards should not be duplicated
-    expect(getFocusGuards(namespace).length).toBe(2);
+    expect(getFocusGuards(namespace)).toHaveLength(2);
 
     wrapper1.unmount();
 
     // Second instance still keeps the guards
-    expect(getFocusGuards(namespace).length).toBe(2);
+    expect(getFocusGuards(namespace)).toHaveLength(2);
 
     wrapper2.unmount();
 
     // No guards left after all instances are unmounted
-    expect(getFocusGuards(namespace).length).toBe(0);
+    expect(getFocusGuards(namespace)).toHaveLength(0);
   });
 });

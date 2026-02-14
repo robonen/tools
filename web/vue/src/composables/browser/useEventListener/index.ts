@@ -1,4 +1,5 @@
-import { isArray, isString, noop, type Arrayable, type VoidFunction } from '@robonen/stdlib';
+import { isArray, isString, noop } from '@robonen/stdlib';
+import type { Arrayable, VoidFunction } from '@robonen/stdlib';
 import type { MaybeRefOrGetter } from 'vue';
 import { defaultWindow } from '@/types';
 
@@ -9,9 +10,7 @@ interface InferEventTarget<Events> {
   removeEventListener: (event: Events, listener?: any, options?: any) => any;
 }
 
-export interface GeneralEventListener<E = Event> {
-  (evt: E): void;
-}
+export type GeneralEventListener<E = Event> = (evt: E) => void;
 
 export type WindowEventName = keyof WindowEventMap;
 export type DocumentEventName = keyof DocumentEventMap;
@@ -84,7 +83,7 @@ export function useEventListener<Names extends string, EventType = Event>(
   event: Arrayable<Names>,
   listener: Arrayable<GeneralEventListener<EventType>>,
   options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>
-)
+): VoidFunction;
 
 /**
  * @name useEventListener
@@ -104,13 +103,13 @@ export function useEventListener(...args: any[]) {
   let target: MaybeRefOrGetter<EventTarget> | undefined;
   let events: Arrayable<string>;
   let listeners: Arrayable<Function>;
-  let options: MaybeRefOrGetter<boolean | AddEventListenerOptions> | undefined;
+  let _options: MaybeRefOrGetter<boolean | AddEventListenerOptions> | undefined;
 
   if (isString(args[0]) || isArray(args[0])) {
-    [events, listeners, options] = args;
+    [events, listeners, _options] = args;
     target = defaultWindow;
   } else {
-    [target, events, listeners, options] = args;
+    [target, events, listeners, _options] = args;
   }
 
   if (!target)
@@ -124,13 +123,16 @@ export function useEventListener(...args: any[]) {
 
   const cleanups: Function[] = [];
   
-  const cleanup = () => {
+  const _cleanup = () => {
     cleanups.forEach(fn => fn());
     cleanups.length = 0;
   }
 
-  const register = (el: any, event: string, listener: any, options: any) => {
+  const _register = (el: any, event: string, listener: any, options: any) => {
     el.addEventListener(event, listener, options);
     return () => el.removeEventListener(event, listener, options);
   }
+
+  void _cleanup;
+  void _register;
 }

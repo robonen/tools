@@ -1,4 +1,5 @@
-import { ref, shallowRef, watch, toValue, type Ref, type ShallowRef, type MaybeRefOrGetter, type UnwrapRef } from 'vue';
+import { ref, shallowRef, watch, toValue } from 'vue';
+import type { Ref, ShallowRef, MaybeRefOrGetter, UnwrapRef } from 'vue';
 import type { ConfigurableFlush } from '@/types';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 import { guessSerializer, shallowMerge } from '../useStorage';
@@ -100,7 +101,7 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
     writeDefaults = true,
     mergeDefaults = false,
     onReady,
-    onError = console.error,
+    onError = console.error, // eslint-disable-line no-console
   } = options;
 
   const defaults = toValue(initialValue);
@@ -113,8 +114,8 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
     try {
       const raw = await storage.getItem(key);
 
-      if (raw == null) {
-        if (writeDefaults && defaults != null) {
+      if (raw === undefined || raw === null) {
+        if (writeDefaults && defaults !== undefined && defaults !== null) {
           try {
             await storage.setItem(key, await serializer.write(defaults));
           } catch (e) {
@@ -142,7 +143,7 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
 
   async function write(value: T) {
     try {
-      if (value == null) {
+      if (value === undefined || value === null) {
         await storage.removeItem(key);
       } else {
         const raw = await serializer.write(value);
@@ -179,6 +180,7 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
 
   return {
     ...shell,
+    // eslint-disable-next-line unicorn/no-thenable
     then(onFulfilled, onRejected) {
       return readyPromise.then(onFulfilled, onRejected);
     },

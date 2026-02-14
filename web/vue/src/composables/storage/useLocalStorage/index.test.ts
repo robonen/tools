@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { nextTick } from 'vue';
 import { useLocalStorage } from '.';
 
-describe('useLocalStorage', () => {
+describe(useLocalStorage, () => {
   beforeEach(() => {
     localStorage.clear();
   });

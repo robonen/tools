@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { nextTick } from 'vue';
-import { useStorage, StorageSerializers, type StorageLike } from '.';
+import { useStorage, StorageSerializers } from '.';
+import type { StorageLike } from '.';
 
 function createMockStorage(): StorageLike & { store: Map<string, string> } {
   const store = new Map<string, string>();
@@ -13,7 +14,7 @@ function createMockStorage(): StorageLike & { store: Map<string, string> } {
   };
 }
 
-describe('useStorage', () => {
+describe(useStorage, () => {
   // --- Basic types ---
 
   it('stores and reads a string', async () => {
@@ -45,7 +46,7 @@ describe('useStorage', () => {
     const storage = createMockStorage();
     const state = useStorage<boolean>('test-bool', true, storage);
 
-    expect(state.value).toBe(true);
+    expect(state.value).toBeTruthy();
 
     state.value = false;
     await nextTick();

@@ -1,4 +1,4 @@
-export interface BitVector {
+export interface BitVectorLike {
   getBit(index: number): boolean;
   setBit(index: number): void;
   clearBit(index: number): void;
@@ -12,7 +12,7 @@ export interface BitVector {
  * 
  * @since 0.0.3
  */
-export class BitVector extends Uint8Array implements BitVector {
+export class BitVector extends Uint8Array implements BitVectorLike {
   constructor(size: number) {
     super(Math.ceil(size / 8));
   }

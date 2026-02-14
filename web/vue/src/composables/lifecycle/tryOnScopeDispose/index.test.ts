@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, effectScope, type PropType } from 'vue';
+import { defineComponent, effectScope } from 'vue';
+import type { PropType } from 'vue';
 import { tryOnScopeDispose } from '.';
 import { mount } from '@vue/test-utils';
 import type { VoidFunction } from '@robonen/stdlib';
@@ -17,12 +18,12 @@ const ComponentStub = defineComponent({
   template: '<div></div>',
 });
 
-describe('tryOnScopeDispose', () => {
+describe(tryOnScopeDispose, () => {
   it('returns false when the scope is not active', () => {
     const callback = vi.fn();
     const detectedScope = tryOnScopeDispose(callback);
 
-    expect(detectedScope).toBe(false);
+    expect(detectedScope).toBeFalsy();
     expect(callback).not.toHaveBeenCalled();
   });
   
@@ -35,7 +36,7 @@ describe('tryOnScopeDispose', () => {
       detectedScope = tryOnScopeDispose(callback);
     });
 
-    expect(detectedScope).toBe(true);
+    expect(detectedScope).toBeTruthy();
     expect(callback).not.toHaveBeenCalled();
 
     scope.stop();

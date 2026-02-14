@@ -2,14 +2,14 @@ import { describe, it, expect, vi } from 'vitest';
 import { nextTick, ref } from 'vue';
 import { useOffsetPagination } from '.';
 
-describe('useOffsetPagination', () => {
+describe(useOffsetPagination, () => {
   it('initialize with default values without options', () => {
     const { currentPage, currentPageSize, totalPages, isFirstPage } = useOffsetPagination({});
     
     expect(currentPage.value).toBe(1);
     expect(currentPageSize.value).toBe(10);
     expect(totalPages.value).toBe(Infinity);
-    expect(isFirstPage.value).toBe(true);
+    expect(isFirstPage.value).toBeTruthy();
   });
 
   it('calculate total pages correctly', () => {
@@ -51,14 +51,14 @@ describe('useOffsetPagination', () => {
     const { currentPage, isFirstPage, isLastPage } = useOffsetPagination({ total: 20, pageSize: 10 });
     
     expect(currentPage.value).toBe(1);
-    expect(isFirstPage.value).toBe(true);
-    expect(isLastPage.value).toBe(false);
+    expect(isFirstPage.value).toBeTruthy();
+    expect(isLastPage.value).toBeFalsy();
 
     currentPage.value = 2;
 
     expect(currentPage.value).toBe(2);
-    expect(isFirstPage.value).toBe(false);
-    expect(isLastPage.value).toBe(true);
+    expect(isFirstPage.value).toBeFalsy();
+    expect(isLastPage.value).toBeTruthy();
   });
 
   it('call onPageChange callback', async () => {

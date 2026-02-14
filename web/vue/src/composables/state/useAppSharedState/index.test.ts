@@ -2,7 +2,7 @@ import { describe, it, vi, expect } from 'vitest';
 import { ref, reactive } from 'vue';
 import { useAppSharedState } from '.';
 
-describe('useAppSharedState', () => {
+describe(useAppSharedState, () => {
   it('initialize state only once', () => {
     const stateFactory = (initValue?: number) => {
       const count = ref(initValue ?? 0);

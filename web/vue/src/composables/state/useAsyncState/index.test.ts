@@ -2,7 +2,7 @@ import { isShallow, nextTick, ref } from 'vue';
 import { it, expect, describe, vi, beforeEach, afterEach } from 'vitest';
 import { useAsyncState } from '.';
 
-describe('useAsyncState', () => {
+describe(useAsyncState, () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -18,15 +18,15 @@ describe('useAsyncState', () => {
     );
 
     expect(state.value).toBe('initial');
-    expect(isReady.value).toBe(false);
-    expect(isLoading.value).toBe(true);
+    expect(isReady.value).toBeFalsy();
+    expect(isLoading.value).toBeTruthy();
     expect(error.value).toBe(null);
 
     await nextTick();
 
     expect(state.value).toBe('data');
-    expect(isReady.value).toBe(true);
-    expect(isLoading.value).toBe(false);
+    expect(isReady.value).toBeTruthy();
+    expect(isLoading.value).toBeFalsy();
     expect(error.value).toBe(null);
   });
 
@@ -37,15 +37,15 @@ describe('useAsyncState', () => {
     );
 
     expect(state.value).toBe('initial');
-    expect(isReady.value).toBe(false);
-    expect(isLoading.value).toBe(true);
+    expect(isReady.value).toBeFalsy();
+    expect(isLoading.value).toBeTruthy();
     expect(error.value).toBe(null);
 
     await nextTick();
 
     expect(state.value).toBe('data');
-    expect(isReady.value).toBe(true);
-    expect(isLoading.value).toBe(false);
+    expect(isReady.value).toBeTruthy();
+    expect(isLoading.value).toBeFalsy();
     expect(error.value).toBe(null);
   });
 
@@ -56,15 +56,15 @@ describe('useAsyncState', () => {
     );
 
     expect(state.value).toBe('initial');
-    expect(isReady.value).toBe(false);
-    expect(isLoading.value).toBe(true);
+    expect(isReady.value).toBeFalsy();
+    expect(isLoading.value).toBeTruthy();
     expect(error.value).toBe(null);
 
     await nextTick();
 
     expect(state.value).toBe('initial');
-    expect(isReady.value).toBe(false);
-    expect(isLoading.value).toBe(false);
+    expect(isReady.value).toBeFalsy();
+    expect(isLoading.value).toBeFalsy();
     expect(error.value).toEqual(new Error('test-error'));
   });
 
@@ -131,14 +131,14 @@ describe('useAsyncState', () => {
     );
 
     const promise = execute();
-    expect(isLoading.value).toBe(true);
+    expect(isLoading.value).toBeTruthy();
 
     await vi.advanceTimersByTimeAsync(50);
-    expect(isLoading.value).toBe(true);
+    expect(isLoading.value).toBeTruthy();
 
     await vi.advanceTimersByTimeAsync(50);
     await promise;
-    expect(isLoading.value).toBe(false);
+    expect(isLoading.value).toBeFalsy();
   });
 
   it('is awaitable', async () => {
@@ -160,15 +160,15 @@ describe('useAsyncState', () => {
     executeImmediately();
 
     expect(state.value).toBe('initial');
-    expect(isLoading.value).toBe(true);
-    expect(isReady.value).toBe(false);
+    expect(isLoading.value).toBeTruthy();
+    expect(isReady.value).toBeFalsy();
     expect(error.value).toBe(null);
 
     await nextTick();
 
     expect(state.value).toBe('data');
-    expect(isReady.value).toBe(true);
-    expect(isLoading.value).toBe(false);
+    expect(isReady.value).toBeTruthy();
+    expect(isLoading.value).toBeFalsy();
     expect(error.value).toBe(null);
   });
 
@@ -193,7 +193,7 @@ describe('useAsyncState', () => {
     );
   
     expect(state.value.a).toBe(1);
-    expect(isShallow(state)).toBe(true);
+    expect(isShallow(state)).toBeTruthy();
   });
 
   it('uses ref when shallow is false', async () => {
@@ -204,6 +204,6 @@ describe('useAsyncState', () => {
     );
 
     expect(state.value.a).toBe(1);
-    expect(isShallow(state)).toBe(false);
+    expect(isShallow(state)).toBeFalsy();
   });
 });

@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { useLastChanged } from '.';
 import { timestamp } from '@robonen/stdlib';
 
-describe('useLastChanged', () => {
+describe(useLastChanged, () => {
   it('initialize with null if no initialValue is provided', () => {
     const source = ref(0);
     const lastChanged = useLastChanged(source);

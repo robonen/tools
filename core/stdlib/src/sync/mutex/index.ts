@@ -1,5 +1,3 @@
-import type { MaybePromise } from "../../types";
-
 /**
  * @name SyncMutex
  * @category Utils

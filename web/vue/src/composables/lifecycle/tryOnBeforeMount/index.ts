@@ -1,4 +1,5 @@
-import { onBeforeMount, nextTick, type ComponentInternalInstance } from 'vue';
+import { onBeforeMount, nextTick } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import { getLifeCycleTarger } from '@/utils';
 import type { VoidFunction } from '@robonen/stdlib';
 

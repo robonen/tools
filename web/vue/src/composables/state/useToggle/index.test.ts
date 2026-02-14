@@ -2,56 +2,56 @@ import { it, expect, describe } from 'vitest';
 import { ref } from 'vue';
 import { useToggle } from '.';
 
-describe('useToggle', () => {
+describe(useToggle, () => {
   it('initialize with false by default', () => {
     const { value } = useToggle();
-    expect(value.value).toBe(false);
+    expect(value.value).toBeFalsy();
   });
 
   it('initialize with the provided initial value', () => {
     const { value } = useToggle(true);
-    expect(value.value).toBe(true);
+    expect(value.value).toBeTruthy();
   });
 
   it('initialize with the provided initial value from a ref', () => {
     const { value } = useToggle(ref(true));
-    expect(value.value).toBe(true);
+    expect(value.value).toBeTruthy();
   });
 
   it('toggle from false to true', () => {
     const { value, toggle } = useToggle(false);
     toggle();
-    expect(value.value).toBe(true);
+    expect(value.value).toBeTruthy();
   });
 
   it('toggle from true to false', () => {
     const { value, toggle } = useToggle(true);
     toggle();
-    expect(value.value).toBe(false);
+    expect(value.value).toBeFalsy();
   });
 
   it('toggle multiple times', () => {
     const { value, toggle } = useToggle(false);
     toggle();
-    expect(value.value).toBe(true);
+    expect(value.value).toBeTruthy();
     toggle();
-    expect(value.value).toBe(false);
+    expect(value.value).toBeFalsy();
     toggle();
-    expect(value.value).toBe(true);
+    expect(value.value).toBeTruthy();
   });
 
   it('toggle returns the new value', () => {
     const { toggle } = useToggle(false);
-    expect(toggle()).toBe(true);
-    expect(toggle()).toBe(false);
+    expect(toggle()).toBeTruthy();
+    expect(toggle()).toBeFalsy();
   });
 
   it('set a specific value via toggle', () => {
     const { value, toggle } = useToggle(false);
     toggle(true);
-    expect(value.value).toBe(true);
+    expect(value.value).toBeTruthy();
     toggle(true);
-    expect(value.value).toBe(true);
+    expect(value.value).toBeTruthy();
   });
 
   it('use custom truthy and falsy values', () => {

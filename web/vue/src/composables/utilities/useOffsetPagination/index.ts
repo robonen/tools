@@ -1,5 +1,6 @@
 import type { VoidFunction } from '@robonen/stdlib';
-import { computed, reactive, toValue, watch, type ComputedRef, type MaybeRef, type MaybeRefOrGetter, type UnwrapNestedRefs, type WritableComputedRef } from 'vue';
+import { computed, reactive, toValue, watch } from 'vue';
+import type { ComputedRef, MaybeRef, MaybeRefOrGetter, UnwrapNestedRefs, WritableComputedRef } from 'vue';
 import { useClamp } from '@/composables/math/useClamp';
 
 // TODO: sync returned refs with passed refs
@@ -89,7 +90,7 @@ export function useOffsetPagination(options: UseOffsetPaginationOptions): UseOff
 
   const next = () => currentPage.value++;
   const previous = () => currentPage.value--;
-  const select = (page: number) => currentPage.value = page;
+  const select = (page: number) => { currentPage.value = page; };
 
   const returnValue = {
     currentPage,

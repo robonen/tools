@@ -1,0 +1,52 @@
+{
+  "name": "@robonen/oxlint",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "description": "Composable oxlint configuration presets",
+  "keywords": [
+    "oxlint",
+    "oxc",
+    "linter",
+    "config",
+    "presets"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "configs/oxlint"
+  },
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "lint": "oxlint -c oxlint.config.ts",
+    "test": "vitest run",
+    "dev": "vitest dev",
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@robonen/oxlint": "workspace:*",
+    "@robonen/tsconfig": "workspace:*",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "oxlint": ">=1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,5 +1,6 @@
 import { timestamp } from '@robonen/stdlib';
-import { ref, watch, type WatchSource, type WatchOptions, type Ref } from 'vue';
+import { ref, watch } from 'vue';
+import type { WatchSource, WatchOptions, Ref } from 'vue';
 
 export interface UseLastChangedOptions<
   Immediate extends boolean,
@@ -32,7 +33,7 @@ export function useLastChanged(source: WatchSource, options: UseLastChangedOptio
 export function useLastChanged(source: WatchSource, options: UseLastChangedOptions<boolean, any> = {}): Ref<number | null> | Ref<number> {
   const lastChanged = ref<number | null>(options.initialValue ?? null);
 
-  watch(source, () => lastChanged.value = timestamp(), options);
+  watch(source, () => { lastChanged.value = timestamp(); }, options);
 
   return lastChanged;
 }

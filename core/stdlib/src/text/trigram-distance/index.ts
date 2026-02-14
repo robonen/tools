@@ -11,7 +11,7 @@ export type Trigrams = Map<string, number>;
  * @since 0.0.1
  */
 export function trigramProfile(text: string): Trigrams {
-    text = '\n\n' + text + '\n\n';
+    text = `\n\n${text}\n\n`;
 
     const trigrams = new Map<string, number>();
 

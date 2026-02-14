@@ -1,5 +1,6 @@
 import { get } from '../../collections';
-import { isFunction, type Path, type PathToType, type Stringable, type Trim, type UnionToIntersection } from '../../types';
+import { isFunction } from '../../types';
+import type { Collection, Path, PathToType, Stringable, Trim, UnionToIntersection } from '../../types';
 
 /**
  * Type of a value that will be used to replace a placeholder in a template.
@@ -55,7 +56,7 @@ export type GenerateTypes<T extends string, Target = string> = UnionToIntersecti
 
 export function templateObject<
   T extends string,
-  A extends GenerateTypes<ExtractPlaceholders<T>, TemplateValue>
+  A extends GenerateTypes<ExtractPlaceholders<T>, TemplateValue> & Collection
 >(template: T, args: A, fallback?: TemplateFallback) {
     return template.replace(TEMPLATE_PLACEHOLDER, (_, key) => {    
         const value = get(args, key)?.toString();

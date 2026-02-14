@@ -1,6 +1,6 @@
 import { isClient } from '@robonen/platform/multi';
 
-export const defaultWindow = /* #__PURE__ */ isClient ? window : undefined
+export const defaultWindow = /* #__PURE__ */ isClient ? globalThis as Window & typeof globalThis : undefined
 
 export interface ConfigurableWindow {
   /**

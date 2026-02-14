@@ -39,12 +39,15 @@
     }
   },
   "scripts": {
+    "lint": "oxlint -c oxlint.config.ts",
     "test": "vitest run",
     "dev": "vitest dev",
     "build": "tsdown"
   },
   "devDependencies": {
+    "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
+    "oxlint": "catalog:",
     "tsdown": "catalog:"
   }
 }

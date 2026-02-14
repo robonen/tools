@@ -1,3 +1,3 @@
-export type AsyncPoolOptions = {
+export interface AsyncPoolOptions {
   concurrency?: number;
 }

@@ -1,4 +1,5 @@
-import { watch, type Ref, type WatchOptions, type WatchSource } from 'vue';
+import { watch } from 'vue';
+import type { Ref, WatchOptions, WatchSource } from 'vue';
 import { isArray } from '@robonen/stdlib';
 
 /**
@@ -40,7 +41,7 @@ export function useSyncRefs<T = unknown>(
 
     return watch(
         source,
-        (value) => targets.forEach((target) => target.value = value),
+        (value) => targets.forEach((target) => { target.value = value; }),
         { flush, deep, immediate },
     );
 }

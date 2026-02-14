@@ -14,7 +14,7 @@ const ComponentStub = defineComponent({
     template: `<div>{{ visibleCount }}</div>`,
 });
 
-describe('useRenderCount', () => {
+describe(useRenderCount, () => {
     it('return the number of times the component has been rendered', async () => {
         const component = mount(ComponentStub);
         

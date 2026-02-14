@@ -1,3 +1,5 @@
+// eslint-disable
+
 export interface DebounceOptions {
     /**
      * Call the function on the leading edge of the timeout, instead of waiting for the trailing edge

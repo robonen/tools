@@ -1,5 +1,5 @@
 import { useContextFactory } from '../useContextFactory';
-import type { App, InjectionKey } from 'vue';
+import type { App } from 'vue';
 
 export interface useInjectionStoreOptions<Return> {
   injectionName?: string;

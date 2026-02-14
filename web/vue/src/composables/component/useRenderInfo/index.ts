@@ -1,5 +1,6 @@
 import { timestamp } from '@robonen/stdlib';
-import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, readonly, ref, type ComponentInternalInstance } from 'vue';
+import { onBeforeMount, onBeforeUpdate, onMounted, onUpdated, readonly, ref } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import { useRenderCount } from '../useRenderCount';
 import { getLifeCycleTarger } from '@/utils';
 
@@ -24,7 +25,7 @@ export function useRenderInfo(instance?: ComponentInternalInstance) {
     const duration = ref(0);
     let renderStartTime = 0;
 
-    const startMark = () => renderStartTime = performance.now();
+    const startMark = () => { renderStartTime = performance.now(); };
     const endMark = () => {
         duration.value = Math.max(performance.now() - renderStartTime, 0);
         renderStartTime = 0;

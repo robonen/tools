@@ -1,4 +1,5 @@
-import { ref, watch, toValue, type MaybeRefOrGetter, type Ref, type WatchOptions } from 'vue';
+import { ref, watch, toValue } from 'vue';
+import type { MaybeRefOrGetter, Ref, WatchOptions } from 'vue';
 
 export type Comparator<Value> = (a: Value, b: Value) => boolean;
 

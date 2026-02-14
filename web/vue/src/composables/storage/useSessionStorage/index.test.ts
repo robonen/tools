@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { nextTick } from 'vue';
 import { useSessionStorage } from '.';
 
-describe('useSessionStorage', () => {
+describe(useSessionStorage, () => {
   beforeEach(() => {
     sessionStorage.clear();
   });

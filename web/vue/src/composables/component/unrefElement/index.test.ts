@@ -3,7 +3,7 @@ import { computed, defineComponent, nextTick, ref, shallowRef } from 'vue';
 import { mount } from '@vue/test-utils'
 import { unrefElement } from '.';
 
-describe('unrefElement', () => {
+describe(unrefElement, () => {
   it('returns a plain element when passed a raw element', () => {
     const htmlEl = document.createElement('div');
     const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -47,14 +47,14 @@ describe('unrefElement', () => {
     const result = unrefElement(childInstance);
 
     expect(result).toBe(childInstance.$el);
-    expect((result as HTMLElement).classList.contains('child-el')).toBe(true);
+    expect((result as HTMLElement).classList.contains('child-el')).toBeTruthy();
   });
 
   it('handles null and undefined values', () => {
     expect(unrefElement(undefined)).toBe(undefined);
     expect(unrefElement(null)).toBe(null);
-    expect(unrefElement(ref(null))).toBe(null);
-    expect(unrefElement(ref(undefined))).toBe(undefined);
+    expect(unrefElement(ref<null>(null))).toBe(null);
+    expect(unrefElement(ref<undefined>(undefined))).toBe(undefined);
     expect(unrefElement(() => null)).toBe(null);
     expect(unrefElement(() => undefined)).toBe(undefined);
   });

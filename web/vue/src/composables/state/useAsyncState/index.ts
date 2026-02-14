@@ -1,4 +1,5 @@
-import { ref, shallowRef, watch, type Ref, type ShallowRef, type UnwrapRef } from 'vue';
+import { ref, shallowRef, watch } from 'vue';
+import type { Ref, ShallowRef, UnwrapRef } from 'vue';
 import { isFunction, sleep } from '@robonen/stdlib';
 
 export interface UseAsyncStateOptions<Shallow extends boolean, Data = any> {
@@ -103,8 +104,12 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
       watch(
         isLoading,
         (loading) => {
-          if (loading === false)
-            error.value ? reject(error.value) : resolve(shell);
+          if (loading === false) {
+            if (error.value)
+              reject(error.value);
+            else 
+              resolve(shell);
+          }
         },
         { 
           immediate: true,
@@ -117,6 +122,7 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
 
   return {
     ...shell,
+    // eslint-disable-next-line unicorn/no-thenable
     then(onFulfilled, onRejected) {
       return waitResolve().then(onFulfilled, onRejected);
     },

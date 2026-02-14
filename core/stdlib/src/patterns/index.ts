@@ -1,1 +1,3 @@
-export * from './behavioral/pubsub';
+export * from './behavioral/Command';
+export * from './behavioral/PubSub';
+export * from './behavioral/StateMachine';

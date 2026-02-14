@@ -1,5 +1,8 @@
 import { last } from '../../arrays';
 import { isArray } from '../../types';
+import type { StackLike } from './types';
+
+export type { StackLike } from './types';
 
 export interface StackOptions {
     maxSize?: number;
@@ -14,7 +17,7 @@ export interface StackOptions {
  *
  * @template T The type of elements stored in the stack
  */
-export class Stack<T> implements Iterable<T>, AsyncIterable<T> {
+export class Stack<T> implements StackLike<T> {
     /**
      * The maximum number of elements that the stack can hold
      * 

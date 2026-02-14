@@ -1,9 +1,3 @@
-import type { AnyFunction } from '../../../types';
-
-export type Subscriber = AnyFunction;
-
-export type EventHandlerMap = Record<PropertyKey, Subscriber>;
-
 /**
  * @name PubSub
  * @category Patterns
@@ -11,9 +5,9 @@ export type EventHandlerMap = Record<PropertyKey, Subscriber>;
  *
  * @since 0.0.2
  * 
- * @template Events - Event map where all values are function types
+ * @template Events - Event map where keys are event names and values are listener signatures
  */
-export class PubSub<Events extends EventHandlerMap> {
+export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
   /**
    * Events map
    * 

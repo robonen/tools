@@ -1,3 +1,4 @@
+import { isString } from '../../../types';
 import { BaseStateMachine } from './base';
 import type { AsyncStateNodeConfig, ExtractStates, ExtractEvents } from './types';
 
@@ -24,33 +25,33 @@ export class AsyncStateMachine<
    * @returns The current state after processing the event
    */
   async send(event: Events): Promise<States> {
-    const stateNode = this._states[this._current];
+    const stateNode = this.states[this.currentState];
 
     if (!stateNode?.on)
-      return this._current;
+      return this.currentState;
 
     const transition = stateNode.on[event];
 
     if (transition === undefined)
-      return this._current;
+      return this.currentState;
 
     let target: string;
 
-    if (typeof transition === 'string') {
+    if (isString(transition)) {
       target = transition;
     } else {
-      if (transition.guard && !(await transition.guard(this._context)))
-        return this._current;
+      if (transition.guard && !(await transition.guard(this.context)))
+        return this.currentState;
 
-      await transition.action?.(this._context);
+      await transition.action?.(this.context);
       target = transition.target;
     }
 
-    await stateNode.exit?.(this._context);
-    this._current = target as States;
-    await this._states[this._current]?.entry?.(this._context);
+    await stateNode.exit?.(this.context);
+    this.currentState = target as States;
+    await this.states[this.currentState]?.entry?.(this.context);
 
-    return this._current;
+    return this.currentState;
   }
 
   /**
@@ -59,7 +60,7 @@ export class AsyncStateMachine<
    * @param event - Event to check
    */
   async can(event: Events): Promise<boolean> {
-    const stateNode = this._states[this._current];
+    const stateNode = this.states[this.currentState];
 
     if (!stateNode?.on)
       return false;
@@ -69,8 +70,8 @@ export class AsyncStateMachine<
     if (transition === undefined)
       return false;
 
-    if (typeof transition !== 'string' && transition.guard)
-      return await transition.guard(this._context);
+    if (!isString(transition) && transition.guard)
+      return await transition.guard(this.context);
 
     return true;
   }

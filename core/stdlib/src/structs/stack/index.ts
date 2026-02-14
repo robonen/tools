@@ -1,9 +1,9 @@
 import { last } from '../../arrays';
 import { isArray } from '../../types';
 
-export type StackOptions = {
+export interface StackOptions {
     maxSize?: number;
-};
+}
 
 /**
  * @name Stack

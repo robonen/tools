@@ -1,4 +1,5 @@
-import { isArray, type Arrayable } from '../../types';
+import { isArray } from '../../types';
+import type { Arrayable } from '../../types';
 
 /**
  * @name omit

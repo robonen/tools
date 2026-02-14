@@ -1,5 +1,6 @@
 import { clamp, isFunction } from '@robonen/stdlib';
-import { computed, isReadonly, ref, toValue, type ComputedRef, type MaybeRef, type MaybeRefOrGetter, type WritableComputedRef } from 'vue';
+import { computed, isReadonly, ref, toValue } from 'vue';
+import type { ComputedRef, MaybeRef, MaybeRefOrGetter, WritableComputedRef } from 'vue';
 
 /**
  * @name useClamp

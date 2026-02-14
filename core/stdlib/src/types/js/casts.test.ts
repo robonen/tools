@@ -19,7 +19,7 @@ describe('casts', () => {
       expect(toString(null)).toBe('[object Null]');
       expect(toString(/abc/)).toBe('[object RegExp]');
       expect(toString(new Date())).toBe('[object Date]');
-      expect(toString(new Error())).toBe('[object Error]');
+      expect(toString(new Error('test'))).toBe('[object Error]');
       expect(toString(new Promise(() => {}))).toBe('[object Promise]');
       expect(toString(new Map())).toBe('[object Map]');
       expect(toString(new Set())).toBe('[object Set]');

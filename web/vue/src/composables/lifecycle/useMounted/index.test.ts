@@ -12,7 +12,7 @@ const ComponentStub = defineComponent({
     template: `<div>{{ isMounted }}</div>`,
 });
 
-describe('useMounted', () => {
+describe(useMounted, () => {
     it('return the mounted state of the component', async () => {
         const component = mount(ComponentStub);
         

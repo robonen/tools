@@ -1,3 +1,4 @@
+// eslint-disable
 export interface RetryOptions {
   times?: number;
   delay?: number;

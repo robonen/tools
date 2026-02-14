@@ -11,14 +11,14 @@ const ComponentStub = defineComponent({
     },
   },
   setup(props) {
-      const isSupported = useSupported(() => props.location in window);
+      const isSupported = useSupported(() => props.location in globalThis);
       
       return { isSupported };
   },
   template: `<div>{{ isSupported }}</div>`,
 });
 
-describe('useSupported', () => {
+describe(useSupported, () => {
   it('return whether the feature is supported', async () => {
       const component = mount(ComponentStub);
 

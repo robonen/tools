@@ -20,7 +20,7 @@ export type PathToType<T extends string[], Target = unknown> =
   T extends [infer Head, ...infer Rest]
     ? Head extends `${number}`
       ? Rest extends string[]
-        ? PathToType<Rest, Target>[]
+        ? Array<PathToType<Rest, Target>>
         : never
       : Rest extends string[]
         ? { [K in Head & string]: PathToType<Rest, Target> }

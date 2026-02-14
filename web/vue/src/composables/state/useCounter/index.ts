@@ -1,4 +1,5 @@
-import { ref, toValue, type MaybeRefOrGetter, type Ref } from 'vue';
+import { ref, toValue } from 'vue';
+import type { MaybeRefOrGetter, Ref } from 'vue';
 import { clamp } from '@robonen/stdlib';
 
 export interface UseCounterOptions {
@@ -46,14 +47,17 @@ export function useCounter(
         max = Number.MAX_SAFE_INTEGER,
     } = options;
 
-    const increment = (delta = 1) =>
+    const increment = (delta = 1) => {
         count.value = clamp(count.value + delta, min, max);
+    };
 
-    const decrement = (delta = 1) =>
+    const decrement = (delta = 1) => {
         count.value = clamp(count.value - delta, min, max);
+    };
 
-    const set = (value: number) =>
+    const set = (value: number) => {
         count.value = clamp(value, min, max);
+    };
 
     const get = () => count.value;
 

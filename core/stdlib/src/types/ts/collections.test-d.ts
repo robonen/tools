@@ -35,35 +35,35 @@ describe('collections', () => {
   describe('PathToType', () => {
     it('convert simple object path', () => {
       type actual = PathToType<['user', 'name']>;
-      type expected = { user: { name: unknown } };
+      interface expected { user: { name: unknown } }
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
     });
 
     it('convert simple array path', () => {
       type actual = PathToType<['user', '0']>;
-      type expected = { user: unknown[] };
+      interface expected { user: unknown[] }
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
     });
 
     it('convert complex object path', () => {
       type actual = PathToType<['user', 'addresses', '0', 'street']>;
-      type expected = { user: { addresses: { street: unknown }[] } };
+      interface expected { user: { addresses: Array<{ street: unknown }> } }
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
     });
 
     it('convert double dot path', () => {
       type actual = PathToType<['user', '', 'name']>;
-      type expected = { user: { '': { name: unknown } } };
+      interface expected { user: { '': { name: unknown } } }
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
     });
 
     it('convert to custom target', () => {
       type actual = PathToType<['user', 'name'], string>;
-      type expected = { user: { name: string } };
+      interface expected { user: { name: string } }
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
     });

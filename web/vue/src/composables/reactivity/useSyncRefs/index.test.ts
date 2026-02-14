@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ref } from 'vue';
 import { useSyncRefs } from '.';
 
-describe('useSyncRefs', () => {
+describe(useSyncRefs, () => {
   it('sync the value of a source ref with multiple target refs', () => {
     const source = ref(0);
     const target1 = ref(0);

@@ -77,7 +77,7 @@ describe('complex', () => {
   
   describe('isError', () => {
     it('true if the value is an error', () => {
-      expect(isError(new Error())).toBe(true);
+      expect(isError(new Error('test'))).toBe(true);
     });
   
     it('false if the value is not an error', () => {

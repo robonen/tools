@@ -2,7 +2,7 @@ import { ref, readonly, computed } from 'vue';
 import { describe, it, expect } from 'vitest';
 import { useClamp } from '.';
 
-describe('useClamp', () => {
+describe(useClamp, () => {
   it('non-reactive values should be clamped', () => {
     const clampedValue = useClamp(10, 0, 5);
 

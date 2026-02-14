@@ -4,7 +4,7 @@ import { useCached } from '.';
 
 const arrayEquals = (a: number[], b: number[]) => a.length === b.length && a.every((v, i) => v === b[i]);
 
-describe('useCached', () => {
+describe(useCached, () => {
   it('default comparator', async () => {
     const externalValue = ref(0);
     const cachedValue = useCached(externalValue);

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { nextTick } from 'vue';
-import { useStorageAsync, type StorageLikeAsync } from '.';
+import { useStorageAsync } from '.';
+import type { StorageLikeAsync } from '.';
 
 function createMockAsyncStorage(): StorageLikeAsync & { store: Map<string, string> } {
   const store = new Map<string, string>();
@@ -24,7 +25,7 @@ function createDelayedAsyncStorage(delay: number): StorageLikeAsync & { store: M
   };
 }
 
-describe('useStorageAsync', () => {
+describe(useStorageAsync, () => {
   // --- Basic read/write ---
 
   it('returns default value before storage is ready', () => {
@@ -32,7 +33,7 @@ describe('useStorageAsync', () => {
     const { state, isReady } = useStorageAsync('key', 'default', storage);
 
     expect(state.value).toBe('default');
-    expect(isReady.value).toBe(false);
+    expect(isReady.value).toBeFalsy();
   });
 
   it('reads existing value from async storage', async () => {
@@ -42,7 +43,7 @@ describe('useStorageAsync', () => {
     const { state, isReady } = await useStorageAsync('key', 'default', storage);
 
     expect(state.value).toBe('stored');
-    expect(isReady.value).toBe(true);
+    expect(isReady.value).toBeTruthy();
   });
 
   it('writes value to async storage on change', async () => {
@@ -81,7 +82,7 @@ describe('useStorageAsync', () => {
 
     const { state } = await useStorageAsync('flag', false, storage);
 
-    expect(state.value).toBe(true);
+    expect(state.value).toBeTruthy();
 
     state.value = false;
     await nextTick();
@@ -108,7 +109,7 @@ describe('useStorageAsync', () => {
     const { state, isReady } = await useStorageAsync('delayed', 'default', storage);
 
     expect(state.value).toBe('loaded');
-    expect(isReady.value).toBe(true);
+    expect(isReady.value).toBeTruthy();
   });
 
   // --- onReady callback ---
@@ -201,7 +202,7 @@ describe('useStorageAsync', () => {
     await nextTick();
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(storage.store.has('nullable')).toBe(false);
+    expect(storage.store.has('nullable')).toBeFalsy();
   });
 
   // --- Error handling ---
@@ -321,7 +322,7 @@ describe('useStorageAsync', () => {
 
     await useStorageAsync('new-key', 'default-val', storage, { writeDefaults: false });
 
-    expect(storage.store.has('new-key')).toBe(false);
+    expect(storage.store.has('new-key')).toBeFalsy();
   });
 
   it('does not overwrite existing value with defaults', async () => {

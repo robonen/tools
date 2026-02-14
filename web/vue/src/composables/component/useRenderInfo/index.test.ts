@@ -26,7 +26,7 @@ const UnnamedComponentStub = defineComponent({
   template: `<div>{{ visibleCount }}</div>`,
 });
 
-describe('useRenderInfo', () => {
+describe(useRenderInfo, () => {
   it('return uid if component name is not available', async () => {
     const wrapper = mount(UnnamedComponentStub);
 
@@ -42,8 +42,8 @@ describe('useRenderInfo', () => {
     expect(wrapper.vm.info.duration.value).toBeGreaterThan(0);
     expect(wrapper.vm.info.lastRendered).toBeGreaterThan(0);
 
-    let lastRendered = wrapper.vm.info.lastRendered;
-    let duration = wrapper.vm.info.duration.value;
+    const lastRendered = wrapper.vm.info.lastRendered;
+    const duration = wrapper.vm.info.duration.value;
 
     // Will not trigger a render
     wrapper.vm.hiddenCount++;
@@ -76,8 +76,8 @@ describe('useRenderInfo', () => {
     expect(info.duration.value).toBe(0);
     expect(info.lastRendered).toBeGreaterThan(0);
 
-    let lastRendered = info.lastRendered;
-    let duration = info.duration.value;
+    const lastRendered = info.lastRendered;
+    const duration = info.duration.value;
 
     // Will not trigger a render
     wrapper.vm.hiddenCount++;

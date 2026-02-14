@@ -1,4 +1,5 @@
-import { ref, shallowRef, watch, toValue, type Ref, type MaybeRefOrGetter } from 'vue';
+import { ref, shallowRef, watch, toValue } from 'vue';
+import type { Ref, MaybeRefOrGetter } from 'vue';
 import { isBoolean, isNumber, isString, isObject, isMap, isSet, isDate } from '@robonen/stdlib';
 import type { ConfigurableFlush } from '@/types';
 
@@ -145,7 +146,7 @@ export function useStorage<T>(
     flush = 'pre',
     writeDefaults = true,
     mergeDefaults = false,
-    onError = console.error,
+    onError = console.error, // eslint-disable-line no-console
   } = options;
 
   const defaults = toValue(initialValue);
@@ -156,8 +157,8 @@ export function useStorage<T>(
   function read(): T {
     const raw = storage.getItem(key);
 
-    if (raw == null) {
-      if (writeDefaults && defaults != null) {
+    if (raw === undefined || raw === null) {
+      if (writeDefaults && defaults !== undefined && defaults !== null) {
         try {
           storage.setItem(key, serializer.write(defaults));
         } catch (e) {
@@ -188,7 +189,7 @@ export function useStorage<T>(
     try {
       const oldValue = storage.getItem(key);
 
-      if (value == null) {
+      if (value === undefined || value === null) {
         storage.removeItem(key);
       } else {
         const serialized = serializer.write(value);

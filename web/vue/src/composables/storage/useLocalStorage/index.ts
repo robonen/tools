@@ -1,7 +1,8 @@
 import type { MaybeRefOrGetter, Ref } from 'vue';
 import { defaultWindow } from '@/types';
 import { VueToolsError } from '@/utils/error';
-import { useStorage, type UseStorageOptions } from '../useStorage';
+import { useStorage } from '../useStorage';
+import type { UseStorageOptions } from '../useStorage';
 
 /**
  * @name useLocalStorage

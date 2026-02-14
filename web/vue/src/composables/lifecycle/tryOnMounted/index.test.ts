@@ -1,5 +1,6 @@
 import { describe, it, vi, expect } from 'vitest';
-import { defineComponent, nextTick, type PropType } from 'vue';
+import { defineComponent, nextTick } from 'vue';
+import type { PropType } from 'vue';
 import { tryOnMounted } from '.';
 import { mount } from '@vue/test-utils';
 import type { VoidFunction } from '@robonen/stdlib';
@@ -11,12 +12,12 @@ const ComponentStub = defineComponent({
     },
   },
   setup(props) {
-    props.callback && tryOnMounted(props.callback);
+    if (props.callback) { tryOnMounted(props.callback); }
   },
   template: `<div></div>`,
 });
 
-describe('tryOnMounted', () => {
+describe(tryOnMounted, () => {
   it('run the callback when mounted', () => {
     const callback = vi.fn();
     

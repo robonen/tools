@@ -1,4 +1,4 @@
-import { toString } from '.';
+import { toString } from './casts';
 
 /**
  * @name isFunction

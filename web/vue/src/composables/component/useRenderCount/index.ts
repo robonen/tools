@@ -1,4 +1,5 @@
-import { onMounted, onUpdated, readonly, type ComponentInternalInstance } from 'vue';
+import { onMounted, onUpdated, readonly } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import { useCounter } from '@/composables/state/useCounter';
 import { getLifeCycleTarger } from '@/utils';
 

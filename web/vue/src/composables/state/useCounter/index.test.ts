@@ -2,7 +2,7 @@ import { it, expect, describe } from 'vitest';
 import { ref } from 'vue';
 import { useCounter } from '.';
 
-describe('useCounter', () => {
+describe(useCounter, () => {
   it('initialize count with the provided initial value', () => {
     const { count } = useCounter(5);
     expect(count.value).toBe(5);

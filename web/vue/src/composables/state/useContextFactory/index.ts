@@ -1,4 +1,5 @@
-import { inject as vueInject, provide as vueProvide, type InjectionKey, type App } from 'vue';
+import { inject as vueInject, provide as vueProvide } from 'vue';
+import type { InjectionKey, App } from 'vue';
 import { VueToolsError } from '@/utils';
 
 /**

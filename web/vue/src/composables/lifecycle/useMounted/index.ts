@@ -1,4 +1,5 @@
-import { onMounted, readonly, ref, type ComponentInternalInstance } from 'vue';
+import { onMounted, readonly, ref } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import { getLifeCycleTarger } from '@/utils';
 
 /**
@@ -21,7 +22,7 @@ export function useMounted(instance?: ComponentInternalInstance) {
   const isMounted = ref(false);
   const targetInstance = getLifeCycleTarger(instance);
 
-  onMounted(() => isMounted.value = true, targetInstance);
+  onMounted(() => { isMounted.value = true; }, targetInstance);
 
   return readonly(isMounted);
 }

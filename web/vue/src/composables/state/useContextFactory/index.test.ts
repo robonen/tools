@@ -35,7 +35,7 @@ function testFactory<Data>(
 
 // TODO: maybe replace template with passing mock functions to setup
 
-describe('useContextFactory', () => {
+describe(useContextFactory, () => {
   it('provide and inject context correctly', () => {
     const { Parent } = testFactory('test', useContextFactory('TestContext'));
 

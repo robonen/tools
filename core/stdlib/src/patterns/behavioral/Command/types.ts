@@ -1,11 +1,11 @@
 import type { MaybePromise } from '../../../types';
 
-export type Command = {
+export interface Command {
   execute: () => void;
   undo: () => void;
-};
+}
 
-export type AsyncCommand = {
+export interface AsyncCommand {
   execute: () => MaybePromise<void>;
   undo: () => MaybePromise<void>;
-};
+}

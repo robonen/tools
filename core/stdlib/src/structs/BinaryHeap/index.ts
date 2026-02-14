@@ -52,7 +52,7 @@ export class BinaryHeap<T> implements BinaryHeapLike<T> {
     constructor(initialValues?: T[] | T, options?: BinaryHeapOptions<T>) {
         this.comparator = options?.comparator ?? defaultComparator;
 
-        if (initialValues != null) {
+        if (initialValues !== null && initialValues !== undefined) {
             const items = isArray(initialValues) ? initialValues : [initialValues];
             this.heap.push(...items);
             this.heapify();

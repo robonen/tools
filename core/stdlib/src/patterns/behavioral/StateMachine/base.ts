@@ -8,7 +8,7 @@
  */
 export class BaseStateMachine<
   States extends string,
-  Events extends string,
+  _Events extends string,
   Context,
   NodeConfig,
 > {

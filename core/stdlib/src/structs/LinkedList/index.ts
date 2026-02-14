@@ -30,7 +30,7 @@ export class LinkedList<T> implements LinkedListLike<T> {
      * @private
      * @type {number}
      */
-    private count: number = 0;
+    private count = 0;
 
     /**
      * The first node in the list
@@ -54,7 +54,7 @@ export class LinkedList<T> implements LinkedListLike<T> {
      * @param {(T[] | T)} [initialValues] The initial values to add to the list
      */
     constructor(initialValues?: T[] | T) {
-        if (initialValues != null) {
+        if (initialValues !== null && initialValues !== undefined) {
             const items = isArray(initialValues) ? initialValues : [initialValues];
 
             for (const item of items)
@@ -258,7 +258,7 @@ export class LinkedList<T> implements LinkedListLike<T> {
      * @returns {T[]} Array of values from head to tail
      */
     public toArray(): T[] {
-        const result = new Array<T>(this.count);
+        const result = Array.from<T>({ length: this.count });
         let current = this.first;
         let i = 0;
 

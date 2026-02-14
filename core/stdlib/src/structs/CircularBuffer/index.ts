@@ -21,7 +21,7 @@ export class CircularBuffer<T> implements CircularBufferLike<T> {
    * @private
    * @type {(T | undefined)[]}
    */
-  private buffer: (T | undefined)[];
+  private buffer: Array<T | undefined>;
 
   /**
    * The index of the front element
@@ -53,7 +53,7 @@ export class CircularBuffer<T> implements CircularBufferLike<T> {
     const requested = Math.max(items.length, initialCapacity ?? 0);
     const cap = Math.max(MIN_CAPACITY, nextPowerOfTwo(requested));
 
-    this.buffer = new Array(cap);
+    this.buffer = Array.from<T | undefined>({ length: cap });
 
     for (const item of items)
       this.pushBack(item);
@@ -190,7 +190,7 @@ export class CircularBuffer<T> implements CircularBufferLike<T> {
    * @returns {this}
    */
   clear() {
-    this.buffer = new Array(MIN_CAPACITY);
+    this.buffer = Array.from<T | undefined>({ length: MIN_CAPACITY });
     this.head = 0;
     this.count = 0;
 
@@ -203,7 +203,7 @@ export class CircularBuffer<T> implements CircularBufferLike<T> {
    * @returns {T[]}
    */
   toArray() {
-    const result = new Array<T>(this.count);
+    const result = Array.from<T>({ length: this.count });
 
     for (let i = 0; i < this.count; i++)
       result[i] = this.buffer[(this.head + i) & (this.buffer.length - 1)] as T;
@@ -246,7 +246,7 @@ export class CircularBuffer<T> implements CircularBufferLike<T> {
    */
   private grow() {
     const newCapacity = this.buffer.length << 1;
-    const newBuffer = new Array<T | undefined>(newCapacity);
+    const newBuffer = Array.from<T | undefined>({ length: newCapacity });
 
     for (let i = 0; i < this.count; i++)
       newBuffer[i] = this.buffer[(this.head + i) & (this.buffer.length - 1)];

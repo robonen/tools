@@ -104,8 +104,8 @@ describe(useTabLeader, () => {
 
     await nextTick();
 
-    expect(component.vm.isSupported).toBe(true);
-    expect(component.vm.isLeader).toBe(true);
+    expect(component.vm.isSupported).toBeTruthy();
+    expect(component.vm.isLeader).toBeTruthy();
   });
 
   it('not grant leadership when another tab holds the lock', async () => {
@@ -125,8 +125,8 @@ describe(useTabLeader, () => {
 
     await nextTick();
 
-    expect(leader1!.isLeader.value).toBe(true);
-    expect(leader2!.isLeader.value).toBe(false);
+    expect(leader1!.isLeader.value).toBeTruthy();
+    expect(leader2!.isLeader.value).toBeFalsy();
 
     scope1.stop();
     scope2.stop();
@@ -148,15 +148,15 @@ describe(useTabLeader, () => {
     });
 
     await nextTick();
-    expect(leader1!.isLeader.value).toBe(true);
-    expect(leader2!.isLeader.value).toBe(false);
+    expect(leader1!.isLeader.value).toBeTruthy();
+    expect(leader2!.isLeader.value).toBeFalsy();
 
     // Leader 1 releases (e.g., tab closes)
     scope1.stop();
     await nextTick();
 
-    expect(leader1!.isLeader.value).toBe(false);
-    expect(leader2!.isLeader.value).toBe(true);
+    expect(leader1!.isLeader.value).toBeFalsy();
+    expect(leader2!.isLeader.value).toBeTruthy();
 
     scope2.stop();
   });
@@ -170,15 +170,15 @@ describe(useTabLeader, () => {
     });
 
     await nextTick();
-    expect(leader!.isLeader.value).toBe(true);
+    expect(leader!.isLeader.value).toBeTruthy();
 
     leader!.release();
     await nextTick();
-    expect(leader!.isLeader.value).toBe(false);
+    expect(leader!.isLeader.value).toBeFalsy();
 
     leader!.acquire();
     await nextTick();
-    expect(leader!.isLeader.value).toBe(true);
+    expect(leader!.isLeader.value).toBeTruthy();
 
     scope.stop();
   });
@@ -192,12 +192,12 @@ describe(useTabLeader, () => {
     });
 
     await nextTick();
-    expect(leader!.isLeader.value).toBe(false);
+    expect(leader!.isLeader.value).toBeFalsy();
     expect(navigator.locks.request).not.toHaveBeenCalled();
 
     leader!.acquire();
     await nextTick();
-    expect(leader!.isLeader.value).toBe(true);
+    expect(leader!.isLeader.value).toBeTruthy();
 
     scope.stop();
   });
@@ -216,7 +216,7 @@ describe(useTabLeader, () => {
 
     await nextTick();
 
-    expect(component.vm.isSupported).toBe(false);
-    expect(component.vm.isLeader).toBe(false);
+    expect(component.vm.isSupported).toBeFalsy();
+    expect(component.vm.isLeader).toBeFalsy();
   });
 });

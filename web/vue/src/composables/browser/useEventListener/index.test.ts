@@ -192,8 +192,8 @@ describe(useEventListener, () => {
 
   it('use window as default target when event string is passed directly', async () => {
     const listener = vi.fn();
-    const addSpy = vi.spyOn(window, 'addEventListener');
-    const removeSpy = vi.spyOn(window, 'removeEventListener');
+    const addSpy = vi.spyOn(globalThis, 'addEventListener');
+    const removeSpy = vi.spyOn(globalThis, 'removeEventListener');
 
     component = mountWithEventListener(() => {
       useEventListener('click', listener);
@@ -213,7 +213,7 @@ describe(useEventListener, () => {
 
   it('use window as default target when event array is passed directly', async () => {
     const listener = vi.fn();
-    const addSpy = vi.spyOn(window, 'addEventListener');
+    const addSpy = vi.spyOn(globalThis, 'addEventListener');
 
     component = mountWithEventListener(() => {
       useEventListener(['click', 'keydown'], listener);

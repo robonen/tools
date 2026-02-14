@@ -1,6 +1,5 @@
-import { isArray, isObject, isString, noop } from '@robonen/stdlib';
+import { first, isArray, isObject, isString, noop } from '@robonen/stdlib';
 import type { Arrayable, VoidFunction } from '@robonen/stdlib';
-import { first } from '@robonen/stdlib';
 import { toValue, watch } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
 import { defaultWindow } from '@/types';

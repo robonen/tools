@@ -1,9 +1,9 @@
-import { isArray, isString, noop } from '@robonen/stdlib';
+import { first, isArray, isObject, isString, noop } from '@robonen/stdlib';
 import type { Arrayable, VoidFunction } from '@robonen/stdlib';
+import { toValue, watch } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
 import { defaultWindow } from '@/types';
-
-// TODO: wip
+import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 
 interface InferEventTarget<Events> {
   addEventListener: (event: Events, listener?: any, options?: any) => any;
@@ -105,7 +105,7 @@ export function useEventListener(...args: any[]) {
   let listeners: Arrayable<Function>;
   let _options: MaybeRefOrGetter<boolean | AddEventListenerOptions> | undefined;
 
-  if (isString(args[0]) || isArray(args[0])) {
+  if (isString(first(args)) || isArray(first(args))) {
     [events, listeners, _options] = args;
     target = defaultWindow;
   } else {
@@ -128,11 +128,40 @@ export function useEventListener(...args: any[]) {
     cleanups.length = 0;
   }
 
-  const _register = (el: any, event: string, listener: any, options: any) => {
-    el.addEventListener(event, listener, options);
-    return () => el.removeEventListener(event, listener, options);
+  const _register = (el: EventTarget, event: string, listener: Function, options: boolean | AddEventListenerOptions | undefined) => {
+    el.addEventListener(event, listener as EventListener, options);
+    return () => el.removeEventListener(event, listener as EventListener, options);
   }
 
-  void _cleanup;
-  void _register;
+  const stopWatch = watch(
+    () => [toValue(target), toValue(_options)] as const,
+    ([el, options]) => {
+      _cleanup();
+
+      if (!el)
+        return;
+
+      // Clone object options to avoid reactive mutation between add/remove
+      const optionsClone = isObject(options) ? { ...options } : options;
+
+      const eventsArray = events as string[];
+      const listenersArray = listeners as Function[];
+
+      cleanups.push(
+        ...eventsArray.flatMap((event) =>
+          listenersArray.map((listener) => _register(el, event, listener, optionsClone)),
+        ),
+      );
+    },
+    { immediate: true, flush: 'post' },
+  );
+
+  const stop = () => {
+    stopWatch();
+    _cleanup();
+  }
+
+  tryOnScopeDispose(stop);
+
+  return stop;
 }

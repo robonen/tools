@@ -35,6 +35,10 @@
     "lint": "pnpm -r lint",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "create": "jiti ./bin/cli.ts"
+    "create": "jiti ./bin/cli.ts",
+    "docs:dev": "pnpm -C docs dev",
+    "docs:generate": "pnpm -C docs generate",
+    "docs:preview": "pnpm -C docs preview",
+    "docs:extract": "pnpm -C docs extract"
   }
 }

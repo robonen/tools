@@ -1,0 +1,69 @@
+@import "tailwindcss";
+@source "../../../../web/vue/src/**/demo.vue";
+@source "../../../../core/stdlib/src/**/demo.vue";
+@source "../../../../core/platform/src/**/demo.vue";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+  --color-brand-950: #1e1b4b;
+}
+
+:root {
+  --color-bg: #ffffff;
+  --color-bg-soft: #f9fafb;
+  --color-bg-mute: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-text: #111827;
+  --color-text-soft: #4b5563;
+  --color-text-mute: #9ca3af;
+  --color-header-bg: rgba(255, 255, 255, 0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f172a;
+    --color-bg-soft: #1e293b;
+    --color-bg-mute: #334155;
+    --color-border: #334155;
+    --color-text: #f1f5f9;
+    --color-text-soft: #94a3b8;
+    --color-text-mute: #64748b;
+    --color-header-bg: rgba(15, 23, 42, 0.8);
+  }
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+/* Shiki dual-theme: activate dark colors via prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  .shiki,
+  .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+}

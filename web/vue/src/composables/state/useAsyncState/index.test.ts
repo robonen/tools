@@ -206,4 +206,113 @@ describe(useAsyncState, () => {
     expect(state.value.a).toBe(1);
     expect(isShallow(state)).toBeFalsy();
   });
+
+  it('aborts pending execution', async () => {
+    let resolvePromise: (value: string) => void;
+    const promiseFn = () => new Promise<string>(resolve => { resolvePromise = resolve; });
+
+    const { state, isLoading, abort, executeImmediately } = useAsyncState(
+      promiseFn,
+      'initial',
+      { immediate: false },
+    );
+
+    executeImmediately();
+    expect(isLoading.value).toBeTruthy();
+
+    abort();
+    expect(isLoading.value).toBeFalsy();
+
+    resolvePromise!('data');
+    await nextTick();
+
+    expect(state.value).toBe('initial');
+  });
+
+  it('abort prevents state update from resolved promise', async () => {
+    let resolvePromise: (value: string) => void;
+    const promiseFn = () => new Promise<string>(resolve => { resolvePromise = resolve; });
+
+    const { state, isLoading, isReady, abort, executeImmediately } = useAsyncState(
+      promiseFn,
+      'initial',
+      { immediate: false },
+    );
+
+    executeImmediately();
+    expect(isLoading.value).toBeTruthy();
+
+    abort();
+    expect(isLoading.value).toBeFalsy();
+
+    resolvePromise!('data');
+    await nextTick();
+
+    expect(state.value).toBe('initial');
+    expect(isReady.value).toBeFalsy();
+  });
+
+  it('abort prevents error handling from rejected promise', async () => {
+    let rejectPromise: (error: Error) => void;
+    const promiseFn = () => new Promise<string>((_, reject) => { rejectPromise = reject; });
+    const onError = vi.fn();
+
+    const { error, abort, executeImmediately } = useAsyncState(
+      promiseFn,
+      'initial',
+      { immediate: false, onError },
+    );
+
+    executeImmediately();
+    abort();
+
+    rejectPromise!(new Error('test-error'));
+    await nextTick();
+
+    expect(error.value).toBe(null);
+    expect(onError).not.toHaveBeenCalled();
+  });
+
+  it('new execute after abort works correctly', async () => {
+    let resolvePromise: (value: string) => void;
+    const promiseFn = () => new Promise<string>(resolve => { resolvePromise = resolve; });
+
+    const { state, isReady, abort, executeImmediately } = useAsyncState(
+      promiseFn,
+      'initial',
+      { immediate: false },
+    );
+
+    executeImmediately();
+    abort();
+
+    executeImmediately();
+    resolvePromise!('new data');
+    await nextTick();
+
+    expect(state.value).toBe('new data');
+    expect(isReady.value).toBeTruthy();
+  });
+
+  it('re-execute cancels previous pending execution', async () => {
+    let callCount = 0;
+    const promiseFn = (value: string) => new Promise<string>(resolve => {
+      callCount++;
+      setTimeout(() => resolve(value), 100);
+    });
+
+    const { state, executeImmediately } = useAsyncState(
+      promiseFn,
+      'initial',
+      { immediate: false },
+    );
+
+    executeImmediately('first');
+    executeImmediately('second');
+
+    await vi.advanceTimersByTimeAsync(100);
+
+    expect(state.value).toBe('second');
+    expect(callCount).toBe(2);
+  });
 });

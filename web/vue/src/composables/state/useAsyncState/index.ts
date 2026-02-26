@@ -19,6 +19,7 @@ export interface UseAsyncStateReturnBase<Data, Params extends any[], Shallow ext
   error: Ref<unknown | null>;
   execute: (delay?: number, ...params: Params) => Promise<Data>;
   executeImmediately: (...params: Params) => Promise<Data>;
+  abort: () => void;
 }
 
 export type UseAsyncStateReturn<Data, Params extends any[], Shallow extends boolean> =
@@ -50,7 +51,11 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
   const isLoading = ref(false);
   const isReady = ref(false);
 
+  let version = 0;
+
   const execute = async (actualDelay = delay, ...params: any[]) => {
+    const currentVersion = ++version;
+
     if (resetOnExecute)
       state.value = initialState;
 
@@ -65,11 +70,18 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
 
     try {
       const data = await promise;
+
+      if (currentVersion !== version)
+        return state.value as Data;
+
       state.value = data;
       isReady.value = true;
       onSuccess?.(data);
     }
     catch (e: unknown) {
+      if (currentVersion !== version)
+        return state.value as Data;
+
       error.value = e;
       onError?.(e);
 
@@ -77,7 +89,8 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
         throw e;
     }
     finally {
-      isLoading.value = false;
+      if (currentVersion === version)
+        isLoading.value = false;
     }
 
     return state.value as Data;
@@ -85,6 +98,11 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
 
   const executeImmediately = (...params: Params) => {
     return execute(0, ...params);
+  };
+
+  const abort = () => {
+    version++;
+    isLoading.value = false;
   };
 
   if (immediate)
@@ -97,6 +115,7 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
     error,
     execute,
     executeImmediately,
+    abort,
   };
 
   function waitResolve() {

@@ -1,6 +1,6 @@
 import { ref, shallowRef, watch } from 'vue';
 import type { Ref, ShallowRef, UnwrapRef } from 'vue';
-import { isFunction, sleep } from '@robonen/stdlib';
+import { isFunction, sleep, cancellablePromise as makeCancellable, CancelledError } from '@robonen/stdlib';
 
 export interface UseAsyncStateOptions<Shallow extends boolean, Data = any> {
   delay?: number;
@@ -51,10 +51,13 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
   const isLoading = ref(false);
   const isReady = ref(false);
 
-  let version = 0;
+  let cancelPending: ((reason?: string) => void) | undefined;
 
   const execute = async (actualDelay = delay, ...params: any[]) => {
-    const currentVersion = ++version;
+    cancelPending?.();
+
+    let active = true;
+    cancelPending = () => { active = false; };
 
     if (resetOnExecute)
       state.value = initialState;
@@ -66,20 +69,25 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
     if (actualDelay > 0)
       await sleep(actualDelay);
 
-    const promise = isFunction(maybePromise) ? maybePromise(...params as Params) : maybePromise;
+    if (!active)
+      return state.value as Data;
+
+    const rawPromise = isFunction(maybePromise) ? maybePromise(...params as Params) : maybePromise;
+    const { promise, cancel } = makeCancellable(rawPromise);
+    cancelPending = (reason?: string) => {
+      active = false;
+      cancel(reason);
+    };
 
     try {
       const data = await promise;
-
-      if (currentVersion !== version)
-        return state.value as Data;
 
       state.value = data;
       isReady.value = true;
       onSuccess?.(data);
     }
     catch (e: unknown) {
-      if (currentVersion !== version)
+      if (e instanceof CancelledError)
         return state.value as Data;
 
       error.value = e;
@@ -89,7 +97,7 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
         throw e;
     }
     finally {
-      if (currentVersion === version)
+      if (active)
         isLoading.value = false;
     }
 
@@ -101,7 +109,8 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
   };
 
   const abort = () => {
-    version++;
+    cancelPending?.();
+    cancelPending = undefined;
     isLoading.value = false;
   };
 
@@ -120,10 +129,12 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
 
   function waitResolve() {
     return new Promise<UseAsyncStateReturnBase<Data, Params, Shallow>>((resolve, reject) => {
-      watch(
+      const unwatch = watch(
         isLoading,
         (loading) => {
           if (loading === false) {
+            unwatch();
+
             if (error.value)
               reject(error.value);
             else 
@@ -132,7 +143,6 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
         },
         { 
           immediate: true,
-          once: true,
           flush: 'sync',
         },
       );

@@ -23,6 +23,7 @@ describe(useAsyncState, () => {
     expect(error.value).toBe(null);
 
     await nextTick();
+    await nextTick();
 
     expect(state.value).toBe('data');
     expect(isReady.value).toBeTruthy();
@@ -41,6 +42,7 @@ describe(useAsyncState, () => {
     expect(isLoading.value).toBeTruthy();
     expect(error.value).toBe(null);
 
+    await nextTick();
     await nextTick();
 
     expect(state.value).toBe('data');
@@ -61,6 +63,7 @@ describe(useAsyncState, () => {
     expect(error.value).toBe(null);
 
     await nextTick();
+    await nextTick();
 
     expect(state.value).toBe('initial');
     expect(isReady.value).toBeFalsy();
@@ -78,6 +81,7 @@ describe(useAsyncState, () => {
     );
 
     await nextTick();
+    await nextTick();
 
     expect(onSuccess).toHaveBeenCalledWith('data');
   });
@@ -92,6 +96,7 @@ describe(useAsyncState, () => {
       { onError },
     );
 
+    await nextTick();
     await nextTick();
 
     expect(onError).toHaveBeenCalledWith(error);
@@ -164,6 +169,7 @@ describe(useAsyncState, () => {
     expect(isReady.value).toBeFalsy();
     expect(error.value).toBe(null);
 
+    await nextTick();
     await nextTick();
 
     expect(state.value).toBe('data');
@@ -288,6 +294,7 @@ describe(useAsyncState, () => {
 
     executeImmediately();
     resolvePromise!('new data');
+    await nextTick();
     await nextTick();
 
     expect(state.value).toBe('new data');

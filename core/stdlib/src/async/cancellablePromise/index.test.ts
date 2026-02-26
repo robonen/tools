@@ -37,23 +37,20 @@ describe('cancellablePromise', () => {
     await expect(promise).rejects.toThrow('Request aborted');
   });
 
-  it('cancel prevents onSuccess from being called', async () => {
-    const onSuccess = vi.fn();
+  it('cancel prevents then callback from being called', async () => {
+    const onFulfilled = vi.fn();
 
     const { promise, cancel } = cancellablePromise(
       new Promise<string>((resolve) => setTimeout(() => resolve('data'), 100)),
     );
 
+    const chained = promise.then(onFulfilled).catch(() => {});
+
     cancel();
 
-    try {
-      await promise;
-    }
-    catch {
-      // expected
-    }
+    await chained;
 
-    expect(onSuccess).not.toHaveBeenCalled();
+    expect(onFulfilled).not.toHaveBeenCalled();
   });
 
   it('CancelledError has correct name property', () => {

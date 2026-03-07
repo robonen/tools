@@ -1,5 +1,5 @@
 import { bench, describe } from 'vitest';
-import { encodeBinary, encodeSegments, encodeText, makeSegments, LOW, EccMap } from '.';
+import { encodeBinary, encodeSegments, encodeText, makeSegments, LOW, EccMap } from '..';
 
 /* -- Test data -- */
 

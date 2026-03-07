@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { encodeText, encodeBinary, makeSegments, isNumeric, isAlphanumeric, QrCode, EccMap, LOW, MEDIUM, HIGH } from '.';
+import { encodeText, encodeBinary, encodeSegments, makeSegments, isNumeric, isAlphanumeric, QrCode, QrCodeDataType, EccMap, LOW, MEDIUM, QUARTILE, HIGH } from '..';
 
 describe('isNumeric', () => {
   it('accepts pure digit strings', () => {
@@ -178,5 +178,80 @@ describe('EccMap', () => {
   it('works with encodeText', () => {
     const qr = encodeText('Test', EccMap.L);
     expect(qr).toBeInstanceOf(QrCode);
+  });
+});
+
+describe('encodeSegments', () => {
+  it('uses explicit mask when specified', () => {
+    const qr = encodeSegments(makeSegments('Test'), LOW, 1, 40, 3);
+    expect(qr.mask).toBe(3);
+  });
+
+  it('preserves ECC level when boostEcl is false', () => {
+    const qr = encodeSegments(makeSegments('Test'), LOW, 1, 40, -1, false);
+    expect(qr.ecc).toBe(LOW);
+  });
+
+  it('boosts ECC level by default when data fits', () => {
+    const qr = encodeSegments(makeSegments('Test'), LOW);
+    expect(qr.ecc).toBe(HIGH);
+  });
+
+  it('forces a specific version when min equals max', () => {
+    const qr = encodeSegments(makeSegments('Test'), LOW, 5, 5);
+    expect(qr.version).toBe(5);
+  });
+
+  it('throws on invalid version range', () => {
+    expect(() => encodeSegments(makeSegments('Test'), LOW, 2, 1)).toThrow(RangeError);
+  });
+
+  it('throws on invalid mask value', () => {
+    expect(() => encodeSegments(makeSegments('Test'), LOW, 1, 40, 8)).toThrow(RangeError);
+  });
+});
+
+describe('encodeBinary edge cases', () => {
+  it('encodes an empty array', () => {
+    const qr = encodeBinary([], LOW);
+    expect(qr).toBeInstanceOf(QrCode);
+  });
+});
+
+describe('encodeText edge cases', () => {
+  it('encodes Unicode emoji text', () => {
+    const qr = encodeText('Hello \uD83C\uDF0D', LOW);
+    expect(qr).toBeInstanceOf(QrCode);
+    expect(qr.size).toBeGreaterThanOrEqual(21);
+  });
+
+  it('uses compact encoding for alphanumeric text', () => {
+    const qr = encodeText('HELLO WORLD', LOW);
+    expect(qr.version).toBe(1);
+  });
+
+  it('selects version >= 7 for long data (triggers drawVersion)', () => {
+    const qr = encodeText('a'.repeat(200), LOW);
+    expect(qr.version).toBeGreaterThanOrEqual(7);
+  });
+});
+
+describe('getType semantics', () => {
+  it('identifies finder pattern modules as Position', () => {
+    const qr = encodeText('Test', LOW);
+    // Top-left finder pattern
+    expect(qr.getType(0, 0)).toBe(QrCodeDataType.Position);
+    expect(qr.getType(3, 3)).toBe(QrCodeDataType.Position);
+    expect(qr.getType(6, 6)).toBe(QrCodeDataType.Position);
+    // Top-right finder pattern
+    expect(qr.getType(qr.size - 1, 0)).toBe(QrCodeDataType.Position);
+    // Bottom-left finder pattern
+    expect(qr.getType(0, qr.size - 1)).toBe(QrCodeDataType.Position);
+  });
+
+  it('identifies timing pattern modules as Timing', () => {
+    const qr = encodeText('Test', LOW);
+    // Horizontal timing row y=6, between finders
+    expect(qr.getType(8, 6)).toBe(QrCodeDataType.Timing);
   });
 });

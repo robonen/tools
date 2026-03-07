@@ -1,9 +1,12 @@
 import { defineConfig } from 'tsdown';
 import { sharedConfig } from '@robonen/tsdown';
+import Vue from 'unplugin-vue/rolldown';
 
 export default defineConfig({
   ...sharedConfig,
   entry: ['src/index.ts'],
+  plugins: [Vue({ isProduction: true })],
+  dts: { vue: true },
   deps: {
     neverBundle: ['vue'],
     alwaysBundle: [/^@robonen\//, '@vue/shared'],

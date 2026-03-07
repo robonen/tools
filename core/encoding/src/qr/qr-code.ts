@@ -7,14 +7,9 @@
 
 import type { QrCodeEcc } from './types';
 import { QrCodeDataType } from './types';
-import { ECC_CODEWORDS_PER_BLOCK, MAX_VERSION, MIN_VERSION, NUM_ERROR_CORRECTION_BLOCKS } from './constants';
+import { ECC_CODEWORDS_PER_BLOCK, MAX_VERSION, MIN_VERSION, NUM_ERROR_CORRECTION_BLOCKS, PENALTY_N1, PENALTY_N2, PENALTY_N3, PENALTY_N4 } from './constants';
 import { assert, getBit, getNumDataCodewords, getNumRawDataModules } from './utils';
 import { computeDivisor, computeRemainder } from '../reed-solomon';
-
-const PENALTY_N1 = 3;
-const PENALTY_N2 = 3;
-const PENALTY_N3 = 40;
-const PENALTY_N4 = 10;
 
 /**
  * A QR Code symbol, which is a type of two-dimension barcode.
@@ -102,7 +97,7 @@ export class QrCode {
     const size = this.size;
     // Draw horizontal and vertical timing patterns
     for (let i = 0; i < size; i++) {
-      const dark = i % 2 === 0 ? 1 : 0;
+      const dark = (i & 1) ^ 1;
       this.setFunctionModule(6, i, dark, QrCodeDataType.Timing);
       this.setFunctionModule(i, 6, dark, QrCodeDataType.Timing);
     }
@@ -322,10 +317,8 @@ export class QrCode {
             result++;
         }
         else {
-          // finderPenaltyAddHistory inlined
           if (h0 === 0) runX += size;
           h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = runX; h0 = runX;
-          // finderPenaltyCountPatterns inlined (only when runColor is light = 0)
           if (runColor === 0) {
             const core = h1 > 0 && h2 === h1 && h3 === h1 * 3 && h4 === h1 && h5 === h1;
             if (core && h0 >= h1 * 4 && h6 >= h1) result += PENALTY_N3;
@@ -335,7 +328,6 @@ export class QrCode {
           runX = 1;
         }
       }
-      // finderPenaltyTerminateAndCount inlined
       {
         let currentRunLength = runX;
         if (runColor === 1) {
@@ -415,7 +407,7 @@ export class QrCode {
     const k = Math.ceil(Math.abs(dark * 20 - total * 10) / total) - 1;
     assert(k >= 0 && k <= 9);
     result += k * PENALTY_N4;
-    assert(result >= 0 && result <= 2568888);
+    assert(result >= 0 && result <= 2_568_888);
     return result;
   }
 
@@ -423,14 +415,14 @@ export class QrCode {
     if (this.version === 1)
       return [];
 
-    const numAlign = ((this.version / 7) | 0)
-      + 2;
+    const numAlign = ((this.version / 7) | 0) + 2;
     const step = (this.version === 32)
       ? 26
       : Math.ceil((this.version * 4 + 4) / (numAlign * 2 - 2)) * 2;
-    const result = [6];
-    for (let pos = this.size - 7; result.length < numAlign; pos -= step)
-      result.splice(1, 0, pos);
+    const result = Array.from<number>({ length: numAlign });
+    result[0] = 6;
+    for (let i = numAlign - 1, pos = this.size - 7; i >= 1; i--, pos -= step)
+      result[i] = pos;
     return result;
   }
 }

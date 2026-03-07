@@ -44,10 +44,14 @@
     "@robonen/tsdown": "workspace:*",
     "@stylistic/eslint-plugin": "catalog:",
     "@vue/test-utils": "catalog:",
+    "axe-core": "^4.11.1",
     "oxlint": "catalog:",
-    "tsdown": "catalog:"
+    "tsdown": "catalog:",
+    "unplugin-vue": "^7.1.1",
+    "vue-tsc": "^3.2.5"
   },
   "dependencies": {
+    "@robonen/vue": "workspace:*",
     "@vue/shared": "catalog:",
     "vue": "catalog:"
   }

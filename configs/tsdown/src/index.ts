@@ -1,4 +1,4 @@
-import type { Options } from 'tsdown';
+import type { InlineConfig } from 'tsdown';
 
 const BANNER = '/*! @robonen/tools | (c) 2026 Robonen Andrew | Apache-2.0 */';
 
@@ -10,4 +10,4 @@ export const sharedConfig = {
   outputOptions: {
     banner: BANNER,
   },
-} satisfies Options;
+} satisfies InlineConfig;

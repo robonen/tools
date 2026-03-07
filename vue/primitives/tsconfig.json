@@ -6,5 +6,9 @@
     "paths": {
       "@/*": ["src/*"]
     }
+  },
+  "vueCompilerOptions": {
+    "strictTemplates": true,
+    "fallthroughAttributes": true
   }
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeDivisor, computeRemainder, multiply } from '.';
+import { computeDivisor, computeRemainder, multiply } from '..';
 
 describe('multiply', () => {
   it('multiplies zero by anything to get zero', () => {
@@ -96,5 +96,20 @@ describe('computeRemainder', () => {
       const result = computeRemainder(data, divisor);
       expect(result).toHaveLength(degree);
     }
+  });
+
+  it('produces correct ECC for QR Version 1-M reference data', () => {
+    const data = [0x40, 0xD2, 0x75, 0x47, 0x76, 0x17, 0x32, 0x06, 0x27, 0x26, 0x96, 0xC6, 0xC6, 0x96, 0x70, 0xEC];
+    const divisor = computeDivisor(10);
+    const result = computeRemainder(data, divisor);
+    expect(result).toEqual(Uint8Array.from([188, 42, 144, 19, 107, 175, 239, 253, 75, 224]));
+  });
+
+  it('is deterministic', () => {
+    const data = [0x10, 0x20, 0x30, 0x40, 0x50];
+    const divisor = computeDivisor(7);
+    const a = computeRemainder(data, divisor);
+    const b = computeRemainder(data, divisor);
+    expect(a).toEqual(b);
   });
 });

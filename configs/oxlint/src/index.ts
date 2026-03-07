@@ -2,7 +2,7 @@
 export { compose } from './compose';
 
 /* Presets */
-export { base, typescript, vue, vitest, imports, node } from './presets';
+export { base, typescript, vue, vitest, imports, node, stylistic } from './presets';
 
 /* Types */
 export type {
@@ -10,6 +10,7 @@ export type {
   OxlintOverride,
   OxlintEnv,
   OxlintGlobals,
+  ExternalPluginEntry,
   AllowWarnDeny,
   DummyRule,
   DummyRuleMap,

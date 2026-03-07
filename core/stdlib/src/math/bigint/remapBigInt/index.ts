@@ -1,11 +1,11 @@
 import { clampBigInt } from '../clampBigInt';
-import {inverseLerpBigInt, lerpBigInt} from '../lerpBigInt';
+import { inverseLerpBigInt, lerpBigInt } from '../lerpBigInt';
 
 /**
  * @name remapBigInt
  * @category Math
  * @description Map a bigint value from one range to another
- * 
+ *
  * @param {bigint} value The value to map
  * @param {bigint} in_min The minimum value of the input range
  * @param {bigint} in_max The maximum value of the input range

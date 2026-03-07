@@ -39,7 +39,8 @@ export class StateMachine<
 
     if (isString(transition)) {
       target = transition;
-    } else {
+    }
+    else {
       if (transition.guard && !transition.guard(this.context))
         return this.currentState;
 

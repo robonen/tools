@@ -1,0 +1,10 @@
+{
+  "extends": "@robonen/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["DOM"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}

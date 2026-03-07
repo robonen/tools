@@ -234,7 +234,7 @@ export class CircularBuffer<T> implements CircularBufferLike<T> {
    *
    * @returns {AsyncIterableIterator<T>}
    */
-  async *[Symbol.asyncIterator]() {
+  async* [Symbol.asyncIterator]() {
     for (const element of this)
       yield element;
   }

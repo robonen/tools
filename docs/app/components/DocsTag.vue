@@ -1,5 +1,4 @@
-<script setup lang="ts">
-defineProps<{
+<script setup lang="ts">defineProps<{
   label: string;
   variant?: 'since' | 'test' | 'demo' | 'wip';
 }>();

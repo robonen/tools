@@ -2,7 +2,7 @@
  * @name and
  * @category Bits
  * @description Function to combine multiple flags using the AND operator
- * 
+ *
  * @param {number[]} flags - The flags to combine
  * @returns {number} The combined flags
  *
@@ -16,7 +16,7 @@ export function and(...flags: number[]) {
 * @name or
 * @category Bits
 * @description Function to combine multiple flags using the OR operator
-* 
+*
 * @param {number[]} flags - The flags to combine
 * @returns {number} The combined flags
 *
@@ -30,7 +30,7 @@ export function or(...flags: number[]) {
 * @name not
 * @category Bits
 * @description Function to combine multiple flags using the XOR operator
-* 
+*
 * @param {number} flag - The flag to apply the NOT operator to
 * @returns {number} The result of the NOT operator
 *
@@ -44,7 +44,7 @@ export function not(flag: number) {
 * @name has
 * @category Bits
 * @description Function to make sure a flag has a specific bit set
-* 
+*
 * @param {number} flag - The flag to check
 * @param {number} other - Flag to check
 * @returns {boolean} Whether the flag has the bit set
@@ -59,7 +59,7 @@ export function has(flag: number, other: number) {
 * @name is
 * @category Bits
 * @description Function to check if a flag is set
-* 
+*
 * @param {number} flag - The flag to check
 * @returns {boolean} Whether the flag is set
 *
@@ -73,7 +73,7 @@ export function is(flag: number) {
 * @name unset
 * @category Bits
 * @description Function to unset a flag
-* 
+*
 * @param {number} flag - Source flag
 * @param {number} other - Flag to unset
 * @returns {number} The new flag
@@ -88,7 +88,7 @@ export function unset(flag: number, other: number) {
 * @name toggle
 * @category Bits
 * @description Function to toggle (xor) a flag
-* 
+*
 * @param {number} flag - Source flag
 * @param {number} other - Flag to toggle
 * @returns {number} The new flag

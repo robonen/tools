@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import { demos } from '#docs/demos';
+<script setup lang="ts">import { demos } from '#docs/demos';
 
 const route = useRoute();
 const { getItem } = useDocs();

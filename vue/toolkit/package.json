@@ -1,0 +1,55 @@
+{
+  "name": "@robonen/vue",
+  "version": "0.0.13",
+  "license": "Apache-2.0",
+  "description": "Collection of powerful tools for Vue",
+  "keywords": [
+    "vue",
+    "tools",
+    "ui",
+    "utilities",
+    "composables"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "vue/toolkit"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=24.13.1"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "lint:check": "oxlint -c oxlint.config.ts",
+    "lint:fix": "oxlint -c oxlint.config.ts --fix",
+    "test": "vitest run",
+    "dev": "vitest dev",
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@robonen/oxlint": "workspace:*",
+    "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
+    "@stylistic/eslint-plugin": "catalog:",
+    "@vue/test-utils": "catalog:",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "dependencies": {
+    "@robonen/platform": "workspace:*",
+    "@robonen/stdlib": "workspace:*",
+    "vue": "catalog:"
+  }
+}

@@ -27,10 +27,10 @@ export default defineNuxtModule({
     const metadata: DocsMetadata = extract();
 
     // Add Vite resolve aliases for source packages so demo.vue imports resolve.
-    // The web/vue package uses `@/` path aliases (e.g. `@/composables/...`).
+    // The vue/toolkit package uses `@/` path aliases (e.g. `@/composables/...`).
     // We prepend them via vite:extendConfig so they take priority over Nuxt's
     // built-in `@` → srcDir alias.
-    const vueSrc = resolve(ROOT, 'web/vue/src');
+    const vueSrc = resolve(ROOT, 'vue/toolkit/src');
 
     nuxt.hook('vite:extendConfig', (config) => {
       const existing = config.resolve?.alias;
@@ -42,7 +42,8 @@ export default defineNuxtModule({
 
       if (Array.isArray(existing)) {
         existing.unshift(...sourceAliases);
-      } else {
+      }
+      else {
         config.resolve ??= {};
         config.resolve.alias = [
           ...sourceAliases,

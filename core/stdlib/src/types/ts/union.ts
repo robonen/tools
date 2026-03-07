@@ -3,8 +3,8 @@
  */
 export type UnionToIntersection<Union> = (
   Union extends unknown
-		? (distributedUnion: Union) => void
-		: never
+    ? (distributedUnion: Union) => void
+    : never
 ) extends ((mergedIntersection: infer Intersection) => void)
-	? Intersection & Union
-	: never;
+  ? Intersection & Union
+  : never;

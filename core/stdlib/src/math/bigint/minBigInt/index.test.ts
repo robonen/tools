@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest';
-import {minBigInt} from '.';
+import { describe, it, expect } from 'vitest';
+import { minBigInt } from '.';
 
 describe('minBigInt', () => {
   it('returns Infinity when no values are provided', () => {
@@ -32,7 +32,7 @@ describe('minBigInt', () => {
   });
 
   it('handles a large number of bigints', () => {
-    const values = Array.from({length: 1000}, (_, i) => BigInt(i));
+    const values = Array.from({ length: 1000 }, (_, i) => BigInt(i));
     const result = minBigInt(...values);
     expect(result).toBe(0n);
   });

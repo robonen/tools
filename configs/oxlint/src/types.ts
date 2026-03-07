@@ -11,6 +11,7 @@ export type {
   OxlintOverride,
   OxlintEnv,
   OxlintGlobals,
+  ExternalPluginEntry,
   AllowWarnDeny,
   DummyRule,
   DummyRuleMap,

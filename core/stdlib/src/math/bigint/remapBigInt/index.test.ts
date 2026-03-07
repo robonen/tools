@@ -1,5 +1,5 @@
-import {describe, expect, it} from 'vitest';
-import {remapBigInt} from '.';
+import { describe, expect, it } from 'vitest';
+import { remapBigInt } from '.';
 
 describe('remapBigInt', () => {
   it('map values from one range to another', () => {

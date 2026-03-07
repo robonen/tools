@@ -34,7 +34,7 @@ describe('cluster', () => {
 
   it('return an empty array if the input array is empty', () => {
     const result = cluster([], 3);
-    
+
     expect(result).toEqual([]);
   });
 });

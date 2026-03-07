@@ -7,21 +7,8 @@
 
 import { resolve, relative, dirname } from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
-import {
-  Project,
-  type SourceFile,
-  type FunctionDeclaration,
-  type ClassDeclaration,
-  type InterfaceDeclaration,
-  type TypeAliasDeclaration,
-  type JSDoc,
-  type JSDocTag,
-  type MethodDeclaration,
-  type PropertyDeclaration,
-  type PropertySignature,
-  SyntaxKind,
-  type Node,
-} from 'ts-morph';
+import { Project } from 'ts-morph';
+import type { SourceFile, FunctionDeclaration, ClassDeclaration, InterfaceDeclaration, TypeAliasDeclaration, JSDoc, JSDocTag, MethodDeclaration, PropertyDeclaration, PropertySignature } from 'ts-morph';
 import type {
   DocsMetadata,
   PackageMeta,
@@ -41,7 +28,7 @@ const ROOT = resolve(import.meta.dirname, '..', '..', '..');
 const PACKAGES: PackageConfig[] = [
   { path: 'core/stdlib', slug: 'stdlib' },
   { path: 'core/platform', slug: 'platform' },
-  { path: 'web/vue', slug: 'vue' },
+  { path: 'vue/toolkit', slug: 'vue' },
   { path: 'configs/oxlint', slug: 'oxlint' },
 ];
 
@@ -74,16 +61,6 @@ function getTagValue(tags: JSDocTag[], tagName: string): string {
   return comment?.trim() ?? '';
 }
 
-function getTagValues(tags: JSDocTag[], tagName: string): string[] {
-  return tags
-    .filter(t => t.getTagName() === tagName)
-    .map(t => {
-      const comment = t.getCommentText();
-      return comment?.trim() ?? '';
-    })
-    .filter(Boolean);
-}
-
 function getDescription(jsdocs: JSDoc[], tags: JSDocTag[]): string {
   // Try @description tag first
   const descTag = getTagValue(tags, 'description');
@@ -101,7 +78,7 @@ function getDescription(jsdocs: JSDoc[], tags: JSDocTag[]): string {
 function getExamples(tags: JSDocTag[]): string[] {
   return tags
     .filter(t => t.getTagName() === 'example')
-    .map(t => {
+    .map((t) => {
       const text = t.getCommentText()?.trim() ?? '';
       // Strip surrounding ```ts ... ``` if present
       return text.replace(/^```(?:ts|typescript)?\n?/, '').replace(/\n?```$/, '').trim();
@@ -120,8 +97,7 @@ function extractParams(tags: JSDocTag[], node: FunctionDeclaration | MethodDecla
     const defaultValue = param.getInitializer()?.getText() ?? null;
 
     // Find matching @param tag
-    const paramTag = paramTags.find(t => {
-      const text = t.getCommentText() ?? '';
+    const paramTag = paramTags.find((t) => {
       const tagText = t.getText();
       return tagText.includes(name);
     });
@@ -220,28 +196,6 @@ function hasTestFile(sourceFilePath: string): boolean {
   return existsSync(resolve(dir, 'index.test.ts'));
 }
 
-function inferCategory(sourceFilePath: string, tags: JSDocTag[]): string {
-  // Try @category tag first
-  const categoryTag = getTagValue(tags, 'category');
-  if (categoryTag) return categoryTag;
-
-  // Infer from directory structure
-  const parts = sourceFilePath.split('/src/');
-  if (parts[1]) {
-    const segments = parts[1].split('/');
-    // For patterns like: composables/browser/useIntervalFn/index.ts → "Browser"
-    // For patterns like: arrays/cluster/index.ts → "Arrays"
-    if (segments.length >= 2) {
-      const category = segments.length >= 3 ? segments[1] : segments[0];
-      if (category) {
-        return category.charAt(0).toUpperCase() + category.slice(1);
-      }
-    }
-  }
-
-  return 'General';
-}
-
 // ── Extraction ─────────────────────────────────────────────────────────────
 
 function extractFunction(fn: FunctionDeclaration, sourceFilePath: string, entryPoint: string): ItemMeta | null {
@@ -254,7 +208,6 @@ function extractFunction(fn: FunctionDeclaration, sourceFilePath: string, entryP
   const jsdocs = fn.getJsDocs();
   const tags = getJsDocTags(jsdocs);
   const description = getDescription(jsdocs, tags);
-  const category = inferCategory(sourceFilePath, tags);
 
   // Get signature text without body
   const signatureText = fn.getOverloads().length > 0
@@ -464,7 +417,8 @@ function collectExportedItems(
         entryPoint,
       };
       items.push(item);
-    } else {
+    }
+    else {
       const item = extractFunction(fn, filePath, entryPoint);
       if (item) items.push(item);
     }
@@ -479,7 +433,6 @@ function collectExportedItems(
   for (const iface of sourceFile.getInterfaces()) {
     if (!iface.isExported()) continue;
     // Skip internal interfaces (e.g. Options, Return types that are documented inline)
-    const name = iface.getName();
     const jsdocs = iface.getJsDocs();
     const tags = getJsDocTags(jsdocs);
     const hasCategory = getTagValue(tags, 'category') !== '';
@@ -537,7 +490,8 @@ function groupCoLocatedTypes(items: ItemMeta[]): ItemMeta[] {
       const existing = typesByDir.get(dir) ?? [];
       existing.push(item);
       typesByDir.set(dir, existing);
-    } else {
+    }
+    else {
       const existing = primaryByDir.get(dir) ?? [];
       existing.push(item);
       primaryByDir.set(dir, existing);
@@ -595,12 +549,14 @@ function extractPackage(config: PackageConfig): PackageMeta | null {
         const fullPath = resolve(pkgDir, srcPath);
         if (existsSync(fullPath)) {
           entryPoints.push({ subpath, filePath: fullPath });
-        } else {
+        }
+        else {
           // Try index.ts in subdirectory
           const altPath = resolve(pkgDir, srcPath.replace(/\.ts$/, '/index.ts'));
           if (existsSync(altPath)) {
             entryPoints.push({ subpath, filePath: altPath });
-          } else {
+          }
+          else {
             console.warn(`[extractor] Entry point not found: ${fullPath} or ${altPath}`);
           }
         }
@@ -639,7 +595,7 @@ function extractPackage(config: PackageConfig): PackageMeta | null {
 
   // Deduplicate by name (overloaded functions may appear once already)
   const seen = new Set<string>();
-  const uniqueItems = allItems.filter(item => {
+  const uniqueItems = allItems.filter((item) => {
     const key = `${item.entryPoint}:${item.name}`;
     if (seen.has(key)) return false;
     seen.add(key);

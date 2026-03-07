@@ -169,7 +169,7 @@ describe('stateMachine', () => {
             on: {
               FAIL: {
                 target: 'idle',
-                guard: (ctx) => ctx.retries < 3,
+                guard: ctx => ctx.retries < 3,
               },
               SUCCESS: 'done',
             },
@@ -255,7 +255,7 @@ describe('stateMachine', () => {
             on: {
               UNLOCK: {
                 target: 'unlocked',
-                guard: (ctx) => ctx.unlocked,
+                guard: ctx => ctx.unlocked,
               },
             },
             exit: exitHook,
@@ -374,7 +374,7 @@ describe('stateMachine', () => {
             on: {
               NEXT: {
                 target: 'c',
-                guard: (ctx) => ctx.step === 1,
+                guard: ctx => ctx.step === 1,
                 action: (ctx) => { ctx.step = 2; },
               },
             },
@@ -434,7 +434,7 @@ describe('asyncStateMachine', () => {
             on: {
               GO: {
                 target: 'active',
-                guard: async (ctx) => ctx.allowed,
+                guard: async ctx => ctx.allowed,
               },
             },
           },
@@ -456,7 +456,7 @@ describe('asyncStateMachine', () => {
             on: {
               GO: {
                 target: 'active',
-                guard: async (ctx) => ctx.allowed,
+                guard: async ctx => ctx.allowed,
               },
             },
           },
@@ -483,7 +483,7 @@ describe('asyncStateMachine', () => {
               FETCH: {
                 target: 'done',
                 action: async (ctx) => {
-                  await new Promise((r) => setTimeout(r, 10));
+                  await new Promise(r => setTimeout(r, 10));
                   ctx.data = 'fetched';
                   order.push('action');
                 },
@@ -513,13 +513,13 @@ describe('asyncStateMachine', () => {
           a: {
             on: { GO: 'b' },
             exit: async () => {
-              await new Promise((r) => setTimeout(r, 10));
+              await new Promise(r => setTimeout(r, 10));
               order.push('exit-a');
             },
           },
           b: {
             entry: async () => {
-              await new Promise((r) => setTimeout(r, 10));
+              await new Promise(r => setTimeout(r, 10));
               order.push('entry-b');
             },
           },
@@ -544,7 +544,7 @@ describe('asyncStateMachine', () => {
             on: {
               UNLOCK: {
                 target: 'unlocked',
-                guard: async (ctx) => ctx.unlocked,
+                guard: async ctx => ctx.unlocked,
               },
             },
             exit: exitHook,
@@ -573,7 +573,7 @@ describe('asyncStateMachine', () => {
             on: {
               GO: {
                 target: 'active',
-                guard: async (ctx) => ctx.ready,
+                guard: async ctx => ctx.ready,
               },
             },
           },
@@ -667,7 +667,7 @@ describe('asyncStateMachine', () => {
             on: {
               GO: {
                 target: 'active',
-                guard: (ctx) => ctx.count === 0,
+                guard: ctx => ctx.count === 0,
                 action: (ctx) => { ctx.count++; },
               },
             },

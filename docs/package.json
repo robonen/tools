@@ -6,6 +6,8 @@
   "description": "Auto-generated documentation site for @robonen/tools",
   "type": "module",
   "scripts": {
+    "lint:check": "oxlint -c oxlint.config.ts",
+    "lint:fix": "oxlint -c oxlint.config.ts --fix",
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",
@@ -13,17 +15,20 @@
     "extract": "jiti ./modules/extractor/extract.ts"
   },
   "dependencies": {
-    "shiki": "^3.4.2"
+    "shiki": "^4.0.1"
   },
   "devDependencies": {
-    "@nuxt/fonts": "^0.11.4",
+    "@nuxt/fonts": "^0.14.0",
     "@nuxt/kit": "^4.3.1",
-    "@tailwindcss/vite": "^4.1.0",
+    "@robonen/oxlint": "workspace:*",
+    "@stylistic/eslint-plugin": "catalog:",
+    "@tailwindcss/vite": "^4.2.1",
     "jiti": "^2.6.1",
     "nuxt": "catalog:",
-    "tailwindcss": "^4.1.0",
-    "ts-morph": "^25.0.0",
+    "oxlint": "catalog:",
+    "tailwindcss": "^4.2.1",
+    "ts-morph": "^27.0.2",
     "vue": "catalog:",
-    "vue-router": "^4.5.1"
+    "vue-router": "^5.0.3"
   }
 }

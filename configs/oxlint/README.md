@@ -41,6 +41,19 @@ compose(base, typescript, {
 | `imports`    | Import rules (cycles, duplicates, ordering)        |
 | `node`       | Node.js-specific rules                             |
 
+## Rules Documentation
+
+Подробные описания правил и `good/bad` примеры вынесены в отдельную директорию:
+
+- `rules/README.md`
+- `rules/base.md`
+- `rules/typescript.md`
+- `rules/vue.md`
+- `rules/vitest.md`
+- `rules/imports.md`
+- `rules/node.md`
+- `rules/stylistic.md`
+
 ## API
 
 ### `compose(...configs: OxlintConfig[]): OxlintConfig`

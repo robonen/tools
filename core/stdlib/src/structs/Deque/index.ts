@@ -173,7 +173,7 @@ export class Deque<T> implements DequeLike<T> {
    *
    * @returns {AsyncIterableIterator<T>}
    */
-  async *[Symbol.asyncIterator]() {
+  async* [Symbol.asyncIterator]() {
     for (const element of this.buffer)
       yield element;
   }

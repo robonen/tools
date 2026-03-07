@@ -1,5 +1,4 @@
-<script setup lang="ts">
-const route = useRoute();
+<script setup lang="ts">const route = useRoute();
 const { getPackage } = useDocs();
 
 const slug = computed(() => route.params.package as string);

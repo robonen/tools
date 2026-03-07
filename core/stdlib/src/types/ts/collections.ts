@@ -6,18 +6,18 @@ export type Collection = Record<PropertyKey, any> | any[];
 /**
  * Parse a collection path string into an array of keys
  */
-export type Path<T> =
-  T extends `${infer Key}.${infer Rest}`
+export type Path<T>
+  = T extends `${infer Key}.${infer Rest}`
     ? [Key, ...Path<Rest>]
-      : T extends `${infer Key}`
-        ? [Key]
-        : [];
+    : T extends `${infer Key}`
+      ? [Key]
+      : [];
 
 /**
  * Convert a collection path array into a Target type
  */
-export type PathToType<T extends string[], Target = unknown> =
-  T extends [infer Head, ...infer Rest]
+export type PathToType<T extends string[], Target = unknown>
+  = T extends [infer Head, ...infer Rest]
     ? Head extends `${number}`
       ? Rest extends string[]
         ? Array<PathToType<Rest, Target>>

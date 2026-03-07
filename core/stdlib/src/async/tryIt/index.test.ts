@@ -13,7 +13,9 @@ describe('tryIt', () => {
   });
 
   it('handle synchronous functions with errors', () => {
-    const syncFn = (): void => { throw new Error('Test error') };
+    const syncFn = (): void => {
+      throw new Error('Test error');
+    };
     const wrappedSyncFn = tryIt(syncFn);
 
     const [error, result] = wrappedSyncFn();
@@ -34,7 +36,9 @@ describe('tryIt', () => {
   });
 
   it('handle asynchronous functions with errors', async () => {
-    const asyncFn = async () => { throw new Error('Test error') };
+    const asyncFn = async () => {
+      throw new Error('Test error');
+    };
     const wrappedAsyncFn = tryIt(asyncFn);
 
     const [error, result] = await wrappedAsyncFn();

@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import type { ParamMeta } from '../../modules/extractor/types';
+<script setup lang="ts">import type { ParamMeta } from '../../modules/extractor/types';
 
 defineProps<{
   params: ParamMeta[];

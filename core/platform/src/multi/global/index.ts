@@ -7,8 +7,8 @@
  *
  * @since 0.0.1
  */
-export const _global =
-  typeof globalThis !== 'undefined'
+export const _global
+  = typeof globalThis !== 'undefined'
     ? globalThis
     : typeof window !== 'undefined'
       ? window
@@ -22,7 +22,7 @@ export const _global =
  * @name isClient
  * @category Multi
  * @description Check if the current environment is the client
- * 
+ *
  * @since 0.0.1
  */
 export const isClient = typeof window !== 'undefined' && typeof document !== 'undefined';

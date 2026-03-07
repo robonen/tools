@@ -16,7 +16,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "configs/oxlint"
   },
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.30.3",
   "engines": {
     "node": ">=24.13.1"
   },
@@ -27,12 +27,13 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
   },
   "scripts": {
-    "lint": "oxlint -c oxlint.config.ts",
+    "lint:check": "oxlint -c oxlint.config.ts",
+    "lint:fix": "oxlint -c oxlint.config.ts --fix",
     "test": "vitest run",
     "dev": "vitest dev",
     "build": "tsdown"
@@ -41,11 +42,18 @@
     "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
+    "@stylistic/eslint-plugin": "catalog:",
     "oxlint": "catalog:",
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "oxlint": ">=1.0.0"
+    "oxlint": ">=1.0.0",
+    "@stylistic/eslint-plugin": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@stylistic/eslint-plugin": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "access": "public"

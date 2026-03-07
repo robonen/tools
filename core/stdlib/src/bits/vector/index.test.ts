@@ -13,7 +13,7 @@ describe('BitVector', () => {
   it('set and get bits correctly', () => {
     const bitVector = new BitVector(16);
     bitVector.setBit(5);
-    
+
     expect(bitVector.getBit(5)).toBe(true);
     expect(bitVector.getBit(4)).toBe(false);
   });
@@ -40,7 +40,7 @@ describe('BitVector', () => {
     const indices = [99, 88, 66, 65, 64, 63, 15, 14, 1, 0];
     const result = [];
     indices.forEach(index => bitVector.setBit(index));
-    
+
     for (let i = bitVector.previousBit(100); i !== -1; i = bitVector.previousBit(i)) {
       result.push(i);
     }

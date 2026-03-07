@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import type { PropertyMeta } from '../../modules/extractor/types';
+<script setup lang="ts">import type { PropertyMeta } from '../../modules/extractor/types';
 
 defineProps<{
   properties: PropertyMeta[];

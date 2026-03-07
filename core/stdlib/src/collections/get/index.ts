@@ -1,14 +1,14 @@
 import type { Collection, Path } from '../../types';
 
-export type ExtractFromObject<O extends Record<PropertyKey, unknown>, K> =
-  K extends keyof O
+export type ExtractFromObject<O extends Record<PropertyKey, unknown>, K>
+  = K extends keyof O
     ? O[K]
     : K extends keyof NonNullable<O>
       ? NonNullable<O>[K]
       : never;
 
-export type ExtractFromArray<A extends readonly any[], K> =
-  any[] extends A
+export type ExtractFromArray<A extends readonly any[], K>
+  = any[] extends A
     ? A extends ReadonlyArray<infer T>
       ? T | undefined
       : undefined
@@ -16,16 +16,16 @@ export type ExtractFromArray<A extends readonly any[], K> =
       ? A[K]
       : undefined;
 
-export type ExtractFromCollection<O, K> =
-  K extends []
-  ? O
-  : K extends [infer Key, ...infer Rest]
-    ? O extends Record<PropertyKey, unknown>
-      ? ExtractFromCollection<ExtractFromObject<O, Key>, Rest>
-      : O extends readonly any[]
-        ? ExtractFromCollection<ExtractFromArray<O, Key>, Rest>
-        : never
-    : never;
+export type ExtractFromCollection<O, K>
+  = K extends []
+    ? O
+    : K extends [infer Key, ...infer Rest]
+      ? O extends Record<PropertyKey, unknown>
+        ? ExtractFromCollection<ExtractFromObject<O, Key>, Rest>
+        : O extends readonly any[]
+          ? ExtractFromCollection<ExtractFromArray<O, Key>, Rest>
+          : never
+      : never;
 
 type Get<O, K> = ExtractFromCollection<O, Path<K>>;
 

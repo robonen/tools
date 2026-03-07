@@ -1,5 +1,4 @@
-<script setup lang="ts">
-const { getPackages, getTotalItems } = useDocs();
+<script setup lang="ts">const { getPackages, getTotalItems } = useDocs();
 const packages = getPackages();
 const totalItems = getTotalItems();
 

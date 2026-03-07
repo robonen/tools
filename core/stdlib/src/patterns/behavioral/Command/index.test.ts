@@ -205,11 +205,11 @@ describe('asyncCommandHistory', () => {
   function addItemAsync(item: string): AsyncCommand {
     return {
       execute: async () => {
-        await new Promise((r) => setTimeout(r, 5));
+        await new Promise(r => setTimeout(r, 5));
         items.push(item);
       },
       undo: async () => {
-        await new Promise((r) => setTimeout(r, 5));
+        await new Promise(r => setTimeout(r, 5));
         items.pop();
       },
     };

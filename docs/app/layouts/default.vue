@@ -1,5 +1,4 @@
-<script setup lang="ts">
-const { getPackages } = useDocs();
+<script setup lang="ts">const { getPackages } = useDocs();
 const packages = getPackages();
 
 const route = useRoute();

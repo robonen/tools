@@ -1,0 +1,47 @@
+{
+  "name": "@robonen/encoding",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "description": "Encoding utilities for TypeScript",
+  "keywords": [
+    "encoding",
+    "tools"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "core/encoding"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=24.13.1"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "lint:check": "oxlint -c oxlint.config.ts",
+    "lint:fix": "oxlint -c oxlint.config.ts --fix",
+    "test": "vitest run",
+    "dev": "vitest dev",
+    "bench": "vitest bench",
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@robonen/oxlint": "workspace:*",
+    "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
+    "@stylistic/eslint-plugin": "catalog:",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:"
+  }
+}

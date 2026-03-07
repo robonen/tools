@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { and, or, not, has, is, unset, toggle } from '.';
 
-
 describe('flagsAnd', () => {
   it('no effect on zero flags', () => {
     const result = and();
@@ -14,7 +13,7 @@ describe('flagsAnd', () => {
 
     expect(result).toBe(0b1010);
   });
-  
+
   it('perform bitwise AND operation on flags', () => {
     const result = and(0b1111, 0b1010, 0b1100);
 
@@ -30,15 +29,15 @@ describe('flagsOr', () => {
   });
 
   it('source flag is returned if no flags are provided', () => {
-      const result = or(0b1010);
-  
-      expect(result).toBe(0b1010);
+    const result = or(0b1010);
+
+    expect(result).toBe(0b1010);
   });
 
   it('perform bitwise OR operation on flags', () => {
-      const result = or(0b1111, 0b1010, 0b1100);
-  
-      expect(result).toBe(0b1111);
+    const result = or(0b1111, 0b1010, 0b1100);
+
+    expect(result).toBe(0b1111);
   });
 });
 
@@ -58,9 +57,9 @@ describe('flagsHas', () => {
   });
 
   it('check if a flag has a specific bit unset', () => {
-      const result = has(0b1010, 0b0100);
-  
-      expect(result).toBe(false);
+    const result = has(0b1010, 0b0100);
+
+    expect(result).toBe(false);
   });
 });
 
@@ -72,9 +71,9 @@ describe('flagsIs', () => {
   });
 
   it('check if a flag is unset', () => {
-      const result = is(0);
-  
-      expect(result).toBe(false);
+    const result = is(0);
+
+    expect(result).toBe(false);
   });
 });
 

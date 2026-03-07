@@ -8,4 +8,4 @@ export * from './structs';
 export * from './sync';
 export * from './text';
 export * from './types';
-export * from './utils'
+export * from './utils';

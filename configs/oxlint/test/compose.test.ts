@@ -143,4 +143,29 @@ describe('compose', () => {
     expect(result.env).toBeUndefined();
     expect(result.settings).toBeUndefined();
   });
+
+  it('should concatenate jsPlugins with dedup by specifier', () => {
+    const a: OxlintConfig = { jsPlugins: ['eslint-plugin-foo'] };
+    const b: OxlintConfig = { jsPlugins: ['eslint-plugin-foo', 'eslint-plugin-bar'] };
+
+    const result = compose(a, b);
+    expect(result.jsPlugins).toEqual(['eslint-plugin-foo', 'eslint-plugin-bar']);
+  });
+
+  it('should dedup jsPlugins with mixed string and object entries', () => {
+    const a: OxlintConfig = { jsPlugins: ['eslint-plugin-foo'] };
+    const b: OxlintConfig = { jsPlugins: [{ name: 'foo', specifier: 'eslint-plugin-foo' }] };
+
+    const result = compose(a, b);
+    expect(result.jsPlugins).toEqual(['eslint-plugin-foo']);
+  });
+
+  it('should keep jsPlugins and plugins independent', () => {
+    const a: OxlintConfig = { plugins: ['eslint'], jsPlugins: ['eslint-plugin-foo'] };
+    const b: OxlintConfig = { plugins: ['typescript'], jsPlugins: ['eslint-plugin-bar'] };
+
+    const result = compose(a, b);
+    expect(result.plugins).toEqual(['eslint', 'typescript']);
+    expect(result.jsPlugins).toEqual(['eslint-plugin-foo', 'eslint-plugin-bar']);
+  });
 });

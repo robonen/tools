@@ -31,6 +31,7 @@ function deepMerge(target: Record<string, unknown>, source: Record<string, unkno
  * Compose multiple oxlint configurations into a single config.
  *
  * - `plugins` — union (deduplicated)
+ * - `jsPlugins` — union (deduplicated by specifier)
  * - `categories` — later configs override earlier
  * - `rules` — later configs override earlier
  * - `overrides` — concatenated
@@ -58,6 +59,22 @@ export function compose(...configs: OxlintConfig[]): OxlintConfig {
     // Plugins — union with dedup
     if (config.plugins?.length) {
       result.plugins = Array.from(new Set([...(result.plugins ?? []), ...config.plugins]));
+    }
+
+    // JS Plugins — union with dedup by specifier
+    if (config.jsPlugins?.length) {
+      const existing = result.jsPlugins ?? [];
+      const seen = new Set(existing.map(e => typeof e === 'string' ? e : e.specifier));
+
+      for (const entry of config.jsPlugins) {
+        const specifier = typeof entry === 'string' ? entry : entry.specifier;
+        if (!seen.has(specifier)) {
+          seen.add(specifier);
+          existing.push(entry);
+        }
+      }
+
+      result.jsPlugins = existing;
     }
 
     // Categories — shallow merge

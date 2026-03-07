@@ -1,11 +1,11 @@
 import { clamp } from '../clamp';
-import {inverseLerp, lerp} from '../lerp';
+import { inverseLerp, lerp } from '../lerp';
 
 /**
  * @name remap
  * @category Math
  * @description Map a value from one range to another
- * 
+ *
  * @param {number} value The value to map
  * @param {number} in_min The minimum value of the input range
  * @param {number} in_max The maximum value of the input range

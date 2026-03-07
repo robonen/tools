@@ -11,7 +11,7 @@ describe('unique', () => {
   it('return an array with unique objects based on id', () => {
     const result = unique(
       [{ id: 1 }, { id: 2 }, { id: 1 }],
-      (item) => item.id,
+      item => item.id,
     );
 
     expect(result).toEqual([{ id: 1 }, { id: 2 }]);
@@ -33,7 +33,7 @@ describe('unique', () => {
     const sym1 = Symbol('a');
     const sym2 = Symbol('b');
     const result = unique([sym1, sym2, sym1]);
-    
+
     expect(result).toEqual([sym1, sym2]);
   });
 

@@ -39,7 +39,8 @@ export class AsyncStateMachine<
 
     if (isString(transition)) {
       target = transition;
-    } else {
+    }
+    else {
       if (transition.guard && !(await transition.guard(this.context)))
         return this.currentState;
 

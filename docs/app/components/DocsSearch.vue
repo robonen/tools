@@ -1,5 +1,4 @@
-<script setup lang="ts">
-const { searchItems } = useDocs();
+<script setup lang="ts">const { searchItems } = useDocs();
 
 const isOpen = ref(false);
 const query = ref('');

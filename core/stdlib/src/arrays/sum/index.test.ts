@@ -15,7 +15,7 @@ describe('sum', () => {
   });
 
   it('return the sum of all elements using a getValue function', () => {
-    const result = sum([{ value: 1 }, { value: 2 }, { value: 3 }], (item) => item.value);
+    const result = sum([{ value: 1 }, { value: 2 }, { value: 3 }], item => item.value);
 
     expect(result).toBe(6);
   });
@@ -39,8 +39,8 @@ describe('sum', () => {
   });
 
   it('handle arrays with a getValue function returning floating point numbers', () => {
-    const result = sum([{ value: 1.5 }, { value: 2.5 }, { value: 3.5 }], (item) => item.value);
-    
+    const result = sum([{ value: 1.5 }, { value: 2.5 }, { value: 3.5 }], item => item.value);
+
     expect(result).toBe(7.5);
   });
 });

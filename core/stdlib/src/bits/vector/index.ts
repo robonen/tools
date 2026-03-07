@@ -9,7 +9,7 @@ export interface BitVectorLike {
  * @name BitVector
  * @category Bits
  * @description A bit vector is a vector of bits that can be used to store a collection of bits
- * 
+ *
  * @since 0.0.3
  */
 export class BitVector extends Uint8Array implements BitVectorLike {

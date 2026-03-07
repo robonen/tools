@@ -112,7 +112,7 @@ describe('stack', () => {
       for await (const element of stack) {
         elements.push(element);
       }
-      
+
       expect(elements).toEqual([3, 2, 1]);
     });
   });

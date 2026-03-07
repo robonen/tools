@@ -1,0 +1,54 @@
+{
+  "name": "@robonen/primitives",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "description": "Collection of UI primitives",
+  "keywords": [
+    "ui",
+    "primitives",
+    "components",
+    "tools"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "vue/primitives"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=24.13.1"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "lint:check": "oxlint -c oxlint.config.ts",
+    "lint:fix": "oxlint -c oxlint.config.ts --fix",
+    "test": "vitest run",
+    "bench": "vitest bench",
+    "dev": "vitest dev",
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@robonen/oxlint": "workspace:*",
+    "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
+    "@stylistic/eslint-plugin": "catalog:",
+    "@vue/test-utils": "catalog:",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "dependencies": {
+    "@vue/shared": "catalog:",
+    "vue": "catalog:"
+  }
+}

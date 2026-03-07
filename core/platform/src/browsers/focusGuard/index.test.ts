@@ -8,7 +8,7 @@ describe('focusGuard', () => {
 
   it('initialize with the correct default namespace', () => {
     const guard = focusGuard();
-    
+
     expect(guard.selector).toBe('data-focus-guard');
   });
 
@@ -31,7 +31,7 @@ describe('focusGuard', () => {
     guard.removeGuard();
 
     const guards = document.querySelectorAll(`[${guard.selector}]`);
-    
+
     expect(guards.length).toBe(0);
   });
 

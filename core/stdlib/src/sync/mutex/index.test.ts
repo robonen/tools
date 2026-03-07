@@ -14,21 +14,21 @@ describe('SyncMutex', () => {
 
   it('lock the mutex', () => {
     mutex.lock();
-  
+
     expect(mutex.isLocked).toBe(true);
   });
 
   it('remain locked when locked multiple times', () => {
     mutex.lock();
     mutex.lock();
-  
+
     expect(mutex.isLocked).toBe(true);
   });
 
   it('unlock a locked mutex', () => {
     mutex.lock();
     mutex.unlock();
-  
+
     expect(mutex.isLocked).toBe(false);
   });
 
@@ -50,7 +50,7 @@ describe('SyncMutex', () => {
   it('execute a callback when unlocked', async () => {
     const callback = vi.fn(() => 'done');
     const result = await mutex.execute(callback);
-  
+
     expect(result).toBe('done');
     expect(callback).toHaveBeenCalled();
   });
@@ -58,7 +58,7 @@ describe('SyncMutex', () => {
   it('execute a promise callback when unlocked', async () => {
     const callback = vi.fn(() => Promise.resolve('done'));
     const result = await mutex.execute(callback);
-  
+
     expect(result).toBe('done');
     expect(callback).toHaveBeenCalled();
   });
@@ -71,7 +71,7 @@ describe('SyncMutex', () => {
       mutex.execute(callback),
       mutex.execute(callback),
     ]);
-  
+
     expect(result).toEqual(['done', undefined, undefined]);
     expect(callback).toHaveBeenCalledTimes(1);
   });
@@ -88,7 +88,7 @@ describe('SyncMutex', () => {
   it('unlocks after executing a callback', async () => {
     const callback = vi.fn(() => 'done');
     await mutex.execute(callback);
-  
+
     expect(mutex.isLocked).toBe(false);
   });
 });

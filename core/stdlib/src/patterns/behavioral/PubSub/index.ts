@@ -4,13 +4,13 @@
  * @description Simple PubSub implementation
  *
  * @since 0.0.2
- * 
+ *
  * @template Events - Event map where keys are event names and values are listener signatures
  */
 export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
   /**
    * Events map
-   * 
+   *
    * @private
    * @type {Map<keyof Events, Set<Events[keyof Events]>>}
    */
@@ -25,7 +25,7 @@ export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
 
   /**
    * Subscribe to an event
-   * 
+   *
    * @template {keyof Events} K
    * @param {K} event Name of the event
    * @param {Events[K]} listener Listener function
@@ -44,7 +44,7 @@ export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
 
   /**
    * Unsubscribe from an event
-   * 
+   *
    * @template {keyof Events} K
    * @param {K} event Name of the event
    * @param {Events[K]} listener Listener function
@@ -61,7 +61,7 @@ export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
 
   /**
    * Subscribe to an event only once
-   * 
+   *
    * @template {keyof Events} K
    * @param {K} event Name of the event
    * @param {Events[K]} listener Listener function
@@ -69,8 +69,8 @@ export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
    */
   public once<K extends keyof Events>(event: K, listener: Events[K]) {
     const onceListener = (...args: Parameters<Events[K]>) => {
-        this.off(event, onceListener as Events[K]);
-        listener(...args);
+      this.off(event, onceListener as Events[K]);
+      listener(...args);
     };
 
     this.on(event, onceListener as Events[K]);
@@ -80,7 +80,7 @@ export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
 
   /**
    * Emit an event
-   * 
+   *
    * @template {keyof Events} K
    * @param {K} event Name of the event
    * @param {...Parameters<Events[K]>} args Arguments for the listener
@@ -92,14 +92,14 @@ export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
     if (!listeners)
       return false;
 
-    listeners.forEach((listener) => listener(...args));
+    listeners.forEach(listener => listener(...args));
 
     return true;
   }
 
   /**
    * Clear all listeners for an event
-   * 
+   *
    * @template {keyof Events} K
    * @param {K} event Name of the event
    * @returns {this}

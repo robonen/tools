@@ -16,5 +16,7 @@ export const imports: OxlintConfig = {
     'import/no-commonjs': 'warn',
     'import/no-empty-named-blocks': 'warn',
     'import/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
+
+    'sort-imports': ['warn', { ignoreDeclarationSort: false, ignoreMemberSort: false, ignoreCase: true, allowSeparatedGroups: true }],
   },
 };

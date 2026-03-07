@@ -1,4 +1,4 @@
 import { defineConfig } from 'oxlint';
-import { compose, base, typescript, imports } from '@robonen/oxlint';
+import { compose, base, typescript, imports, stylistic } from '@robonen/oxlint';
 
-export default defineConfig(compose(base, typescript, imports));
+export default defineConfig(compose(base, typescript, imports, stylistic));

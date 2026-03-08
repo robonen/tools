@@ -215,6 +215,9 @@ importers:
 
   vue/primitives:
     dependencies:
+      '@robonen/platform':
+        specifier: workspace:*
+        version: link:../../core/platform
       '@robonen/vue':
         specifier: workspace:*
         version: link:../toolkit

@@ -9,6 +9,9 @@
   },
   "vueCompilerOptions": {
     "strictTemplates": true,
-    "fallthroughAttributes": true
+    "fallthroughAttributes": true,
+    "inferTemplateDollarAttrs": true,
+    "inferTemplateDollarEl": true,
+    "inferTemplateDollarRefs": true
   }
 }

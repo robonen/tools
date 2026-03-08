@@ -1,15 +1,15 @@
-import type { ComputedRef, Ref } from 'vue';
+import type { Ref } from 'vue';
 import { useContextFactory } from '@robonen/vue';
 
 export interface PaginationContext {
-  currentPage: Ref<number>;
-  totalPages: ComputedRef<number>;
-  pageSize: Ref<number>;
-  siblingCount: Ref<number>;
-  showEdges: Ref<boolean>;
-  disabled: Ref<boolean>;
-  isFirstPage: ComputedRef<boolean>;
-  isLastPage: ComputedRef<boolean>;
+  currentPage: Readonly<Ref<number>>;
+  totalPages: Readonly<Ref<number>>;
+  pageSize: Readonly<Ref<number>>;
+  siblingCount: Readonly<Ref<number>>;
+  showEdges: Readonly<Ref<boolean>>;
+  disabled: Readonly<Ref<boolean>>;
+  isFirstPage: Readonly<Ref<boolean>>;
+  isLastPage: Readonly<Ref<boolean>>;
   onPageChange: (value: number) => void;
   next: () => void;
   prev: () => void;

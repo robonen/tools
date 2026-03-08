@@ -28,14 +28,24 @@
   ],
   "exports": {
     "./browsers": {
-      "types": "./dist/browsers.d.ts",
-      "import": "./dist/browsers.js",
-      "require": "./dist/browsers.cjs"
+      "import": {
+        "types": "./dist/browsers.d.mts",
+        "default": "./dist/browsers.mjs"
+      },
+      "require": {
+        "types": "./dist/browsers.d.cts",
+        "default": "./dist/browsers.cjs"
+      }
     },
     "./multi": {
-      "types": "./dist/multi.d.ts",
-      "import": "./dist/multi.js",
-      "require": "./dist/multi.cjs"
+      "import": {
+        "types": "./dist/multi.d.mts",
+        "default": "./dist/multi.mjs"
+      },
+      "require": {
+        "types": "./dist/multi.d.cts",
+        "default": "./dist/multi.cjs"
+      }
     }
   },
   "scripts": {

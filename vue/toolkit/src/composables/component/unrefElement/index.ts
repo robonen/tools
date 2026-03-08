@@ -2,7 +2,7 @@ import type { ComponentPublicInstance, MaybeRef, MaybeRefOrGetter } from 'vue';
 import { toValue } from 'vue';
 
 export type VueInstance = ComponentPublicInstance;
-export type MaybeElement = HTMLElement | SVGElement | VueInstance | undefined | null;
+export type MaybeElement = Element | VueInstance | undefined | null;
 
 export type MaybeElementRef<El extends MaybeElement = MaybeElement> = MaybeRef<El>;
 export type MaybeComputedElementRef<El extends MaybeElement = MaybeElement> = MaybeRefOrGetter<El>;

@@ -14,6 +14,5 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    execArgv: ['--expose-gc'],
   },
 });

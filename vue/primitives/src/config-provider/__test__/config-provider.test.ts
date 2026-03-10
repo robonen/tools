@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { defineComponent, h } from 'vue';
 import { mount } from '@vue/test-utils';
 import {
-  provideConfig,
   provideAppConfig,
+  provideConfig,
   useConfig,
 } from '..';
 
@@ -42,7 +42,6 @@ describe('useConfig', () => {
         return h('div', {
           'data-dir': this.config.dir.value,
           'data-target': this.config.teleportTarget.value,
-          'data-nonce': this.config.nonce.value,
         });
       },
     });
@@ -52,7 +51,6 @@ describe('useConfig', () => {
         provideConfig({
           dir: 'rtl',
           teleportTarget: '#app',
-          nonce: 'abc123',
         });
       },
       render() {
@@ -64,7 +62,6 @@ describe('useConfig', () => {
 
     expect(wrapper.find('div').attributes('data-dir')).toBe('rtl');
     expect(wrapper.find('div').attributes('data-target')).toBe('#app');
-    expect(wrapper.find('div').attributes('data-nonce')).toBe('abc123');
 
     wrapper.unmount();
   });

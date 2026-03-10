@@ -1,6 +1,6 @@
+import Vue from 'unplugin-vue/vite';
 import { defineConfig } from 'vitest/config';
 import { resolve } from 'node:path';
-import Vue from 'unplugin-vue/vite';
 
 export default defineConfig({
   plugins: [Vue()],
@@ -14,5 +14,6 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    execArgv: ['--expose-gc'],
   },
 });

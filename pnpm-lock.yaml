@@ -218,6 +218,9 @@ importers:
       '@robonen/platform':
         specifier: workspace:*
         version: link:../../core/platform
+      '@robonen/stdlib':
+        specifier: ^0.0.9
+        version: 0.0.9
       '@robonen/vue':
         specifier: workspace:*
         version: link:../toolkit
@@ -1982,6 +1985,10 @@ packages:
   '@renovatebot/ruby-semver@4.1.2':
     resolution: {integrity: sha512-zTK2X2r6fQTgQ1lqM0jaF/MgxmXCp0UrfiE1Ks3rQOBQjci4Xez1Zzsy4MgtjhMiHcdDi4lbBvtlPnksvEU8GQ==}
     engines: {node: ^20.9.0 || ^22.11.0 || ^24, pnpm: ^10.0.0}
+
+  '@robonen/stdlib@0.0.9':
+    resolution: {integrity: sha512-JrnOEILRde0bX50C1lY1ZY90QQ18pe6Z47Lw45vYFi2fAcoDSgeKztl028heaFyDXLjsFdc2VGhkt5I+DFCFuQ==}
+    engines: {node: '>=24.13.1'}
 
   '@rolldown/binding-android-arm64@1.0.0-rc.6':
     resolution: {integrity: sha512-kvjTSWGcrv+BaR2vge57rsKiYdVR8V8CoS0vgKrc570qRBfty4bT+1X0z3j2TaVV+kAYzA0PjeB9+mdZyqUZlg==}
@@ -9557,6 +9564,8 @@ snapshots:
   '@renovatebot/pgp@1.3.2': {}
 
   '@renovatebot/ruby-semver@4.1.2': {}
+
+  '@robonen/stdlib@0.0.9': {}
 
   '@rolldown/binding-android-arm64@1.0.0-rc.6':
     optional: true

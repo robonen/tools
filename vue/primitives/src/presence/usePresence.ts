@@ -1,13 +1,13 @@
-import type { MaybeElement } from '@robonen/vue';
 import type { MaybeRefOrGetter, Ref } from 'vue';
 import { computed, readonly, shallowRef, toValue, watch } from 'vue';
-import { tryOnScopeDispose, unrefElement } from '@robonen/vue';
 import {
   dispatchAnimationEvent,
   getAnimationName,
   onAnimationSettle,
   shouldSuspendUnmount,
 } from '@robonen/platform/browsers';
+import { tryOnScopeDispose, unrefElement } from '@robonen/vue';
+import type { MaybeElement } from '@robonen/vue';
 
 export interface UsePresenceReturn {
   isPresent: Readonly<Ref<boolean>>;

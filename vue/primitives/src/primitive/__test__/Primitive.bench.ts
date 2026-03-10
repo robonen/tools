@@ -1,5 +1,5 @@
 import { bench, describe } from 'vitest';
-import { cloneVNode, Comment, createVNode, h } from 'vue';
+import { Comment, cloneVNode, createVNode, h } from 'vue';
 import { Primitive, Slot } from '..';
 
 // -- Attribute sets of increasing size --
@@ -9,13 +9,13 @@ const attrs1 = { class: 'a' };
 const attrs5 = { class: 'a', id: 'b', role: 'button', tabindex: '0', title: 'tip' };
 
 const attrs15 = {
-  'class': 'a',
-  'id': 'b',
-  'style': { color: 'red' },
-  'onClick': () => {},
-  'role': 'button',
-  'tabindex': '0',
-  'title': 'tip',
+  class: 'a',
+  id: 'b',
+  style: { color: 'red' },
+  onClick: () => {},
+  role: 'button',
+  tabindex: '0',
+  title: 'tip',
   'data-a': '1',
   'data-b': '2',
   'data-c': '3',

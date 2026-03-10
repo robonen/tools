@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { getRange, transform, PaginationItemType } from '../utils';
+import { describe, expect, it } from 'vitest';
+import { PaginationItemType, getRange, transform } from '../utils';
 
 describe(getRange, () => {
   it('returns empty array for zero total pages', () => {

@@ -1,5 +1,5 @@
 import { bench, describe } from 'vitest';
-import { createVNode, Comment, Fragment, h, render } from 'vue';
+import { Comment, Fragment, createVNode, h, render } from 'vue';
 import { PatchFlags } from '@vue/shared';
 import { getRawChildren } from '../getRawChildren';
 

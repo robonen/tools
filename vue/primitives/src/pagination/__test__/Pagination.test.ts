@@ -1,15 +1,15 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import {
-  PaginationRoot,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
   PaginationList,
   PaginationListItem,
-  PaginationFirst,
-  PaginationPrev,
   PaginationNext,
-  PaginationLast,
-  PaginationEllipsis,
+  PaginationPrev,
+  PaginationRoot,
 } from '..';
 import type { PaginationItem } from '../utils';
 
@@ -23,10 +23,10 @@ function createPagination(props: Record<string, unknown> = {}) {
           h(
             PaginationRoot,
             {
-              'total': 100,
-              'pageSize': 10,
+              total: 100,
+              pageSize: 10,
               ...props,
-              'page': page.value,
+              page: page.value,
               'onUpdate:page': (v: number) => {
                 page.value = v;
               },

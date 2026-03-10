@@ -19,8 +19,8 @@ const disabled = computed(() => ctx.isFirstPage.value || ctx.disabled.value);
 
 const attrs = computed(() => ({
   'aria-label': 'First Page',
-  'type': as === 'button' ? 'button' as const : undefined,
-  'disabled': disabled.value,
+  type: as === 'button' ? 'button' as const : undefined,
+  disabled: disabled.value,
 }));
 
 function handleClick() {

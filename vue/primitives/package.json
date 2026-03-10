@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@robonen/platform": "workspace:*",
+    "@robonen/stdlib": "^0.0.9",
     "@robonen/vue": "workspace:*",
     "@vue/shared": "catalog:",
     "vue": "catalog:"

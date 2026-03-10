@@ -25,8 +25,8 @@ const attrs = computed(() => ({
   'aria-label': `Page ${value}`,
   'aria-current': isSelected.value ? 'page' as const : undefined,
   'data-selected': isSelected.value ? 'true' : undefined,
-  'disabled': disabled.value,
-  'type': as === 'button' ? 'button' as const : undefined,
+  disabled: disabled.value,
+  type: as === 'button' ? 'button' as const : undefined,
 }));
 
 function handleClick() {

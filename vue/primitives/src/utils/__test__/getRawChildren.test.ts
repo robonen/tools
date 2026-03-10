@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { createVNode, Comment, Fragment, h } from 'vue';
+import { describe, expect, it } from 'vitest';
+import { Comment, Fragment, createVNode, h } from 'vue';
 import { getRawChildren } from '../getRawChildren';
 
 describe(getRawChildren, () => {

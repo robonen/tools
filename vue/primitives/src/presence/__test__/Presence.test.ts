@@ -1,14 +1,14 @@
-import { beforeEach, describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Ref } from 'vue';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import { usePresence } from '../usePresence';
 import Presence from '../Presence.vue';
 import {
-  getAnimationName,
-  shouldSuspendUnmount,
   dispatchAnimationEvent,
+  getAnimationName,
   onAnimationSettle,
+  shouldSuspendUnmount,
 } from '@robonen/platform/browsers';
 
 vi.mock('@robonen/platform/browsers', () => ({

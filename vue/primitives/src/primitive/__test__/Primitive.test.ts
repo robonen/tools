@@ -1,6 +1,6 @@
 import type { PrimitiveProps } from '..';
-import { describe, it, expect, vi } from 'vitest';
-import { createVNode, Comment, h, defineComponent, markRaw, nextTick, ref, shallowRef } from 'vue';
+import { describe, expect, it, vi } from 'vitest';
+import { Comment, createVNode, defineComponent, h, markRaw, nextTick, ref, shallowRef } from 'vue';
 import { mount } from '@vue/test-utils';
 import { Primitive, Slot } from '..';
 
@@ -224,7 +224,7 @@ describe(Primitive, () => {
   it('merges attrs onto the slotted child in template mode', () => {
     const wrapper = mount(Primitive, {
       props: { as: 'template' },
-      attrs: { 'class': 'merged', 'data-testid': 'slot' },
+      attrs: { class: 'merged', 'data-testid': 'slot' },
       slots: { default: () => h('div', 'child') },
     });
 

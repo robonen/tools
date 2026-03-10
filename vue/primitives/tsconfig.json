@@ -1,7 +1,7 @@
 {
   "extends": "@robonen/tsconfig/tsconfig.json",
   "compilerOptions": {
-    "lib": ["DOM"],
+    "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

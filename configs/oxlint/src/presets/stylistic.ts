@@ -59,7 +59,7 @@ export const stylistic: OxlintConfig = {
     '@stylistic/comma-style': ['error', 'last'],
     '@stylistic/semi': ['error', 'always'],
     '@stylistic/quotes': ['error', 'single', { allowTemplateLiterals: 'always', avoidEscape: false }],
-    '@stylistic/quote-props': ['error', 'consistent-as-needed'],
+    '@stylistic/quote-props': ['error', 'as-needed'],
 
     /* ── indentation ──────────────────────────────────────── */
     '@stylistic/indent': ['error', 2, {

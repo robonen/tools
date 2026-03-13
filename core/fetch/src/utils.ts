@@ -13,15 +13,12 @@ import type {
 // ---------------------------------------------------------------------------
 
 /** HTTP methods whose requests carry a body */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const PAYLOAD_METHODS: ReadonlySet<string> = /* @__PURE__ */ new Set(['PATCH', 'POST', 'PUT', 'DELETE']);
 
 /** HTTP status codes whose responses never have a body */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const NULL_BODY_STATUSES: ReadonlySet<number> = /* @__PURE__ */ new Set([101, 204, 205, 304]);
 
 /** Content-types treated as plain text */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const TEXT_CONTENT_TYPES: ReadonlySet<string> = /* @__PURE__ */ new Set([
   'image/svg',
   'application/xml',

@@ -17,7 +17,6 @@ import {
 // ---------------------------------------------------------------------------
 
 /** HTTP status codes that trigger automatic retry by default */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const DEFAULT_RETRY_STATUS_CODES: ReadonlySet<number> = /* @__PURE__ */ new Set([
   408, // Request Timeout
   409, // Conflict

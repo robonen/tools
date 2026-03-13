@@ -122,6 +122,27 @@ importers:
         specifier: 'catalog:'
         version: 0.21.0(typescript@5.8.3)(vue-tsc@3.2.5(typescript@5.8.3))
 
+  core/fetch:
+    devDependencies:
+      '@robonen/oxlint':
+        specifier: workspace:*
+        version: link:../../configs/oxlint
+      '@robonen/tsconfig':
+        specifier: workspace:*
+        version: link:../../configs/tsconfig
+      '@robonen/tsdown':
+        specifier: workspace:*
+        version: link:../../configs/tsdown
+      '@stylistic/eslint-plugin':
+        specifier: 'catalog:'
+        version: 5.10.0(eslint@10.0.3(jiti@2.6.1))
+      oxlint:
+        specifier: 'catalog:'
+        version: 1.51.0
+      tsdown:
+        specifier: 'catalog:'
+        version: 0.21.0(typescript@5.8.3)(vue-tsc@3.2.5(typescript@5.8.3))
+
   core/platform:
     devDependencies:
       '@robonen/oxlint':

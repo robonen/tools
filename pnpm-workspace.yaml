@@ -8,7 +8,7 @@ packages:
 catalog:
   '@vitest/coverage-v8': ^4.0.18
   '@vue/test-utils': ^2.4.6
-  jsdom: ^28.0.0
+  jsdom: ^29.0.1
   oxlint: ^1.2.0
   tsdown: ^0.12.5
   vitest: ^4.0.18

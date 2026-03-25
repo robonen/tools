@@ -46,13 +46,13 @@ describe('clamp', () => {
 
   it('handle NaN and Infinity', () => {
     // value is NaN
-    expect(clamp(NaN, 0, 100)).toBe(NaN);
+    expect(clamp(Number.NaN, 0, 100)).toBe(Number.NaN);
 
     // min is NaN
-    expect(clamp(50, NaN, 100)).toBe(NaN);
+    expect(clamp(50, Number.NaN, 100)).toBe(Number.NaN);
 
     // max is NaN
-    expect(clamp(50, 0, NaN)).toBe(NaN);
+    expect(clamp(50, 0, Number.NaN)).toBe(Number.NaN);
 
     // value is Infinity
     expect(clamp(Infinity, 0, 100)).toBe(100);

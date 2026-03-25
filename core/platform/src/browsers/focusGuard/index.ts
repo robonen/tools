@@ -18,7 +18,7 @@
  * 
  * @since 0.0.3
  */
-export function focusGuard(namespace: string = 'focus-guard') {
+export function focusGuard(namespace = 'focus-guard') {
   const guardAttr = `data-${namespace}`;
 
   const createGuard = () => {
@@ -39,7 +39,7 @@ export function focusGuard(namespace: string = 'focus-guard') {
   };
 }
 
-export function createGuardAttrs(namespace: string) {
+export function createGuardAttrs(namespace = 'focus-guard') {
   const element = document.createElement('span');
 
   element.setAttribute(namespace, '');

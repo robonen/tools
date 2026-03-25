@@ -1,6 +1,6 @@
 {
   "name": "@robonen/stdlib",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "license": "Apache-2.0",
   "description": "A collection of tools, utilities, and helpers for TypeScript",
   "keywords": [
@@ -18,9 +18,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/stdlib"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.29.3",
   "engines": {
-    "node": ">=22.17.1"
+    "node": ">=24.13.1"
   },
   "type": "module",
   "files": [
@@ -29,18 +29,21 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
   },
   "scripts": {
+    "lint": "oxlint -c oxlint.config.ts",
     "test": "vitest run",
     "dev": "vitest dev",
-    "build": "unbuild"
+    "build": "tsdown"
   },
   "devDependencies": {
+    "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
-    "pathe": "catalog:",
-    "unbuild": "catalog:"
+    "@robonen/tsdown": "workspace:*",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:"
   }
 }

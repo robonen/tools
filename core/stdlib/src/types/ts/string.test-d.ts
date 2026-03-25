@@ -7,7 +7,7 @@ describe('string', () => {
         expectTypeOf(Number(1)).toExtend<Stringable>();
         expectTypeOf(String(1)).toExtend<Stringable>();
         expectTypeOf(Symbol()).toExtend<Stringable>();
-        expectTypeOf(new Array(1)).toExtend<Stringable>();
+        expectTypeOf([1]).toExtend<Stringable>();
         expectTypeOf(new Object()).toExtend<Stringable>();
         expectTypeOf(new Date()).toExtend<Stringable>();
       });

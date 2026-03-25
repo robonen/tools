@@ -1,6 +1,6 @@
 {
   "name": "@robonen/vue",
-  "version": "0.0.9",
+  "version": "0.0.13",
   "license": "Apache-2.0",
   "description": "Collection of powerful tools for Vue",
   "keywords": [
@@ -16,9 +16,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "./packages/vue"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.29.3",
   "engines": {
-    "node": ">=22.17.1"
+    "node": ">=24.13.1"
   },
   "type": "module",
   "files": [
@@ -27,23 +27,27 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
   },
   "scripts": {
+    "lint": "oxlint -c oxlint.config.ts",
     "test": "vitest run",
     "dev": "vitest dev",
-    "build": "unbuild"
+    "build": "tsdown"
   },
   "devDependencies": {
-    "@robonen/platform": "workspace:*",
-    "@robonen/stdlib": "workspace:*",
+    "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
     "@vue/test-utils": "catalog:",
-    "unbuild": "catalog:"
+    "oxlint": "catalog:",
+    "tsdown": "catalog:"
   },
   "dependencies": {
+    "@robonen/platform": "workspace:*",
+    "@robonen/stdlib": "workspace:*",
     "vue": "catalog:"
   }
 }

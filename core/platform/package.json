@@ -1,6 +1,6 @@
 {
   "name": "@robonen/platform",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "Apache-2.0",
   "description": "Platform dependent utilities for javascript development",
   "keywords": [
@@ -18,9 +18,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/platform"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.29.3",
   "engines": {
-    "node": ">=22.17.1"
+    "node": ">=24.13.1"
   },
   "type": "module",
   "files": [
@@ -29,22 +29,26 @@
   "exports": {
     "./browsers": {
       "types": "./dist/browsers.d.ts",
-      "import": "./dist/browsers.mjs",
+      "import": "./dist/browsers.js",
       "require": "./dist/browsers.cjs"
     },
     "./multi": {
       "types": "./dist/multi.d.ts",
-      "import": "./dist/multi.mjs",
+      "import": "./dist/multi.js",
       "require": "./dist/multi.cjs"
     }
   },
   "scripts": {
+    "lint": "oxlint -c oxlint.config.ts",
     "test": "vitest run",
     "dev": "vitest dev",
-    "build": "unbuild"
+    "build": "tsdown"
   },
   "devDependencies": {
+    "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
-    "unbuild": "catalog:"
+    "@robonen/tsdown": "workspace:*",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:"
   }
 }

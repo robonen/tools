@@ -1,4 +1,4 @@
-import { type Collection, type Path } from '../../types';
+import type { Collection, Path } from '../../types';
 
 export type ExtractFromObject<O extends Record<PropertyKey, unknown>, K> =
   K extends keyof O
@@ -9,7 +9,7 @@ export type ExtractFromObject<O extends Record<PropertyKey, unknown>, K> =
 
 export type ExtractFromArray<A extends readonly any[], K> =
   any[] extends A
-    ? A extends readonly (infer T)[]
+    ? A extends ReadonlyArray<infer T>
       ? T | undefined
       : undefined
     : K extends keyof A

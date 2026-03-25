@@ -1,4 +1,5 @@
-import { getCurrentInstance, type ComponentInternalInstance } from 'vue';
+import { getCurrentInstance } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 
 /**
  * @name getLifeCycleTarger

@@ -90,5 +90,6 @@ export async function retry<Return>(
     }
   }
 
+  // eslint-disable-next-line eslint/no-throw-literal
   throw lastError!;
 }

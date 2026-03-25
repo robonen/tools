@@ -32,7 +32,7 @@ export function tryIt<Args extends any[], Return>(
       const result = fn(...args);
 
       if (isPromise(result))
-        return result.then(onResolve).catch(onReject) as TryItReturn<Return>;
+        return result.then(onResolve, onReject) as TryItReturn<Return>;
 
       return { error: undefined, data: result } as TryItReturn<Return>;
     } catch (error) {

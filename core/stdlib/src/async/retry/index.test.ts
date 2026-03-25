@@ -99,53 +99,56 @@ describe('retry', () => {
     const failingFn = vi.fn().mockRejectedValue(new Error('Test error'));
 
     const retryPromise = retry(failingFn, { times: 3, delay: 1000 });
-    
+    const result = expect(retryPromise).rejects.toThrow('Test error');
+
     // First call should happen immediately
     expect(failingFn).toHaveBeenCalledTimes(1);
-    
+
     // Advance time to trigger first retry
     await vi.advanceTimersByTimeAsync(1000);
     expect(failingFn).toHaveBeenCalledTimes(2);
-    
+
     // Advance time to trigger second retry
     await vi.advanceTimersByTimeAsync(1000);
     expect(failingFn).toHaveBeenCalledTimes(3);
-    
-    await expect(retryPromise).rejects.toThrow('Test error');
+
+    await result;
   });
 
   it('use dynamic delay function', async () => {
     const failingFn = vi.fn().mockRejectedValue(new Error('Test error'));
     const delayFn = vi.fn((count: number) => count * 500);
-    
+
     const retryPromise = retry(failingFn, { times: 3, delay: delayFn });
-    
+    const result = expect(retryPromise).rejects.toThrow('Test error');
+
     // First call should happen immediately
     expect(failingFn).toHaveBeenCalledTimes(1);
-    
+
     // First retry should wait for delay(2) = 1000ms
     await vi.advanceTimersByTimeAsync(1000);
     expect(failingFn).toHaveBeenCalledTimes(2);
     expect(delayFn).toHaveBeenCalledWith(2);
-    
+
     // Second retry should wait for delay(3) = 1500ms
     await vi.advanceTimersByTimeAsync(1500);
     expect(failingFn).toHaveBeenCalledTimes(3);
     expect(delayFn).toHaveBeenCalledWith(3);
-    
-    await expect(retryPromise).rejects.toThrow('Test error');
+
+    await result;
   });
 
   it('not delay after the last attempt', async () => {
     const failingFn = vi.fn().mockRejectedValue(new Error('Test error'));
-    
+
     const retryPromise = retry(failingFn, { times: 2, delay: 1000 });
-    
+    const result = expect(retryPromise).rejects.toThrow('Test error');
+
     // Wait for the first retry delay
     await vi.advanceTimersByTimeAsync(1000);
-    
+
     // Should complete without further delays
-    await expect(retryPromise).rejects.toThrow('Test error');
+    await result;
     expect(failingFn).toHaveBeenCalledTimes(2);
   });
 

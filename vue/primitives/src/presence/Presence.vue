@@ -3,9 +3,14 @@ export interface PresenceProps {
   present: boolean;
   forceMount?: boolean;
 }
+
+export default {
+  inheritAttrs: false,
+};
 </script>
 
 <script setup lang="ts">
+import { Slot } from '../primitive/Slot';
 import { usePresence } from './usePresence';
 
 const {
@@ -23,6 +28,7 @@ defineExpose({ present: isPresent });
 </script>
 
 <template>
-  <!-- @vue-expect-error ref is forwarded to slot -->
-  <slot v-if="forceMount || present || isPresent" :ref="setRef" :present="isPresent" />
+  <Slot v-if="forceMount || isPresent" :ref="setRef" v-bind="$attrs">
+    <slot :present="isPresent" />
+  </Slot>
 </template>

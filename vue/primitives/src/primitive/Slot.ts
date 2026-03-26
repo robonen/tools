@@ -1,5 +1,5 @@
-import type { SetupContext } from 'vue';
 import { cloneVNode, warn } from 'vue';
+import type { SetupContext } from 'vue';
 import { getRawChildren } from '../utils/getRawChildren';
 
 type FunctionalComponentContext = Omit<SetupContext, 'expose'>;

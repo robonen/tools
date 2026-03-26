@@ -203,6 +203,67 @@ describe('Presence', () => {
     expect(slotPresent).toBe(false);
     wrapper.unmount();
   });
+
+  it('forwards attrs to slot child', () => {
+    const wrapper = mount(Presence, {
+      props: { present: true },
+      attrs: { class: 'fade', 'data-testid': 'box' },
+      slots: { default: () => h('div', 'content') },
+    });
+
+    const div = wrapper.find('div');
+    expect(div.classes()).toContain('fade');
+    expect(div.attributes('data-testid')).toBe('box');
+    wrapper.unmount();
+  });
+
+  it('forwards style to slot child', () => {
+    const wrapper = mount(Presence, {
+      props: { present: true },
+      attrs: { style: 'color: red' },
+      slots: { default: () => h('div', 'content') },
+    });
+
+    expect(wrapper.find('div').attributes('style')).toContain('color: red');
+    wrapper.unmount();
+  });
+
+  it('merges attrs when child already has attrs', () => {
+    const wrapper = mount(Presence, {
+      props: { present: true },
+      attrs: { class: 'outer' },
+      slots: { default: () => h('div', { class: 'inner' }, 'content') },
+    });
+
+    const div = wrapper.find('div');
+    expect(div.classes()).toContain('outer');
+    expect(div.classes()).toContain('inner');
+    wrapper.unmount();
+  });
+
+  it('does not render attrs when not present', () => {
+    const wrapper = mount(Presence, {
+      props: { present: false },
+      attrs: { class: 'fade' },
+      slots: { default: () => h('div', 'content') },
+    });
+
+    expect(wrapper.find('div').exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it('forwards attrs with forceMount', () => {
+    const wrapper = mount(Presence, {
+      props: { present: false, forceMount: true },
+      attrs: { class: 'fade', 'data-testid': 'forced' },
+      slots: { default: () => h('div', 'content') },
+    });
+
+    const div = wrapper.find('div');
+    expect(div.classes()).toContain('fade');
+    expect(div.attributes('data-testid')).toBe('forced');
+    wrapper.unmount();
+  });
 });
 
 describe('usePresence (animation)', () => {

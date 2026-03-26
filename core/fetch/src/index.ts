@@ -1,3 +1,5 @@
+import { createFetch } from './fetch';
+
 export { createFetch } from './fetch';
 export { FetchError, createFetchError } from './error';
 export {
@@ -14,6 +16,7 @@ export type {
   CreateFetchOptions,
   Fetch,
   FetchContext,
+  FetchErrorOptions,
   FetchHook,
   FetchHooks,
   FetchOptions,
@@ -21,8 +24,6 @@ export type {
   FetchResponse,
   IFetchError,
   MappedResponseType,
-  MaybeArray,
-  MaybePromise,
   ResponseMap,
   ResponseType,
   ResolvedFetchOptions,

@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { FetchError, createFetchError } from './error';
+import { describe, expect, it } from 'vitest';
 import type { FetchContext } from './types';
 
 function makeContext(overrides: Partial<FetchContext> = {}): FetchContext {

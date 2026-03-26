@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Fetch } from './types';
 import { FetchError } from './error';
 import { createFetch } from './fetch';
 
@@ -10,8 +11,8 @@ function makeFetchMock(
   body: unknown = { ok: true },
   init: ResponseInit = { status: 200 },
   contentType = 'application/json',
-): ReturnType<typeof vi.fn> {
-  return vi.fn().mockResolvedValue(
+) {
+  return vi.fn<Fetch>().mockResolvedValue(
     new Response(typeof body === 'string' ? body : JSON.stringify(body), {
       ...init,
       headers: { 'content-type': contentType, ...init.headers },
@@ -478,14 +479,14 @@ describe('response types', () => {
 
   it('uses a custom parseResponse function', async () => {
     const fetchMock = vi
-      .fn()
+      .fn<Fetch>()
       .mockResolvedValue(
         new Response('{"value":10}', { headers: { 'content-type': 'application/json' } }),
       );
     const $fetch = createFetch({ fetch: fetchMock });
 
-    const data = await $fetch<{ value: number }>('https://api.example.com/custom', {
-      parseResponse: text => ({ ...JSON.parse(text) as object, custom: true }),
+    const data = await $fetch<{ value: number; custom: boolean }>('https://api.example.com/custom', {
+      parseResponse: text => ({ ...(JSON.parse(text) as { value: number }), custom: true }),
     });
 
     expect(data).toEqual({ value: 10, custom: true });

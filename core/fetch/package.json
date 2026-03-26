@@ -42,6 +42,9 @@
     "dev": "vitest dev",
     "build": "tsdown"
   },
+  "dependencies": {
+    "@robonen/stdlib": "workspace:*"
+  },
   "devDependencies": {
     "@robonen/oxlint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",

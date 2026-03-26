@@ -1,5 +1,5 @@
-import type { ResponseMap, $Fetch, CreateFetchOptions, FetchContext, FetchOptions, FetchRequest, FetchResponse, ResponseType } from './types';
-import { createFetchError } from './error';
+import type { $Fetch, CreateFetchOptions, FetchContext, FetchOptions, FetchRequest, FetchResponse, MappedResponseType, ResponseType } from './types';
+import { FetchError, createFetchError } from './error';
 import {
   NULL_BODY_STATUSES,
   buildURL,
@@ -10,11 +10,11 @@ import {
   joinURL,
   resolveFetchOptions,
 } from './utils';
+import { isFunction, isNumber, isString, retry } from '@robonen/stdlib';
 
-// ---------------------------------------------------------------------------
-// V8: module-level Set — initialised once, never mutated, allows V8 to
-// embed the set reference as a constant in compiled code.
-// ---------------------------------------------------------------------------
+function assignResponseData(response: { _data?: unknown }, data: unknown): void {
+  response._data = data;
+}
 
 /** HTTP status codes that trigger automatic retry by default */
 const DEFAULT_RETRY_STATUS_CODES: ReadonlySet<number> = /* @__PURE__ */ new Set([
@@ -37,15 +37,6 @@ const DEFAULT_RETRY_STATUS_CODES: ReadonlySet<number> = /* @__PURE__ */ new Set(
  * @category Fetch
  * @description Creates a configured $fetch instance
  *
- * V8 optimisation notes:
- * - All inner objects are created with a fixed property set so V8 can reuse
- *   their hidden class across invocations (no dynamic property additions).
- * - `Error.captureStackTrace` is called only when available (V8 / Node.js)
- *   to produce clean stack traces without internal frames.
- * - Retry and timeout paths avoid allocating closures on the hot path.
- * - `NULL_BODY_STATUSES` / `DEFAULT_RETRY_STATUS_CODES` are frozen module-
- *   level Sets, so their `.has()` calls are always monomorphic.
- *
  * @param {CreateFetchOptions} [globalOptions={}] - Global defaults and custom fetch implementation
  * @returns {$Fetch} Configured fetch instance
  *
@@ -55,82 +46,104 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
   const fetchImpl = globalOptions.fetch ?? globalThis.fetch;
 
   // -------------------------------------------------------------------------
-  // Error handler — shared between network errors and 4xx/5xx responses
+  // executeFetch — performs a single fetch attempt (no retry logic)
   // -------------------------------------------------------------------------
 
-  async function onError(context: FetchContext): Promise<FetchResponse<unknown>> {
-    // Explicit user-triggered abort should not be retried automatically
-    const isAbort
-      = context.error !== undefined
-        && context.error.name === 'AbortError'
-        && context.options.timeout === undefined;
+  async function executeFetch<T = unknown, R extends ResponseType = 'json'>(context: FetchContext<T, R>): Promise<FetchResponse<T>> {
+    // Actual fetch call
+    try {
+      context.response = await fetchImpl(context.request, context.options as RequestInit);
+    }
+    catch (err) {
+      context.error = err as Error;
 
-    if (!isAbort && context.options.retry !== false) {
-      // Default retry count: 0 for payload methods, 1 for idempotent methods
-      const maxRetries
-        = typeof context.options.retry === 'number'
-          ? context.options.retry
-          : isPayloadMethod(context.options.method ?? 'GET')
-            ? 0
-            : 1;
+      if (context.options.onRequestError !== undefined) {
+        await callHooks(
+          context as FetchContext<T, R> & { error: Error },
+          context.options.onRequestError,
+        );
+      }
 
-      if (maxRetries > 0) {
-        const responseStatus = context.response?.status ?? 500;
-        const retryStatusCodes = context.options.retryStatusCodes;
-        const shouldRetry
-          = retryStatusCodes !== undefined
-            ? retryStatusCodes.includes(responseStatus)
-            : DEFAULT_RETRY_STATUS_CODES.has(responseStatus);
+      throw createFetchError(context);
+    }
 
-        if (shouldRetry) {
-          const retryDelay
-            = typeof context.options.retryDelay === 'function'
-              ? context.options.retryDelay(context)
-              : (context.options.retryDelay ?? 0);
+    // Response body parsing
+    const method = context.options.method ?? 'GET';
+    const hasBody
+      = context.response.body !== null
+        && !NULL_BODY_STATUSES.has(context.response.status)
+        && method !== 'HEAD';
 
-          if (retryDelay > 0) {
-            await new Promise<void>((resolve) => {
-              setTimeout(resolve, retryDelay);
-            });
+    if (hasBody) {
+      const responseType
+        = context.options.parseResponse !== undefined
+          ? 'json'
+          : (context.options.responseType
+            ?? detectResponseType(context.response.headers.get('content-type') ?? ''));
+
+      switch (responseType) {
+        case 'json': {
+          const text = await context.response.text();
+          if (text) {
+            context.response._data
+              = context.options.parseResponse !== undefined
+                ? context.options.parseResponse(text)
+                : JSON.parse(text);
           }
-
-          return $fetchRaw(context.request, {
-            ...context.options,
-            retry: maxRetries - 1,
-          });
+          break;
+        }
+        case 'stream': {
+          assignResponseData(context.response, context.response.body);
+          break;
+        }
+        default: {
+          assignResponseData(context.response, await context.response[responseType]());
         }
       }
     }
 
-    const error = createFetchError(context);
-
-    // V8 / Node.js — clip internal frames from the error stack trace
-    if (typeof Error.captureStackTrace === 'function') {
-      Error.captureStackTrace(error, $fetchRaw);
+    if (context.options.onResponse !== undefined) {
+      await callHooks(
+        context as FetchContext<T, R> & { response: FetchResponse<T> },
+        context.options.onResponse,
+      );
     }
 
-    throw error;
+    if (
+      !context.options.ignoreResponseError
+      && context.response.status >= 400
+      && context.response.status < 600
+    ) {
+      if (context.options.onResponseError !== undefined) {
+        await callHooks(
+          context as FetchContext<T, R> & { response: FetchResponse<T> },
+          context.options.onResponseError,
+        );
+      }
+
+      throw createFetchError(context);
+    }
+
+    return context.response;
   }
 
   // -------------------------------------------------------------------------
   // $fetchRaw — returns the full Response object with a parsed `_data` field
   // -------------------------------------------------------------------------
 
-  const $fetchRaw: $Fetch['raw'] = async function $fetchRaw<
+  const $fetchRaw = async function $fetchRaw<
     T = unknown,
     R extends ResponseType = 'json',
   >(
     _request: FetchRequest,
-    _options: FetchOptions<R, T> = {} as FetchOptions<R, T>,
-  ): Promise<FetchResponse<T>> {
-    // V8: object literal with a fixed shape — V8 allocates a single hidden
-    // class for all context objects created by this function.
+    _options?: FetchOptions<R, T>,
+  ): Promise<FetchResponse<MappedResponseType<R, T>>> {
     const context: FetchContext<T, R> = {
       request: _request,
       options: resolveFetchOptions(
         _request,
         _options,
-        globalOptions.defaults as FetchOptions<R, T>,
+        globalOptions.defaults,
       ),
       response: undefined,
       error: undefined,
@@ -146,7 +159,7 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
     }
 
     // URL transformations — only when request is a plain string
-    if (typeof context.request === 'string') {
+    if (isString(context.request)) {
       if (context.options.baseURL !== undefined) {
         context.request = joinURL(context.options.baseURL, context.request);
       }
@@ -163,7 +176,7 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
       if (isJSONSerializable(context.options.body)) {
         const contentType = context.options.headers.get('content-type');
 
-        if (typeof context.options.body !== 'string') {
+        if (!isString(context.options.body)) {
           context.options.body
             = contentType === 'application/x-www-form-urlencoded'
               ? new URLSearchParams(
@@ -198,81 +211,80 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
           : timeoutSignal;
     }
 
-    // Actual fetch call
+    // -----------------------------------------------------------------------
+    // Retry configuration — computed once, not per attempt
+    // -----------------------------------------------------------------------
+
+    const retryDisabled = context.options.retry === false;
+    const maxRetries = retryDisabled
+      ? 0
+      : isNumber(context.options.retry)
+        ? context.options.retry
+        : isPayloadMethod(method)
+          ? 0
+          : 1;
+
+    if (maxRetries === 0) {
+      try {
+        return await executeFetch(context) as FetchResponse<MappedResponseType<R, T>>;
+      }
+      catch (err) {
+        const error = err instanceof FetchError ? err : createFetchError(context);
+
+        if (isFunction(Error.captureStackTrace)) {
+          Error.captureStackTrace(error, $fetchRaw);
+        }
+
+        throw error;
+      }
+    }
+
+    // Retry path — delegates to stdlib retry with iterative while-loop
     try {
-      context.response = await fetchImpl(context.request, context.options as RequestInit);
-    }
-    catch (err) {
-      context.error = err as Error;
-
-      if (context.options.onRequestError !== undefined) {
-        await callHooks(
-          context as FetchContext<T, R> & { error: Error },
-          context.options.onRequestError,
-        );
-      }
-
-      return (await onError(context)) as FetchResponse<T>;
-    }
-
-    // Response body parsing
-    const hasBody
-      = context.response.body !== null
-        && !NULL_BODY_STATUSES.has(context.response.status)
-        && method !== 'HEAD';
-
-    if (hasBody) {
-      const responseType
-        = context.options.parseResponse !== undefined
-          ? 'json'
-          : (context.options.responseType
-            ?? detectResponseType(context.response.headers.get('content-type') ?? ''));
-
-      // V8: switch over a string constant — compiled to a jump table
-      switch (responseType) {
-        case 'json': {
-          const text = await context.response.text();
-          if (text) {
-            context.response._data
-              = context.options.parseResponse !== undefined
-                ? context.options.parseResponse(text)
-                : (JSON.parse(text) as T);
+      return await retry(
+        async ({ stop }) => {
+          try {
+            return await executeFetch(context) as FetchResponse<MappedResponseType<R, T>>;
           }
-          break;
-        }
-        case 'stream': {
-          context.response._data = context.response.body as unknown as T;
-          break;
-        }
-        default: {
-          context.response._data = (await context.response[responseType]()) as T;
-        }
-      }
-    }
+          catch (error) {
+            // User-initiated abort (not timeout) should not be retried
+            const isAbort
+              = context.error !== undefined
+                && context.error.name === 'AbortError'
+                && context.options.timeout === undefined;
 
-    if (context.options.onResponse !== undefined) {
-      await callHooks(
-        context as FetchContext<T, R> & { response: FetchResponse<T> },
-        context.options.onResponse,
+            if (isAbort) {
+              stop(error);
+            }
+
+            throw error;
+          }
+        },
+        {
+          // stdlib retry counts total attempts; fetch `retry` means retries only
+          times: maxRetries + 1,
+          delay: isFunction(context.options.retryDelay)
+            ? () => (context.options.retryDelay as (ctx: FetchContext<T, R>) => number)(context)
+            : (context.options.retryDelay ?? 0),
+          shouldRetry: () => {
+            const status = context.response?.status ?? 500;
+            return context.options.retryStatusCodes !== undefined
+              ? context.options.retryStatusCodes.includes(status)
+              : DEFAULT_RETRY_STATUS_CODES.has(status);
+          },
+        },
       );
     }
+    catch (err) {
+      const error = err instanceof FetchError ? err : createFetchError(context);
 
-    if (
-      !context.options.ignoreResponseError
-      && context.response.status >= 400
-      && context.response.status < 600
-    ) {
-      if (context.options.onResponseError !== undefined) {
-        await callHooks(
-          context as FetchContext<T, R> & { response: FetchResponse<T> },
-          context.options.onResponseError,
-        );
+      // V8 / Node.js — clip internal frames from the error stack trace
+      if (isFunction(Error.captureStackTrace)) {
+        Error.captureStackTrace(error, $fetchRaw);
       }
 
-      return (await onError(context)) as FetchResponse<T>;
+      throw error;
     }
-
-    return context.response;
   };
 
   // -------------------------------------------------------------------------
@@ -282,9 +294,9 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
   const $fetch = async function $fetch<T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
     options?: FetchOptions<R, T>,
-  ): Promise<InferResponseType<R, T>> {
+  ): Promise<MappedResponseType<R, T>> {
     const response = await $fetchRaw<T, R>(request, options);
-    return response._data as InferResponseType<R, T>;
+    return response._data as MappedResponseType<R, T>;
   } as $Fetch;
 
   $fetch.raw = $fetchRaw;
@@ -317,8 +329,3 @@ export function createFetch(globalOptions: CreateFetchOptions = {}): $Fetch {
 
   return $fetch;
 }
-
-/** Resolves the inferred return value type from a ResponseType key */
-type InferResponseType<R extends ResponseType, T> = R extends keyof ResponseMap
-  ? ResponseMap[R]
-  : T;

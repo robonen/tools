@@ -1,16 +1,11 @@
 import type {
-  FetchContext,
   FetchHook,
   FetchOptions,
   FetchRequest,
   ResolvedFetchOptions,
   ResponseType,
 } from './types';
-
-// ---------------------------------------------------------------------------
-// V8 optimisation: module-level frozen Sets avoid per-call allocations and
-// allow V8 to treat them as compile-time constants in hidden-class analysis.
-// ---------------------------------------------------------------------------
+import { isArray, isFunction } from '@robonen/stdlib';
 
 /** HTTP methods whose requests carry a body */
 const PAYLOAD_METHODS: ReadonlySet<string> = /* @__PURE__ */ new Set(['PATCH', 'POST', 'PUT', 'DELETE']);
@@ -26,7 +21,6 @@ const TEXT_CONTENT_TYPES: ReadonlySet<string> = /* @__PURE__ */ new Set([
   'application/html',
 ]);
 
-/** V8: pre-compiled at module load — avoids per-call RegExp construction */
 const JSON_CONTENT_TYPE_RE = /^application\/(?:[\w!#$%&*.^`~-]*\+)?json(;.+)?$/i;
 
 // ---------------------------------------------------------------------------
@@ -37,8 +31,6 @@ const JSON_CONTENT_TYPE_RE = /^application\/(?:[\w!#$%&*.^`~-]*\+)?json(;.+)?$/i
  * @name isPayloadMethod
  * @category Fetch
  * @description Returns true for HTTP methods that carry a request body
- *
- * V8: function is monomorphic — always called with an uppercase string.
  *
  * @param {string} method - Uppercase HTTP method string
  * @returns {boolean}
@@ -54,16 +46,14 @@ export function isPayloadMethod(method: string): boolean {
  * @category Fetch
  * @description Returns true when a value can be serialised with JSON.stringify
  *
- * V8: typeof checks are ordered from most-common to least-common to maximise
- * the probability of an early return and keep the IC monomorphic.
- *
  * @param {unknown} value - Any value
  * @returns {boolean}
  *
  * @since 0.0.1
  */
 export function isJSONSerializable(value: unknown): boolean {
-  if (value === undefined) return false;
+  if (value === undefined)
+    return false;
 
   const type = typeof value;
 
@@ -74,7 +64,7 @@ export function isJSONSerializable(value: unknown): boolean {
   if (type !== 'object') return false;
 
   // Arrays are serialisable
-  if (Array.isArray(value)) return true;
+  if (isArray(value)) return true;
 
   // TypedArrays / ArrayBuffers carry a .buffer property — not JSON-serialisable
   if ((value as Record<string, unknown>).buffer !== undefined) return false;
@@ -108,7 +98,6 @@ export function isJSONSerializable(value: unknown): boolean {
 export function detectResponseType(contentType = ''): ResponseType {
   if (!contentType) return 'json';
 
-  // V8: split once and reuse — avoids calling split multiple times
   const type = contentType.split(';')[0] ?? '';
 
   if (JSON_CONTENT_TYPE_RE.test(type)) return 'json';
@@ -185,16 +174,18 @@ export function joinURL(base: string, path: string): string {
  * @category Fetch
  * @description Merges per-request options with global defaults
  *
- * V8: the returned object always has the same property set (fixed shape),
- * which lets V8 reuse its hidden class across all calls.
- *
  * @since 0.0.1
  */
 export function resolveFetchOptions<R extends ResponseType = 'json', T = unknown>(
   request: FetchRequest,
   input: FetchOptions<R, T> | undefined,
-  defaults: FetchOptions<R, T> | undefined,
-): ResolvedFetchOptions<R, T> {
+  defaults: FetchOptions | undefined,
+): ResolvedFetchOptions<R, T>;
+export function resolveFetchOptions(
+  request: FetchRequest,
+  input: FetchOptions | undefined,
+  defaults: FetchOptions | undefined,
+): ResolvedFetchOptions {
   const headers = mergeHeaders(
     input?.headers ?? (request as Request)?.headers,
     defaults?.headers,
@@ -224,15 +215,17 @@ export function resolveFetchOptions<R extends ResponseType = 'json', T = unknown
   };
 }
 
+/** Header sources accepted by the merge function */
+type HeadersInput = Headers | Record<string, string | undefined> | Array<[string, string]>;
+
 /**
- * Merge two HeadersInit sources into a single Headers instance.
+ * Merge two header sources into a single Headers instance.
  * Input headers override default headers.
  *
- * V8: avoids constructing an intermediate Headers when defaults are absent.
  */
 function mergeHeaders(
-  input: HeadersInit | undefined,
-  defaults: HeadersInit | undefined,
+  input: HeadersInput | undefined,
+  defaults: HeadersInput | undefined,
 ): Headers {
   if (defaults === undefined) {
     return new Headers(input);
@@ -242,9 +235,9 @@ function mergeHeaders(
 
   if (input !== undefined) {
     const src = input instanceof Headers ? input : new Headers(input);
-    for (const [key, value] of src) {
+    src.forEach((value, key) => {
       merged.set(key, value);
-    }
+    });
   }
 
   return merged;
@@ -259,24 +252,21 @@ function mergeHeaders(
  * @category Fetch
  * @description Invokes one or more lifecycle hooks with the given context
  *
- * V8: the single-hook path avoids Array creation; the Array path uses a
- * for-loop with a cached length to stay monomorphic inside the loop body.
- *
  * @since 0.0.1
  */
-export async function callHooks<C extends FetchContext = FetchContext>(
+export async function callHooks<C>(
   context: C,
-  hooks: FetchHook<C> | readonly FetchHook<C>[] | undefined,
+  hooks: FetchHook<C> | ReadonlyArray<FetchHook<C>> | undefined,
 ): Promise<void> {
   if (hooks === undefined) return;
 
-  if (Array.isArray(hooks)) {
-    const len = hooks.length;
-    for (let i = 0; i < len; i++) {
-      await (hooks as Array<FetchHook<C>>)[i]!(context);
-    }
+  if (isFunction(hooks)) {
+    await hooks(context);
+    return;
   }
-  else {
-    await (hooks as FetchHook<C>)(context);
+
+  const len = hooks.length;
+  for (let i = 0; i < len; i++) {
+    await hooks[i]!(context);
   }
 }

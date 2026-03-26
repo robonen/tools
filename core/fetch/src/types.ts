@@ -1,3 +1,5 @@
+import type { MaybePromise, ReadonlyArrayable } from '@robonen/stdlib';
+
 // --------------------------
 // Fetch API
 // --------------------------
@@ -50,8 +52,8 @@ export interface $Fetch {
   /** Shorthand for HEAD requests */
   head(
     request: FetchRequest,
-    options?: Omit<FetchOptions<'text', never>, 'method'>,
-  ): Promise<FetchResponse<never>>;
+    options?: Omit<FetchOptions, 'method'>,
+  ): Promise<FetchResponse<unknown>>;
 }
 
 // --------------------------
@@ -69,7 +71,7 @@ export interface FetchOptions<R extends ResponseType = 'json', T = unknown>
   /** Base URL prepended to all relative request URLs */
   baseURL?: string;
   /** Request body — plain objects are automatically JSON-serialized */
-  body?: BodyInit | Record<string, unknown> | unknown[] | null;
+  body?: RequestInit['body'] | Record<string, unknown> | unknown[] | null;
   /** Suppress throwing on 4xx/5xx responses */
   ignoreResponseError?: boolean;
   /** URL query parameters serialized and appended to the request URL */
@@ -139,15 +141,12 @@ export interface FetchContext<T = unknown, R extends ResponseType = 'json'> {
   error?: Error;
 }
 
-export type MaybePromise<T> = T | Promise<T>;
-export type MaybeArray<T> = T | readonly T[];
-
 /**
  * @name FetchHook
  * @category Fetch
  * @description A function invoked at a specific point in the fetch lifecycle
  */
-export type FetchHook<C extends FetchContext = FetchContext> = (context: C) => MaybePromise<void>;
+export type FetchHook<C = FetchContext> = (context: C) => MaybePromise<void>;
 
 /**
  * @name FetchHooks
@@ -156,13 +155,13 @@ export type FetchHook<C extends FetchContext = FetchContext> = (context: C) => M
  */
 export interface FetchHooks<T = unknown, R extends ResponseType = 'json'> {
   /** Called before the request is sent */
-  onRequest?: MaybeArray<FetchHook<FetchContext<T, R>>>;
+  onRequest?: ReadonlyArrayable<FetchHook<FetchContext<T, R>>>;
   /** Called when the request itself throws (e.g. network error, timeout) */
-  onRequestError?: MaybeArray<FetchHook<FetchContext<T, R> & { error: Error }>>;
+  onRequestError?: ReadonlyArrayable<FetchHook<FetchContext<T, R> & { error: Error }>>;
   /** Called after a successful response is received and parsed */
-  onResponse?: MaybeArray<FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>>;
+  onResponse?: ReadonlyArrayable<FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>>;
   /** Called when the response status is 4xx or 5xx */
-  onResponseError?: MaybeArray<FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>>;
+  onResponseError?: ReadonlyArrayable<FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>>;
 }
 
 // --------------------------
@@ -211,13 +210,24 @@ export interface FetchResponse<T> extends Response {
 // --------------------------
 
 /**
+ * @name FetchErrorOptions
+ * @category Fetch
+ * @description Subset of FetchOptions stored on FetchError — strips lifecycle hooks,
+ * parseResponse, and retryDelay callback that are invariant in T/R
+ */
+export type FetchErrorOptions = Omit<
+  FetchOptions<ResponseType>,
+  keyof FetchHooks | 'parseResponse' | 'retryDelay'
+>;
+
+/**
  * @name IFetchError
  * @category Fetch
  * @description Shape of errors thrown by $fetch
  */
 export interface IFetchError<T = unknown> extends Error {
   request?: FetchRequest;
-  options?: FetchOptions;
+  options?: FetchErrorOptions;
   response?: FetchResponse<T>;
   data?: T;
   status?: number;
@@ -234,4 +244,4 @@ export interface IFetchError<T = unknown> extends Error {
 export type Fetch = typeof globalThis.fetch;
 
 /** A fetch request — URL string, URL object, or Request object */
-export type FetchRequest = RequestInfo;
+export type FetchRequest = string | URL | Request;

@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import {
   buildURL,
   callHooks,
@@ -8,6 +7,7 @@ import {
   joinURL,
   resolveFetchOptions,
 } from './utils';
+import { describe, expect, it } from 'vitest';
 import type { FetchContext } from './types';
 
 // ---------------------------------------------------------------------------

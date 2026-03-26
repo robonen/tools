@@ -1,4 +1,5 @@
-import type { FetchContext, FetchOptions, FetchRequest, FetchResponse, IFetchError } from './types';
+import type { FetchContext, FetchErrorOptions, FetchRequest, FetchResponse, IFetchError, ResponseType } from './types';
+import { omit } from '@robonen/stdlib';
 
 /**
  * @name FetchError
@@ -8,18 +9,27 @@ import type { FetchContext, FetchOptions, FetchRequest, FetchResponse, IFetchErr
  * @since 0.0.1
  */
 export class FetchError<T = unknown> extends Error implements IFetchError<T> {
-  request?: FetchRequest;
-  options?: FetchOptions;
-  response?: FetchResponse<T>;
-  data?: T;
-  status?: number;
-  statusText?: string;
-  statusCode?: number;
-  statusMessage?: string;
+  request: FetchRequest | undefined;
+  options: FetchErrorOptions | undefined;
+  response: FetchResponse<T> | undefined;
+  data: T | undefined;
+  status: number | undefined;
+  statusText: string | undefined;
+  statusCode: number | undefined;
+  statusMessage: string | undefined;
 
   constructor(message: string) {
     super(message);
     this.name = 'FetchError';
+
+    this.request = undefined;
+    this.options = undefined;
+    this.response = undefined;
+    this.data = undefined;
+    this.status = undefined;
+    this.statusText = undefined;
+    this.statusCode = undefined;
+    this.statusMessage = undefined;
   }
 }
 
@@ -33,13 +43,13 @@ export class FetchError<T = unknown> extends Error implements IFetchError<T> {
  *
  * @since 0.0.1
  */
-export function createFetchError<T = unknown>(context: FetchContext<T>): FetchError<T> {
+export function createFetchError<T = unknown, R extends ResponseType = ResponseType>(context: FetchContext<T, R>): FetchError<T> {
   const url
     = typeof context.request === 'string'
       ? context.request
       : context.request instanceof URL
         ? context.request.href
-        : (context.request as Request).url;
+        : context.request.url;
 
   const statusPart = context.response
     ? `${context.response.status} ${context.response.statusText}`
@@ -55,7 +65,7 @@ export function createFetchError<T = unknown>(context: FetchContext<T>): FetchEr
   const error = new FetchError<T>(message);
 
   error.request = context.request;
-  error.options = context.options;
+  error.options = omit(context.options, ['onRequest', 'onRequestError', 'onResponse', 'onResponseError', 'retryDelay', 'parseResponse']);
 
   if (context.response !== undefined) {
     error.response = context.response;

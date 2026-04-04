@@ -16,9 +16,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "./packages/vue"
   },
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": ">=24.13.1"
+    "node": ">=24.14.1"
   },
   "type": "module",
   "files": [

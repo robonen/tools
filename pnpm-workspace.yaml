@@ -6,12 +6,12 @@ packages:
   - docs
 
 catalog:
-  '@vitest/coverage-v8': ^4.0.18
+  '@vitest/coverage-v8': ^4.1.4
   '@vue/test-utils': ^2.4.6
-  jsdom: ^29.0.1
-  oxlint: ^1.2.0
-  tsdown: ^0.12.5
-  vitest: ^4.0.18
-  '@vitest/ui': ^4.0.18
-  vue: ^3.5.28
-  nuxt: ^4.3.1
+  jsdom: ^29.0.2
+  oxlint: ^1.59.0
+  tsdown: ^0.21.7
+  vitest: ^4.1.4
+  '@vitest/ui': ^4.1.4
+  vue: ^3.5.32
+  nuxt: ^4.4.2

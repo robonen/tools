@@ -16,9 +16,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "configs/oxlint"
   },
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": ">=24.13.1"
+    "node": ">=24.15.0"
   },
   "type": "module",
   "files": [
@@ -45,7 +45,7 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "oxlint": ">=1.0.0"
+    "oxlint": ">=1.60.0"
   },
   "publishConfig": {
     "access": "public"

@@ -1,0 +1,15 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "@robonen vue (Vue SFC libraries / apps)",
+    "extends": "./tsconfig.dom.json",
+    "compilerOptions": {
+        "jsx": "preserve"
+    },
+    "vueCompilerOptions": {
+        "strictTemplates": true,
+        "fallthroughAttributes": true,
+        "inferTemplateDollarAttrs": true,
+        "inferTemplateDollarEl": true,
+        "inferTemplateDollarRefs": true
+    }
+}

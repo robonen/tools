@@ -1,36 +1,5 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
-    "display": "Base TypeScript Configuration",
-    "compilerOptions": {
-        /* Basic Options */
-        "module": "ESNext",
-        "noEmit": true,
-        "lib": ["ESNext"],
-        "moduleResolution": "Bundler",
-        "target": "ESNext",
-        "outDir": "dist",
-        
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "allowImportingTsExtensions": true,
-        "allowJs": true,
-        "resolveJsonModule": true,
-        "moduleDetection": "force",
-        "isolatedModules": true,
-        "removeComments": false,
-        "verbatimModuleSyntax": true,
-        "useDefineForClassFields": true,
-
-        /* Strict Type-Checking Options */
-        "strict": true,
-        "noUncheckedIndexedAccess": true,
-
-        /* Library transpiling */
-        "declaration": true,
-        // "composite": true,
-        "sourceMap": false,
-        "declarationMap": false
-    },
-    "exclude": ["node_modules", "dist", ".output", "coverage"]
+    "display": "@robonen base (default)",
+    "extends": "./tsconfig.base.json"
 }

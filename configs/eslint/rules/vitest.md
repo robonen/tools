@@ -10,7 +10,7 @@
 - `vitest/no-import-node-test`.
 - `vitest/prefer-to-be-truthy`, `vitest/prefer-to-be-falsy`.
 - `vitest/prefer-to-have-length`.
-- Relaxations: `eslint/no-unused-vars` и `typescript/no-explicit-any` выключены для тестов.
+- Relaxations: `no-unused-vars` и `@typescript-eslint/no-explicit-any` выключены для тестов.
 
 ## Examples
 

@@ -1,6 +1,6 @@
 # Rules Reference
 
-Документация по preset-ам `@robonen/oxlint`: что включает каждый preset и какие правила чаще всего влияют на код.
+Документация по preset-ам `@robonen/eslint`: что включает каждый preset и какие правила чаще всего влияют на код.
 
 ## Presets
 
@@ -18,4 +18,4 @@
 - `Key Rules` — ключевые правила из preset-а (не полный dump).
 - `Examples` — минимальные `good/bad` примеры.
 
-Для точного источника правил см. файлы в `configs/oxlint/src/presets/*.ts`.
+Для точного источника правил см. файлы в `configs/eslint/src/presets/*.ts`.

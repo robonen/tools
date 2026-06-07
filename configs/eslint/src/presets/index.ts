@@ -1,4 +1,4 @@
-export { base } from './base';
+export { base, ignores } from './base';
 export { typescript } from './typescript';
 export { vue } from './vue';
 export { vitest } from './vitest';

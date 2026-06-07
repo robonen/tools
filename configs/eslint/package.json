@@ -1,11 +1,12 @@
 {
-  "name": "@robonen/oxlint",
-  "version": "0.0.2",
+  "name": "@robonen/eslint",
+  "version": "0.0.1",
   "license": "Apache-2.0",
-  "description": "Composable oxlint configuration presets",
+  "description": "Composable ESLint flat configuration presets",
   "keywords": [
-    "oxlint",
-    "oxc",
+    "eslint",
+    "eslint-config",
+    "flat-config",
     "linter",
     "config",
     "presets"
@@ -14,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/robonen/tools.git",
-    "directory": "configs/oxlint"
+    "directory": "configs/eslint"
   },
   "packageManager": "pnpm@10.30.3",
   "engines": {
@@ -37,28 +38,34 @@
     }
   },
   "scripts": {
-    "lint:check": "oxlint -c oxlint.config.ts",
-    "lint:fix": "oxlint -c oxlint.config.ts --fix",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "dev": "vitest dev",
     "build": "tsdown"
   },
+  "dependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "catalog:",
+    "@vitest/eslint-plugin": "^1.6.19",
+    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-n": "^18.0.1",
+    "eslint-plugin-unicorn": "^64.0.0",
+    "eslint-plugin-vue": "^10.9.2",
+    "globals": "^17.6.0",
+    "jiti": "^2.7.0",
+    "typescript-eslint": "^8.60.1",
+    "vue-eslint-parser": "^10.4.1"
+  },
   "devDependencies": {
-    "@robonen/oxlint": "workspace:*",
+    "@robonen/eslint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
-    "@stylistic/eslint-plugin": "catalog:",
-    "oxlint": "catalog:",
+    "eslint": "catalog:",
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "oxlint": ">=1.0.0",
-    "@stylistic/eslint-plugin": ">=4.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@stylistic/eslint-plugin": {
-      "optional": true
-    }
+    "eslint": ">=9.0.0"
   },
   "publishConfig": {
     "access": "public"

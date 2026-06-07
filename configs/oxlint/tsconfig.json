@@ -1,9 +1,0 @@
-{
-  "extends": "@robonen/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "rootDir": "src"
-  },
-  "include": [
-    "src/**/*.ts"
-  ]
-}

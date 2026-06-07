@@ -1,0 +1,9 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "@robonen node (build/test tooling files)",
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "lib": ["ESNext"],
+        "types": ["node"]
+    }
+}

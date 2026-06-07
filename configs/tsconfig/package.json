@@ -1,6 +1,6 @@
 {
   "name": "@robonen/tsconfig",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "description": "Base typescript configuration for projects",
   "keywords": [
@@ -20,7 +20,11 @@
     "node": ">=24.13.1"
   },
   "files": [
-    "**tsconfig.json"
+    "tsconfig.json",
+    "tsconfig.base.json",
+    "tsconfig.dom.json",
+    "tsconfig.node.json",
+    "tsconfig.vue.json"
   ],
   "publishConfig": {
     "access": "public"

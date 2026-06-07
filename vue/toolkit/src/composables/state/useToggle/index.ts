@@ -1,5 +1,5 @@
 import { ref, toValue } from 'vue';
-import type { MaybeRefOrGetter, MaybeRef, Ref } from 'vue';
+import type { MaybeRef, MaybeRefOrGetter, Ref } from 'vue';
 
 export interface UseToggleOptions<Truthy, Falsy> {
   truthyValue?: MaybeRefOrGetter<Truthy>;

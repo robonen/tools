@@ -1,4 +1,4 @@
-import { it, expect, describe } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ref } from 'vue';
 import { useCounter } from '.';
 

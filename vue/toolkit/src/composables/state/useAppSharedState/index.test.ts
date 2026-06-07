@@ -1,5 +1,5 @@
-import { describe, it, vi, expect } from 'vitest';
-import { ref, reactive } from 'vue';
+import { describe, expect, it, vi } from 'vitest';
+import { reactive, ref } from 'vue';
 import { useAppSharedState } from '.';
 
 describe(useAppSharedState, () => {

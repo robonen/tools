@@ -1,5 +1,5 @@
-import { ref, readonly } from 'vue';
-import type { Ref, DeepReadonly, ComputedRef } from 'vue';
+import { readonly, ref } from 'vue';
+import type { ComputedRef, DeepReadonly, Ref } from 'vue';
 import { useSupported } from '@/composables/browser/useSupported';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 

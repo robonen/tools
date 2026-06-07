@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { useRenderInfo } from '.';
 import { defineComponent, nextTick, ref } from 'vue';
 import { mount } from '@vue/test-utils';

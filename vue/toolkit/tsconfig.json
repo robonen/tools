@@ -1,13 +1,7 @@
 {
-  "extends": "@robonen/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "lib": ["DOM"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@/composables/*": ["src/composables/*"],
-      "@/types": ["src/types"],
-      "@/utils": ["src/utils"]
-    }
-  }
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.src.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

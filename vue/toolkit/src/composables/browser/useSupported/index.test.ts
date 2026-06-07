@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { useSupported } from '.';
 import { mount } from '@vue/test-utils';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ref, nextTick, reactive } from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import { useCached } from '.';
 
 const arrayEquals = (a: number[], b: number[]) => a.length === b.length && a.every((v, i) => v === b[i]);

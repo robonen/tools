@@ -27,7 +27,7 @@ import { isArray } from '@robonen/stdlib';
  */
 export function useSyncRefs<T = unknown>(
   source: WatchSource<T>,
-  targets: Ref<T> | Ref<T>[],
+  targets: Ref<T> | Array<Ref<T>>,
   watchOptions: WatchOptions = {},
 ) {
   const {

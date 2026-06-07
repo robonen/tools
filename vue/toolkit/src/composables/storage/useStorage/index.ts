@@ -1,6 +1,6 @@
 import { nextTick, ref, shallowRef, toValue, watch } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
-import { isBoolean, isNumber, isString, isObject, isMap, isSet, isDate } from '@robonen/stdlib';
+import { isBoolean, isDate, isFunction, isMap, isNumber, isObject, isSet, isString } from '@robonen/stdlib';
 import type { ConfigurableFlush, ConfigurableWindow, RemovableRef } from '@/types';
 import { defaultWindow } from '@/types';
 import type { ConfigurableEventFilter, EventFilter } from '@/utils/filters';
@@ -206,7 +206,7 @@ export function useStorage<T>(
       if (!event && mergeDefaults) {
         const value = serializer.read(rawValue);
 
-        return typeof mergeDefaults === 'function'
+        return isFunction(mergeDefaults)
           ? mergeDefaults(value, defaults)
           : shallowMerge(value, defaults);
       }

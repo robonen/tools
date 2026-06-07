@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, effectScope, nextTick } from 'vue';
 import { mount } from '@vue/test-utils';
 import { useTabLeader } from '.';

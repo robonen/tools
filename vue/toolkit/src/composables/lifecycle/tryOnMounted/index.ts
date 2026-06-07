@@ -1,9 +1,7 @@
-import { onMounted, nextTick } from 'vue';
+import { nextTick, onMounted } from 'vue';
 import type { ComponentInternalInstance } from 'vue';
 import { getLifeCycleTarger } from '@/utils';
 import type { VoidFunction } from '@robonen/stdlib';
-
-// TODO: tests
 
 export interface TryOnMountedOptions {
   sync?: boolean;

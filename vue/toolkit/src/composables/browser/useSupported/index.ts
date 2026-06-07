@@ -21,9 +21,8 @@ export function useSupported(feature: () => unknown) {
   const isMounted = useMounted();
 
   return computed(() => {
-    // add reactive dependency on isMounted
-    // eslint-disable-next-line no-unused-expressions
-    isMounted.value;
+    // Touch isMounted to register it as a reactive dependency
+    void isMounted.value;
 
     return Boolean(feature());
   });

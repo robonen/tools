@@ -1,5 +1,6 @@
-import { computed, ref, shallowRef, watch, toValue } from 'vue';
-import type { Ref, ShallowRef, MaybeRefOrGetter, UnwrapRef } from 'vue';
+import { computed, ref, shallowRef, toValue, watch } from 'vue';
+import type { MaybeRefOrGetter, Ref, ShallowRef, UnwrapRef } from 'vue';
+import { isFunction } from '@robonen/stdlib';
 import type { ConfigurableFlush, ConfigurableWindow } from '@/types';
 import { defaultWindow } from '@/types';
 import type { ConfigurableEventFilter, EventFilter } from '@/utils/filters';
@@ -154,7 +155,7 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
       if (!event && mergeDefaults) {
         const value: T = await serializer.read(rawValue) as T;
 
-        return typeof mergeDefaults === 'function'
+        return isFunction(mergeDefaults)
           ? mergeDefaults(value, defaults)
           : shallowMerge(value, defaults);
       }

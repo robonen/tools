@@ -1,5 +1,5 @@
 import { isShallow, nextTick, ref } from 'vue';
-import { it, expect, describe, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAsyncState } from '.';
 
 describe(useAsyncState, () => {

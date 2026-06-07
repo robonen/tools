@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { nextTick, ref } from 'vue';
 import { useStorageAsync } from '.';
 import type { StorageLikeAsync } from '.';

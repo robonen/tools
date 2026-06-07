@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { nextTick, ref } from 'vue';
-import { useStorage, StorageSerializers, customStorageEventName } from '.';
-import type { StorageLike, StorageEventLike } from '.';
+import { StorageSerializers, customStorageEventName, useStorage } from '.';
+import type { StorageEventLike, StorageLike } from '.';
 
 function createMockStorage(): StorageLike & { store: Map<string, string> } {
   const store = new Map<string, string>();
@@ -325,7 +325,7 @@ describe(useStorage, () => {
     const storage = createMockStorage();
     const state = useStorage<string>('sync-key', 'initial', storage, {
       listenToStorageChanges: true,
-      window: globalThis,
+      window: globalThis as unknown as Window,
     });
 
     expect(state.value).toBe('initial');
@@ -347,7 +347,7 @@ describe(useStorage, () => {
     const storage = createMockStorage();
     const state = useStorage<string>('my-key', 'initial', storage, {
       listenToStorageChanges: true,
-      window: globalThis,
+      window: globalThis as unknown as Window,
     });
 
     const detail: StorageEventLike = {
@@ -369,7 +369,7 @@ describe(useStorage, () => {
 
     const state = useStorage<string>('clear-key', 'default', storage, {
       listenToStorageChanges: true,
-      window: globalThis,
+      window: globalThis as unknown as Window,
     });
 
     expect(state.value).toBe('stored');
@@ -392,7 +392,7 @@ describe(useStorage, () => {
     const storage = createMockStorage();
     const state = useStorage<string>('no-listen', 'initial', storage, {
       listenToStorageChanges: false,
-      window: globalThis,
+      window: globalThis as unknown as Window,
     });
 
     const detail: StorageEventLike = {
@@ -414,7 +414,7 @@ describe(useStorage, () => {
     const storage = createMockStorage();
     const state = useStorage<string>('custom-backend', 'initial', storage, {
       listenToStorageChanges: true,
-      window: globalThis,
+      window: globalThis as unknown as Window,
     });
 
     const detail: StorageEventLike = {

@@ -1,4 +1,4 @@
-import { describe, it, vi, expect } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, nextTick } from 'vue';
 import type { PropType } from 'vue';
 import { tryOnMounted } from '.';

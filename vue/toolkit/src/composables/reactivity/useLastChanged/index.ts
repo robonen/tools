@@ -1,6 +1,6 @@
 import { timestamp } from '@robonen/stdlib';
 import { ref, watch } from 'vue';
-import type { WatchSource, WatchOptions, Ref } from 'vue';
+import type { Ref, WatchOptions, WatchSource } from 'vue';
 
 export interface UseLastChangedOptions<
   Immediate extends boolean,

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ref } from 'vue';
-import { bypassFilter, debounceFilter, throttleFilter, pausableFilter } from './filters';
+import { bypassFilter, debounceFilter, pausableFilter, throttleFilter } from './filters';
 
 describe(bypassFilter, () => {
   it('invokes callback immediately', () => {

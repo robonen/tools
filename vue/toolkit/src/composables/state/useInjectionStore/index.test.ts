@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { defineComponent, ref } from 'vue';
 import { useInjectionStore } from '.';
 import { mount } from '@vue/test-utils';
@@ -45,7 +45,7 @@ describe('useInjectionState', () => {
     const { Child } = testFactory(
       useInjectionStore(() => ref('without provider'), {
         defaultValue: ref('default'),
-        injectionKey: 'testKey',
+        injectionName: 'testKey',
       }),
     );
 
@@ -74,7 +74,7 @@ describe('useInjectionState', () => {
   it('works with custom injection key', () => {
     const { Parent } = testFactory(
       useInjectionStore(() => ref('custom key'), {
-        injectionKey: Symbol('customKey'),
+        injectionName: 'customKey',
       }),
     );
 

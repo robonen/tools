@@ -1,5 +1,5 @@
-import { ref, readonly, computed } from 'vue';
-import { describe, it, expect } from 'vitest';
+import { computed, readonly, ref } from 'vue';
+import { describe, expect, it } from 'vitest';
 import { useClamp } from '.';
 
 describe(useClamp, () => {

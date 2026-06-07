@@ -1,5 +1,5 @@
 import { inject as vueInject, provide as vueProvide } from 'vue';
-import type { InjectionKey, App } from 'vue';
+import type { App, InjectionKey } from 'vue';
 import { VueToolsError } from '@/utils';
 
 /**

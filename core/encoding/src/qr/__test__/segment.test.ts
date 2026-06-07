@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { QrSegment, makeNumeric, makeAlphanumeric, makeBytes } from '../segment';
+import { QrSegment, makeAlphanumeric, makeBytes, makeNumeric } from '../segment';
 import { MODE_ALPHANUMERIC, MODE_BYTE, MODE_NUMERIC } from '../constants';
 
 describe('QrSegment', () => {

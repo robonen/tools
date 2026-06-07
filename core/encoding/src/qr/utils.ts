@@ -67,7 +67,7 @@ export function getNumDataCodewords(ver: number, ecl: QrCodeEcc): number {
  * Calculates and returns the number of bits needed to encode the given segments at the given version.
  * The result is infinity if a segment has too many characters to fit its length field.
  */
-export function getTotalBits(segs: Readonly<QrSegment[]>, version: number): number {
+export function getTotalBits(segs: readonly QrSegment[], version: number): number {
   let result = 0;
   for (const seg of segs) {
     const ccbits = numCharCountBits(seg.mode, version);

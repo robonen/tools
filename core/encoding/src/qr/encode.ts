@@ -21,7 +21,7 @@ export function encodeText(text: string, ecl: QrCodeEcc): QrCode {
  * This function always encodes using the binary segment mode, not any text mode.
  * The maximum number of bytes allowed is 2953.
  */
-export function encodeBinary(data: Readonly<number[]>, ecl: QrCodeEcc): QrCode {
+export function encodeBinary(data: readonly number[], ecl: QrCodeEcc): QrCode {
   const seg = makeBytes(data);
   return encodeSegments([seg], ecl);
 }
@@ -32,7 +32,7 @@ export function encodeBinary(data: Readonly<number[]>, ecl: QrCodeEcc): QrCode {
  * This is a mid-level API; the high-level API is encodeText() and encodeBinary().
  */
 export function encodeSegments(
-  segs: Readonly<QrSegment[]>,
+  segs: readonly QrSegment[],
   ecl: QrCodeEcc,
   minVersion = 1,
   maxVersion = 40,

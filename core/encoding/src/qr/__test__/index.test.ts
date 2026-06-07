@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { encodeText, encodeBinary, encodeSegments, makeSegments, isNumeric, isAlphanumeric, QrCode, QrCodeDataType, EccMap, LOW, MEDIUM, QUARTILE, HIGH } from '..';
+import { EccMap, HIGH, LOW, MEDIUM, QUARTILE, QrCode, QrCodeDataType, encodeBinary, encodeSegments, encodeText, isAlphanumeric, isNumeric, makeSegments } from '..';
 
 describe('isNumeric', () => {
   it('accepts pure digit strings', () => {
@@ -253,5 +253,41 @@ describe('getType semantics', () => {
     const qr = encodeText('Test', LOW);
     // Horizontal timing row y=6, between finders
     expect(qr.getType(8, 6)).toBe(QrCodeDataType.Timing);
+  });
+});
+
+describe('automatic mask selection (regression)', () => {
+  // The mask is chosen by minimizing getPenaltyScore() over all 8 patterns.
+  // These version/mask pairs were verified against the canonical Project Nayuki
+  // penalty algorithm. A regression in the finder-pattern (PENALTY_N3) rolling
+  // window — e.g. dropping a history slot during the shift — silently selects a
+  // different, non-spec-optimal mask, which these fixtures catch.
+  it.each([
+    ['HELLO WORLD', QUARTILE, 1, 0],
+    ['HELLO WORLD', MEDIUM, 1, 0],
+    ['https://example.com', LOW, 2, 0],
+    ['12345678901234567890', LOW, 1, 4],
+    ['Hello, World!', MEDIUM, 1, 3],
+    ['a'.repeat(200), LOW, 9, 1],
+  ] as const)('locks version/mask for %j', (text, ecc, version, mask) => {
+    const qr = encodeText(text, ecc);
+    expect(qr.version).toBe(version);
+    expect(qr.mask).toBe(mask);
+  });
+
+  it('produces a stable full-grid fingerprint for HELLO WORLD / QUARTILE', () => {
+    const qr = encodeText('HELLO WORLD', QUARTILE);
+    let dark = 0;
+    let hash = 0;
+    for (let y = 0; y < qr.size; y++) {
+      for (let x = 0; x < qr.size; x++) {
+        const bit = qr.getModule(x, y) ? 1 : 0;
+        dark += bit;
+        hash = (hash * 31 + bit) >>> 0;
+      }
+    }
+    expect(qr.size).toBe(21);
+    expect(dark).toBe(218);
+    expect(hash).toBe(1_118_257_212);
   });
 });

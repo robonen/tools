@@ -38,7 +38,7 @@ export class QrCode {
     public readonly version: number,
     /** The error correction level used in this QR Code. */
     public readonly ecc: QrCodeEcc,
-    dataCodewords: Readonly<number[]>,
+    dataCodewords: readonly number[],
     msk: number,
   ) {
     if (version < MIN_VERSION || version > MAX_VERSION)
@@ -202,7 +202,7 @@ export class QrCode {
 
   /* -- Private helper methods for constructor: Codewords and masking -- */
 
-  private addEccAndInterleave(data: Readonly<number[]>): number[] {
+  private addEccAndInterleave(data: readonly number[]): number[] {
     const ver = this.version;
     const ecl = this.ecc;
     if (data.length !== getNumDataCodewords(ver, ecl))
@@ -239,7 +239,7 @@ export class QrCode {
     return result;
   }
 
-  private drawCodewords(data: Readonly<number[]>): void {
+  private drawCodewords(data: readonly number[]): void {
     if (data.length !== ((getNumRawDataModules(this.version) / 8) | 0))
       throw new RangeError('Invalid argument');
 
@@ -317,8 +317,9 @@ export class QrCode {
             result++;
         }
         else {
-          if (h0 === 0) runX += size;
-          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = runX; h0 = runX;
+          let v = runX;
+          if (h0 === 0) v += size;
+          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = h0; h0 = v;
           if (runColor === 0) {
             const core = h1 > 0 && h2 === h1 && h3 === h1 * 3 && h4 === h1 && h5 === h1;
             if (core && h0 >= h1 * 4 && h6 >= h1) result += PENALTY_N3;
@@ -331,13 +332,15 @@ export class QrCode {
       {
         let currentRunLength = runX;
         if (runColor === 1) {
-          if (h0 === 0) currentRunLength += size;
-          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = currentRunLength; h0 = currentRunLength;
+          let v = currentRunLength;
+          if (h0 === 0) v += size;
+          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = h0; h0 = v;
           currentRunLength = 0;
         }
         currentRunLength += size;
-        if (h0 === 0) currentRunLength += size;
-        h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = currentRunLength; h0 = currentRunLength;
+        let v = currentRunLength;
+        if (h0 === 0) v += size;
+        h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = h0; h0 = v;
         const core = h1 > 0 && h2 === h1 && h3 === h1 * 3 && h4 === h1 && h5 === h1;
         if (core && h0 >= h1 * 4 && h6 >= h1) result += PENALTY_N3;
         if (core && h6 >= h1 * 4 && h0 >= h1) result += PENALTY_N3;
@@ -359,8 +362,9 @@ export class QrCode {
             result++;
         }
         else {
-          if (h0 === 0) runY += size;
-          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = runY; h0 = runY;
+          let v = runY;
+          if (h0 === 0) v += size;
+          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = h0; h0 = v;
           if (runColor === 0) {
             const core = h1 > 0 && h2 === h1 && h3 === h1 * 3 && h4 === h1 && h5 === h1;
             if (core && h0 >= h1 * 4 && h6 >= h1) result += PENALTY_N3;
@@ -373,13 +377,15 @@ export class QrCode {
       {
         let currentRunLength = runY;
         if (runColor === 1) {
-          if (h0 === 0) currentRunLength += size;
-          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = currentRunLength; h0 = currentRunLength;
+          let v = currentRunLength;
+          if (h0 === 0) v += size;
+          h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = h0; h0 = v;
           currentRunLength = 0;
         }
         currentRunLength += size;
-        if (h0 === 0) currentRunLength += size;
-        h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = currentRunLength; h0 = currentRunLength;
+        let v = currentRunLength;
+        if (h0 === 0) v += size;
+        h6 = h5; h5 = h4; h4 = h3; h3 = h2; h2 = h1; h1 = h0; h0 = v;
         const core = h1 > 0 && h2 === h1 && h3 === h1 * 3 && h4 === h1 && h5 === h1;
         if (core && h0 >= h1 * 4 && h6 >= h1) result += PENALTY_N3;
         if (core && h6 >= h1 * 4 && h0 >= h1) result += PENALTY_N3;

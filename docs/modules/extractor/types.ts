@@ -1,13 +1,23 @@
 /**
  * Metadata types for the documentation extractor.
- * These types represent the structured data extracted from source packages
- * via ts-morph, used to generate documentation pages.
+ *
+ * The docs site is "flexible": every package declares a {@link PackageKind}
+ * and is rendered with a layout that fits its nature —
+ *  - `api`        → reference of functions / classes / types (from JSDoc)
+ *  - `components` → component gallery with per-part anatomy (props/emits/slots)
+ *  - `guide`      → prose guide rendered from co-located Markdown
  */
 
 export interface DocsMetadata {
   packages: PackageMeta[];
   generatedAt: string;
 }
+
+/** How a package's documentation should be presented. */
+export type PackageKind = 'api' | 'components' | 'guide';
+
+/** Top-level grouping used for sidebar / landing organisation. */
+export type PackageGroup = 'core' | 'vue' | 'configs' | 'infra';
 
 export interface PackageMeta {
   /** Package name from package.json, e.g. "@robonen/stdlib" */
@@ -18,11 +28,27 @@ export interface PackageMeta {
   description: string;
   /** URL-friendly slug derived from package name, e.g. "stdlib" */
   slug: string;
+  /** Presentation kind — drives which layout the page uses */
+  kind: PackageKind;
+  /** Sidebar / landing group */
+  group: PackageGroup;
   /** Subpath export entries (e.g. "." or "./browsers") */
   entryPoints: string[];
-  /** All documented items grouped by category */
+
+  // ── kind: 'api' ──────────────────────────────────────────────────────────
+  /** Documented API items grouped by category (kind === 'api') */
   categories: CategoryMeta[];
+
+  // ── kind: 'components' ─────────────────────────────────────────────────────
+  /** Documented component groups (kind === 'components') */
+  components: ComponentMeta[];
+
+  // ── kind: 'guide' ──────────────────────────────────────────────────────────
+  /** Prose sections rendered from Markdown (kind === 'guide') */
+  sections: GuideSection[];
 }
+
+// ── API kind ─────────────────────────────────────────────────────────────────
 
 export interface CategoryMeta {
   /** Category name from @category JSDoc tag or directory name */
@@ -71,6 +97,62 @@ export interface ItemMeta {
   /** Subpath export this belongs to (e.g. "." or "./browsers") */
   entryPoint: string;
 }
+
+// ── Components kind ────────────────────────────────────────────────────────────
+
+export interface ComponentMeta {
+  /** Display name of the component group, e.g. "Accordion" */
+  name: string;
+  /** URL-friendly slug, e.g. "accordion" */
+  slug: string;
+  /** Short description (from README heading or first JSDoc) */
+  description: string;
+  /** Subpath export, e.g. "./accordion" */
+  entryPoint: string;
+  /** Ordered parts that compose the anatomy (Root, Item, Trigger, …) */
+  parts: ComponentPartMeta[];
+  /** Whether a demo.vue exists for the group */
+  hasDemo: boolean;
+  /** Raw demo source */
+  demoSource: string;
+  /** Relative path to the component directory from repo root */
+  sourcePath: string;
+}
+
+export interface ComponentPartMeta {
+  /** Component name, e.g. "AccordionRoot" */
+  name: string;
+  /** Short role label derived from the suffix (Root, Item, Trigger…) */
+  role: string;
+  /** Description from the Props interface JSDoc */
+  description: string;
+  /** Props parsed from the `XxxProps` interface */
+  props: PropertyMeta[];
+  /** Emitted events parsed from `defineEmits` */
+  emits: EmitMeta[];
+}
+
+export interface EmitMeta {
+  /** Event name, e.g. "update:modelValue" */
+  name: string;
+  /** Payload signature, e.g. "[value: string]" */
+  payload: string;
+  /** Description, if documented */
+  description: string;
+}
+
+// ── Guide kind ─────────────────────────────────────────────────────────────────
+
+export interface GuideSection {
+  /** Heading-derived title, e.g. "imports preset" */
+  title: string;
+  /** URL-friendly slug, e.g. "imports" */
+  slug: string;
+  /** Raw Markdown content (rendered client-side) */
+  markdown: string;
+}
+
+// ── Shared leaf types ──────────────────────────────────────────────────────────
 
 export interface ParamMeta {
   name: string;

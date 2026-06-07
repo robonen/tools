@@ -6,8 +6,8 @@
  * pages/components via `import metadata from '#docs/metadata'`.
  */
 
-import { defineNuxtModule, addTemplate, createResolver } from '@nuxt/kit';
-import { resolve, dirname } from 'node:path';
+import { addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit';
+import { dirname, resolve } from 'node:path';
 import type { DocsMetadata } from './types';
 
 export default defineNuxtModule({
@@ -81,16 +81,26 @@ declare module '#docs/metadata' {
       },
     });
 
-    // Register prerender routes from metadata
+    // Register prerender routes from metadata — one detail route per documented
+    // leaf, regardless of package kind (api items / components / guide sections).
     nuxt.hook('prerender:routes', async ({ routes }: { routes: Set<string> }) => {
       if (metadata.packages.length === 0) return;
 
       for (const pkg of metadata.packages) {
         routes.add(`/${pkg.slug}`);
-        for (const category of pkg.categories) {
-          for (const item of category.items) {
-            routes.add(`/${pkg.slug}/${item.slug}`);
-          }
+
+        if (pkg.kind === 'api') {
+          for (const category of pkg.categories)
+            for (const item of category.items)
+              routes.add(`/${pkg.slug}/${item.slug}`);
+        }
+        else if (pkg.kind === 'components') {
+          for (const component of pkg.components)
+            routes.add(`/${pkg.slug}/${component.slug}`);
+        }
+        else if (pkg.kind === 'guide') {
+          for (const section of pkg.sections)
+            routes.add(`/${pkg.slug}/${section.slug}`);
         }
       }
 
@@ -105,12 +115,20 @@ declare module '#docs/metadata' {
         const entries: string[] = [];
 
         for (const pkg of metadata.packages) {
+          // api items
           for (const cat of pkg.categories) {
             for (const item of cat.items) {
               if (item.hasDemo) {
                 const demoPath = resolve(ROOT, dirname(item.sourcePath), 'demo.vue');
                 entries.push(`  '${pkg.slug}/${item.slug}': defineAsyncComponent(() => import('${demoPath}')),`);
               }
+            }
+          }
+          // component groups
+          for (const component of pkg.components) {
+            if (component.hasDemo) {
+              const demoPath = resolve(ROOT, component.sourcePath, 'demo.vue');
+              entries.push(`  '${pkg.slug}/${component.slug}': defineAsyncComponent(() => import('${demoPath}')),`);
             }
           }
         }

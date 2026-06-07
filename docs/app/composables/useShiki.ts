@@ -7,7 +7,7 @@ function getHighlighter(): Promise<Highlighter> {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighter({
       themes: ['github-light', 'github-dark'],
-      langs: ['typescript', 'vue', 'json', 'bash'],
+      langs: ['typescript', 'javascript', 'vue', 'json', 'bash'],
     });
   }
   return highlighterPromise;
@@ -17,7 +17,7 @@ export function useShiki() {
   const highlighted = ref<string>('');
   const isReady = ref(false);
 
-  async function highlight(code: string, lang: string = 'typescript'): Promise<string> {
+  async function highlight(code: string, lang = 'typescript'): Promise<string> {
     const highlighter = await getHighlighter();
     return highlighter.codeToHtml(code, {
       lang,
@@ -28,7 +28,7 @@ export function useShiki() {
     });
   }
 
-  async function highlightReactive(code: string, lang: string = 'typescript'): Promise<void> {
+  async function highlightReactive(code: string, lang = 'typescript'): Promise<void> {
     highlighted.value = await highlight(code, lang);
     isReady.value = true;
   }

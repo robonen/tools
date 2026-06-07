@@ -1,69 +1,191 @@
 @import "tailwindcss";
+
 @source "../../../../vue/toolkit/src/**/demo.vue";
+@source "../../../../vue/primitives/src/**/demo.vue";
 @source "../../../../core/stdlib/src/**/demo.vue";
 @source "../../../../core/platform/src/**/demo.vue";
 
+/* Class-based dark mode (toggled on <html class="dark">) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
-  --color-brand-950: #1e1b4b;
+  --radius-card: 0.75rem;
 }
 
+/* ── Semantic design tokens — Geist-minimal ──────────────────────────────── */
 :root {
-  --color-bg: #ffffff;
-  --color-bg-soft: #f9fafb;
-  --color-bg-mute: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-text: #111827;
-  --color-text-soft: #4b5563;
-  --color-text-mute: #9ca3af;
-  --color-header-bg: rgba(255, 255, 255, 0.8);
+  --bg: #ffffff;
+  --bg-subtle: #fafafa;
+  --bg-elevated: #ffffff;
+  --bg-inset: #f4f4f5;
+  --border: #ececec;
+  --border-strong: #d8d8dc;
+  --fg: #18181b;
+  --fg-muted: #52525b;
+  --fg-subtle: #a1a1aa;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-fg: #ffffff;
+  --accent-subtle: #eef3ff;
+  --accent-text: #2563eb;
+  --header-bg: rgba(255, 255, 255, 0.72);
+  --ring: rgba(37, 99, 235, 0.35);
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f172a;
-    --color-bg-soft: #1e293b;
-    --color-bg-mute: #334155;
-    --color-border: #334155;
-    --color-text: #f1f5f9;
-    --color-text-soft: #94a3b8;
-    --color-text-mute: #64748b;
-    --color-header-bg: rgba(15, 23, 42, 0.8);
-  }
+.dark {
+  --bg: #0a0a0a;
+  --bg-subtle: #0f0f10;
+  --bg-elevated: #141416;
+  --bg-inset: #1b1b1e;
+  --border: #232327;
+  --border-strong: #34343a;
+  --fg: #ededed;
+  --fg-muted: #a1a1aa;
+  --fg-subtle: #6c6c75;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-fg: #ffffff;
+  --accent-subtle: #14203a;
+  --accent-text: #74a8ff;
+  --header-bg: rgba(10, 10, 10, 0.72);
+  --ring: rgba(59, 130, 246, 0.4);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-code, pre {
+code, pre, kbd {
   font-family: var(--font-mono);
 }
 
-/* Shiki dual-theme: activate dark colors via prefers-color-scheme */
-@media (prefers-color-scheme: dark) {
-  .shiki,
-  .shiki span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-    font-style: var(--shiki-dark-font-style) !important;
-    font-weight: var(--shiki-dark-font-weight) !important;
-    text-decoration: var(--shiki-dark-text-decoration) !important;
-  }
+::selection {
+  background-color: var(--accent-subtle);
+  color: var(--accent-text);
 }
+
+/* Subtle, theme-aware scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 9999px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* Shiki dual-theme: switch to dark colors under .dark */
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+/* ── Markdown (guide) typography ──────────────────────────────────────────── */
+.prose-docs {
+  color: var(--fg-muted);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+.prose-docs > :first-child { margin-top: 0; }
+.prose-docs h1 {
+  color: var(--fg);
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+}
+.prose-docs h2 {
+  color: var(--fg);
+  font-size: 1.375rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 5rem;
+}
+.prose-docs h3 {
+  color: var(--fg);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+  scroll-margin-top: 5rem;
+}
+.prose-docs p { margin: 1rem 0; }
+.prose-docs a {
+  color: var(--accent-text);
+  text-decoration: none;
+  font-weight: 500;
+}
+.prose-docs a:hover { text-decoration: underline; }
+.prose-docs strong { color: var(--fg); font-weight: 600; }
+.prose-docs ul, .prose-docs ol { margin: 1rem 0; padding-left: 1.5rem; }
+.prose-docs ul { list-style: disc; }
+.prose-docs ol { list-style: decimal; }
+.prose-docs li { margin: 0.375rem 0; }
+.prose-docs li::marker { color: var(--fg-subtle); }
+.prose-docs blockquote {
+  border-left: 3px solid var(--border-strong);
+  padding-left: 1rem;
+  margin: 1.25rem 0;
+  color: var(--fg-muted);
+}
+.prose-docs hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+/* inline code */
+.prose-docs :not(pre) > code {
+  font-size: 0.85em;
+  background-color: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.1rem 0.35rem;
+  color: var(--fg);
+}
+/* fenced code (shiki replaces, but style the fallback + wrapper) */
+.prose-docs pre {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.prose-docs pre code { background: none; border: 0; padding: 0; }
+.prose-docs table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.875rem;
+}
+.prose-docs th, .prose-docs td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.prose-docs th { background-color: var(--bg-subtle); color: var(--fg); font-weight: 600; }
+
+/* Page-enter fade for route transitions */
+.page-enter-active, .page-leave-active { transition: opacity 0.18s ease, transform 0.18s ease; }
+.page-enter-from { opacity: 0; transform: translateY(4px); }
+.page-leave-to { opacity: 0; }

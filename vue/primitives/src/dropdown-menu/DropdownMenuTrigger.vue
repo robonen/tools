@@ -14,7 +14,7 @@ import { MenuAnchor, useMenuContext } from '../menu';
 import { Primitive } from '../primitive';
 import { useDropdownMenuRootContext } from './context';
 
-const { disabled = false, as = 'button', asChild } = defineProps<DropdownMenuTriggerProps>();
+const { disabled = false, as = 'button' } = defineProps<DropdownMenuTriggerProps>();
 
 const menuCtx = useMenuContext();
 const ddCtx = useDropdownMenuRootContext();
@@ -46,11 +46,10 @@ function handleKeyDown(event: KeyboardEvent) {
 </script>
 
 <template>
-  <MenuAnchor as-child>
+  <MenuAnchor>
     <Primitive
       :ref="forwardRef"
       :as="as"
-      :as-child="asChild"
       :id="ddCtx.triggerId.value"
       aria-haspopup="menu"
       :aria-expanded="menuCtx.open.value"

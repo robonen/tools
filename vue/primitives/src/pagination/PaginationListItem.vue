@@ -7,10 +7,10 @@ export interface PaginationListItemProps extends PrimitiveProps {
 </script>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useForwardExpose } from '@robonen/vue';
 import { Primitive } from '@/primitive';
+import { computed } from 'vue';
 import { injectPaginationContext } from './context';
+import { useForwardExpose } from '@robonen/vue';
 
 const { as = 'button' as const, value } = defineProps<PaginationListItemProps>();
 
@@ -18,19 +18,18 @@ const { forwardRef } = useForwardExpose();
 const ctx = injectPaginationContext();
 
 const isSelected = computed(() => ctx.currentPage.value === value);
-const disabled = computed(() => ctx.disabled.value);
 
 const attrs = computed(() => ({
   'data-type': 'page',
   'aria-label': `Page ${value}`,
   'aria-current': isSelected.value ? 'page' as const : undefined,
   'data-selected': isSelected.value ? 'true' : undefined,
-  disabled: disabled.value,
+  disabled: ctx.disabled.value,
   type: as === 'button' ? 'button' as const : undefined,
 }));
 
 function handleClick() {
-  if (!disabled.value) {
+  if (!ctx.disabled.value) {
     ctx.onPageChange(value);
   }
 }

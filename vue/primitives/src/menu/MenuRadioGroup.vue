@@ -16,7 +16,7 @@ import { computed, ref } from 'vue';
 import { Primitive } from '../primitive';
 import { provideMenuRadioGroupContext } from './context';
 
-const { modelValue, defaultValue, as = 'div', asChild } = defineProps<MenuRadioGroupProps>();
+const { modelValue, defaultValue, as = 'div' } = defineProps<MenuRadioGroupProps>();
 const emit = defineEmits<MenuRadioGroupEmits>();
 
 const local = ref(defaultValue);
@@ -32,7 +32,7 @@ provideMenuRadioGroupContext({
 </script>
 
 <template>
-  <Primitive :as="as" :as-child="asChild" role="group">
+  <Primitive :as="as" role="group">
     <slot />
   </Primitive>
 </template>

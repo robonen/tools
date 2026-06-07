@@ -364,7 +364,7 @@ describe.each([1, 2, 3])('Primitive nested as="template" (depth=%i)', (depth) =>
     return current();
   }
 
-  function makeAttrsPerLevel(base: string, depth: number) {
+  function makeAttrsPerLevel(base: string, depth: number): Array<Record<string, unknown>> {
     return Array.from({ length: depth }, (_, i) => ({ [`data-level-${i}`]: `${base}-${i}` }));
   }
 

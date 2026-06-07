@@ -12,10 +12,10 @@ export interface PaginationRootProps extends PrimitiveProps {
 </script>
 
 <script setup lang="ts">
-import { toRef } from 'vue';
 import { useForwardExpose, useOffsetPagination } from '@robonen/vue';
 import { Primitive } from '@/primitive';
 import { providePaginationContext } from './context';
+import { toRef } from 'vue';
 
 const {
   as = 'nav' as const,

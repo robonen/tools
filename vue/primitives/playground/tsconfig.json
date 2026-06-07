@@ -1,0 +1,12 @@
+{
+  "extends": "@robonen/tsconfig/tsconfig.vue.json",
+  "compilerOptions": {
+    "types": ["vite/client", "node"],
+    "allowImportingTsExtensions": false,
+    "paths": {
+      "@primitives/*": ["../src/*"],
+      "@primitives": ["../src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts"]
+}

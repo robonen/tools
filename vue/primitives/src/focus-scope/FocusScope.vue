@@ -1,12 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
-export type FocusScopeEmits = {
+export interface FocusScopeEmits {
   /** Автофокус при монтировании. Можно предотвратить через `event.preventDefault()`. */
   mountAutoFocus: [event: Event];
   /** Автофокус при размонтировании. Можно предотвратить через `event.preventDefault()`. */
   unmountAutoFocus: [event: Event];
-};
+}
 
 export interface FocusScopeProps extends PrimitiveProps {
   /**
@@ -25,21 +25,18 @@ export interface FocusScopeProps extends PrimitiveProps {
 </script>
 
 <script setup lang="ts">
-import { focus, getActiveElement, getTabbableEdges } from '@robonen/platform/browsers';
 import type { FocusScopeAPI } from './stack';
 import { Primitive } from '../primitive';
+import { focus, getActiveElement, getTabbableEdges } from '@robonen/platform/browsers';
 import { useAutoFocus } from './useAutoFocus';
 import { useFocusTrap } from './useFocusTrap';
-import { useTemplateRef } from 'vue';
+import { useForwardExpose } from '@robonen/vue';
 
-const props = withDefaults(defineProps<FocusScopeProps>(), {
-  loop: false,
-  trapped: false,
-});
+const { loop = false, trapped = false, as } = defineProps<FocusScopeProps>();
 
 const emit = defineEmits<FocusScopeEmits>();
 
-const containerRef = useTemplateRef<HTMLElement>('containerRef');
+const { forwardRef, currentElement: containerRef } = useForwardExpose();
 
 const focusScope: FocusScopeAPI = {
   paused: false,
@@ -47,7 +44,7 @@ const focusScope: FocusScopeAPI = {
   resume() { this.paused = false; },
 };
 
-useFocusTrap(containerRef, focusScope, () => props.trapped);
+useFocusTrap(containerRef, focusScope, () => trapped);
 useAutoFocus(
   containerRef,
   focusScope,
@@ -56,7 +53,7 @@ useAutoFocus(
 );
 
 function handleKeyDown(event: KeyboardEvent) {
-  if (!props.loop && !props.trapped) return;
+  if (!loop && !trapped) return;
   if (focusScope.paused) return;
 
   const isTabKey = event.key === 'Tab' && !event.altKey && !event.ctrlKey && !event.metaKey;
@@ -72,18 +69,18 @@ function handleKeyDown(event: KeyboardEvent) {
   }
   else if (!event.shiftKey && focusedElement === last) {
     event.preventDefault();
-    if (props.loop) focus(first, { select: true });
+    if (loop) focus(first, { select: true });
   }
   else if (event.shiftKey && focusedElement === first) {
     event.preventDefault();
-    if (props.loop) focus(last, { select: true });
+    if (loop) focus(last, { select: true });
   }
 }
 </script>
 
 <template>
   <Primitive
-    ref="containerRef"
+    :ref="forwardRef"
     tabindex="-1"
     :as="as"
     @keydown="handleKeyDown"

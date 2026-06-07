@@ -1,10 +1,10 @@
-import type { MaybeRefOrGetter, ShallowRef } from 'vue';
+import type { MaybeRefOrGetter, Ref } from 'vue';
 import { shallowRef, toValue, watchPostEffect } from 'vue';
 import type { FocusScopeAPI } from './stack';
 import { focus } from '@robonen/platform/browsers';
 
 export function useFocusTrap(
-  container: Readonly<ShallowRef<HTMLElement | null>>,
+  container: Readonly<Ref<HTMLElement | null | undefined>>,
   focusScope: FocusScopeAPI,
   trapped: MaybeRefOrGetter<boolean>,
 ) {

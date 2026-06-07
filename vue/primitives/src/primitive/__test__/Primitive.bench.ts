@@ -1,8 +1,6 @@
 import { bench, describe } from 'vitest';
-import { Comment, cloneVNode, createVNode, h } from 'vue';
+import { Comment, cloneVNode, createVNode, h, render } from 'vue';
 import { Primitive, Slot } from '..';
-
-// -- Attribute sets of increasing size --
 
 const attrs1 = { class: 'a' };
 
@@ -112,5 +110,46 @@ describe('Slot — edge cases', () => {
 
   bench('no default slot', () => {
     Slot({} as never, { attrs: attrs5, slots: {}, emit: noop });
+  });
+});
+
+// ---- Slot — realistic attrs (fresh object per iteration) ----
+
+describe('Slot — fresh attrs per call', () => {
+  bench('5 attrs (stable ref)', () => {
+    Slot({} as never, { attrs: attrs5, slots: defaultSlot, emit: noop });
+  });
+
+  bench('5 attrs (new object)', () => {
+    Slot({} as never, {
+      attrs: { class: 'a', id: 'b', role: 'button', tabindex: '0', title: 'tip' },
+      slots: defaultSlot,
+      emit: noop,
+    });
+  });
+});
+
+// ---- Realistic runtime: mount + update via render() ----
+
+describe('Primitive — mount + update via render()', () => {
+  bench('h("div") — mount + update', () => {
+    const container = document.createElement('div');
+    render(h('div', attrs5, [h('span', 'content')]), container);
+    render(h('div', attrs15, [h('span', 'content')]), container);
+    render(null, container);
+  });
+
+  bench('Primitive({ as: "div" }) — mount + update', () => {
+    const container = document.createElement('div');
+    render(h(Primitive, { as: 'div', ...attrs5 }, defaultSlot), container);
+    render(h(Primitive, { as: 'div', ...attrs15 }, defaultSlot), container);
+    render(null, container);
+  });
+
+  bench('Primitive({ as: "template" }) — mount + update', () => {
+    const container = document.createElement('div');
+    render(h(Primitive, { as: 'template', ...attrs5 }, defaultSlot), container);
+    render(h(Primitive, { as: 'template', ...attrs15 }, defaultSlot), container);
+    render(null, container);
   });
 });

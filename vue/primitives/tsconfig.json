@@ -1,17 +1,7 @@
 {
-  "extends": "@robonen/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-  "vueCompilerOptions": {
-    "strictTemplates": true,
-    "fallthroughAttributes": true,
-    "inferTemplateDollarAttrs": true,
-    "inferTemplateDollarEl": true,
-    "inferTemplateDollarRefs": true
-  }
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.src.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

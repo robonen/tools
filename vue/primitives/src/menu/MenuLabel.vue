@@ -7,11 +7,11 @@ export interface MenuLabelProps extends PrimitiveProps {}
 <script setup lang="ts">
 import { Primitive } from '../primitive';
 
-const { as = 'div', asChild } = defineProps<MenuLabelProps>();
+const { as = 'div' } = defineProps<MenuLabelProps>();
 </script>
 
 <template>
-  <Primitive :as="as" :as-child="asChild">
+  <Primitive :as="as">
     <slot />
   </Primitive>
 </template>

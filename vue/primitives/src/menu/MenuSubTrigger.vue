@@ -8,7 +8,7 @@ export interface MenuSubTriggerProps extends MenuItemImplProps {}
 import { PopperAnchor } from '../popper';
 import { useMenuContentContext, useMenuContext, useMenuRootContext, useMenuSubContext } from './context';
 import MenuItemImpl from './MenuItemImpl.vue';
-import { SUB_CLOSE_KEYS, SUB_OPEN_KEYS, getOpenState, isPointerInGraceArea } from './utils';
+import { SUB_CLOSE_KEYS, SUB_OPEN_KEYS, getOpenState } from './utils';
 
 const props = defineProps<MenuSubTriggerProps>();
 
@@ -62,7 +62,7 @@ function handleKeyDown(event: KeyboardEvent) {
 </script>
 
 <template>
-  <PopperAnchor as-child>
+  <PopperAnchor>
     <MenuItemImpl
       v-bind="props"
       :id="subCtx.triggerId.value"

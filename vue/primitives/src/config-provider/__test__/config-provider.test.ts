@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { computed, defineComponent, h } from 'vue';
 import { mount } from '@vue/test-utils';
 import {
   provideAppConfig,
   provideConfig,
   useConfig,
+  useId,
 } from '..';
 
 // --- useConfig ---
@@ -125,6 +126,72 @@ describe('provideAppConfig', () => {
 
     expect(wrapper.find('div').attributes('data-dir')).toBe('rtl');
 
+    wrapper.unmount();
+  });
+});
+
+// --- useId override ---
+
+describe('useId (config override)', () => {
+  it('uses the toolkit fallback when no override is provided', () => {
+    const Child = defineComponent({
+      setup() {
+        const id = useId();
+        return { id };
+      },
+      render() {
+        return h('div', { 'data-id': this.id });
+      },
+    });
+
+    const wrapper = mount(Child);
+    expect(wrapper.find('div').attributes('data-id')).toMatch(/^robonen-/);
+    wrapper.unmount();
+  });
+
+  it('routes through a provided useId override', () => {
+    let count = 0;
+    const customUseId = (_deterministic?: unknown, prefix = 'x') => {
+      count += 1;
+      const n = count;
+      return computed(() => `${prefix}-${n}`);
+    };
+
+    const Child = defineComponent({
+      setup() {
+        const a = useId();
+        const b = useId(undefined, 'custom');
+        return { a, b };
+      },
+      render() {
+        return h('div', { 'data-a': this.a, 'data-b': this.b });
+      },
+    });
+
+    const wrapper = mount(Child, {
+      global: {
+        plugins: [app => provideAppConfig(app, { useId: customUseId })],
+      },
+    });
+
+    expect(wrapper.find('div').attributes('data-a')).toBe('x-1');
+    expect(wrapper.find('div').attributes('data-b')).toBe('custom-2');
+    wrapper.unmount();
+  });
+
+  it('respects deterministic id passed through the override', () => {
+    const Child = defineComponent({
+      setup() {
+        const id = useId(() => 'fixed-id');
+        return { id };
+      },
+      render() {
+        return h('div', { 'data-id': this.id });
+      },
+    });
+
+    const wrapper = mount(Child);
+    expect(wrapper.find('div').attributes('data-id')).toBe('fixed-id');
     wrapper.unmount();
   });
 });

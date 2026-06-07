@@ -5,8 +5,8 @@ export interface PaginationEllipsisProps extends PrimitiveProps {}
 </script>
 
 <script setup lang="ts">
-import { useForwardExpose } from '@robonen/vue';
 import { Primitive } from '@/primitive';
+import { useForwardExpose } from '@robonen/vue';
 
 const { as = 'span' as const } = defineProps<PaginationEllipsisProps>();
 

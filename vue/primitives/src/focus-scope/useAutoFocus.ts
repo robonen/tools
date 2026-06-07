@@ -8,7 +8,7 @@ import {
   getTabbableCandidates,
 } from '@robonen/platform/browsers';
 import type { FocusScopeAPI } from './stack';
-import type { ShallowRef } from 'vue';
+import type { Ref } from 'vue';
 import { createFocusScopesStack } from './stack';
 import { watchPostEffect } from 'vue';
 
@@ -25,7 +25,7 @@ function dispatchCancelableEvent(
 }
 
 export function useAutoFocus(
-  container: Readonly<ShallowRef<HTMLElement | null>>,
+  container: Readonly<Ref<HTMLElement | null | undefined>>,
   focusScope: FocusScopeAPI,
   onMountAutoFocus: (ev: Event) => void,
   onUnmountAutoFocus: (ev: Event) => void,

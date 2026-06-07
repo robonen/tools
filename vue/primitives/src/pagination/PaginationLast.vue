@@ -5,10 +5,10 @@ export interface PaginationLastProps extends PrimitiveProps {}
 </script>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useForwardExpose } from '@robonen/vue';
 import { Primitive } from '@/primitive';
+import { computed } from 'vue';
 import { injectPaginationContext } from './context';
+import { useForwardExpose } from '@robonen/vue';
 
 const { as = 'button' as const } = defineProps<PaginationLastProps>();
 

@@ -14,7 +14,7 @@ import { MenuAnchor, useMenuContext } from '../menu';
 import { Primitive } from '../primitive';
 import { useContextMenuRootContext } from './context';
 
-const { disabled = false, as = 'span', asChild } = defineProps<ContextMenuTriggerProps>();
+const { disabled = false, as = 'span' } = defineProps<ContextMenuTriggerProps>();
 
 const menuCtx = useMenuContext();
 const ctxMenuCtx = useContextMenuRootContext();
@@ -72,11 +72,10 @@ function handlePointerUp() {
 </script>
 
 <template>
-  <MenuAnchor as-child :reference="virtualEl">
+  <MenuAnchor :reference="virtualEl">
     <Primitive
       :ref="forwardRef"
       :as="as"
-      :as-child="asChild"
       :data-state="menuCtx.open.value ? 'open' : 'closed'"
       :data-disabled="disabled ? '' : undefined"
       @contextmenu="handleContextMenu"

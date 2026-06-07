@@ -4,7 +4,8 @@ import Vue from 'unplugin-vue/rolldown';
 
 export default defineConfig({
   ...sharedConfig,
-  entry: ['src/index.ts'],
+  tsconfig: './tsconfig.src.json',
+  entry: ['src/index.ts', 'src/*/index.ts'],
   plugins: [Vue({ isProduction: true })],
   dts: { vue: true },
   deps: {
@@ -14,11 +15,13 @@ export default defineConfig({
   inputOptions: {
     resolve: {
       alias: {
-        // We need to alias @vue/shared to its ESM build to avoid issues
-        // with tree-shaking and module resolution in Rolldown
         '@vue/shared': '@vue/shared/dist/shared.esm-bundler.js',
       },
     },
+  },
+  outputOptions: {
+    ...sharedConfig.outputOptions,
+    chunkFileNames: 'shared/[name]-[hash].js',
   },
   define: {
     __DEV__: 'false',

@@ -7,11 +7,11 @@ export interface MenuSeparatorProps extends PrimitiveProps {}
 <script setup lang="ts">
 import { Primitive } from '../primitive';
 
-const { as = 'div', asChild } = defineProps<MenuSeparatorProps>();
+const { as = 'div' } = defineProps<MenuSeparatorProps>();
 </script>
 
 <template>
-  <Primitive :as="as" :as-child="asChild" role="separator" aria-orientation="horizontal">
+  <Primitive :as="as" role="separator" aria-orientation="horizontal">
     <slot />
   </Primitive>
 </template>

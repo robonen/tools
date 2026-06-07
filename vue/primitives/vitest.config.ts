@@ -1,6 +1,7 @@
+import { resolve } from 'node:path';
+import { playwright } from '@vitest/browser-playwright';
 import Vue from 'unplugin-vue/vite';
 import { defineConfig } from 'vitest/config';
-import { resolve } from 'node:path';
 
 export default defineConfig({
   plugins: [Vue()],
@@ -13,6 +14,11 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
+    browser: {
+      enabled: true,
+      provider: playwright(),
+      headless: true,
+      instances: [{ browser: 'chromium' }],
+    },
   },
 });

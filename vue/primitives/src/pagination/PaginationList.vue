@@ -5,12 +5,12 @@ export interface PaginationListProps extends PrimitiveProps {}
 </script>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useForwardExpose } from '@robonen/vue';
-import { Primitive } from '@/primitive';
-import { injectPaginationContext } from './context';
-import { getRange } from './utils';
 import type { PaginationItem } from './utils';
+import { Primitive } from '@/primitive';
+import { computed } from 'vue';
+import { getRange } from './utils';
+import { injectPaginationContext } from './context';
+import { useForwardExpose } from '@robonen/vue';
 
 const { as = 'div' as const } = defineProps<PaginationListProps>();
 

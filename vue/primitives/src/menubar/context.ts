@@ -1,5 +1,6 @@
 import type { ComputedRef, Ref, ShallowRef } from 'vue';
 import type { Direction } from '../config-provider';
+import type { CollectionItemData } from '../collection';
 
 import { useContextFactory } from '@robonen/vue';
 
@@ -10,6 +11,10 @@ export interface MenubarRootContext {
   onMenuOpen: (value: string) => void;
   onMenuClose: () => void;
   onMenuToggle: (value: string) => void;
+  /** Ordered list of all currently-mounted menubar triggers (DOM order). */
+  getTriggers: (includeDisabled?: boolean) => Array<CollectionItemData<string>>;
+  /** Buffered typeahead search string (cleared after ~1000ms idle). */
+  searchRef: Ref<string>;
 }
 
 export const {

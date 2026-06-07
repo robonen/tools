@@ -21,7 +21,6 @@ const {
   disabled = false,
   textValue: textValueProp,
   as = 'div',
-  asChild,
 } = defineProps<MenuItemImplProps>();
 
 const emit = defineEmits<MenuItemImplEmits>();
@@ -71,11 +70,10 @@ function handleKeyDown(event: KeyboardEvent) {
 </script>
 
 <template>
-  <RovingFocusItem as-child :focusable="!disabled" :active="isHighlighted">
+  <RovingFocusItem :focusable="!disabled" :active="isHighlighted">
     <Primitive
       :ref="(el: unknown) => { itemRef = el as HTMLElement | null }"
       :as="as"
-      :as-child="asChild"
       role="menuitem"
       data-primitives-menu-item=""
       :data-primitive-menu-item-text-value="textValue"

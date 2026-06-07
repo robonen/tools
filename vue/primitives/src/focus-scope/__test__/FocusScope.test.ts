@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { defineComponent, h, nextTick, ref } from 'vue';
+import { render } from 'vitest-browser-vue';
 import FocusScope from '../FocusScope.vue';
 import { mount } from '@vue/test-utils';
 
@@ -446,5 +448,142 @@ describe('FocusScope nested stacks', () => {
     });
 
     wrapper.unmount();
+  });
+});
+
+function mountInDom<T>(component: T) {
+  const host = document.createElement('div');
+  document.body.appendChild(host);
+  return render(component, { container: host });
+}
+
+describe('focusScope (browser)', () => {
+  it('autofocuses first tabbable element on mount', async () => {
+    const Wrapper = defineComponent({
+      setup() {
+        const open = ref(false);
+        return { open };
+      },
+      render() {
+        return h('div', [
+          h('button', { id: 'outside', onClick: () => { this.open = true; } }, 'Open'),
+          this.open
+            ? h(FocusScope, { trapped: true }, {
+                default: () => [
+                  h('button', { id: 'inside-1' }, 'Inside 1'),
+                  h('button', { id: 'inside-2' }, 'Inside 2'),
+                ],
+              })
+            : null,
+        ]);
+      },
+    });
+
+    const { container } = mountInDom(Wrapper);
+    const outside = container.querySelector<HTMLButtonElement>('#outside')!;
+    outside.focus();
+    expect(document.activeElement).toBe(outside);
+
+    await userEvent.click(outside);
+    await nextTick();
+    await new Promise((r) => {
+      requestAnimationFrame(() => r(null));
+    });
+
+    const inside1 = container.querySelector<HTMLButtonElement>('#inside-1')!;
+    expect(document.activeElement).toBe(inside1);
+  });
+
+  it('traps Tab within scope (loop)', async () => {
+    const Wrapper = defineComponent({
+      render() {
+        return h(FocusScope, { trapped: true, loop: true }, {
+          default: () => [
+            h('button', { id: 'a' }, 'A'),
+            h('button', { id: 'b' }, 'B'),
+            h('button', { id: 'c' }, 'C'),
+          ],
+        });
+      },
+    });
+
+    const { container } = mountInDom(Wrapper);
+    await new Promise((r) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => r(null)));
+    });
+    await nextTick();
+
+    const a = container.querySelector<HTMLButtonElement>('#a')!;
+    const b = container.querySelector<HTMLButtonElement>('#b')!;
+    const c = container.querySelector<HTMLButtonElement>('#c')!;
+
+    if (document.activeElement !== a) a.focus();
+    expect(document.activeElement).toBe(a);
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(b);
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(c);
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(a);
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(document.activeElement).toBe(c);
+  });
+
+  it('returns focus to previously focused element on unmount', async () => {
+    const Wrapper = defineComponent({
+      setup() {
+        const open = ref(false);
+        return { open };
+      },
+      render() {
+        return h('div', [
+          h('button', {
+            id: 'trigger',
+            onClick: () => { this.open = !this.open; },
+          }, 'Toggle'),
+          this.open
+            ? h(FocusScope, { trapped: true }, {
+                default: () => [h('button', { id: 'inside' }, 'Inside')],
+              })
+            : null,
+        ]);
+      },
+    });
+
+    const { container } = mountInDom(Wrapper);
+    const trigger = container.querySelector<HTMLButtonElement>('#trigger')!;
+    trigger.focus();
+    await userEvent.click(trigger);
+    await new Promise((r) => {
+      requestAnimationFrame(() => r(null));
+    });
+
+    expect(document.activeElement?.id).toBe('inside');
+    await userEvent.click(trigger);
+    await new Promise((r) => {
+      requestAnimationFrame(() => r(null));
+    });
+
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('honors preventDefault on mountAutoFocus', async () => {
+    const Wrapper = defineComponent({
+      render() {
+        return h(FocusScope, {
+          trapped: true,
+          onMountAutoFocus: (e: Event) => e.preventDefault(),
+        }, {
+          default: () => [h('button', { id: 'x' }, 'X')],
+        });
+      },
+    });
+
+    mountInDom(Wrapper);
+    await new Promise((r) => {
+      requestAnimationFrame(() => r(null));
+    });
+
+    expect(document.activeElement?.tagName).not.toBe('BUTTON');
   });
 });

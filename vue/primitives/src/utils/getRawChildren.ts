@@ -19,7 +19,9 @@ function flatten(children: VNode[], result: VNode[]): void {
   let keyedFragmentCount = 0;
   const startIdx = result.length;
 
-  for (const child of children) {
+  for (let i = 0, len = children.length; i < len; i++) {
+    const child = children[i]!;
+
     if (child.type === Fragment) {
       if (child.patchFlag & PatchFlags.KEYED_FRAGMENT) {
         keyedFragmentCount++;

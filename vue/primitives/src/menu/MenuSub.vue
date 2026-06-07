@@ -26,7 +26,7 @@ const triggerId = useId(undefined, 'menu-sub-trigger');
 provideMenuContext({
   open: openRef,
   onOpenChange: v => emit('update:open', v),
-  content: shallowRef(null),
+  content: shallowRef<HTMLElement | null>(null),
   onContentChange: () => {},
 });
 

@@ -33,31 +33,45 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/*/index.d.mts",
+        "default": "./dist/*/index.mjs"
+      },
+      "require": {
+        "types": "./dist/*/index.d.cts",
+        "default": "./dist/*/index.cjs"
+      }
     }
   },
   "scripts": {
-    "lint:check": "oxlint -c oxlint.config.ts",
-    "lint:fix": "oxlint -c oxlint.config.ts --fix",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "bench": "vitest bench",
     "dev": "vitest dev",
     "build": "tsdown"
   },
   "devDependencies": {
-    "@robonen/oxlint": "workspace:*",
+    "@robonen/eslint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
-    "@stylistic/eslint-plugin": "catalog:",
+    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "^4.0.18",
     "@vue/test-utils": "catalog:",
     "axe-core": "^4.11.1",
-    "oxlint": "catalog:",
+    "eslint": "catalog:",
+    "playwright": "^1.48.0",
     "tsdown": "catalog:",
     "unplugin-vue": "^7.1.1",
+    "vitest-browser-vue": "^1.0.0",
     "vue-tsc": "^3.2.5"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.11",
     "@robonen/platform": "workspace:*",
-    "@robonen/stdlib": "^0.0.9",
+    "@robonen/stdlib": "workspace:*",
     "@robonen/vue": "workspace:*",
     "@vue/shared": "catalog:",
     "vue": "catalog:"

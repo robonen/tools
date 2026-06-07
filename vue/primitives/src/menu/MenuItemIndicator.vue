@@ -14,7 +14,7 @@ import { Primitive } from '../primitive';
 import { useMenuItemIndicatorContext } from './context';
 import { getCheckedState, isIndeterminate } from './utils';
 
-const { as = 'span', asChild, forceMount = false } = defineProps<MenuItemIndicatorProps>();
+const { as = 'span', forceMount = false } = defineProps<MenuItemIndicatorProps>();
 const ctx = useMenuItemIndicatorContext();
 const isPresent = computed(() => ctx.checkedState.value === true || isIndeterminate(ctx.checkedState.value));
 </script>
@@ -23,7 +23,6 @@ const isPresent = computed(() => ctx.checkedState.value === true || isIndetermin
   <Presence :present="forceMount || isPresent">
     <Primitive
       :as="as"
-      :as-child="asChild"
       :data-state="getCheckedState(ctx.checkedState.value)"
     >
       <slot />

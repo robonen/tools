@@ -1,0 +1,26 @@
+{
+  "name": "@robonen/primitives-playground",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Minimal playground for @robonen/primitives — eyeball, debug, hack on hypotheses",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@robonen/primitives": "workspace:*",
+    "vue": "catalog:",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@robonen/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "^4.1.0",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "tailwindcss": "^4.1.0",
+    "vite": "^7.1.9",
+    "vue-tsc": "^3.2.5"
+  }
+}

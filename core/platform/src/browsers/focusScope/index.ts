@@ -136,6 +136,8 @@ export function findFirstVisible(elements: HTMLElement[], container: HTMLElement
     if (!isHidden(element, container))
       return element;
   }
+
+  return undefined;
 }
 
 /**
@@ -150,6 +152,8 @@ export function findLastVisible(elements: HTMLElement[], container: HTMLElement)
     if (!isHidden(elements[i]!, container))
       return elements[i];
   }
+
+  return undefined;
 }
 
 /**

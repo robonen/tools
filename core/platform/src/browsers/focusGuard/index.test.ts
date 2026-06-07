@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { focusGuard, createGuardAttrs } from '.';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { createGuardAttrs, focusGuard } from '.';
 
 describe('focusGuard', () => {
   beforeEach(() => {

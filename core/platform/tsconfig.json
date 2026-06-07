@@ -1,6 +1,7 @@
 {
-  "extends": "@robonen/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "lib": ["DOM"]
-  }
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.src.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

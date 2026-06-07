@@ -1,15 +1,15 @@
-import { afterEach, describe, it, expect } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
-  getActiveElement,
-  getTabbableCandidates,
-  getTabbableEdges,
-  focusFirst,
-  focus,
-  isHidden,
-  isSelectableInput,
   AUTOFOCUS_ON_MOUNT,
   AUTOFOCUS_ON_UNMOUNT,
   EVENT_OPTIONS,
+  focus,
+  focusFirst,
+  getActiveElement,
+  getTabbableCandidates,
+  getTabbableEdges,
+  isHidden,
+  isSelectableInput,
 } from '.';
 
 function createContainer(html: string): HTMLElement {

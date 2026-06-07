@@ -1,6 +1,6 @@
 ---
 name: monorepo
-description: "Manage the @robonen/tools monorepo. Use when: installing dependencies, creating new packages, linting, building, testing, publishing, or scaffolding workspace packages. Covers pnpm catalogs, tsdown builds, oxlint presets, vitest projects, JSR/NPM publishing."
+description: "Manage the @robonen/tools monorepo. Use when: installing dependencies, creating new packages, linting, building, testing, publishing, or scaffolding workspace packages. Covers pnpm catalogs, tsdown builds, eslint presets, vitest projects, JSR/NPM publishing."
 ---
 
 # Monorepo Management
@@ -13,7 +13,7 @@ This is a pnpm workspace monorepo (`@robonen/tools`) with shared configs, strict
 
 | Directory | Purpose | Examples |
 |-----------|---------|---------|
-| `configs/*` | Shared tooling configs | `oxlint`, `tsconfig`, `tsdown` |
+| `configs/*` | Shared tooling configs | `eslint`, `tsconfig`, `tsdown` |
 | `core/*` | Platform-agnostic TS libraries | `stdlib`, `platform`, `encoding` |
 | `vue/*` | Vue 3 packages | `primitives`, `toolkit` |
 | `docs` | Nuxt 4 documentation site | — |
@@ -35,7 +35,7 @@ pnpm -C <package-path> add -D <dep-name>
 
 Examples:
 ```bash
-pnpm -C core/stdlib add -D oxlint
+pnpm -C core/stdlib add -D eslint
 pnpm -C vue/primitives add vue
 ```
 
@@ -47,7 +47,7 @@ Versions shared across multiple packages MUST use the pnpm catalog system. The c
 catalog:
   vitest: ^4.0.18
   tsdown: ^0.21.0
-  oxlint: ^1.2.0
+  eslint: ^10.4.1
   vue: ^3.5.28
   # ... etc
 ```
@@ -57,7 +57,7 @@ In `package.json`, reference catalog versions with the `catalog:` protocol:
 {
   "devDependencies": {
     "vitest": "catalog:",
-    "oxlint": "catalog:"
+    "eslint": "catalog:"
   }
 }
 ```
@@ -72,7 +72,7 @@ Reference sibling packages with the workspace protocol:
 ```json
 {
   "devDependencies": {
-    "@robonen/oxlint": "workspace:*",
+    "@robonen/eslint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*"
   }
@@ -87,7 +87,7 @@ Always run `pnpm install` at the root after editing `pnpm-workspace.yaml` or any
 
 ## Creating a New Package
 
-> **Note:** The existing `bin/cli.ts` (`pnpm create`) is outdated — it generates Vite configs instead of tsdown and lacks oxlint/vitest setup. Follow the manual steps below instead.
+> **Note:** The existing `bin/cli.ts` (`pnpm create`) is outdated — it generates Vite configs instead of tsdown and lacks eslint/vitest setup. Follow the manual steps below instead.
 
 ### 1. Create the directory
 
@@ -116,18 +116,17 @@ Choose the correct parent based on package type:
     }
   },
   "scripts": {
-    "lint:check": "oxlint -c oxlint.config.ts",
-    "lint:fix": "oxlint -c oxlint.config.ts --fix",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "dev": "vitest dev",
     "build": "tsdown"
   },
   "devDependencies": {
-    "@robonen/oxlint": "workspace:*",
+    "@robonen/eslint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
-      "@stylistic/eslint-plugin": "catalog:",
-    "oxlint": "catalog:",
+    "eslint": "catalog:",
     "tsdown": "catalog:"
   }
 }
@@ -139,7 +138,6 @@ For Vue packages, also add:
   "dependencies": {
     "vue": "catalog:",
     "@vue/shared": "catalog:"
-    "@stylistic/eslint-plugin": "catalog:",
   },
   "devDependencies": {
     "@vue/test-utils": "catalog:"
@@ -215,15 +213,16 @@ export default defineConfig({
 });
 ```
 
-### 5. Create `oxlint.config.ts`
+### 5. Create `eslint.config.ts`
 
 Standard (node packages):
 ```typescript
-import { defineConfig } from 'oxlint';
-import { compose, base, typescript, imports, stylistic } from '@robonen/oxlint';
+import { base, compose, imports, stylistic, typescript } from '@robonen/eslint';
 
-export default defineConfig(compose(base, typescript, imports, stylistic));
+export default compose(base, typescript, imports, stylistic);
 ```
+
+> ESLint auto-discovers `eslint.config.ts` (loaded via `jiti`, which `@robonen/eslint` depends on). No `defineConfig` wrapper is needed — `compose()` returns the flat-config array directly.
 
 ### 6. Create `vitest.config.ts`
 
@@ -292,7 +291,7 @@ pnpm -C <package-path> test
 
 ## Linting
 
-Uses **oxlint** (not ESLint) with composable presets from `@robonen/oxlint`.
+Uses **ESLint** (flat config) with composable presets from `@robonen/eslint`.
 
 ### Run linting
 
@@ -314,38 +313,29 @@ pnpm lint:fix
 
 | Preset | Purpose |
 |--------|---------|
-| `base` | ESLint core + Oxc + Unicorn rules |
-| `typescript` | TypeScript rules (via overrides on `*.ts` files) |
-| `imports` | Import ordering, cycles, duplicates |
+| `base` | ESLint core + Unicorn rules + global ignores |
+| `typescript` | TypeScript rules (via `typescript-eslint`, on `*.ts` + `*.vue`) |
+| `imports` | Import ordering, cycles, duplicates (`eslint-plugin-import-x`) |
 | `stylistic` | Code style via `@stylistic/eslint-plugin` |
-| `vue` | Vue 3 Composition API rules |
-| `vitest` | Test file rules |
-| `node` | Node.js-specific rules |
+| `vue` | Vue 3 Composition API rules (`eslint-plugin-vue`) |
+| `vitest` | Test file rules (`@vitest/eslint-plugin`) |
+| `node` | Node.js-specific rules (`eslint-plugin-n`) |
 
-Compose presets in `oxlint.config.ts`:
+Compose presets in `eslint.config.ts`:
 ```typescript
-import { defineConfig } from 'oxlint';
-import { compose, base, typescript, imports } from '@robonen/oxlint';
+import { base, compose, imports, typescript } from '@robonen/eslint';
 
-export default defineConfig(compose(base, typescript, imports));
+export default compose(base, typescript, imports);
+```
 
 **Recommended:** Include `stylistic` preset for code formatting:
 ```typescript
-import { defineConfig } from 'oxlint';
-import { compose, base, typescript, imports, stylistic } from '@robonen/oxlint';
+import { base, compose, imports, stylistic, typescript } from '@robonen/eslint';
 
-export default defineConfig(compose(base, typescript, imports, stylistic));
+export default compose(base, typescript, imports, stylistic);
 ```
 
-When using `stylistic`, add `@stylistic/eslint-plugin` to devDependencies:
-```json
-{
-  "devDependencies": {
-    "@stylistic/eslint-plugin": "catalog:"
-  }
-}
-```
-```
+All plugins (including `@stylistic/eslint-plugin`) ship as dependencies of `@robonen/eslint`, so packages only need `@robonen/eslint` + `eslint` in devDependencies.
 
 ## Building
 

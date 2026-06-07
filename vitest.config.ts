@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     projects: [
-      'configs/oxlint/vitest.config.ts',
+      'configs/eslint/vitest.config.ts',
       'core/fetch/vitest.config.ts',
       'core/stdlib/vitest.config.ts',
       'core/platform/vitest.config.ts',

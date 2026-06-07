@@ -36,8 +36,8 @@
     }
   },
   "scripts": {
-    "lint:check": "oxlint -c oxlint.config.ts",
-    "lint:fix": "oxlint -c oxlint.config.ts --fix",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "dev": "vitest dev",
     "build": "tsdown"
@@ -46,11 +46,10 @@
     "@robonen/stdlib": "workspace:*"
   },
   "devDependencies": {
-    "@robonen/oxlint": "workspace:*",
+    "@robonen/eslint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
-    "@stylistic/eslint-plugin": "catalog:",
-    "oxlint": "catalog:",
+    "eslint": "catalog:",
     "tsdown": "catalog:"
   }
 }

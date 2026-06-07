@@ -1,4 +1,4 @@
-import type { MaybePromise, ReadonlyArrayable } from '@robonen/stdlib';
+import type { MaybePromise, ReadonlyArrayable, UnionToIntersection } from '@robonen/stdlib';
 
 // --------------------------
 // Fetch API
@@ -8,51 +8,60 @@ import type { MaybePromise, ReadonlyArrayable } from '@robonen/stdlib';
  * @name $Fetch
  * @category Fetch
  * @description The main fetch interface with method shortcuts, raw access, and factory methods
+ *
+ * @typeParam Plugins - Tuple of plugins attached to this instance; their option
+ * extensions are merged into every request's options type.
  */
-export interface $Fetch {
+export interface $Fetch<Plugins extends readonly FetchPlugin[] = []> {
   <T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
-    options?: FetchOptions<R, T>,
+    options?: FetchOptions<R, T> & MergePluginOptions<Plugins>,
   ): Promise<MappedResponseType<R, T>>;
   raw<T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
-    options?: FetchOptions<R, T>,
+    options?: FetchOptions<R, T> & MergePluginOptions<Plugins>,
   ): Promise<FetchResponse<MappedResponseType<R, T>>>;
   /** Access to the underlying native fetch function */
   native: Fetch;
-  /** Create a new fetch instance with merged defaults */
-  create(defaults?: FetchOptions, globalOptions?: CreateFetchOptions): $Fetch;
-  /** Alias for create — extend this instance with new defaults */
-  extend(defaults?: FetchOptions, globalOptions?: CreateFetchOptions): $Fetch;
+  /** Create a new fetch instance with merged defaults and (optionally) additional plugins */
+  create<NewPlugins extends readonly FetchPlugin[] = []>(
+    defaults?: FetchOptions & MergePluginOptions<[...Plugins, ...NewPlugins]>,
+    globalOptions?: CreateFetchOptions<NewPlugins>,
+  ): $Fetch<[...Plugins, ...NewPlugins]>;
+  /** Alias for create — extend this instance with new defaults and (optionally) additional plugins */
+  extend<NewPlugins extends readonly FetchPlugin[] = []>(
+    defaults?: FetchOptions & MergePluginOptions<[...Plugins, ...NewPlugins]>,
+    globalOptions?: CreateFetchOptions<NewPlugins>,
+  ): $Fetch<[...Plugins, ...NewPlugins]>;
   /** Shorthand for GET requests */
   get<T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
-    options?: Omit<FetchOptions<R, T>, 'method'>,
+    options?: Omit<FetchOptions<R, T>, 'method'> & MergePluginOptions<Plugins>,
   ): Promise<MappedResponseType<R, T>>;
   /** Shorthand for POST requests */
   post<T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
-    options?: Omit<FetchOptions<R, T>, 'method'>,
+    options?: Omit<FetchOptions<R, T>, 'method'> & MergePluginOptions<Plugins>,
   ): Promise<MappedResponseType<R, T>>;
   /** Shorthand for PUT requests */
   put<T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
-    options?: Omit<FetchOptions<R, T>, 'method'>,
+    options?: Omit<FetchOptions<R, T>, 'method'> & MergePluginOptions<Plugins>,
   ): Promise<MappedResponseType<R, T>>;
   /** Shorthand for PATCH requests */
   patch<T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
-    options?: Omit<FetchOptions<R, T>, 'method'>,
+    options?: Omit<FetchOptions<R, T>, 'method'> & MergePluginOptions<Plugins>,
   ): Promise<MappedResponseType<R, T>>;
   /** Shorthand for DELETE requests */
   delete<T = unknown, R extends ResponseType = 'json'>(
     request: FetchRequest,
-    options?: Omit<FetchOptions<R, T>, 'method'>,
+    options?: Omit<FetchOptions<R, T>, 'method'> & MergePluginOptions<Plugins>,
   ): Promise<MappedResponseType<R, T>>;
   /** Shorthand for HEAD requests */
   head(
     request: FetchRequest,
-    options?: Omit<FetchOptions, 'method'>,
+    options?: Omit<FetchOptions, 'method'> & MergePluginOptions<Plugins>,
   ): Promise<FetchResponse<unknown>>;
 }
 
@@ -117,13 +126,116 @@ export interface ResolvedFetchOptions<R extends ResponseType = 'json', T = unkno
  * @name CreateFetchOptions
  * @category Fetch
  * @description Global options for createFetch
+ *
+ * @typeParam Plugins - Tuple of plugins to attach to the instance
  */
-export interface CreateFetchOptions {
+export interface CreateFetchOptions<Plugins extends readonly FetchPlugin[] = []> {
   /** Default options merged into every request */
-  defaults?: FetchOptions;
+  defaults?: FetchOptions & MergePluginOptions<Plugins>;
   /** Custom fetch implementation — defaults to globalThis.fetch */
   fetch?: Fetch;
+  /**
+   * Plugins composed once at createFetch time.
+   * Each plugin may contribute defaults, lifecycle hooks, and typed option fields.
+   */
+  plugins?: Plugins;
 }
+
+// --------------------------
+// Plugins
+// --------------------------
+
+/**
+ * @name FetchPlugin
+ * @category Fetch
+ * @description A reusable bundle of defaults and lifecycle hooks that extends a fetch instance.
+ *
+ * Plugins are composed once at `createFetch` time — their defaults and hooks are
+ * flattened into the instance closure, so attaching plugins adds zero per-request
+ * overhead beyond the contributed hooks themselves.
+ *
+ * @typeParam Name - Unique plugin identifier (for debugging / duplicate detection)
+ * @typeParam OptionsExt - Extra fields merged into every request's options type
+ * @typeParam ContextExt - Extra fields that the plugin may attach to FetchContext
+ * at runtime (advisory; not enforced by the core pipeline)
+ *
+ * @example
+ * const authPlugin = definePlugin<'auth', { token?: string }>({
+ *   name: 'auth',
+ *   hooks: {
+ *     onRequest: (ctx) => {
+ *       const token = (ctx.options as { token?: string }).token;
+ *       if (token) ctx.options.headers.set('authorization', `Bearer ${token}`);
+ *     },
+ *   },
+ * });
+ */
+export interface FetchPlugin<
+  Name extends string = string,
+  OptionsExt = unknown,
+  ContextExt = unknown,
+> {
+  /** Plugin identifier */
+  readonly name: Name;
+  /** Default options contributed by the plugin — merged under user defaults */
+  readonly defaults?: FetchOptions;
+  /** Lifecycle hooks executed before any user per-request hooks */
+  readonly hooks?: FetchHooks;
+  /**
+   * Onion-style middleware wrapping the fetch attempt + response parse.
+   * Plugins compose in registration order; calling `next()` invokes the next
+   * middleware or ultimately the core executor. May call `next()` multiple
+   * times (e.g. to implement retries).
+   */
+  readonly execute?: FetchExecuteMiddleware;
+  /** Invoked once per createFetch, after all plugin defaults are merged */
+  readonly setup?: (context: { readonly defaults: FetchOptions }) => void;
+  /**
+   * Phantom marker for type-only option/context extensions — never present at runtime.
+   * Populated via dummy field in `definePlugin` generics.
+   * @internal
+   */
+  readonly __types?: { options: OptionsExt; context: ContextExt };
+}
+
+/**
+ * @name FetchExecuteMiddleware
+ * @category Fetch
+ * @description Onion-style wrapper around a single fetch attempt.
+ *
+ * Invoking `next()` delegates to the next middleware in the chain or, at the
+ * innermost layer, performs the actual `fetch` call and response body parsing.
+ * `context.response` / `context.error` are populated by the time `next()` resolves.
+ *
+ * Middlewares may call `next()` zero, one, or many times (retries).
+ */
+export type FetchExecuteMiddleware = (
+  context: FetchContext,
+  next: () => Promise<void>,
+) => Promise<void>;
+
+/**
+ * @name MergePluginOptions
+ * @category Fetch
+ * @description Intersection of all `OptionsExt` carried by a plugin tuple. Empty tuple resolves to `unknown`.
+ */
+export type MergePluginOptions<Plugins extends readonly FetchPlugin[]>
+  = [Plugins[number]] extends [never]
+    ? unknown
+    : UnionToIntersection<PluginOptionsOf<Plugins[number]>>;
+
+/**
+ * @name MergePluginContext
+ * @category Fetch
+ * @description Intersection of all `ContextExt` carried by a plugin tuple. Empty tuple resolves to `unknown`.
+ */
+export type MergePluginContext<Plugins extends readonly FetchPlugin[]>
+  = [Plugins[number]] extends [never]
+    ? unknown
+    : UnionToIntersection<PluginContextOf<Plugins[number]>>;
+
+type PluginOptionsOf<P> = P extends FetchPlugin<infer _N, infer O, infer _C> ? O : unknown;
+type PluginContextOf<P> = P extends FetchPlugin<infer _N, infer _O, infer C> ? C : unknown;
 
 // --------------------------
 // Hooks and Context

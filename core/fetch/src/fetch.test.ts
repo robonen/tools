@@ -212,6 +212,21 @@ describe('JSON body serialisation', () => {
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(init.body).toBe('key=value');
   });
+
+  it('passes a raw string body through without forcing a JSON content-type', async () => {
+    const fetchMock = makeFetchMock({ ok: true });
+    const $fetch = createFetch({ fetch: fetchMock });
+
+    await $fetch('https://api.example.com/raw', {
+      method: 'POST',
+      body: 'plain text payload',
+    });
+
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(init.body).toBe('plain text payload');
+    expect((init.headers as Headers).get('content-type')).toBeNull();
+    expect((init.headers as Headers).get('accept')).toBeNull();
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -327,6 +342,50 @@ describe('retry', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(data).toEqual({ ok: true });
+  });
+
+  it('does not retry a user-initiated abort', async () => {
+    const controller = new AbortController();
+    const fetchMock = vi.fn().mockImplementation((_url: string, init: RequestInit) =>
+      new Promise((_resolve, reject) => {
+        const signal = init.signal as AbortSignal;
+        signal.addEventListener('abort', () => reject(signal.reason));
+      }),
+    );
+    const $fetch = createFetch({ fetch: fetchMock });
+
+    const promise = $fetch('https://api.example.com/cancel', {
+      signal: controller.signal,
+      retry: 3,
+    });
+    controller.abort();
+
+    await expect(promise).rejects.toBeInstanceOf(FetchError);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears a stale error on a successful retry before onResponse runs', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(new TypeError('network down'))
+      .mockResolvedValueOnce(
+        new Response('{"ok":true}', {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      );
+    const $fetch = createFetch({ fetch: fetchMock });
+
+    let errorInResponseHook: unknown = 'unset';
+    const data = await $fetch('https://api.example.com/flaky', {
+      onResponse: (ctx) => {
+        errorInResponseHook = ctx.error;
+      },
+    });
+
+    expect(data).toEqual({ ok: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(errorInResponseHook).toBeUndefined();
   });
 });
 
@@ -523,5 +582,38 @@ describe('timeout', () => {
     vi.advanceTimersByTime(200);
 
     await expect(promise).rejects.toBeInstanceOf(FetchError);
+  });
+
+  it('uses a fresh, un-aborted timeout signal on each retry attempt', async () => {
+    let attempt = 0;
+    const fetchMock = vi.fn().mockImplementation((_url: string, init: RequestInit) => {
+      attempt += 1;
+      const signal = init.signal as AbortSignal;
+
+      // First attempt hangs until its own timeout fires.
+      if (attempt === 1) {
+        return new Promise((_resolve, reject) => {
+          signal.addEventListener('abort', () => reject(signal.reason));
+        });
+      }
+
+      // Retry must receive a brand-new signal, not the already-aborted one.
+      expect(signal.aborted).toBe(false);
+      return Promise.resolve(
+        new Response('{"ok":true}', {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+      );
+    });
+
+    const $fetch = createFetch({ fetch: fetchMock });
+    const promise = $fetch('https://api.example.com/slow', { timeout: 100 });
+
+    // Fire attempt-1 timeout and let the retry proceed to attempt 2.
+    await vi.advanceTimersByTimeAsync(100);
+
+    await expect(promise).resolves.toEqual({ ok: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 });

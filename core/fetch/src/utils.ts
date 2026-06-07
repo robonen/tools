@@ -66,8 +66,9 @@ export function isJSONSerializable(value: unknown): boolean {
   // Arrays are serialisable
   if (isArray(value)) return true;
 
-  // TypedArrays / ArrayBuffers carry a .buffer property — not JSON-serialisable
-  if ((value as Record<string, unknown>).buffer !== undefined) return false;
+  // TypedArrays and ArrayBuffers — use native type checks instead of probing
+  // `.buffer`, which would pollute the property IC with every distinct body shape.
+  if (ArrayBuffer.isView(value) || value instanceof ArrayBuffer) return false;
 
   // FormData and URLSearchParams should not be auto-serialised
   if (value instanceof FormData || value instanceof URLSearchParams) return false;
@@ -77,7 +78,7 @@ export function isJSONSerializable(value: unknown): boolean {
   return (
     ctor === undefined
     || ctor === Object
-    || typeof (value as Record<string, unknown>).toJSON === 'function'
+    || typeof (value as { toJSON?: unknown }).toJSON === 'function'
   );
 }
 
@@ -98,7 +99,9 @@ export function isJSONSerializable(value: unknown): boolean {
 export function detectResponseType(contentType = ''): ResponseType {
   if (!contentType) return 'json';
 
-  const type = contentType.split(';')[0] ?? '';
+  // Strip any `; charset=...` suffix without allocating an intermediate array.
+  const semi = contentType.indexOf(';');
+  const type = semi === -1 ? contentType : contentType.slice(0, semi);
 
   if (JSON_CONTENT_TYPE_RE.test(type)) return 'json';
   if (type === 'text/event-stream') return 'stream';
@@ -140,7 +143,12 @@ export function buildURL(
   const qs = params.toString();
   if (!qs) return url;
 
-  return url.includes('?') ? `${url}&${qs}` : `${url}?${qs}`;
+  // Insert the query string *before* any fragment so `#section` stays trailing.
+  const hashIndex = url.indexOf('#');
+  const base = hashIndex === -1 ? url : url.slice(0, hashIndex);
+  const hash = hashIndex === -1 ? '' : url.slice(hashIndex);
+
+  return `${base}${base.includes('?') ? '&' : '?'}${qs}${hash}`;
 }
 
 /**

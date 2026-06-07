@@ -2,6 +2,9 @@ import { createFetch } from './fetch';
 
 export { createFetch } from './fetch';
 export { FetchError, createFetchError } from './error';
+export { composePlugins, definePlugin, runHookPhase } from './plugin';
+export type { ComposedPlugins } from './plugin';
+export { retryPlugin, timeoutPlugin } from './plugins';
 export {
   isPayloadMethod,
   isJSONSerializable,
@@ -17,13 +20,17 @@ export type {
   Fetch,
   FetchContext,
   FetchErrorOptions,
+  FetchExecuteMiddleware,
   FetchHook,
   FetchHooks,
   FetchOptions,
+  FetchPlugin,
   FetchRequest,
   FetchResponse,
   IFetchError,
   MappedResponseType,
+  MergePluginContext,
+  MergePluginOptions,
   ResponseMap,
   ResponseType,
   ResolvedFetchOptions,

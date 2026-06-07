@@ -131,6 +131,18 @@ describe('buildURL', () => {
   it('returns the URL unchanged when all params are omitted', () => {
     expect(buildURL('https://api.example.com', { a: null })).toBe('https://api.example.com');
   });
+
+  it('inserts the query string before a fragment', () => {
+    expect(buildURL('https://api.example.com/p#section', { a: 1 })).toBe(
+      'https://api.example.com/p?a=1#section',
+    );
+  });
+
+  it('appends to an existing query string before a fragment', () => {
+    expect(buildURL('https://api.example.com/p?foo=bar#section', { baz: 'qux' })).toBe(
+      'https://api.example.com/p?foo=bar&baz=qux#section',
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------

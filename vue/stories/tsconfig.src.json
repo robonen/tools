@@ -1,0 +1,10 @@
+{
+  "extends": "@robonen/tsconfig/tsconfig.vue.json",
+  "compilerOptions": {
+    "composite": true,
+    "types": ["vite/client"],
+    "allowImportingTsExtensions": false,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.src.tsbuildinfo"
+  },
+  "include": ["stories/**/*.ts", "stories/**/*.vue"]
+}

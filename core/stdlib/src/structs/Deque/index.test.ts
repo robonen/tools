@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Deque } from '.';
 
 describe('deque', () => {
@@ -30,6 +30,22 @@ describe('deque', () => {
 
       expect(deque.length).toBe(0);
       expect(deque.isFull).toBe(false);
+    });
+
+    it('throw when initial values exceed maxSize', () => {
+      expect(() => new Deque([1, 2, 3, 4, 5], { maxSize: 3 })).toThrow(RangeError);
+    });
+
+    it('enforce maxSize against subsequent pushes', () => {
+      const deque = new Deque([1, 2], { maxSize: 2 });
+
+      expect(deque.isFull).toBe(true);
+      expect(() => deque.pushBack(3)).toThrow(RangeError);
+      expect(() => deque.pushFront(0)).toThrow(RangeError);
+
+      deque.popFront();
+      expect(deque.isFull).toBe(false);
+      expect(() => deque.pushBack(3)).not.toThrow();
     });
   });
 

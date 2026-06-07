@@ -1,6 +1,6 @@
+import type { Collection, Path, PathToPartialType, Stringable, Trim, UnionToIntersection } from '../../types';
 import { get } from '../../collections';
 import { isFunction } from '../../types';
-import type { Collection, Path, PathToType, Stringable, Trim, UnionToIntersection } from '../../types';
 
 /**
  * Type of a value that will be used to replace a placeholder in a template.
@@ -52,23 +52,45 @@ export type ExtractPlaceholders<In extends string>
  * type Base = GenerateTypes<'Hello {user.name}, your address {user.addresses.0.street}'>; // { user: { name: string; addresses: { 0: { street: string; }; }; }; }
  * type WithTarget = GenerateTypes<'Hello {user.age}', number>; // { user: { age: number; }; }
  */
-export type GenerateTypes<T extends string, Target = string> = UnionToIntersection<PathToType<Path<T>, Target>>;
+export type GenerateTypes<T extends string, Target = string>
+  // No placeholders (T is never) → impose no shape on the args object.
+  = [T] extends [never]
+    ? Collection
+    : UnionToIntersection<PathToPartialType<Path<T>, Target>>;
 
+/**
+ * @name templateObject
+ * @category Text
+ * @description Replace `{path}` placeholders in a template string with values
+ * resolved from `args` by dot-path. Placeholder keys are inferred from the
+ * template, so `args` is type-checked and auto-completed against them.
+ *
+ * @param {string} template - Template string with `{path}` placeholders
+ * @param {object} args - Source values, keyed by the placeholder paths
+ * @param {string | ((key: string) => string)} [fallback] - Value (or factory) used when a placeholder cannot be resolved; defaults to an empty string
+ * @returns {string} The interpolated string
+ *
+ * @example
+ * templateObject('Hello, {name}!', { name: 'John' }); // 'Hello, John!'
+ * templateObject('Hi {user.addresses.0.city}', { user: { addresses: [{ city: 'NY' }] } }); // 'Hi NY'
+ * templateObject('Hello, {name}!', {}, 'Guest'); // 'Hello, Guest!'
+ * templateObject('Hello, {name}!', {}, key => `<${key}>`); // 'Hello, <name>!'
+ *
+ * @since 0.0.4
+ */
 export function templateObject<
   T extends string,
   A extends GenerateTypes<ExtractPlaceholders<T>, TemplateValue> & Collection,
->(template: T, args: A, fallback?: TemplateFallback) {
-  return template.replace(TEMPLATE_PLACEHOLDER, (_, key) => {
-    const value = get(args, key)?.toString();
-    return value !== undefined ? value : (isFunction(fallback) ? fallback(key) : '');
+>(template: T, args: A, fallback?: TemplateFallback): string {
+  return template.replace(TEMPLATE_PLACEHOLDER, (_match, key: string) => {
+    const value = get(args, key);
+
+    if (value !== null && value !== undefined)
+      return String(value);
+
+    if (isFunction<(key: string) => string>(fallback))
+      return fallback(key);
+
+    return fallback ?? '';
   });
 }
-
-templateObject('Hello {user.name}, your address {user.addresses.0.city}', {
-  user: {
-    name: 'John',
-    addresses: [
-      { city: 'Kolpa' },
-    ],
-  },
-});

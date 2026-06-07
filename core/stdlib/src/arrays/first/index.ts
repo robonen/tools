@@ -16,5 +16,6 @@
  * @since 0.0.3
  */
 export function first<Value>(arr: Value[], defaultValue?: Value) {
-  return arr[0] ?? defaultValue;
+  // Branch on length, not nullishness, so a present null/undefined first element is preserved.
+  return arr.length > 0 ? arr[0]! : defaultValue;
 }

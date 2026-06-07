@@ -1,4 +1,3 @@
-import { last } from '../../arrays';
 import { isArray } from '../../types';
 import type { StackLike } from './types';
 
@@ -43,7 +42,17 @@ export class Stack<T> implements StackLike<T> {
      */
   constructor(initialValues?: T[] | T, options?: StackOptions) {
     this.maxSize = options?.maxSize ?? Infinity;
-    this.stack = isArray(initialValues) ? initialValues : initialValues ? [initialValues] : [];
+
+    // Copy the input so external mutation can't corrupt internal state, and use an
+    // explicit nullish check so falsy single values (0, '', false) are not dropped.
+    const values = isArray(initialValues)
+      ? initialValues.slice()
+      : initialValues !== null && initialValues !== undefined ? [initialValues] : [];
+
+    if (values.length > this.maxSize)
+      throw new RangeError('Stack: initial values exceed maxSize');
+
+    this.stack = values;
   }
 
   /**
@@ -67,7 +76,7 @@ export class Stack<T> implements StackLike<T> {
      * @returns {boolean} `true` if the stack is full, `false` otherwise
      */
   public get isFull() {
-    return this.stack.length === this.maxSize;
+    return this.stack.length >= this.maxSize;
   }
 
   /**
@@ -98,10 +107,9 @@ export class Stack<T> implements StackLike<T> {
      * @returns {T | undefined} The top element of the stack
      */
   public peek() {
-    if (this.isEmpty)
-      return undefined;
-
-    return last(this.stack);
+    // Direct index preserves a legitimately stored `undefined`/`null` top and
+    // returns `undefined` for an empty stack (noUncheckedIndexedAccess).
+    return this.stack[this.stack.length - 1];
   }
 
   /**
@@ -138,8 +146,10 @@ export class Stack<T> implements StackLike<T> {
      *
      * @returns {IterableIterator<T>}
      */
-  public [Symbol.iterator]() {
-    return this.toArray()[Symbol.iterator]();
+  public* [Symbol.iterator]() {
+    // Lazy reverse walk — no eager reversed-copy allocation.
+    for (let i = this.stack.length - 1; i >= 0; i--)
+      yield this.stack[i]!;
   }
 
   /**
@@ -148,8 +158,7 @@ export class Stack<T> implements StackLike<T> {
      * @returns {AsyncIterableIterator<T>}
      */
   public async* [Symbol.asyncIterator]() {
-    for (const element of this.toArray()) {
-      yield element;
-    }
+    for (let i = this.stack.length - 1; i >= 0; i--)
+      yield this.stack[i]!;
   }
 }

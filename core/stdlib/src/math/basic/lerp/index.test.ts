@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { inverseLerp, lerp } from '.';
 
 describe('lerp', () => {
@@ -25,6 +25,16 @@ describe('lerp', () => {
   it('handles interpolation values greater than 1', () => {
     const result = lerp(0, 10, 1.5);
     expect(result).toBe(15);
+  });
+
+  it('interpolates from a non-zero start', () => {
+    expect(lerp(10, 20, 0.5)).toBe(15);
+    expect(lerp(-10, 10, 0.25)).toBe(-5);
+  });
+
+  it('propagates NaN and Infinity', () => {
+    expect(lerp(0, 10, Number.NaN)).toBeNaN();
+    expect(lerp(0, Number.POSITIVE_INFINITY, 0.5)).toBe(Number.POSITIVE_INFINITY);
   });
 });
 

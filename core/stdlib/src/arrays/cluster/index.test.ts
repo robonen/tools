@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { cluster } from '.';
 
 describe('cluster', () => {
@@ -36,5 +36,14 @@ describe('cluster', () => {
     const result = cluster([], 3);
 
     expect(result).toEqual([]);
+  });
+
+  it('not mutate the input and produce copied sub-arrays', () => {
+    const input = [1, 2, 3, 4];
+    const result = cluster(input, 2);
+
+    result[0]!.push(99);
+
+    expect(input).toEqual([1, 2, 3, 4]);
   });
 });

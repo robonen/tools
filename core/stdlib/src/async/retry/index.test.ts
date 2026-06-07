@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { retry } from '.';
 
 describe('retry', () => {
@@ -12,7 +12,7 @@ describe('retry', () => {
 
   it('return the result on first successful attempt', async () => {
     const successFn = vi.fn().mockResolvedValue('success');
-    
+
     const result = await retry(successFn);
 
     expect(result).toBe('success');
@@ -20,19 +20,19 @@ describe('retry', () => {
     expect(successFn).toHaveBeenCalledWith({ count: 1, stop: expect.any(Function) });
   });
 
-    it('use default times value of 2', async () => {
+  it('use default times value of 2', async () => {
     const failingFn = vi.fn().mockRejectedValue(new Error('Test error'));
-    
+
     await expect(retry(failingFn)).rejects.toThrow('Test error');
-    
+
     expect(failingFn).toHaveBeenCalledTimes(2);
   });
 
   it('retry the specified number of times on failure', async () => {
     const failingFn = vi.fn().mockRejectedValue(new Error('Test error'));
-    
+
     await expect(retry(failingFn, { times: 3 })).rejects.toThrow('Test error');
-    
+
     expect(failingFn).toHaveBeenCalledTimes(3);
     expect(failingFn).toHaveBeenNthCalledWith(1, { count: 1, stop: expect.any(Function) });
     expect(failingFn).toHaveBeenNthCalledWith(2, { count: 2, stop: expect.any(Function) });
@@ -44,7 +44,7 @@ describe('retry', () => {
       .mockRejectedValueOnce(new Error('First failure'))
       .mockRejectedValueOnce(new Error('Second failure'))
       .mockResolvedValue('success');
-    
+
     const result = await retry(partiallyFailingFn, { times: 3 });
 
     expect(result).toBe('success');
@@ -55,24 +55,24 @@ describe('retry', () => {
     const networkError = new Error('Network failed');
     networkError.name = 'NetworkError';
     const failingFn = vi.fn().mockRejectedValue(networkError);
-    
-    await expect(retry(failingFn, { 
+
+    await expect(retry(failingFn, {
       times: 3,
-      shouldRetry: (error) => error.name !== 'NetworkError'
+      shouldRetry: error => error.name !== 'NetworkError',
     })).rejects.toThrow('Network failed');
-    
+
     expect(failingFn).toHaveBeenCalledTimes(1);
   });
 
   it('retry with custom shouldRetry based on count', async () => {
     const testError = new Error('Test error');
     const failingFn = vi.fn().mockRejectedValue(testError);
-    
-    await expect(retry(failingFn, { 
+
+    await expect(retry(failingFn, {
       times: 5,
-      shouldRetry: (error, count) => count < 3 // Only retry first 2 attempts
+      shouldRetry: (error, count) => count < 3, // Only retry first 2 attempts
     })).rejects.toThrow('Test error');
-    
+
     expect(failingFn).toHaveBeenCalledTimes(3); // Initial + 2 retries
   });
 
@@ -81,17 +81,17 @@ describe('retry', () => {
     temporaryError.name = 'TemporaryError';
     const permanentError = new Error('Permanent failure');
     permanentError.name = 'PermanentError';
-    
+
     const failingFn = vi.fn()
       .mockRejectedValueOnce(temporaryError)
       .mockRejectedValueOnce(temporaryError)
       .mockRejectedValueOnce(permanentError);
-    
-    await expect(retry(failingFn, { 
+
+    await expect(retry(failingFn, {
       times: 5,
-      shouldRetry: (error) => error.name === 'TemporaryError'
+      shouldRetry: error => error.name === 'TemporaryError',
     })).rejects.toThrow('Permanent failure');
-    
+
     expect(failingFn).toHaveBeenCalledTimes(3);
   });
 
@@ -154,9 +154,9 @@ describe('retry', () => {
 
   it('handle zero delay', async () => {
     const failingFn = vi.fn().mockRejectedValue(new Error('Test error'));
-    
+
     await expect(retry(failingFn, { times: 3, delay: 0 })).rejects.toThrow('Test error');
-    
+
     expect(failingFn).toHaveBeenCalledTimes(3);
   });
 
@@ -167,7 +167,7 @@ describe('retry', () => {
       }
       return `Success on attempt ${count}`;
     });
-    
+
     const result = await retry(countingFn, { times: 3 });
 
     expect(result).toBe('Success on attempt 3');
@@ -182,15 +182,15 @@ describe('retry', () => {
     const failingFn = vi.fn()
       .mockRejectedValueOnce(firstError)
       .mockRejectedValueOnce(lastError);
-    
+
     await expect(retry(failingFn, { times: 2 })).rejects.toThrow('Last error');
   });
 
   it('handle times value of 1', async () => {
     const failingFn = vi.fn().mockRejectedValue(new Error('Test error'));
-    
+
     await expect(retry(failingFn, { times: 1 })).rejects.toThrow('Test error');
-    
+
     expect(failingFn).toHaveBeenCalledTimes(1);
   });
 
@@ -201,7 +201,7 @@ describe('retry', () => {
       }
       return 'success';
     });
-    
+
     const result = await retry(syncFn, { times: 2 });
 
     expect(result).toBe('success');
@@ -209,45 +209,82 @@ describe('retry', () => {
   });
 
   it('handle complex return types', async () => {
-    const complexFn = vi.fn().mockResolvedValue({ 
-      data: [1, 2, 3], 
+    const complexFn = vi.fn().mockResolvedValue({
+      data: [1, 2, 3],
       status: 'ok',
-      metadata: { timestamp: 123456 }
+      metadata: { timestamp: 123456 },
     });
-    
+
     const result = await retry(complexFn);
 
     expect(result).toEqual({
       data: [1, 2, 3],
       status: 'ok',
-      metadata: { timestamp: 123456 }
+      metadata: { timestamp: 123456 },
     });
   });
 
   it('stop retrying when stop function is called', async () => {
     const customError = new Error('Custom stop error');
-    const stopFn = vi.fn(async ({ count, stop }: { count: number, stop: (error: any) => void }) => {
+    const stopFn = vi.fn(async ({ count, stop }: { count: number; stop: (error: any) => void }) => {
       if (count === 2) {
         stop(customError);
       }
       throw new Error(`Attempt ${count} failed`);
     });
-    
+
     await expect(retry(stopFn, { times: 5 })).rejects.toThrow('Custom stop error');
-    
+
     expect(stopFn).toHaveBeenCalledTimes(2);
   });
 
   it('stop retrying with undefined error when stop is called without argument', async () => {
-    const stopFn = vi.fn(async ({ count, stop }: { count: number, stop: (error?: any) => void }) => {
+    const stopFn = vi.fn(async ({ count, stop }: { count: number; stop: (error?: any) => void }) => {
       if (count === 2) {
         stop();
       }
       throw new Error(`Attempt ${count} failed`);
     });
-    
+
     await expect(retry(stopFn, { times: 5 })).rejects.toBeUndefined();
-    
+
     expect(stopFn).toHaveBeenCalledTimes(2);
+  });
+
+  it('make exactly one attempt for times: 0 and reject with the real error (not null)', async () => {
+    const failingFn = vi.fn().mockRejectedValue(new Error('only attempt'));
+
+    await expect(retry(failingFn, { times: 0 })).rejects.toThrow('only attempt');
+
+    expect(failingFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('make exactly one attempt for a negative times', async () => {
+    const failingFn = vi.fn().mockRejectedValue(new Error('only attempt'));
+
+    await expect(retry(failingFn, { times: -3 })).rejects.toThrow('only attempt');
+
+    expect(failingFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('stop() on the first attempt aborts immediately with the given reason', async () => {
+    const reason = new Error('early');
+    const fn = vi.fn(async ({ stop }: { stop: (error: any) => void }) => {
+      stop(reason);
+      throw new Error('should not surface');
+    });
+
+    await expect(retry(fn, { times: 5 })).rejects.toBe(reason);
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it('stop() rejects with a non-Error value verbatim', async () => {
+    const fn = vi.fn(async ({ stop }: { stop: (error: any) => void }) => {
+      stop('plain string reason');
+      throw new Error('ignored');
+    });
+
+    await expect(retry(fn, { times: 3 })).rejects.toBe('plain string reason');
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });

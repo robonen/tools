@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { BitVector } from '.';
 
 describe('BitVector', () => {
@@ -54,10 +54,76 @@ describe('BitVector', () => {
     expect(bitVector.previousBit(0)).toBe(-1);
   });
 
-  it('throw RangeError when previousBit is called with an unreachable value', () => {
+  it('clamp an out-of-range start index and return the previous set bit', () => {
     const bitVector = new BitVector(16);
     bitVector.setBit(5);
 
-    expect(() => bitVector.previousBit(24)).toThrow(new RangeError('Unreachable value'));
+    expect(bitVector.previousBit(24)).toBe(5);
+  });
+
+  it('return -1 from previousBit on an empty out-of-range query', () => {
+    const bitVector = new BitVector(16);
+
+    expect(bitVector.previousBit(24)).toBe(-1);
+  });
+
+  it('toggle bits correctly', () => {
+    const bitVector = new BitVector(16);
+
+    bitVector.toggleBit(7);
+    expect(bitVector.getBit(7)).toBe(true);
+
+    bitVector.toggleBit(7);
+    expect(bitVector.getBit(7)).toBe(false);
+  });
+
+  it('find the next bit correctly', () => {
+    const bitVector = new BitVector(100);
+    const indices = [0, 1, 14, 15, 63, 64, 65, 66, 88, 99];
+    const result = [];
+    indices.forEach(index => bitVector.setBit(index));
+
+    for (let i = bitVector.nextBit(-1); i !== -1; i = bitVector.nextBit(i)) {
+      result.push(i);
+    }
+
+    expect(result).toEqual(indices);
+  });
+
+  it('return -1 when no next bit is found', () => {
+    const bitVector = new BitVector(16);
+
+    expect(bitVector.nextBit(0)).toBe(-1);
+    expect(bitVector.nextBit(15)).toBe(-1);
+  });
+
+  it('count the number of set bits', () => {
+    const bitVector = new BitVector(100);
+
+    expect(bitVector.count()).toBe(0);
+
+    [0, 5, 63, 64, 99].forEach(index => bitVector.setBit(index));
+
+    expect(bitVector.count()).toBe(5);
+
+    bitVector.clearBit(5);
+
+    expect(bitVector.count()).toBe(4);
+  });
+
+  it('tolerate out-of-bounds writes without crashing or corrupting in-range bits', () => {
+    const bitVector = new BitVector(16);
+    bitVector.setBit(3);
+
+    expect(() => {
+      bitVector.setBit(1000);
+      bitVector.clearBit(1000);
+      bitVector.toggleBit(1000);
+    }).not.toThrow();
+
+    // out-of-range reads are false; in-range state is intact
+    expect(bitVector.getBit(1000)).toBe(false);
+    expect(bitVector.getBit(3)).toBe(true);
+    expect(bitVector.count()).toBe(1);
   });
 });

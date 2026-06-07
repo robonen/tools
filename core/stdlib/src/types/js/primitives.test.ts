@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isBoolean, isFunction, isNumber, isBigInt, isString, isSymbol, isUndefined, isNull } from './primitives';
+import { isBigInt, isBoolean, isFunction, isNull, isNumber, isString, isSymbol, isUndefined } from './primitives';
 
 describe('primitives', () => {
   describe('isBoolean', () => {
@@ -37,6 +37,13 @@ describe('primitives', () => {
     it('false if the value is not a number', () => {
       expect(isNumber('123')).toBe(false);
       expect(isNumber(null)).toBe(false);
+    });
+
+    it('true for NaN, Infinity and -0 (purely typeof-based)', () => {
+      expect(isNumber(Number.NaN)).toBe(true);
+      expect(isNumber(Number.POSITIVE_INFINITY)).toBe(true);
+      expect(isNumber(Number.NEGATIVE_INFINITY)).toBe(true);
+      expect(isNumber(-0)).toBe(true);
     });
   });
 

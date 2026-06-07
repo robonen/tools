@@ -37,9 +37,14 @@ export class SyncMutex {
       return;
 
     this.lock();
-    const result = await callback();
-    this.unlock();
 
-    return result;
+    // try/finally guarantees the lock is released even if the callback throws or
+    // rejects — otherwise a single failure would wedge the guarded section forever.
+    try {
+      return await callback();
+    }
+    finally {
+      this.unlock();
+    }
   }
 }

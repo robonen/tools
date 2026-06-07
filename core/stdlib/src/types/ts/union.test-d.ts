@@ -27,5 +27,13 @@ describe('union', () => {
     it('never when union not possible', () => {
       expectTypeOf<UnionToIntersection<string | number>>().toEqualTypeOf<never>();
     });
+
+    it('returns a single-member object union unchanged', () => {
+      expectTypeOf<UnionToIntersection<{ a: string }>>().toEqualTypeOf<{ a: string }>();
+    });
+
+    it('collapses boolean (true | false) to never', () => {
+      expectTypeOf<UnionToIntersection<boolean>>().toEqualTypeOf<never>();
+    });
   });
 });

@@ -29,7 +29,7 @@ export function or(...flags: number[]) {
 /**
 * @name not
 * @category Bits
-* @description Function to combine multiple flags using the XOR operator
+* @description Function to apply the bitwise NOT (complement) operator to a flag
 *
 * @param {number} flag - The flag to apply the NOT operator to
 * @returns {number} The result of the NOT operator

@@ -1,6 +1,6 @@
 import { isString } from '../../../types';
 import { BaseStateMachine } from './base';
-import type { SyncStateNodeConfig, ExtractStates, ExtractEvents } from './types';
+import type { ExtractEvents, ExtractStates, SyncStateNodeConfig } from './types';
 
 /**
  * @name StateMachine

@@ -3,5 +3,6 @@ import { sharedConfig } from '@robonen/tsdown';
 
 export default defineConfig({
   ...sharedConfig,
+  tsconfig: './tsconfig.src.json',
   entry: ['src/index.ts'],
 });

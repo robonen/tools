@@ -22,18 +22,20 @@ export function omit<Target extends object, Key extends keyof Target>(
   target: Target,
   keys: Arrayable<Key>,
 ): Omit<Target, Key> {
-  const result = { ...target };
+  const result = {} as Omit<Target, Key>;
 
-  if (!target || !keys)
+  if (!target)
     return result;
 
-  if (isArray(keys)) {
-    for (const key of keys) {
-      delete result[key];
-    }
-  }
-  else {
-    delete result[keys];
+  // Build the kept-keys object directly instead of spread-then-delete: `delete` forces V8
+  // to drop the object into slow dictionary mode, penalizing all later property access.
+  const omitted = new Set<PropertyKey>(
+    keys === null || keys === undefined ? [] : isArray(keys) ? keys : [keys],
+  );
+
+  for (const key in target) {
+    if (Object.hasOwn(target, key) && !omitted.has(key))
+      (result as Record<PropertyKey, unknown>)[key] = target[key];
   }
 
   return result;

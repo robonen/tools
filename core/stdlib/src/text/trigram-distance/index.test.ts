@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { trigramDistance, trigramProfile } from '.';
 
 describe('trigramProfile', () => {
@@ -64,6 +64,13 @@ describe('trigramDistance', () => {
     const profile2 = trigramProfile('lorem ipsum');
 
     expect(trigramDistance(profile1, profile2)).toBe(1);
+  });
+
+  it('is symmetric', () => {
+    const a = trigramProfile('hello world');
+    const b = trigramProfile('hello lorem');
+
+    expect(trigramDistance(a, b)).toBe(trigramDistance(b, a));
   });
 
   it('one for empty text and non-empty text', () => {

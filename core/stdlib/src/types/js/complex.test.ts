@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isArray, isObject, isRegExp, isDate, isError, isPromise, isMap, isSet, isWeakMap, isWeakSet } from './complex';
+import { isArray, isDate, isError, isMap, isObject, isPromise, isRegExp, isSet, isWeakMap, isWeakSet } from './complex';
 
 describe('complex', () => {
   describe('isArray', () => {
@@ -35,6 +35,13 @@ describe('complex', () => {
       expect(isObject([])).toBe(false);
       expect(isObject(new Map())).toBe(false);
       expect(isObject(new Set())).toBe(false);
+    });
+
+    it('true for class instances and null-prototype objects', () => {
+      class Foo {}
+
+      expect(isObject(new Foo())).toBe(true);
+      expect(isObject(Object.create(null))).toBe(true);
     });
   });
 
@@ -96,6 +103,8 @@ describe('complex', () => {
   describe('isPromise', () => {
     it('true if the value is a promise', () => {
       expect(isPromise(new Promise(() => {}))).toBe(true);
+      expect(isPromise(Promise.resolve())).toBe(true);
+      expect(isPromise((async () => {})())).toBe(true);
     });
 
     it('false if the value is not a promise', () => {
@@ -108,6 +117,11 @@ describe('complex', () => {
       expect(isPromise({})).toBe(false);
       expect(isPromise(new Map())).toBe(false);
       expect(isPromise(new Set())).toBe(false);
+    });
+
+    it('false for a non-native thenable (only native promises match)', () => {
+      // eslint-disable-next-line unicorn/no-thenable -- documenting that custom thenables are not detected
+      expect(isPromise({ then() {} })).toBe(false);
     });
   });
 

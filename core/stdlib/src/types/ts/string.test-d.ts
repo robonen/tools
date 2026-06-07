@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import type { HasSpaces, Trim, Stringable } from './string';
+import type { HasSpaces, Stringable, Trim } from './string';
 
 describe('string', () => {
   describe('Stringable', () => {
@@ -34,6 +34,20 @@ describe('string', () => {
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
     });
+
+    it('trim tabs, newlines and carriage returns', () => {
+      expectTypeOf<Trim<'\thello\n'>>().toEqualTypeOf<'hello'>();
+      expectTypeOf<Trim<'\r\n hello \r\n'>>().toEqualTypeOf<'hello'>();
+    });
+
+    it('handle empty and whitespace-only strings', () => {
+      expectTypeOf<Trim<''>>().toEqualTypeOf<''>();
+      expectTypeOf<Trim<'   '>>().toEqualTypeOf<''>();
+    });
+
+    it('preserve interior spaces', () => {
+      expectTypeOf<Trim<'  a b  '>>().toEqualTypeOf<'a b'>();
+    });
   });
 
   describe('HasSpaces', () => {
@@ -49,6 +63,15 @@ describe('string', () => {
       type expected = false;
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
+    });
+
+    it('false for an empty string', () => {
+      expectTypeOf<HasSpaces<''>>().toEqualTypeOf<false>();
+    });
+
+    it('true for leading or trailing spaces', () => {
+      expectTypeOf<HasSpaces<' a'>>().toEqualTypeOf<true>();
+      expectTypeOf<HasSpaces<'a '>>().toEqualTypeOf<true>();
     });
   });
 });

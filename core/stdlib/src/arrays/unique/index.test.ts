@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { unique } from '.';
 
 describe('unique', () => {
@@ -41,5 +41,29 @@ describe('unique', () => {
     const result = unique([]);
 
     expect(result).toEqual([]);
+  });
+
+  it('keep the last value per extracted key (last-write-wins, first-seen order)', () => {
+    const result = unique(
+      [{ id: 1, v: 'a' }, { id: 2, v: 'b' }, { id: 1, v: 'c' }],
+      item => item.id,
+    );
+
+    expect(result).toEqual([{ id: 1, v: 'c' }, { id: 2, v: 'b' }]);
+  });
+
+  it('return a new array and not mutate the input', () => {
+    const input = [1, 2, 2, 3];
+    const result = unique(input);
+
+    expect(result).not.toBe(input);
+    expect(input).toEqual([1, 2, 2, 3]);
+  });
+
+  it('preserve element identity for object values', () => {
+    const a = { id: 1 };
+    const result = unique([a], item => item.id);
+
+    expect(result[0]).toBe(a);
   });
 });

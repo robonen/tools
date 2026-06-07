@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createMachine, createAsyncMachine, StateMachine, AsyncStateMachine } from '.';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { AsyncStateMachine, StateMachine, createAsyncMachine, createMachine } from '.';
 
 describe('stateMachine', () => {
   describe('createMachine (without context)', () => {
@@ -683,6 +683,25 @@ describe('asyncStateMachine', () => {
       expect(machine.current).toBe('active');
       expect(machine.context.count).toBe(1);
       expect(entryHook).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('transition into an unknown target state', () => {
+    it('silently moves to a target that has no state node, then dead-ends', () => {
+      const machine = createMachine({
+        initial: 'idle',
+        states: {
+          idle: { on: { GO: 'ghost' } }, // 'ghost' is not defined in states
+        },
+      });
+
+      // Documents current behavior: the transition is accepted, no throw.
+      expect(machine.send('GO')).toBe('ghost');
+      expect(machine.current).toBe('ghost');
+
+      // From the undefined state there are no transitions — further sends are no-ops.
+      expect(machine.send('GO')).toBe('ghost');
+      expect(machine.can('GO')).toBe(false);
     });
   });
 });

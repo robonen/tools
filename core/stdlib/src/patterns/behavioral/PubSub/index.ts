@@ -92,7 +92,11 @@ export class PubSub<Events extends Record<string, (...args: any[]) => any>> {
     if (!listeners)
       return false;
 
-    listeners.forEach(listener => listener(...args));
+    // Snapshot first: iterating the live Set would invoke listeners added during this
+    // emit (and is fragile to self-removal). A copy gives stable EventEmitter semantics.
+    const snapshot = [...listeners];
+    for (const listener of snapshot)
+      listener(...args);
 
     return true;
   }

@@ -16,5 +16,6 @@
  * @since 0.0.3
  */
 export function last<Value>(arr: Value[], defaultValue?: Value) {
-  return arr[arr.length - 1] ?? defaultValue;
+  // Branch on length, not nullishness, so a present null/undefined last element is preserved.
+  return arr.length > 0 ? arr[arr.length - 1]! : defaultValue;
 }

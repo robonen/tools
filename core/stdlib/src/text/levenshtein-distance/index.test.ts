@@ -29,4 +29,15 @@ describe('levenshteinDistance', () => {
     expect(levenshteinDistance('abc', '')).toBe(3);
     expect(levenshteinDistance('', 'abc')).toBe(3);
   });
+
+  it('is symmetric', () => {
+    expect(levenshteinDistance('kitten', 'sitting')).toBe(levenshteinDistance('sitting', 'kitten'));
+    expect(levenshteinDistance('football', 'foot')).toBe(levenshteinDistance('foot', 'football'));
+  });
+
+  it('counts UTF-16 code units (surrogate pairs count as two)', () => {
+    expect(levenshteinDistance('😀', '')).toBe(2); // surrogate pair = 2 code units
+    expect(levenshteinDistance('a😀b', 'a😀b')).toBe(0);
+    expect(levenshteinDistance('café', 'cafe')).toBe(1);
+  });
 });

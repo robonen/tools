@@ -98,6 +98,10 @@ describe('LinkedList', () => {
       expect(list.popBack()).toBe(3);
       expect(list.length).toBe(2);
       expect(list.peekBack()).toBe(2);
+      // tail pointer must be rewired and detached
+      expect(list.tail!.value).toBe(2);
+      expect(list.tail!.next).toBeUndefined();
+      expect(list.peekFront()).toBe(1);
     });
 
     it('should handle single element', () => {
@@ -123,6 +127,10 @@ describe('LinkedList', () => {
       expect(list.popFront()).toBe(1);
       expect(list.length).toBe(2);
       expect(list.peekFront()).toBe(2);
+      // head pointer must be rewired and detached
+      expect(list.head!.value).toBe(2);
+      expect(list.head!.prev).toBeUndefined();
+      expect(list.peekBack()).toBe(3);
     });
 
     it('should handle single element', () => {
@@ -170,11 +178,14 @@ describe('LinkedList', () => {
       const list = new LinkedList<number>();
       const node = list.pushBack(2);
 
-      list.insertBefore(node, 1);
+      const inserted = list.insertBefore(node, 1);
 
       expect(list.peekFront()).toBe(1);
       expect(list.peekBack()).toBe(2);
       expect(list.length).toBe(2);
+      // new node becomes the head with no prev
+      expect(list.head).toBe(inserted);
+      expect(inserted.prev).toBeUndefined();
     });
 
     it('should insert before middle node', () => {
@@ -202,10 +213,13 @@ describe('LinkedList', () => {
       const list = new LinkedList<number>();
       const node = list.pushBack(1);
 
-      list.insertAfter(node, 2);
+      const inserted = list.insertAfter(node, 2);
 
       expect(list.peekFront()).toBe(1);
       expect(list.peekBack()).toBe(2);
+      // new node becomes the tail with no next
+      expect(list.tail).toBe(inserted);
+      expect(inserted.next).toBeUndefined();
       expect(list.length).toBe(2);
     });
 

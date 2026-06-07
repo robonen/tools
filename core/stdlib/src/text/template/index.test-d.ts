@@ -1,7 +1,8 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import type { ClearPlaceholder, ExtractPlaceholders } from './index';
+import type { ClearPlaceholder, ExtractPlaceholders, GenerateTypes } from './index';
+import { templateObject } from './index';
 
-describe.skip('template', () => {
+describe('template', () => {
   describe('ClearPlaceholder', () => {
     it('ignores strings without braces', () => {
       type actual = ClearPlaceholder<'name'>;
@@ -100,6 +101,38 @@ describe.skip('template', () => {
       type expected = 'name' | 'positions';
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
+    });
+  });
+
+  describe('GenerateTypes', () => {
+    type Shape = GenerateTypes<'user.name', string>;
+
+    it('accepts a fully-matching shape', () => {
+      expectTypeOf<{ user: { name: 'John' } }>().toExtend<Shape>();
+    });
+
+    it('accepts missing keys (every key is optional)', () => {
+      expectTypeOf<{ unrelated: number }>().toExtend<Shape>();
+    });
+
+    it('accepts extra keys (objects stay open)', () => {
+      expectTypeOf<{ user: { name: 'John' }; extra: number }>().toExtend<Shape>();
+    });
+
+    it('rejects a mistyped leaf value', () => {
+      expectTypeOf<{ user: { name: number } }>().not.toExtend<Shape>();
+    });
+  });
+
+  describe('templateObject', () => {
+    it('always returns a string', () => {
+      expectTypeOf(templateObject('Hello, {name}!', { name: 'John' })).toEqualTypeOf<string>();
+      expectTypeOf(templateObject('Hi {user.name}', { user: { name: 'John' } })).toEqualTypeOf<string>();
+    });
+
+    it('accepts a string or factory fallback', () => {
+      expectTypeOf(templateObject('Hello, {name}!', {}, 'Guest')).toEqualTypeOf<string>();
+      expectTypeOf(templateObject('Hello, {name}!', {}, key => `<${key}>`)).toEqualTypeOf<string>();
     });
   });
 });

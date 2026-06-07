@@ -1,11 +1,19 @@
-import { isPromise } from '../../types';
-
-export type TryItReturn<Return> = Return extends Promise<any>
+export type TryItReturn<Return> = Return extends PromiseLike<any>
   ? Promise<{ error: Error; data: undefined } | { error: undefined; data: Awaited<Return> }>
   : { error: Error; data: undefined } | { error: undefined; data: Return };
 
-function onResolve(data: any) { return { error: undefined, data }; }
-function onReject(error: any) { return { error, data: undefined }; }
+function isThenable(value: unknown): value is PromiseLike<unknown> {
+  return value !== null && (typeof value === 'object' || typeof value === 'function')
+    && typeof (value as PromiseLike<unknown>).then === 'function';
+}
+
+function onResolve(data: any) {
+  return { error: undefined, data };
+}
+
+function onReject(error: any) {
+  return { error, data: undefined };
+}
 
 /**
  * @name tryIt
@@ -31,11 +39,14 @@ export function tryIt<Args extends any[], Return>(
     try {
       const result = fn(...args);
 
-      if (isPromise(result))
-        return result.then(onResolve, onReject) as TryItReturn<Return>;
+      // Handle any thenable (native Promise, async fn, or custom PromiseLike), so a
+      // rejected thenable is captured as { error } instead of escaping as raw data.
+      if (isThenable(result))
+        return Promise.resolve(result).then(onResolve, onReject) as TryItReturn<Return>;
 
       return { error: undefined, data: result } as TryItReturn<Return>;
-    } catch (error) {
+    }
+    catch (error) {
       return { error, data: undefined } as TryItReturn<Return>;
     }
   };

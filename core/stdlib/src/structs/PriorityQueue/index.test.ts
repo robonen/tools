@@ -209,5 +209,17 @@ describe('PriorityQueue', () => {
       expect(pq.dequeue()).toBe(10);
       expect(pq.dequeue()).toBeUndefined();
     });
+
+    it('accept a new element after dequeue frees a slot in a full queue', () => {
+      const pq = new PriorityQueue([1, 2], { maxSize: 2 });
+
+      expect(pq.isFull).toBe(true);
+      expect(() => pq.enqueue(3)).toThrow(RangeError);
+
+      pq.dequeue();
+      expect(pq.isFull).toBe(false);
+      expect(() => pq.enqueue(3)).not.toThrow();
+      expect(pq.length).toBe(2);
+    });
   });
 });

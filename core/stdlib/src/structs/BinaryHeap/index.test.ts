@@ -32,6 +32,21 @@ describe('BinaryHeap', () => {
 
       expect(heap.peek()).toBe(8);
     });
+
+    it('should not mutate the input array', () => {
+      const input = [5, 3, 8, 1, 4];
+
+      new BinaryHeap(input);
+
+      expect(input).toEqual([5, 3, 8, 1, 4]);
+    });
+
+    it('should not overflow the stack for a very large initial array', () => {
+      const big = Array.from({ length: 200_000 }, (_, i) => 200_000 - i);
+
+      expect(() => new BinaryHeap(big)).not.toThrow();
+      expect(new BinaryHeap(big).peek()).toBe(1);
+    });
   });
 
   describe('push', () => {
@@ -224,6 +239,39 @@ describe('BinaryHeap', () => {
       expect(heap.pop()).toBe(7);
       expect(heap.pop()).toBe(10);
       expect(heap.pop()).toBeUndefined();
+    });
+  });
+
+  describe('nullable / falsy elements', () => {
+    it('peek/pop return a legitimately stored null root (not undefined)', () => {
+      // Comparator that ranks null before any number.
+      const heap = new BinaryHeap<number | null>([5, null, 3], {
+        comparator: (a, b) => (a === null ? -1 : b === null ? 1 : a - b),
+      });
+
+      expect(heap.length).toBe(3);
+      expect(heap.peek()).toBeNull();
+      expect(heap.pop()).toBeNull();
+      expect(heap.length).toBe(2);
+    });
+
+    it('peek returns a 0 root rather than collapsing to undefined', () => {
+      const heap = new BinaryHeap([0, 5, 3]);
+
+      expect(heap.peek()).toBe(0);
+    });
+  });
+
+  describe('async iteration', () => {
+    it('yields every element with the root (min) first', async () => {
+      const heap = new BinaryHeap([5, 3, 8, 1]);
+      const out: number[] = [];
+
+      for await (const value of heap)
+        out.push(value);
+
+      expect(out[0]).toBe(1); // heap array order — root first
+      expect([...out].sort((a, b) => a - b)).toEqual([1, 3, 5, 8]);
     });
   });
 });

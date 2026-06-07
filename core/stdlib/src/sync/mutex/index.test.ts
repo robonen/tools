@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SyncMutex } from '.';
 
 describe('SyncMutex', () => {
@@ -88,6 +88,23 @@ describe('SyncMutex', () => {
   it('unlocks after executing a callback', async () => {
     const callback = vi.fn(() => 'done');
     await mutex.execute(callback);
+
+    expect(mutex.isLocked).toBe(false);
+  });
+
+  it('releases the lock and rethrows when the callback throws synchronously', async () => {
+    await expect(mutex.execute(() => {
+      throw new Error('boom');
+    })).rejects.toThrow('boom');
+
+    expect(mutex.isLocked).toBe(false);
+
+    // The mutex must still be usable afterwards.
+    await expect(mutex.execute(() => Promise.resolve('ok'))).resolves.toBe('ok');
+  });
+
+  it('releases the lock and rejects when the callback returns a rejecting promise', async () => {
+    await expect(mutex.execute(() => Promise.reject(new Error('async boom')))).rejects.toThrow('async boom');
 
     expect(mutex.isLocked).toBe(false);
   });

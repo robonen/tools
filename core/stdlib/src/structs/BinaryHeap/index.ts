@@ -1,4 +1,3 @@
-import { first } from '../../arrays';
 import { isArray } from '../../types';
 import type { BinaryHeapLike, Comparator } from './types';
 
@@ -54,7 +53,11 @@ export class BinaryHeap<T> implements BinaryHeapLike<T> {
 
     if (initialValues !== null && initialValues !== undefined) {
       const items = isArray(initialValues) ? initialValues : [initialValues];
-      this.heap.push(...items);
+
+      // Avoid push(...items): spreading a large array as arguments overflows the call stack.
+      for (const item of items)
+        this.heap.push(item);
+
       this.heapify();
     }
   }
@@ -91,7 +94,7 @@ export class BinaryHeap<T> implements BinaryHeapLike<T> {
   public pop(): T | undefined {
     if (this.heap.length === 0) return undefined;
 
-    const root = first(this.heap)!;
+    const root = this.heap[0]!;
     const last = this.heap.pop()!;
 
     if (this.heap.length > 0) {
@@ -107,7 +110,8 @@ export class BinaryHeap<T> implements BinaryHeapLike<T> {
      * @returns {T | undefined} The root element, or `undefined` if the heap is empty
      */
   public peek(): T | undefined {
-    return first(this.heap);
+    // Direct index preserves a legitimately stored null/undefined root (length is the empty check).
+    return this.heap.length === 0 ? undefined : this.heap[0];
   }
 
   /**

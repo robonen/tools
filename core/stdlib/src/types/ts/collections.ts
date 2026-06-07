@@ -26,3 +26,19 @@ export type PathToType<T extends string[], Target = unknown>
         ? { [K in Head & string]: PathToType<Rest, Target> }
         : never
     : Target;
+
+/**
+ * Like {@link PathToType}, but every object key is optional and objects stay
+ * open (accept extra keys). Useful when the produced type only describes the
+ * keys a consumer *may* provide rather than the full shape of the source data.
+ */
+export type PathToPartialType<T extends string[], Target = unknown>
+  = T extends [infer Head, ...infer Rest]
+    ? Head extends `${number}`
+      ? Rest extends string[]
+        ? Array<PathToPartialType<Rest, Target>>
+        : never
+      : Rest extends string[]
+        ? { [K in Head & string]?: PathToPartialType<Rest, Target> } & Record<PropertyKey, unknown>
+        : never
+    : Target;

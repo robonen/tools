@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { first } from '.';
 
 describe('first', () => {
@@ -19,5 +19,12 @@ describe('first', () => {
   it('return the first element even if a default value is provided', () => {
     expect(first([1, 2, 3], 42)).toBe(1);
     expect(first(['a', 'b', 'c'], 'default')).toBe('a');
+  });
+
+  it('preserve a present null/undefined/falsy first element (not the default)', () => {
+    expect(first([null as number | null], 42)).toBeNull();
+    expect(first([undefined, 2], 42)).toBeUndefined();
+    expect(first([0], 99)).toBe(0);
+    expect(first([''], 'x')).toBe('');
   });
 });

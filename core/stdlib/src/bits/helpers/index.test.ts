@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { and, or, not, has, is, unset, toggle } from '.';
+import { describe, expect, it } from 'vitest';
+import { and, has, is, not, or, toggle, unset } from '.';
 
 describe('flagsAnd', () => {
   it('no effect on zero flags', () => {
@@ -60,6 +60,15 @@ describe('flagsHas', () => {
     const result = has(0b1010, 0b0100);
 
     expect(result).toBe(false);
+  });
+
+  it('require ALL queried bits, not just any (partial overlap is false)', () => {
+    // 0b1000 is set but 0b0100 is not — partial overlap must be false
+    expect(has(0b1010, 0b1100)).toBe(false);
+    // both bits present
+    expect(has(0b1110, 0b1100)).toBe(true);
+    // querying zero bits is vacuously true
+    expect(has(0b1010, 0b0000)).toBe(true);
   });
 });
 

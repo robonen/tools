@@ -1,5 +1,3 @@
-import { toString } from './casts';
-
 /**
  * @name isObject
  * @category Types
@@ -22,7 +20,7 @@ export const isBoolean = (value: any): value is boolean => typeof value === 'boo
  *
  * @since 0.0.2
  */
-export const isFunction = <T extends Function>(value: any): value is T => typeof value === 'function';
+export const isFunction = <T extends (...args: any[]) => any>(value: any): value is T => typeof value === 'function';
 
 /**
  * @name isNumber
@@ -82,7 +80,7 @@ export const isSymbol = (value: any): value is symbol => typeof value === 'symbo
  *
  * @since 0.0.2
  */
-export const isUndefined = (value: any): value is undefined => toString(value) === '[object Undefined]';
+export const isUndefined = (value: any): value is undefined => typeof value === 'undefined';
 
 /**
  * @name isNull
@@ -94,4 +92,4 @@ export const isUndefined = (value: any): value is undefined => toString(value) =
  *
  * @since 0.0.2
  */
-export const isNull = (value: any): value is null => toString(value) === '[object Null]';
+export const isNull = (value: any): value is null => value === null;

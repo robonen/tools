@@ -147,6 +147,10 @@ const canBold = editor.command(toggleMark('bold'));`;
       <p>Jump into the pieces you'll reach for first:</p>
       <ul>
         <li>
+          <NuxtLink to="/editor/playground"><strong>Playground</strong></NuxtLink> — a live editor
+          you can type in, right here in the docs.
+        </li>
+        <li>
           <code>EditorRoot</code> and <code>EditorContent</code> — the mount
           surface and the single contenteditable.
         </li>

@@ -19,12 +19,12 @@
   "devDependencies": {
     "@robonen/eslint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
-    "@storybook/addon-a11y": "^10.2.1",
-    "@storybook/addon-docs": "^10.2.1",
-    "@storybook/vue3-vite": "^10.2.1",
-    "@vitejs/plugin-vue": "^6.0.6",
+    "@storybook/addon-a11y": "^10.4.2",
+    "@storybook/addon-docs": "^10.4.2",
+    "@storybook/vue3-vite": "^10.4.2",
+    "@vitejs/plugin-vue": "^6.0.7",
     "eslint": "catalog:",
-    "storybook": "^10.2.1",
-    "vite": "^7.1.9"
+    "storybook": "^10.4.2",
+    "vite": "^8.0.16"
   }
 }

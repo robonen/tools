@@ -15,7 +15,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "vue/primitives"
   },
-  "packageManager": "pnpm@10.30.3",
+  "packageManager": "pnpm@10.33.2",
   "engines": {
     "node": ">=24.13.1"
   },
@@ -58,15 +58,15 @@
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
     "@vitest/browser": "catalog:",
-    "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/browser-playwright": "^4.1.8",
     "@vue/test-utils": "catalog:",
-    "axe-core": "^4.11.1",
+    "axe-core": "^4.12.0",
     "eslint": "catalog:",
-    "playwright": "^1.48.0",
+    "playwright": "^1.60.0",
     "tsdown": "catalog:",
-    "unplugin-vue": "^7.1.1",
-    "vitest-browser-vue": "^1.0.0",
-    "vue-tsc": "^3.2.5"
+    "unplugin-vue": "^7.2.0",
+    "vitest-browser-vue": "^2.1.0",
+    "vue-tsc": "^3.3.4"
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.11",

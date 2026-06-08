@@ -5,7 +5,7 @@ import { getLifeCycleTarger } from '@/utils';
 
 /**
  * @name useRenderCount
- * @category Component
+ * @category Debug
  * @description Returns the number of times the component has been rendered into the DOM
  *
  * @param {ComponentInternalInstance} [instance] The component instance to track the render count for

@@ -1,7 +1,7 @@
 import { shallowReadonly, shallowRef, toRef, toValue, watch } from 'vue';
 import type { MaybeRefOrGetter, Ref } from 'vue';
-import { useDebounceFn } from '@/composables/utilities/useDebounceFn';
-import type { UseDebounceFnOptions } from '@/composables/utilities/useDebounceFn';
+import { useDebounceFn } from '@/composables/reactivity/useDebounceFn';
+import type { UseDebounceFnOptions } from '@/composables/reactivity/useDebounceFn';
 
 export type RefDebouncedOptions = UseDebounceFnOptions;
 

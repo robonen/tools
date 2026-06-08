@@ -3,7 +3,7 @@ import type { ComputedRef, MaybeRef, MaybeRefOrGetter, Ref } from 'vue';
 import { isFunction, isString } from '@robonen/stdlib';
 import { defaultDocument } from '@/types';
 import type { ConfigurableDocument } from '@/types';
-import { useMutationObserver } from '@/composables/browser/useMutationObserver';
+import { useMutationObserver } from '@/composables/elements/useMutationObserver';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 
 export interface UseTitleOptionsBase extends ConfigurableDocument {

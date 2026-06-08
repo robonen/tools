@@ -3,7 +3,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
 import { isFunction, isNumber } from '@robonen/stdlib';
 import { defaultWindow } from '@/types';
 import type { ConfigurableWindow } from '@/types';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 import { useEventListener } from '@/composables/browser/useEventListener';
 
 export interface UseMediaQueryOptions extends ConfigurableWindow {

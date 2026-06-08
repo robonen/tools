@@ -2,7 +2,7 @@ import { shallowRef } from 'vue';
 import type { ComputedRef, ShallowRef } from 'vue';
 import { defaultWindow } from '@/types';
 import type { ConfigurableWindow } from '@/types';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 
 export interface EyeDropperOpenOptions {
   /**

@@ -186,12 +186,12 @@ export function useColorMode<T extends string = BasicColorMode>(
     let attributeToChange: { key: string; value: string } | null = null;
 
     if (attr === 'class') {
-      const next = value.split(/\s/g);
+      const next = new Set(value.split(/\s/g));
 
       // Toggle only the classes this composable owns (derived from `modes`),
       // so unrelated classes on the element are left untouched.
       for (const owned of Object.values<string>(modes).flatMap(mode => (mode || '').split(/\s/g)).filter(Boolean)) {
-        if (next.includes(owned))
+        if (next.has(owned))
           classesToAdd.add(owned);
         else
           classesToRemove.add(owned);

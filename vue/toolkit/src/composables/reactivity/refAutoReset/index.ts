@@ -1,6 +1,6 @@
 import { customRef, toValue } from 'vue';
 import type { MaybeRefOrGetter, Ref } from 'vue';
-import { useTimeoutFn } from '@/composables/utilities/useTimeoutFn';
+import { useTimeoutFn } from '@/composables/animation/useTimeoutFn';
 
 export type RefAutoResetReturn<T> = Ref<T>;
 

@@ -3,9 +3,9 @@ import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import type { Arrayable } from '@robonen/stdlib';
 import type { ConfigurableNavigator } from '@/types';
 import { defaultNavigator } from '@/types';
-import { useSupported } from '@/composables/browser/useSupported';
-import { useIntervalFn } from '@/composables/browser/useIntervalFn';
-import type { UseIntervalFnReturn } from '@/composables/browser/useIntervalFn';
+import { useSupported } from '@/composables/utilities/useSupported';
+import { useIntervalFn } from '@/composables/animation/useIntervalFn';
+import type { UseIntervalFnReturn } from '@/composables/animation/useIntervalFn';
 
 export interface UseVibrateOptions extends ConfigurableNavigator {
   /**
@@ -85,7 +85,7 @@ export function useVibrate(options: UseVibrateOptions = {}): UseVibrateReturn {
     navigator = defaultNavigator,
   } = options;
 
-  const isSupported = useSupported(() => typeof navigator !== 'undefined' && !!navigator && 'vibrate' in navigator);
+  const isSupported = useSupported(() => navigator !== undefined && !!navigator && 'vibrate' in navigator);
 
   const patternRef = toRef(pattern);
 

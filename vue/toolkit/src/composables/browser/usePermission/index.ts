@@ -3,7 +3,7 @@ import type { Ref, ShallowRef } from 'vue';
 import { isString } from '@robonen/stdlib';
 import { defaultNavigator } from '@/types';
 import type { ConfigurableNavigator } from '@/types';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 import { useEventListener } from '@/composables/browser/useEventListener';
 
 /**

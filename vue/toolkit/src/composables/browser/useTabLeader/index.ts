@@ -1,6 +1,6 @@
 import { readonly, ref } from 'vue';
 import type { ComputedRef, DeepReadonly, Ref } from 'vue';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 
 export interface UseTabLeaderOptions {

@@ -6,7 +6,7 @@ import { getLifeCycleTarger } from '@/utils';
 
 /**
  * @name useRenderInfo
- * @category Component
+ * @category Debug
  * @description Returns information about the component's render count and the last time it was rendered
  *
  * @param {ComponentInternalInstance} [instance] The component instance to track the render count for

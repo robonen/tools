@@ -2,7 +2,7 @@ import { toValue } from 'vue';
 import type { MaybeRefOrGetter, Ref } from 'vue';
 import { defaultNavigator } from '@/types';
 import type { ConfigurableNavigator } from '@/types';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 
 export interface UseShareOptions {
   /**

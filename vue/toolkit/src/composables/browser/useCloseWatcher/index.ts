@@ -3,7 +3,7 @@ import { noop } from '@robonen/stdlib';
 import type { Ref } from 'vue';
 import { defaultWindow } from '@/types';
 import type { ConfigurableWindow } from '@/types';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 import { useEventListener } from '@/composables/browser/useEventListener';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 

@@ -12,7 +12,7 @@ export interface StorageSerializer<T> {
   write: (value: T) => string;
 }
 
-export const StorageSerializers: { [K: string]: StorageSerializer<any> } & {
+export const StorageSerializers: Record<string, StorageSerializer<any>> & {
   boolean: StorageSerializer<boolean>;
   number: StorageSerializer<number>;
   string: StorageSerializer<string>;

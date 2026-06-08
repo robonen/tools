@@ -6,7 +6,7 @@ import { defaultDocument } from '@/types';
 import type { MaybeComputedElementRef } from '@/composables/component/unrefElement';
 import { unrefElement } from '@/composables/component/unrefElement';
 import { useEventListener } from '@/composables/browser/useEventListener';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 import { tryOnMounted } from '@/composables/lifecycle/tryOnMounted';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 

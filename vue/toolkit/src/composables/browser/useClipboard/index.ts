@@ -3,9 +3,9 @@ import type { MaybeRefOrGetter, Ref } from 'vue';
 import { isString } from '@robonen/stdlib';
 import { defaultNavigator } from '@/types';
 import type { ConfigurableNavigator } from '@/types';
-import { useSupported } from '@/composables/browser/useSupported';
+import { useSupported } from '@/composables/utilities/useSupported';
 import { useEventListener } from '@/composables/browser/useEventListener';
-import { useTimeoutFn } from '@/composables/utilities/useTimeoutFn';
+import { useTimeoutFn } from '@/composables/animation/useTimeoutFn';
 
 /**
  * A value to copy: either a string or an (optionally async) getter that resolves to one.

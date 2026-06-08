@@ -32,8 +32,8 @@ function buildDocToc() {
     if (!h.id) {
       h.id = (h.textContent ?? '')
         .toLowerCase().trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
+        .replaceAll(/[^a-z0-9]+/g, '-')
+        .replaceAll(/(^-|-$)/g, '');
     }
     return { id: h.id, text: h.textContent ?? '', depth: h.tagName === 'H2' ? 2 : 3 };
   });

@@ -73,10 +73,12 @@ jobs:
       - name: Build
         run: pnpm --filter "${{ matrix.package }}..." --if-present run build
 
-      # Only the browser-mode test suites (vitest `instances: chromium`) need a browser.
+      # Only the browser-mode test suites (vitest `instances: chromium`) need a
+      # browser. playwright is a direct devDep of these packages, so run its CLI
+      # in the package context (--filter) — it isn't resolvable from the root.
       - name: Install Playwright Chromium
         if: matrix.package == '@robonen/primitives' || matrix.package == '@robonen/editor'
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter "${{ matrix.package }}" exec playwright install --with-deps chromium
 
       - name: Lint
         run: pnpm --filter "${{ matrix.package }}" --if-present run lint:check

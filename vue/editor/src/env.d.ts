@@ -5,13 +5,9 @@ declare global {
 }
 
 declare module 'vue' {
-  interface ComponentCustomProps {
-    [key: `data${string}`]: unknown;
-  }
+  type ComponentCustomProps = Record<`data${string}`, unknown>;
 }
 
 declare module 'vue' {
-  interface HTMLAttributes {
-    [key: `data-${string}`]: unknown;
-  }
+  type HTMLAttributes = Record<`data-${string}`, unknown>;
 }

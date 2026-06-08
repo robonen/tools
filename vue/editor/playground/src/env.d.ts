@@ -5,7 +5,5 @@ declare global {
 }
 
 declare module 'vue' {
-  interface HTMLAttributes {
-    [key: `data-${string}`]: unknown;
-  }
+  type HTMLAttributes = Record<`data-${string}`, unknown>;
 }

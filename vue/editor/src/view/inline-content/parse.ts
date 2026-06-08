@@ -35,7 +35,7 @@ function marksForElement(el: HTMLElement, registry: Registry): Mark[] {
 function walk(node: Node, marks: readonly Mark[], out: InlineNode[], registry: Registry): void {
   for (const child of Array.from(node.childNodes)) {
     if (child.nodeType === Node.TEXT_NODE) {
-      const text = (child.nodeValue ?? '').replace(ZWSP, '');
+      const text = (child.nodeValue ?? '').replaceAll(ZWSP, '');
       if (text)
         out.push({ text, marks });
       continue;

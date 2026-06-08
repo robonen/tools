@@ -26,7 +26,7 @@ const { floatingStyles, update } = useFloating(reference, floatingEl, {
 });
 
 function selectionRect(): DOMRect | null {
-  const selection = typeof globalThis.window === 'undefined' ? null : globalThis.getSelection();
+  const selection = globalThis.window === undefined ? null : globalThis.getSelection();
   if (!selection || selection.rangeCount === 0)
     return null;
 

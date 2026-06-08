@@ -48,7 +48,7 @@ function indexInParent(el: Node): number {
 }
 
 function getWindow(): Window | null {
-  return typeof globalThis.window === 'undefined' ? null : globalThis.window;
+  return globalThis.window === undefined ? null : globalThis.window;
 }
 
 export function createSelectionBridge(

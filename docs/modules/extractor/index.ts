@@ -32,12 +32,30 @@ export default defineNuxtModule({
     // built-in `@` → srcDir alias.
     const vueSrc = resolve(ROOT, 'vue/toolkit/src');
 
+    // Resolve `@robonen/*` workspace imports (pulled in transitively by demos and
+    // doc sections) from SOURCE rather than built `dist/`. Without this the docs
+    // build depends on every workspace package being built first — which CI does
+    // not guarantee (e.g. a composable importing `@robonen/platform/multi` fails
+    // to resolve when platform's dist is absent). Prefix aliases also cover
+    // subpath exports (`@robonen/platform/multi` → `core/platform/src/multi`).
+    const workspaceSrc: Record<string, string> = {
+      '@robonen/stdlib': 'core/stdlib/src',
+      '@robonen/platform': 'core/platform/src',
+      '@robonen/fetch': 'core/fetch/src',
+      '@robonen/encoding': 'core/encoding/src',
+      '@robonen/crdt': 'core/crdt/src',
+      '@robonen/editor': 'vue/editor/src',
+      '@robonen/primitives': 'vue/primitives/src',
+      '@robonen/vue': vueSrc,
+    };
+
     nuxt.hook('vite:extendConfig', (config) => {
       const existing = config.resolve?.alias;
       const sourceAliases = [
         { find: '@/composables', replacement: resolve(vueSrc, 'composables') },
         { find: '@/types', replacement: resolve(vueSrc, 'types') },
         { find: '@/utils', replacement: resolve(vueSrc, 'utils') },
+        ...Object.entries(workspaceSrc).map(([find, rel]) => ({ find, replacement: resolve(ROOT, rel) })),
       ];
 
       if (Array.isArray(existing)) {

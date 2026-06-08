@@ -172,7 +172,10 @@ describe(useCssVar, () => {
   it('updates the ref when an observed mutation fires', () => {
     vi.stubGlobal('MutationObserver', StubMutationObserver);
     const el = document.createElement('div');
-    el.style.setProperty('--y', 'initial');
+    // NB: use a normal token, not a CSS-wide keyword like `initial` — per spec
+    // (and jsdom 29+) a custom property set to `initial` computes to the
+    // guaranteed-invalid value, so getComputedStyle returns an empty string.
+    el.style.setProperty('--y', 'start');
     document.body.appendChild(el);
 
     const scope = effectScope();
@@ -181,7 +184,7 @@ describe(useCssVar, () => {
       v = useCssVar('--y', el, { observe: true });
     });
 
-    expect(v!.value).toBe('initial');
+    expect(v!.value).toBe('start');
 
     // Simulate an external change followed by a mutation record.
     el.style.setProperty('--y', 'external');

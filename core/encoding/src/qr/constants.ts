@@ -34,7 +34,7 @@ export const PENALTY_N4 = 10;
 
 /* -- Character Sets & Patterns -- */
 
-export const NUMERIC_REGEX = /^[0-9]*$/;
+export const NUMERIC_REGEX = /^\d*$/;
 export const ALPHANUMERIC_REGEX = /^[A-Z0-9 $%*+./:_-]*$/;
 export const ALPHANUMERIC_CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:' as const;
 

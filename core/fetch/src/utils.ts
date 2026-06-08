@@ -21,7 +21,7 @@ const TEXT_CONTENT_TYPES: ReadonlySet<string> = /* @__PURE__ */ new Set([
   'application/html',
 ]);
 
-const JSON_CONTENT_TYPE_RE = /^application\/(?:[\w!#$%&*.^`~-]*\+)?json(;.+)?$/i;
+const JSON_CONTENT_TYPE_RE = /^application\/(?:[\w!#$%&*.^`~-]*\+)?json(?:;.+)?$/i;
 
 // ---------------------------------------------------------------------------
 // Predicate helpers

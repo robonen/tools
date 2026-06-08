@@ -1,5 +1,5 @@
 import { render } from 'vitest-browser-vue';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 import { createDoc, createNode, textSelection } from '../../model';
 import { createDefaultRegistry } from '../../preset';
@@ -49,17 +49,20 @@ describe('EditorRoot (single contenteditable)', () => {
     const bText = hosts[1]!.firstChild!; // text node "world"
 
     selectNative({ node: aText, offset: 1 }, { node: bText, offset: 3 });
-    await nextTick();
-    await nextTick();
 
-    const sel = editor.state.selection;
-    expect(sel.kind).toBe('text');
-    if (sel.kind === 'text') {
-      expect(sel.anchor.blockId).toBe('a');
-      expect(sel.anchor.offset).toBe(1);
-      expect(sel.focus.blockId).toBe('b');
-      expect(sel.focus.offset).toBe(3);
-    }
+    // `selectionchange` is dispatched on a macrotask, so awaiting microtasks
+    // (nextTick) isn't enough — poll until the editor has synced the model.
+    const sel = await vi.waitFor(() => {
+      const s = editor.state.selection;
+      if (s.kind !== 'text' || s.anchor.offset !== 1)
+        throw new Error('selection not synced yet');
+      return s;
+    });
+
+    expect(sel.anchor.blockId).toBe('a');
+    expect(sel.anchor.offset).toBe(1);
+    expect(sel.focus.blockId).toBe('b');
+    expect(sel.focus.offset).toBe(3);
   });
 
   it('writes a cross-block model selection back to a native range spanning blocks', async () => {

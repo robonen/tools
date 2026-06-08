@@ -4,8 +4,9 @@ import vitestPlugin from '@vitest/eslint-plugin';
 /**
  * Vitest configuration for test files.
  *
- * Scoped to common test file patterns; also relaxes a few strict rules that
- * are noisy in tests.
+ * Scoped to common test file patterns. Adopts the plugin's full `recommended`
+ * ruleset, layers extra preference rules at `error`, and relaxes a few strict
+ * rules that are noisy in tests.
  */
 export const vitest: FlatConfigArray = [
   {
@@ -20,19 +21,29 @@ export const vitest: FlatConfigArray = [
       vitest: vitestPlugin,
     },
     rules: {
-      'vitest/no-conditional-tests': 'warn',
+      ...vitestPlugin.configs.recommended.rules,
+
+      /* House convention: `describe(useX, …)` / `it(fn, …)` pass a FUNCTION as the
+         title (nicer reporter output) — valid-title only accepts strings. */
+      'vitest/valid-title': 'off',
+      /* Niche stylistic preference; the explicit two-assertion form is clearer. */
+      'vitest/prefer-called-exactly-once-with': 'off',
+
       'vitest/no-import-node-test': 'error',
-      'vitest/prefer-to-be-truthy': 'warn',
-      'vitest/prefer-to-be-falsy': 'warn',
-      'vitest/prefer-to-be-object': 'warn',
-      'vitest/prefer-to-have-length': 'warn',
-      'vitest/consistent-test-filename': 'warn',
-      'vitest/prefer-describe-function-title': 'warn',
+      'vitest/no-conditional-tests': 'error',
+      'vitest/prefer-to-be-truthy': 'error',
+      'vitest/prefer-to-be-falsy': 'error',
+      'vitest/prefer-to-be-object': 'error',
+      'vitest/prefer-to-have-length': 'error',
+      'vitest/consistent-test-filename': 'error',
+      'vitest/prefer-describe-function-title': 'error',
 
       /* relax strict rules in tests */
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      /* Empty mock/fixture classes (e.g. stubbing `class DeviceOrientationEvent {}`). */
+      '@typescript-eslint/no-extraneous-class': 'off',
     },
   },
 ];

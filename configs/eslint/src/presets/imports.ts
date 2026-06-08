@@ -25,17 +25,19 @@ export const imports: FlatConfigArray = [
     rules: {
       'import-x/no-duplicates': 'error',
       'import-x/no-self-import': 'error',
-      'import-x/no-cycle': 'warn',
-      'import-x/first': 'warn',
+      'import-x/no-cycle': 'error',
+      'import-x/first': 'error',
       'import-x/no-mutable-exports': 'error',
       'import-x/no-amd': 'error',
-      'import-x/no-commonjs': 'warn',
-      'import-x/no-empty-named-blocks': 'warn',
-      'import-x/consistent-type-specifier-style': ['warn', 'prefer-top-level'],
+      'import-x/no-commonjs': 'error',
+      'import-x/no-empty-named-blocks': 'error',
+      'import-x/no-useless-path-segments': ['error', { noUselessIndex: false }],
+      'import-x/consistent-type-specifier-style': ['error', 'prefer-top-level'],
 
       /* Only enforce member order within `{ … }`; declaration order is sorted
          by source path across the codebase, which core `sort-imports` (orders
-         by first member name) would otherwise fight. */
+         by first member name) would otherwise fight. Kept at `warn` — it is not
+         autofixable and member order is a soft preference. */
       'sort-imports': ['warn', { ignoreDeclarationSort: true }],
     },
   },

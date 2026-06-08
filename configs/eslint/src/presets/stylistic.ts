@@ -12,7 +12,7 @@ import stylisticPlugin from '@stylistic/eslint-plugin';
  * - commaDangle: always-multiline
  * - arrowParens: as-needed
  * - blockSpacing: true
- * - quoteProps: consistent-as-needed
+ * - quoteProps: as-needed
  * - jsx: true
  *
  * @see https://eslint.style/guide/config-presets

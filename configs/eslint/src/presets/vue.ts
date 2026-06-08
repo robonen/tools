@@ -1,16 +1,28 @@
-import type { FlatConfigArray } from '../types';
+import type { FlatConfigArray, Rules } from '../types';
 import pluginVue from 'eslint-plugin-vue';
 import tseslint from 'typescript-eslint';
 import vueParser from 'vue-eslint-parser';
 
 /**
+ * Merge the rule maps from every config object in an eslint-plugin-vue flat
+ * preset (they ship as arrays) into a single rules record.
+ */
+function collectRules(configs: Array<{ rules?: unknown }>): Rules {
+  return configs.reduce<Rules>((rules, config) => ({ ...rules, ...(config.rules as Rules | undefined) }), {});
+}
+
+/**
+ * The Priority-A "Essential" (error-prevention) ruleset from eslint-plugin-vue.
+ */
+const essentialRules = collectRules(pluginVue.configs['flat/essential'] as Array<{ rules?: unknown }>);
+
+/**
  * Vue.js configuration.
  *
  * Registers `eslint-plugin-vue` with `vue-eslint-parser` (delegating
- * `<script lang="ts">` to the TypeScript parser) and enables an opinionated
- * subset that enforces Composition API with `<script setup>` and type-based
- * declarations. Only the listed rules are turned on — the plugin's large
- * `recommended` set is intentionally not pulled in.
+ * `<script lang="ts">` to the TypeScript parser), adopts the plugin's full
+ * **Essential** (Priority-A) ruleset, and layers opinionated rules that enforce
+ * the Composition API with `<script setup>` and type-based declarations.
  */
 export const vue: FlatConfigArray = [
   {
@@ -34,19 +46,19 @@ export const vue: FlatConfigArray = [
     name: 'robonen/vue/rules',
     files: ['**/*.vue'],
     rules: {
-      'vue/no-arrow-functions-in-watch': 'error',
-      'vue/no-deprecated-destroyed-lifecycle': 'error',
-      'vue/no-export-in-script-setup': 'error',
-      'vue/no-lifecycle-after-await': 'error',
+      ...essentialRules,
+
+      /* Component library: single-word component names (Primitive, Slot, …) are intentional. */
+      'vue/multi-word-component-names': 'off',
+
+      /* House additions / stricter opinions on top of Essential. */
       'vue/no-multiple-slot-args': 'error',
       'vue/no-import-compiler-macros': 'error',
       'vue/define-emits-declaration': ['error', 'type-based'],
       'vue/define-props-declaration': ['error', 'type-based'],
       'vue/prefer-import-from-vue': 'error',
-      'vue/no-required-prop-with-default': 'warn',
-      'vue/valid-define-emits': 'error',
-      'vue/valid-define-props': 'error',
-      'vue/require-typed-ref': 'warn',
+      'vue/no-required-prop-with-default': 'error',
+      'vue/require-typed-ref': 'error',
     },
   },
 ];

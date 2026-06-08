@@ -2,7 +2,7 @@
 export { compose } from './compose';
 
 /* Presets */
-export { base, ignores, typescript, vue, vitest, imports, node, stylistic } from './presets';
+export { base, ignores, typescript, vue, vitest, imports, node, stylistic, regexp } from './presets';
 
 /* Types */
 export type {

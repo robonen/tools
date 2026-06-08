@@ -38,6 +38,7 @@ describe('complex', () => {
     });
 
     it('true for class instances and null-prototype objects', () => {
+      // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- fixture for the instance check
       class Foo {}
 
       expect(isObject(new Foo())).toBe(true);
@@ -48,6 +49,7 @@ describe('complex', () => {
   describe('isRegExp', () => {
     it('true if the value is a regexp', () => {
       expect(isRegExp(/test/)).toBe(true);
+      // eslint-disable-next-line prefer-regex-literals -- intentionally testing the constructor form
       expect(isRegExp(new RegExp('test'))).toBe(true);
     });
 

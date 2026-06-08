@@ -72,7 +72,7 @@ describe('primitives', () => {
 
   describe('isSymbol', () => {
     it('true if the value is a symbol', () => {
-      expect(isSymbol(Symbol())).toBe(true);
+      expect(isSymbol(Symbol('test'))).toBe(true);
     });
 
     it('false if the value is not a symbol', () => {

@@ -15,7 +15,7 @@ export type TemplateFallback = string | ((key: string) => string);
 /**
  * Type of a template string with placeholders.
  */
-const TEMPLATE_PLACEHOLDER = /\{\s*([^{}]+?)\s*\}/gm;
+const TEMPLATE_PLACEHOLDER = /\{([^{}]+)\}/g;
 
 /**
  * Removes the placeholder syntax from a template string.
@@ -82,8 +82,8 @@ export function templateObject<
   T extends string,
   A extends GenerateTypes<ExtractPlaceholders<T>, TemplateValue> & Collection,
 >(template: T, args: A, fallback?: TemplateFallback): string {
-  return template.replace(TEMPLATE_PLACEHOLDER, (_match, key: string) => {
-    const value = get(args, key);
+  return template.replaceAll(TEMPLATE_PLACEHOLDER, (_match, key: string) => {
+    const value = get(args, key.trim());
 
     if (value !== null && value !== undefined)
       return String(value);

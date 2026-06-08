@@ -80,7 +80,7 @@ export const isSymbol = (value: any): value is symbol => typeof value === 'symbo
  *
  * @since 0.0.2
  */
-export const isUndefined = (value: any): value is undefined => typeof value === 'undefined';
+export const isUndefined = (value: any): value is undefined => value === undefined;
 
 /**
  * @name isNull

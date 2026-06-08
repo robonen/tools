@@ -2,6 +2,7 @@ export * from './arrays';
 export * from './async';
 export * from './bits';
 export * from './collections';
+export * from './comparators';
 export * from './functions';
 export * from './math';
 export * from './objects';

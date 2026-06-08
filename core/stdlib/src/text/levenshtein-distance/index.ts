@@ -31,7 +31,7 @@ export function levenshteinDistance(left: string, right: string): number {
 
     for (let j = 1; j <= innerLength; j++) {
       const cost = outerChar === inner[j - 1] ? 0 : 1;
-      current[j]! = Math.min(
+      current[j] = Math.min(
         prev[j]! + 1, // insertion
         current[j - 1]! + 1, // deletion
         prev[j - 1]! + cost, // substitution

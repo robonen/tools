@@ -8,6 +8,7 @@
   "scripts": {
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
+    "test": "vitest run",
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",

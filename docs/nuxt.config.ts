@@ -1,4 +1,12 @@
+import { tmpdir } from 'node:os';
 import tailwindcss from '@tailwindcss/vite';
+
+// macOS dev fix: Nuxt's vite-node IPC uses a unix socket under $TMPDIR, and the
+// default macOS temp dir (/var/folders/…) pushes the socket path past the
+// ~104-char sun_path limit → `connect EINVAL` on every request. Point $TMPDIR
+// at a short directory so `nuxt dev` works. Other platforms are unaffected.
+if (process.platform === 'darwin' && tmpdir().length > 30)
+  process.env.TMPDIR = '/tmp';
 
 export default defineNuxtConfig({
   future: {

@@ -7,8 +7,6 @@ export interface ComboboxRootProps<T extends AcceptableValue = AcceptableValue> 
   modelValue?: T | T[];
   /** Uncontrolled initial value. */
   defaultValue?: T | T[];
-  /** Controlled open state. Use `v-model:open`. */
-  open?: boolean;
   /** Uncontrolled default open state. */
   defaultOpen?: boolean;
   /** Allow selecting multiple values. */
@@ -77,6 +75,7 @@ const config = useConfig();
 const direction = computed(() => dir ?? config.dir.value);
 
 const localOpen = ref<boolean>(defaultOpen);
+/** Controlled open state. Use `v-model:open`. */
 const open = defineModel<boolean>('open', {
   default: undefined,
   get: v => v ?? localOpen.value,

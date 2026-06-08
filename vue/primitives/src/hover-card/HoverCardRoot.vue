@@ -21,6 +21,9 @@ const { openDelay = 700, closeDelay = 300, defaultOpen = false } = defineProps<H
 const openModel = defineModel<boolean | undefined>('open', { default: undefined });
 const uncontrolled = ref(defaultOpen);
 
+// `open` intentionally shares the model name: it's a local read-only computed that
+// resolves the controlled model against the uncontrolled fallback. Safe in script-setup.
+// eslint-disable-next-line vue/no-dupe-keys
 const open = computed(() => openModel.value ?? uncontrolled.value);
 
 function setOpen(value: boolean) {

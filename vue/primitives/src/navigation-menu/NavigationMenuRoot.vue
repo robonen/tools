@@ -3,8 +3,6 @@ import type { Direction } from '../config-provider';
 import type { Orientation } from '../roving-focus';
 
 export interface NavigationMenuRootProps {
-  /** Controlled active item value. Use `v-model`. */
-  modelValue?: string;
   /** Uncontrolled initial value. */
   defaultValue?: string;
   /** Reading direction. Falls back to `ConfigProvider`. */
@@ -72,6 +70,7 @@ const config = useConfig();
 const dirRef = computed<Direction>(() => dir ?? config.dir.value);
 
 const localValue = ref<string>(defaultValue ?? '');
+/** Controlled active item value. Use `v-model`. */
 const modelValue = defineModel<string | undefined>({
   default: undefined,
   get: v => v ?? localValue.value,
@@ -212,7 +211,7 @@ provideNavigationMenuContext({
     <Primitive
       :ref="forwardRef"
       as="nav"
-      :aria-label="$attrs['aria-label'] as string | undefined ?? 'Main'"
+      :aria-label="($attrs['aria-label'] ?? 'Main') as string"
       :data-orientation="orientation"
       :dir="dirRef"
       data-primitives-navigation-menu

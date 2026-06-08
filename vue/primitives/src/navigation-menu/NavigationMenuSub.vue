@@ -2,8 +2,6 @@
 import type { Orientation } from '../roving-focus';
 
 export interface NavigationMenuSubProps {
-  /** Controlled active value of the submenu. Use `v-model`. */
-  modelValue?: string;
   /** Uncontrolled initial value. */
   defaultValue?: string;
   /** Submenu orientation. @default 'horizontal' */
@@ -36,6 +34,7 @@ defineSlots<{
 }>();
 
 const localValue = ref<string>(defaultValue ?? '');
+/** Controlled active value of the submenu. Use `v-model`. */
 const modelValue = defineModel<string | undefined>({
   default: undefined,
   get: v => v ?? localValue.value,

@@ -17,7 +17,7 @@ const { forwardRef } = useForwardExpose();
 
 function onClick(): void {
   if (item.disabled.value) return;
-  const idx = ctx.modelValue.value.findIndex(v => v === item.value.value);
+  const idx = ctx.modelValue.value.indexOf(item.value.value);
   if (idx !== -1) ctx.onRemoveValue(idx);
 }
 </script>

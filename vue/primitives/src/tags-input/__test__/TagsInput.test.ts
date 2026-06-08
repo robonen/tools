@@ -120,8 +120,8 @@ describe('TagsInput', () => {
 
   it('delete trigger removes its tag', async () => {
     const w = createTagsInput({ defaultValue: ['a', 'b'] });
-    const deleteBtns = w.findAll('button').filter(b => b.text() === '×');
-    await deleteBtns[0]!.trigger('click');
+    const deleteBtn = w.findAll('button').find(b => b.text() === '×');
+    await deleteBtn!.trigger('click');
     await nextTick();
     const items = w.findAllComponents(TagsInputItem as Component);
     expect(items).toHaveLength(1);

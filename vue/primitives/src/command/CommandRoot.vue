@@ -138,7 +138,7 @@ const filteredItems = computed<Map<string, number>>(() => {
 
 function escapeAttr(v: string): string {
   if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') return CSS.escape(v);
-  return v.replace(/["\\]/g, '\\$&');
+  return v.replaceAll(/["\\]/g, '\\$&');
 }
 
 function getSelectableItems(): string[] {

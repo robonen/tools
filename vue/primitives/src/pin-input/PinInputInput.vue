@@ -102,7 +102,7 @@ function onPaste(e: ClipboardEvent): void {
     return;
   e.preventDefault();
   const chars = ctx.type.value === 'number'
-    ? data.replace(NON_DIGIT_G, '').split('')
+    ? data.replaceAll(NON_DIGIT_G, '').split('')
     : data.split('');
   let idx = props.index;
   for (const ch of chars) {

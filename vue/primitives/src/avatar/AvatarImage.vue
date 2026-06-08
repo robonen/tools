@@ -43,7 +43,7 @@ function load(nextSrc: string | undefined) {
     setStatus('error');
     return;
   }
-  if (typeof globalThis.window === 'undefined') {
+  if (globalThis.window === undefined) {
     setStatus('loading');
     return;
   }

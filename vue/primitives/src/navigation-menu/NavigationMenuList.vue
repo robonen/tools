@@ -1,4 +1,7 @@
 <script lang="ts">
+// This component takes no props of its own (it renders a fixed wrapper + RovingFocusGroup
+// and forwards $attrs). The empty interface is the intentional public prop contract.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface NavigationMenuListProps {}
 </script>
 

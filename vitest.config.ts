@@ -9,6 +9,7 @@ export default defineConfig({
       'core/platform/vitest.config.ts',
       'vue/toolkit/vitest.config.ts',
       'vue/primitives/vitest.config.ts',
+      'docs/vitest.config.ts',
     ],
     coverage: {
       provider: 'v8',

@@ -20,6 +20,11 @@ export const ignores: FlatConfigArray = [
       '**/.output/**',
       '**/storybook-static/**',
       '**/*.min.*',
+      // Hand-authored docs-site content co-located in packages (intro/guide .vue
+      // pages and per-composable demos). Not shipped source; lints against the
+      // docs app's own toolchain, and non-Vue packages can't even parse .vue.
+      '**/docs/**',
+      '**/demo.vue',
     ],
   },
 ];

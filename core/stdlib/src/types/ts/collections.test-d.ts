@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import type { Path, PathToType } from './collections';
+import type { Path, PathToPartialType, PathToType } from './collections';
 
 describe('collections', () => {
   describe('Path', () => {
@@ -66,6 +66,32 @@ describe('collections', () => {
       interface expected { user: { name: string } }
 
       expectTypeOf<actual>().toEqualTypeOf<expected>();
+    });
+  });
+
+  describe('PathToPartialType', () => {
+    type Shape = PathToPartialType<['user', 'name'], string>;
+
+    it('accepts the full nested shape', () => {
+      expectTypeOf<{ user: { name: 'John' } }>().toExtend<Shape>();
+    });
+
+    it('makes every key optional', () => {
+      expectTypeOf<{ unrelated: number }>().toExtend<Shape>();
+    });
+
+    it('keeps objects open for extra keys', () => {
+      expectTypeOf<{ user: { name: 'John'; age: number }; meta: boolean }>().toExtend<Shape>();
+    });
+
+    it('still enforces the leaf type when provided', () => {
+      expectTypeOf<{ user: { name: number } }>().not.toExtend<Shape>();
+    });
+
+    it('resolves array segments to arrays', () => {
+      type Indexed = PathToPartialType<['items', '0'], string>;
+
+      expectTypeOf<{ items: string[] }>().toExtend<Indexed>();
     });
   });
 });

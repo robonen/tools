@@ -133,7 +133,7 @@ export class Queue<T> implements QueueLike<T> {
    *
    * @returns {AsyncIterableIterator<T>}
    */
-  async *[Symbol.asyncIterator]() {
+  async* [Symbol.asyncIterator]() {
     for (const element of this.deque)
       yield element;
   }

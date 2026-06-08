@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { tryIt } from '.';
 
 describe('tryIt', () => {
@@ -13,7 +13,9 @@ describe('tryIt', () => {
   });
 
   it('handle synchronous functions with errors', () => {
-    const syncFn = (): void => { throw new Error('Test error') };
+    const syncFn = (): void => {
+      throw new Error('Test error');
+    };
     const wrappedSyncFn = tryIt(syncFn);
 
     const { error, data } = wrappedSyncFn();
@@ -34,7 +36,9 @@ describe('tryIt', () => {
   });
 
   it('handle asynchronous functions with errors', async () => {
-    const asyncFn = async () => { throw new Error('Test error') };
+    const asyncFn = async () => {
+      throw new Error('Test error');
+    };
     const wrappedAsyncFn = tryIt(asyncFn);
 
     const { error, data } = await wrappedAsyncFn();
@@ -63,5 +67,34 @@ describe('tryIt', () => {
     expect(error).toBeInstanceOf(Error);
     expect(error?.message).toBe('Test error');
     expect(data).toBeUndefined();
+  });
+
+  it('capture a rejected thenable (non-native PromiseLike)', async () => {
+    const thenableFn = () => ({
+      // eslint-disable-next-line unicorn/no-thenable -- intentionally exercising a custom thenable
+      then(_resolve: (v: number) => void, reject: (e: unknown) => void) {
+        reject(new Error('thenable error'));
+      },
+    });
+
+    const { error, data } = await tryIt(thenableFn)();
+
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toBe('thenable error');
+    expect(data).toBeUndefined();
+  });
+
+  it('resolve a fulfilled thenable to its data', async () => {
+    const thenableFn = () => ({
+      // eslint-disable-next-line unicorn/no-thenable -- intentionally exercising a custom thenable
+      then(resolve: (v: number) => void) {
+        resolve(42);
+      },
+    });
+
+    const { error, data } = await tryIt(thenableFn)();
+
+    expect(error).toBeUndefined();
+    expect(data).toBe(42);
   });
 });

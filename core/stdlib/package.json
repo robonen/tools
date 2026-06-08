@@ -18,7 +18,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "packages/stdlib"
   },
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.33.2",
   "engines": {
     "node": ">=24.13.1"
   },
@@ -28,22 +28,29 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     }
   },
   "scripts": {
-    "lint": "oxlint -c oxlint.config.ts",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "dev": "vitest dev",
     "build": "tsdown"
   },
   "devDependencies": {
-    "@robonen/oxlint": "workspace:*",
+    "@robonen/eslint": "workspace:*",
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
-    "oxlint": "catalog:",
-    "tsdown": "catalog:"
+    "eslint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "^6.0.3"
   }
 }

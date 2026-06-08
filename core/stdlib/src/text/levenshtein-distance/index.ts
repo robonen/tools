@@ -2,7 +2,7 @@
  * @name levenshteinDistance
  * @category Text
  * @description Calculate the Levenshtein distance between two strings
- * 
+ *
  * @param {string} left First string
  * @param {string} right Second string
  * @returns {number} The Levenshtein distance between the two strings
@@ -10,37 +10,39 @@
  * @since 0.0.1
  */
 export function levenshteinDistance(left: string, right: string): number {
-    if (left === right) return 0;
+  if (left === right) return 0;
 
-    if (left.length === 0) return right.length;
-    if (right.length === 0) return left.length;
+  if (left.length === 0) return right.length;
+  if (right.length === 0) return left.length;
 
-    // Create empty edit distance matrix for all possible modifications of
-    // substrings of left to substrings of right
-    const distanceMatrix = Array(right.length + 1).fill(null).map(() => Array(left.length + 1).fill(null));
+  // Iterate with the shorter string as the inner dimension so the rolling rows are
+  // O(min(m, n)) memory instead of a full O(m * n) matrix.
+  const outer = left.length >= right.length ? left : right;
+  const inner = left.length >= right.length ? right : left;
+  const innerLength = inner.length;
 
-    // Fill the first row of the matrix
-    // If this is the first row, we're transforming from an empty string to left
-    // In this case, the number of operations equals the length of left substring
-    for (let i = 0; i <= left.length; i++)
-        distanceMatrix[0]![i]! = i;
+  // prev = previous row; current = row being computed. prev starts as the base row [0..innerLength].
+  let prev = Array.from({ length: innerLength + 1 }, (_, i) => i);
+  let current = Array.from<number>({ length: innerLength + 1 });
 
-    // Fill the first column of the matrix
-    // If this is the first column, we're transforming empty string to right
-    // In this case, the number of operations equals the length of right substring
-    for (let j = 0; j <= right.length; j++)
-        distanceMatrix[j]![0]! = j;
+  for (let i = 1; i <= outer.length; i++) {
+    current[0] = i;
+    const outerChar = outer[i - 1];
 
-    for (let j = 1; j <= right.length; j++) {
-        for (let i = 1; i <= left.length; i++) {
-            const indicator = left[i - 1] === right[j - 1] ? 0 : 1;
-            distanceMatrix[j]![i]! = Math.min(
-                distanceMatrix[j]![i - 1]! + 1, // deletion
-                distanceMatrix[j - 1]![i]! + 1, // insertion
-                distanceMatrix[j - 1]![i - 1]! + indicator // substitution
-            );
-        }
+    for (let j = 1; j <= innerLength; j++) {
+      const cost = outerChar === inner[j - 1] ? 0 : 1;
+      current[j] = Math.min(
+        prev[j]! + 1, // insertion
+        current[j - 1]! + 1, // deletion
+        prev[j - 1]! + cost, // substitution
+      );
     }
 
-    return distanceMatrix[right.length]![left.length]!;
+    // Swap the rolling rows; the freshly computed row becomes `prev` for the next iteration.
+    const next = prev;
+    prev = current;
+    current = next;
+  }
+
+  return prev[innerLength]!;
 }

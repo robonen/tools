@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Queue } from '.';
 
 describe('queue', () => {
@@ -87,7 +87,7 @@ describe('queue', () => {
       expect(queue.dequeue()).toBeUndefined();
     });
 
-    it('compact internal storage after many dequeues', () => {
+    it('keep correct length and front element after many enqueue/dequeue cycles', () => {
       const queue = new Queue<number>();
 
       for (let i = 0; i < 100; i++)
@@ -98,6 +98,17 @@ describe('queue', () => {
 
       expect(queue.length).toBe(20);
       expect(queue.peek()).toBe(80);
+    });
+
+    it('report isFull and free a slot after dequeue', () => {
+      const queue = new Queue<number>(undefined, { maxSize: 2 });
+      queue.enqueue(1).enqueue(2);
+
+      expect(queue.isFull).toBe(true);
+
+      queue.dequeue();
+      expect(queue.isFull).toBe(false);
+      expect(() => queue.enqueue(3)).not.toThrow();
     });
   });
 

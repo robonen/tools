@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isArray, isObject, isRegExp, isDate, isError, isPromise, isMap, isSet, isWeakMap, isWeakSet } from './complex';
+import { isArray, isDate, isError, isMap, isObject, isPromise, isRegExp, isSet, isWeakMap, isWeakSet } from './complex';
 
 describe('complex', () => {
   describe('isArray', () => {
@@ -7,7 +7,7 @@ describe('complex', () => {
       expect(isArray([])).toBe(true);
       expect(isArray([1, 2, 3])).toBe(true);
     });
-  
+
     it('false if the value is not an array', () => {
       expect(isArray('')).toBe(false);
       expect(isArray(123)).toBe(false);
@@ -19,13 +19,13 @@ describe('complex', () => {
       expect(isArray(new Set())).toBe(false);
     });
   });
-  
+
   describe('isObject', () => {
     it('true if the value is an object', () => {
       expect(isObject({})).toBe(true);
       expect(isObject({ key: 'value' })).toBe(true);
     });
-  
+
     it('false if the value is not an object', () => {
       expect(isObject('')).toBe(false);
       expect(isObject(123)).toBe(false);
@@ -36,14 +36,23 @@ describe('complex', () => {
       expect(isObject(new Map())).toBe(false);
       expect(isObject(new Set())).toBe(false);
     });
+
+    it('true for class instances and null-prototype objects', () => {
+      // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- fixture for the instance check
+      class Foo {}
+
+      expect(isObject(new Foo())).toBe(true);
+      expect(isObject(Object.create(null))).toBe(true);
+    });
   });
-  
+
   describe('isRegExp', () => {
     it('true if the value is a regexp', () => {
       expect(isRegExp(/test/)).toBe(true);
+      // eslint-disable-next-line prefer-regex-literals -- intentionally testing the constructor form
       expect(isRegExp(new RegExp('test'))).toBe(true);
     });
-  
+
     it('false if the value is not a regexp', () => {
       expect(isRegExp('')).toBe(false);
       expect(isRegExp(123)).toBe(false);
@@ -56,12 +65,12 @@ describe('complex', () => {
       expect(isRegExp(new Set())).toBe(false);
     });
   });
-  
+
   describe('isDate', () => {
     it('true if the value is a date', () => {
       expect(isDate(new Date())).toBe(true);
     });
-  
+
     it('false if the value is not a date', () => {
       expect(isDate('')).toBe(false);
       expect(isDate(123)).toBe(false);
@@ -74,12 +83,12 @@ describe('complex', () => {
       expect(isDate(new Set())).toBe(false);
     });
   });
-  
+
   describe('isError', () => {
     it('true if the value is an error', () => {
       expect(isError(new Error('test'))).toBe(true);
     });
-  
+
     it('false if the value is not an error', () => {
       expect(isError('')).toBe(false);
       expect(isError(123)).toBe(false);
@@ -92,12 +101,14 @@ describe('complex', () => {
       expect(isError(new Set())).toBe(false);
     });
   });
-  
+
   describe('isPromise', () => {
     it('true if the value is a promise', () => {
       expect(isPromise(new Promise(() => {}))).toBe(true);
+      expect(isPromise(Promise.resolve())).toBe(true);
+      expect(isPromise((async () => {})())).toBe(true);
     });
-  
+
     it('false if the value is not a promise', () => {
       expect(isPromise('')).toBe(false);
       expect(isPromise(123)).toBe(false);
@@ -109,13 +120,18 @@ describe('complex', () => {
       expect(isPromise(new Map())).toBe(false);
       expect(isPromise(new Set())).toBe(false);
     });
+
+    it('false for a non-native thenable (only native promises match)', () => {
+      // eslint-disable-next-line unicorn/no-thenable -- documenting that custom thenables are not detected
+      expect(isPromise({ then() {} })).toBe(false);
+    });
   });
-  
+
   describe('isMap', () => {
     it('true if the value is a map', () => {
       expect(isMap(new Map())).toBe(true);
     });
-  
+
     it('false if the value is not a map', () => {
       expect(isMap('')).toBe(false);
       expect(isMap(123)).toBe(false);
@@ -127,12 +143,12 @@ describe('complex', () => {
       expect(isMap(new Set())).toBe(false);
     });
   });
-  
+
   describe('isSet', () => {
     it('true if the value is a set', () => {
       expect(isSet(new Set())).toBe(true);
     });
-  
+
     it('false if the value is not a set', () => {
       expect(isSet('')).toBe(false);
       expect(isSet(123)).toBe(false);
@@ -144,12 +160,12 @@ describe('complex', () => {
       expect(isSet(new Map())).toBe(false);
     });
   });
-  
+
   describe('isWeakMap', () => {
     it('true if the value is a weakmap', () => {
       expect(isWeakMap(new WeakMap())).toBe(true);
     });
-  
+
     it('false if the value is not a weakmap', () => {
       expect(isWeakMap('')).toBe(false);
       expect(isWeakMap(123)).toBe(false);
@@ -162,12 +178,12 @@ describe('complex', () => {
       expect(isWeakMap(new Set())).toBe(false);
     });
   });
-  
+
   describe('isWeakSet', () => {
     it('true if the value is a weakset', () => {
       expect(isWeakSet(new WeakSet())).toBe(true);
     });
-  
+
     it('false if the value is not a weakset', () => {
       expect(isWeakSet('')).toBe(false);
       expect(isWeakSet(123)).toBe(false);

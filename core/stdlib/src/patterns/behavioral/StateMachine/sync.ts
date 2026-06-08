@@ -1,6 +1,6 @@
 import { isString } from '../../../types';
 import { BaseStateMachine } from './base';
-import type { SyncStateNodeConfig, ExtractStates, ExtractEvents } from './types';
+import type { ExtractEvents, ExtractStates, SyncStateNodeConfig } from './types';
 
 /**
  * @name StateMachine
@@ -39,7 +39,8 @@ export class StateMachine<
 
     if (isString(transition)) {
       target = transition;
-    } else {
+    }
+    else {
       if (transition.guard && !transition.guard(this.context))
         return this.currentState;
 

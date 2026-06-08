@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { flagsGenerator } from '.';
 
 describe('flagsGenerator', () => {
@@ -22,5 +22,18 @@ describe('flagsGenerator', () => {
     }
 
     expect(() => generateFlag()).toThrow(new RangeError('Cannot create more than 31 flags'));
+  });
+
+  it('produce 31 distinct, orthogonal powers of two up to 2^30', () => {
+    const generateFlag = flagsGenerator();
+    const flags = Array.from({ length: 31 }, () => generateFlag());
+
+    expect(new Set(flags).size).toBe(31);
+    flags.forEach((flag, i) => {
+      expect(flag).toBe(2 ** i);
+      expect(flag & (flag - 1)).toBe(0); // exactly one bit set
+    });
+
+    expect(flags.at(-1)).toBe(2 ** 30);
   });
 });

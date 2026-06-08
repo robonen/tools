@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Stack } from '.';
 
 describe('stack', () => {
@@ -33,6 +33,26 @@ describe('stack', () => {
       expect(stack.length).toBe(0);
       expect(stack.isFull).toBe(false);
     });
+
+    it('keep a falsy single initial value', () => {
+      expect(new Stack(0).length).toBe(1);
+      expect(new Stack(0).peek()).toBe(0);
+      expect(new Stack('').peek()).toBe('');
+    });
+
+    it('copy the initial array (no aliasing of the caller array)', () => {
+      const initialValues = [1, 2, 3];
+      const stack = new Stack(initialValues);
+
+      initialValues.push(4);
+
+      expect(stack.length).toBe(3);
+      expect([...stack]).toEqual([3, 2, 1]);
+    });
+
+    it('throw when initial values exceed maxSize', () => {
+      expect(() => new Stack([1, 2, 3], { maxSize: 2 })).toThrow(RangeError);
+    });
   });
 
   describe('push', () => {
@@ -50,6 +70,16 @@ describe('stack', () => {
       stack.push(1);
 
       expect(() => stack.push(2)).toThrow(new RangeError('Stack is full'));
+    });
+
+    it('report isFull at the boundary', () => {
+      const stack = new Stack<number>(undefined, { maxSize: 2 });
+      stack.push(1).push(2);
+
+      expect(stack.isFull).toBe(true);
+
+      stack.pop();
+      expect(stack.isFull).toBe(false);
     });
   });
 
@@ -97,6 +127,22 @@ describe('stack', () => {
     });
   });
 
+  describe('toArray / toString', () => {
+    it('return elements in LIFO order as a distinct array', () => {
+      const stack = new Stack([1, 2, 3]);
+      const arr = stack.toArray();
+
+      expect(arr).toEqual([3, 2, 1]);
+
+      arr.push(99);
+      expect(stack.length).toBe(3);
+    });
+
+    it('stringify in LIFO order', () => {
+      expect(new Stack([1, 2, 3]).toString()).toBe('3,2,1');
+    });
+  });
+
   describe('iteration', () => {
     it('iterate over the stack in LIFO order', () => {
       const stack = new Stack<number>([1, 2, 3]);
@@ -112,7 +158,7 @@ describe('stack', () => {
       for await (const element of stack) {
         elements.push(element);
       }
-      
+
       expect(elements).toEqual([3, 2, 1]);
     });
   });

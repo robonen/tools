@@ -10,20 +10,21 @@ pnpm install @robonen/stdlib
 
 ## Modules
 
-| Module          | Utilities                                                       |
-| --------------- | --------------------------------------------------------------- |
-| **arrays**      | `cluster`, `first`, `last`, `sum`, `unique`                     |
-| **async**       | `sleep`, `tryIt`                                                |
-| **bits**        | `flags`                                                         |
-| **collections** | `get`                                                           |
-| **math**        | `clamp`, `lerp`, `remap` + BigInt variants                      |
-| **objects**     | `omit`, `pick`                                                  |
-| **patterns**    | `pubsub`                                                        |
-| **structs**     | `stack`                                                         |
-| **sync**        | `mutex`                                                         |
-| **text**        | `levenshteinDistance`, `trigramDistance`                         |
-| **types**       | JS & TS type utilities                                          |
-| **utils**       | `timestamp`, `noop`                                             |
+| Module          | Utilities                                                                          |
+| --------------- | ---------------------------------------------------------------------------------- |
+| **arrays**      | `cluster`, `first`, `groupBy`, `last`, `partition`, `range`, `sum`, `toArray`, `unique`, `zip` |
+| **async**       | `pool`, `retry`, `sleep`, `tryIt`                                                   |
+| **bits**        | `flagsGenerator`, `and`, `or`, `not`, `has`, `is`, `unset`, `toggle`, `BitVector`  |
+| **collections** | `get`                                                                              |
+| **functions**   | `compose`, `debounce`, `memoize`, `once`, `pipe`, `throttle`                        |
+| **math**        | `clamp`, `lerp`, `remap` + BigInt variants                                          |
+| **objects**     | `omit`, `pick`                                                                     |
+| **patterns**    | `Command`, `PubSub`, `StateMachine`                                                 |
+| **structs**     | `BinaryHeap`, `CircularBuffer`, `Deque`, `LinkedList`, `PriorityQueue`, `Queue`, `Stack` |
+| **sync**        | `mutex`                                                                            |
+| **text**        | `levenshteinDistance`, `trigramDistance`, `templateObject`                          |
+| **types**       | JS & TS type utilities                                                             |
+| **utils**       | `timestamp`, `noop`                                                                |
 
 ## Usage
 

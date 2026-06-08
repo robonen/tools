@@ -1,5 +1,5 @@
-import {describe, expect, it} from 'vitest';
-import {remapBigInt} from '.';
+import { describe, expect, it } from 'vitest';
+import { remapBigInt } from '.';
 
 describe('remapBigInt', () => {
   it('map values from one range to another', () => {
@@ -28,5 +28,15 @@ describe('remapBigInt', () => {
   it('handle edge cases', () => {
     // input range is zero (should return output min)
     expect(remapBigInt(5n, 0n, 0n, 0n, 100n)).toBe(0n);
+  });
+
+  it('stay exact for large ranges (no number round-trip)', () => {
+    // 1/3 of 10^30, computed entirely in BigInt — only truncation, no float precision loss
+    expect(remapBigInt(1n, 0n, 3n, 0n, 10n ** 30n)).toBe(333333333333333333333333333333n);
+  });
+
+  it('preserve precision well beyond 2^53', () => {
+    const huge = 10n ** 40n;
+    expect(remapBigInt(1n, 0n, 2n, 0n, huge)).toBe(huge / 2n);
   });
 });

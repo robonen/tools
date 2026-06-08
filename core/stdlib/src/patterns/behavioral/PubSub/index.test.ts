@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PubSub } from '.';
 
 describe('pubsub', () => {
@@ -114,5 +114,55 @@ describe('pubsub', () => {
     eventBus.emit('event1', 'Hello');
 
     expect(listener).toHaveBeenCalledTimes(1);
+  });
+
+  describe('off edge cases', () => {
+    it('removes only the targeted listener of many', () => {
+      const a = vi.fn();
+      const b = vi.fn();
+      eventBus.on('event1', a);
+      eventBus.on('event1', b);
+
+      eventBus.off('event1', a);
+      eventBus.emit('event1', 'x');
+
+      expect(a).not.toHaveBeenCalled();
+      expect(b).toHaveBeenCalledTimes(1);
+    });
+
+    it('is a no-op when removing an unregistered listener or unknown event', () => {
+      const a = vi.fn();
+      eventBus.on('event1', a);
+
+      expect(() => eventBus.off('event1', vi.fn())).not.toThrow();
+      expect(() => eventBus.off('event2', vi.fn())).not.toThrow();
+
+      eventBus.emit('event1', 'x');
+      expect(a).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('emit stability', () => {
+    it('does not invoke listeners added during the same emit', () => {
+      const added = vi.fn();
+      const adder = vi.fn(() => eventBus.on('event1', added));
+      eventBus.on('event1', adder);
+
+      eventBus.emit('event1', 'x');
+
+      expect(adder).toHaveBeenCalledTimes(1);
+      expect(added).not.toHaveBeenCalled(); // only fires on the next emit
+    });
+
+    it('a once listener removes itself and fires exactly once', () => {
+      const listener = vi.fn();
+      eventBus.once('event1', listener);
+
+      eventBus.emit('event1', 'a');
+      eventBus.emit('event1', 'b');
+
+      expect(listener).toHaveBeenCalledTimes(1);
+      expect(listener).toHaveBeenCalledWith('a');
+    });
   });
 });

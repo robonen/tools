@@ -1,0 +1,26 @@
+import type { AllowedComponentProps, Component, IntrinsicElementAttributes, SetupContext, VNodeProps } from 'vue';
+import { h } from 'vue';
+import { renderSlotChild } from './Slot';
+
+type FunctionalComponentContext = Omit<SetupContext, 'expose'>;
+
+export interface PrimitiveProps {
+  as?: keyof IntrinsicElementAttributes | Component;
+}
+
+export function Primitive(props: PrimitiveProps & VNodeProps & AllowedComponentProps & Record<string, unknown>, ctx: FunctionalComponentContext) {
+  const as = props.as;
+
+  return as === 'template'
+    ? renderSlotChild(ctx.slots, ctx.attrs)
+    : h(as!, ctx.attrs, ctx.slots);
+}
+
+Primitive.inheritAttrs = false;
+
+Primitive.props = {
+  as: {
+    type: [String, Object],
+    default: 'div' as const,
+  },
+};

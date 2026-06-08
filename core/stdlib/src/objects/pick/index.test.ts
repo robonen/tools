@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { pick } from '.';
 
 describe('pick', () => {
@@ -23,7 +23,11 @@ describe('pick', () => {
   it('handle non-existent keys by setting them to undefined', () => {
     const result = pick({ a: 1, b: 2 }, ['a', 'c'] as any);
 
-    expect(result).toEqual({ a: 1, c: undefined });
+    // toEqual ignores undefined values, so assert key presence explicitly.
+    expect(Object.keys(result).sort()).toEqual(['a', 'c']);
+    expect('c' in result).toBe(true);
+    expect((result as Record<string, unknown>).c).toBeUndefined();
+    expect(result.a).toBe(1);
   });
 
   it('return an empty object if target is null or undefined', () => {

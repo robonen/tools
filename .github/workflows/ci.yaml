@@ -5,21 +5,26 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
-  NODE_VERSION: 22.x
+  NODE_VERSION: 24.x
 
 jobs:
-  code-quality:
-    name: Code quality checks
+  # Enumerate the workspace packages so the matrix below fans out one job per
+  # package (kept dynamic so new packages are picked up automatically).
+  discover:
+    name: Discover packages
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+    outputs:
+      packages: ${{ steps.list.outputs.packages }}
     steps:
       - uses: actions/checkout@v6
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v5
+        uses: pnpm/action-setup@v6
         with:
           run_install: false
 
@@ -31,11 +36,52 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: List workspace packages
+        id: list
+        run: echo "packages=$(pnpm -r ls --depth -1 --json | jq -c '[.[] | select(.name != "tools") | .name]')" >> "$GITHUB_OUTPUT"
+
+  # One job per package — build (with its workspace deps), lint and test run in
+  # parallel across packages. fail-fast: false so every package is reported.
+  check:
+    name: ${{ matrix.package }}
+    needs: discover
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.discover.outputs.packages) }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build the package and the workspace deps it relies on (incl. @robonen/eslint,
+      # which every package's lint config imports from its built dist).
       - name: Build
-        run: pnpm build
+        run: pnpm --filter "${{ matrix.package }}..." --if-present run build
+
+      # Only the browser-mode test suites (vitest `instances: chromium`) need a
+      # browser. playwright is a direct devDep of these packages, so run its CLI
+      # in the package context (--filter) — it isn't resolvable from the root.
+      - name: Install Playwright Chromium
+        if: matrix.package == '@robonen/primitives' || matrix.package == '@robonen/editor'
+        run: pnpm --filter "${{ matrix.package }}" exec playwright install --with-deps chromium
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm --filter "${{ matrix.package }}" --if-present run lint:check
 
       - name: Test
-        run: pnpm test
+        run: pnpm --filter "${{ matrix.package }}" --if-present run test

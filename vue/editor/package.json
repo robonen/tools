@@ -1,0 +1,83 @@
+{
+  "name": "@robonen/editor",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "description": "Headless block-based rich-text editor for Vue with a registry-driven schema and pluggable CRDT",
+  "keywords": [
+    "editor",
+    "rich-text",
+    "wysiwyg",
+    "block-editor",
+    "crdt",
+    "collaborative",
+    "vue",
+    "tools"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "vue/editor"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=24.13.1"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/*/index.d.mts",
+        "default": "./dist/*/index.mjs"
+      },
+      "require": {
+        "types": "./dist/*/index.d.cts",
+        "default": "./dist/*/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "bench": "vitest bench",
+    "dev": "vitest dev",
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "@robonen/eslint": "workspace:*",
+    "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
+    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "^4.1.8",
+    "@vue/test-utils": "catalog:",
+    "eslint": "catalog:",
+    "jsdom": "catalog:",
+    "playwright": "^1.60.0",
+    "tsdown": "catalog:",
+    "unplugin-vue": "^7.2.0",
+    "vitest-browser-vue": "^2.1.0",
+    "vue-tsc": "^3.3.4"
+  },
+  "dependencies": {
+    "@floating-ui/vue": "^1.1.11",
+    "@robonen/crdt": "workspace:*",
+    "@robonen/platform": "workspace:*",
+    "@robonen/stdlib": "workspace:*",
+    "@vue/shared": "catalog:",
+    "vue": "catalog:"
+  }
+}

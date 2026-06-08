@@ -40,7 +40,7 @@ export class CommandHistory extends BaseCommandHistory<Command> {
 
   batch(commands: Command[]): void {
     const macro: Command = {
-      execute: () => commands.forEach((c) => c.execute()),
+      execute: () => commands.forEach(c => c.execute()),
       undo: () => {
         for (let i = commands.length - 1; i >= 0; i--)
           commands[i]!.undo();

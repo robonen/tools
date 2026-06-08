@@ -1,0 +1,74 @@
+{
+  "name": "@robonen/eslint",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "description": "Composable ESLint flat configuration presets",
+  "keywords": [
+    "eslint",
+    "eslint-config",
+    "flat-config",
+    "linter",
+    "config",
+    "presets"
+  ],
+  "author": "Robonen Andrew <robonenandrew@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robonen/tools.git",
+    "directory": "configs/eslint"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=24.13.1"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "dev": "vitest dev",
+    "build": "tsdown"
+  },
+  "dependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "catalog:",
+    "@vitest/eslint-plugin": "^1.6.19",
+    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-n": "^18.0.1",
+    "eslint-plugin-regexp": "^3.1.0",
+    "eslint-plugin-unicorn": "^65.0.0",
+    "eslint-plugin-vue": "^10.9.2",
+    "globals": "^17.6.0",
+    "jiti": "^2.7.0",
+    "typescript-eslint": "^8.60.1",
+    "vue-eslint-parser": "^10.4.1"
+  },
+  "devDependencies": {
+    "@robonen/eslint": "workspace:*",
+    "@robonen/tsconfig": "workspace:*",
+    "@robonen/tsdown": "workspace:*",
+    "eslint": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": ">=9.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,5 +1,5 @@
-import {describe, expect, it} from 'vitest';
-import {remap} from '.';
+import { describe, expect, it } from 'vitest';
+import { remap } from '.';
 
 describe('remap', () => {
   it('map values from one range to another', () => {
@@ -42,5 +42,13 @@ describe('remap', () => {
   it('handle edge cases', () => {
     // input range is zero (should return output min)
     expect(remap(5, 0, 0, 0, 100)).toBe(0);
+  });
+
+  it('handle a reversed (descending) input range', () => {
+    // 2 is 80% of the way from 10 down to 0
+    expect(remap(2, 10, 0, 0, 100)).toBe(80);
+    // clamps to the interval regardless of orientation
+    expect(remap(15, 10, 0, 0, 100)).toBe(0);
+    expect(remap(-5, 10, 0, 0, 100)).toBe(100);
   });
 });

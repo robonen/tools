@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { CommandHistory, AsyncCommandHistory } from '.';
-import type { Command, AsyncCommand } from '.';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { AsyncCommandHistory, CommandHistory } from '.';
+import type { AsyncCommand, Command } from '.';
 
 describe('commandHistory', () => {
   let history: CommandHistory;
@@ -205,11 +205,11 @@ describe('asyncCommandHistory', () => {
   function addItemAsync(item: string): AsyncCommand {
     return {
       execute: async () => {
-        await new Promise((r) => setTimeout(r, 5));
+        await new Promise(r => setTimeout(r, 5));
         items.push(item);
       },
       undo: async () => {
-        await new Promise((r) => setTimeout(r, 5));
+        await new Promise(r => setTimeout(r, 5));
         items.pop();
       },
     };
@@ -277,5 +277,44 @@ describe('asyncCommandHistory', () => {
     await limited.execute(addItemAsync('c'));
 
     expect(limited.size).toBe(2);
+  });
+
+  describe('error handling', () => {
+    it('does not record a sync command whose execute throws', () => {
+      const h = new CommandHistory();
+      const cmd: Command = {
+        execute: () => {
+          throw new Error('boom');
+        },
+        undo: () => {},
+      };
+
+      expect(() => h.execute(cmd)).toThrow('boom');
+      expect(h.size).toBe(0);
+      expect(h.undo()).toBe(false);
+    });
+
+    it('does not record an async command whose execute rejects', async () => {
+      const h = new AsyncCommandHistory();
+      const cmd: AsyncCommand = {
+        execute: () => Promise.reject(new Error('boom')),
+        undo: () => Promise.resolve(),
+      };
+
+      await expect(h.execute(cmd)).rejects.toThrow('boom');
+      expect(h.size).toBe(0);
+      expect(await h.undo()).toBe(false);
+    });
+
+    it('propagates a rejecting undo', async () => {
+      const h = new AsyncCommandHistory();
+      const cmd: AsyncCommand = {
+        execute: () => Promise.resolve(),
+        undo: () => Promise.reject(new Error('undo failed')),
+      };
+
+      await h.execute(cmd);
+      await expect(h.undo()).rejects.toThrow('undo failed');
+    });
   });
 });

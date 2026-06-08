@@ -42,6 +42,9 @@ export class Deque<T> implements DequeLike<T> {
   constructor(initialValues?: T[] | T, options?: DequeOptions) {
     this.maxSize = options?.maxSize ?? Infinity;
     this.buffer = new CircularBuffer(initialValues);
+
+    if (this.buffer.length > this.maxSize)
+      throw new RangeError('Deque: initial values exceed maxSize');
   }
 
   /**
@@ -65,7 +68,7 @@ export class Deque<T> implements DequeLike<T> {
    * @returns {boolean} `true` if the deque is full, `false` otherwise
    */
   get isFull() {
-    return this.buffer.length === this.maxSize;
+    return this.buffer.length >= this.maxSize;
   }
 
   /**
@@ -173,7 +176,7 @@ export class Deque<T> implements DequeLike<T> {
    *
    * @returns {AsyncIterableIterator<T>}
    */
-  async *[Symbol.asyncIterator]() {
+  async* [Symbol.asyncIterator]() {
     for (const element of this.buffer)
       yield element;
   }

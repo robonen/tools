@@ -15,26 +15,32 @@
     "type": "git",
     "url": "git+https://github.com/robonen/tools.git"
   },
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.33.2",
   "engines": {
     "node": ">=24.13.1"
   },
   "type": "module",
   "devDependencies": {
-    "@types/node": "^24.10.13",
+    "@types/node": "^25.9.2",
     "@vitest/coverage-v8": "catalog:",
     "@vitest/ui": "catalog:",
-    "citty": "^0.2.1",
-    "jiti": "^2.6.1",
+    "citty": "^0.2.2",
+    "jiti": "^2.7.0",
     "jsdom": "catalog:",
     "scule": "^1.3.0",
+    "typescript": "^6.0.3",
     "vitest": "catalog:"
   },
   "scripts": {
     "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
+    "lint:check": "pnpm -r lint:check",
+    "lint:fix": "pnpm -r lint:fix",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "create": "jiti ./bin/cli.ts"
+    "create": "jiti ./bin/cli.ts",
+    "docs:dev": "pnpm -C docs dev",
+    "docs:generate": "pnpm -C docs generate",
+    "docs:preview": "pnpm -C docs preview",
+    "docs:extract": "pnpm -C docs extract"
   }
 }

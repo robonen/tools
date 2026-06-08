@@ -3,227 +3,275 @@ import { describe, expect, it } from 'vitest';
 import { BinaryHeap } from '.';
 
 describe('BinaryHeap', () => {
-    describe('constructor', () => {
-        it('should create an empty heap', () => {
-            const heap = new BinaryHeap<number>();
+  describe('constructor', () => {
+    it('should create an empty heap', () => {
+      const heap = new BinaryHeap<number>();
 
-            expect(heap.length).toBe(0);
-            expect(heap.isEmpty).toBe(true);
-        });
-
-        it('should create a heap from single value', () => {
-            const heap = new BinaryHeap(42);
-
-            expect(heap.length).toBe(1);
-            expect(heap.peek()).toBe(42);
-        });
-
-        it('should create a heap from array (heapify)', () => {
-            const heap = new BinaryHeap([5, 3, 8, 1, 4]);
-
-            expect(heap.length).toBe(5);
-            expect(heap.peek()).toBe(1);
-        });
-
-        it('should accept a custom comparator for max-heap', () => {
-            const heap = new BinaryHeap([5, 3, 8, 1, 4], {
-                comparator: (a, b) => b - a,
-            });
-
-            expect(heap.peek()).toBe(8);
-        });
+      expect(heap.length).toBe(0);
+      expect(heap.isEmpty).toBe(true);
     });
 
-    describe('push', () => {
-        it('should insert elements maintaining heap property', () => {
-            const heap = new BinaryHeap<number>();
+    it('should create a heap from single value', () => {
+      const heap = new BinaryHeap(42);
 
-            heap.push(5);
-            heap.push(3);
-            heap.push(8);
-            heap.push(1);
-
-            expect(heap.peek()).toBe(1);
-            expect(heap.length).toBe(4);
-        });
-
-        it('should handle duplicate values', () => {
-            const heap = new BinaryHeap<number>();
-
-            heap.push(3);
-            heap.push(3);
-            heap.push(3);
-
-            expect(heap.length).toBe(3);
-            expect(heap.peek()).toBe(3);
-        });
+      expect(heap.length).toBe(1);
+      expect(heap.peek()).toBe(42);
     });
 
-    describe('pop', () => {
-        it('should return undefined for empty heap', () => {
-            const heap = new BinaryHeap<number>();
+    it('should create a heap from array (heapify)', () => {
+      const heap = new BinaryHeap([5, 3, 8, 1, 4]);
 
-            expect(heap.pop()).toBeUndefined();
-        });
-
-        it('should extract elements in min-heap order', () => {
-            const heap = new BinaryHeap([5, 3, 8, 1, 4, 2, 7, 6]);
-            const sorted: number[] = [];
-
-            while (!heap.isEmpty) {
-                sorted.push(heap.pop()!);
-            }
-
-            expect(sorted).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
-        });
-
-        it('should extract elements in max-heap order with custom comparator', () => {
-            const heap = new BinaryHeap([5, 3, 8, 1, 4], {
-                comparator: (a, b) => b - a,
-            });
-            const sorted: number[] = [];
-
-            while (!heap.isEmpty) {
-                sorted.push(heap.pop()!);
-            }
-
-            expect(sorted).toEqual([8, 5, 4, 3, 1]);
-        });
-
-        it('should handle single element', () => {
-            const heap = new BinaryHeap(42);
-
-            expect(heap.pop()).toBe(42);
-            expect(heap.isEmpty).toBe(true);
-        });
+      expect(heap.length).toBe(5);
+      expect(heap.peek()).toBe(1);
     });
 
-    describe('peek', () => {
-        it('should return undefined for empty heap', () => {
-            const heap = new BinaryHeap<number>();
+    it('should accept a custom comparator for max-heap', () => {
+      const heap = new BinaryHeap([5, 3, 8, 1, 4], {
+        comparator: (a, b) => b - a,
+      });
 
-            expect(heap.peek()).toBeUndefined();
-        });
-
-        it('should return root without removing it', () => {
-            const heap = new BinaryHeap([5, 3, 1]);
-
-            expect(heap.peek()).toBe(1);
-            expect(heap.length).toBe(3);
-        });
+      expect(heap.peek()).toBe(8);
     });
 
-    describe('clear', () => {
-        it('should remove all elements', () => {
-            const heap = new BinaryHeap([1, 2, 3]);
+    it('should not mutate the input array', () => {
+      const input = [5, 3, 8, 1, 4];
 
-            const result = heap.clear();
+      new BinaryHeap(input);
 
-            expect(heap.length).toBe(0);
-            expect(heap.isEmpty).toBe(true);
-            expect(result).toBe(heap);
-        });
+      expect(input).toEqual([5, 3, 8, 1, 4]);
     });
 
-    describe('toArray', () => {
-        it('should return empty array for empty heap', () => {
-            const heap = new BinaryHeap<number>();
+    it('should not overflow the stack for a very large initial array', () => {
+      const big = Array.from({ length: 200_000 }, (_, i) => 200_000 - i);
 
-            expect(heap.toArray()).toEqual([]);
-        });
+      expect(() => new BinaryHeap(big)).not.toThrow();
+      expect(new BinaryHeap(big).peek()).toBe(1);
+    });
+  });
 
-        it('should return a shallow copy', () => {
-            const heap = new BinaryHeap([3, 1, 2]);
-            const arr = heap.toArray();
+  describe('push', () => {
+    it('should insert elements maintaining heap property', () => {
+      const heap = new BinaryHeap<number>();
 
-            arr.push(99);
+      heap.push(5);
+      heap.push(3);
+      heap.push(8);
+      heap.push(1);
 
-            expect(heap.length).toBe(3);
-        });
+      expect(heap.peek()).toBe(1);
+      expect(heap.length).toBe(4);
     });
 
-    describe('toString', () => {
-        it('should return formatted string', () => {
-            const heap = new BinaryHeap([1, 2, 3]);
+    it('should handle duplicate values', () => {
+      const heap = new BinaryHeap<number>();
 
-            expect(heap.toString()).toBe('BinaryHeap(3)');
-        });
+      heap.push(3);
+      heap.push(3);
+      heap.push(3);
+
+      expect(heap.length).toBe(3);
+      expect(heap.peek()).toBe(3);
+    });
+  });
+
+  describe('pop', () => {
+    it('should return undefined for empty heap', () => {
+      const heap = new BinaryHeap<number>();
+
+      expect(heap.pop()).toBeUndefined();
     });
 
-    describe('iterator', () => {
-        it('should iterate over heap elements', () => {
-            const heap = new BinaryHeap([5, 3, 8, 1]);
-            const elements = [...heap];
+    it('should extract elements in min-heap order', () => {
+      const heap = new BinaryHeap([5, 3, 8, 1, 4, 2, 7, 6]);
+      const sorted: number[] = [];
 
-            expect(elements.length).toBe(4);
-            expect(elements[0]).toBe(1);
-        });
+      while (!heap.isEmpty) {
+        sorted.push(heap.pop()!);
+      }
+
+      expect(sorted).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
 
-    describe('custom comparator', () => {
-        it('should work with string length comparator', () => {
-            const heap = new BinaryHeap(['banana', 'apple', 'kiwi', 'fig'], {
-                comparator: (a, b) => a.length - b.length,
-            });
+    it('should extract elements in max-heap order with custom comparator', () => {
+      const heap = new BinaryHeap([5, 3, 8, 1, 4], {
+        comparator: (a, b) => b - a,
+      });
+      const sorted: number[] = [];
 
-            expect(heap.pop()).toBe('fig');
-            expect(heap.pop()).toBe('kiwi');
-        });
+      while (!heap.isEmpty) {
+        sorted.push(heap.pop()!);
+      }
 
-        it('should work with object comparator', () => {
-            interface Task {
-                priority: number;
-                name: string;
-            }
-
-            const heap = new BinaryHeap<Task>(
-                [
-                    { priority: 3, name: 'low' },
-                    { priority: 1, name: 'high' },
-                    { priority: 2, name: 'medium' },
-                ],
-                { comparator: (a, b) => a.priority - b.priority },
-            );
-
-            expect(heap.pop()?.name).toBe('high');
-            expect(heap.pop()?.name).toBe('medium');
-            expect(heap.pop()?.name).toBe('low');
-        });
+      expect(sorted).toEqual([8, 5, 4, 3, 1]);
     });
 
-    describe('heapify', () => {
-        it('should correctly heapify large arrays', () => {
-            const values = Array.from({ length: 1000 }, () => Math.random() * 1000 | 0);
-            const heap = new BinaryHeap(values);
-            const sorted: number[] = [];
+    it('should handle single element', () => {
+      const heap = new BinaryHeap(42);
 
-            while (!heap.isEmpty) {
-                sorted.push(heap.pop()!);
-            }
+      expect(heap.pop()).toBe(42);
+      expect(heap.isEmpty).toBe(true);
+    });
+  });
 
-            const expected = [...values].sort((a, b) => a - b);
+  describe('peek', () => {
+    it('should return undefined for empty heap', () => {
+      const heap = new BinaryHeap<number>();
 
-            expect(sorted).toEqual(expected);
-        });
+      expect(heap.peek()).toBeUndefined();
     });
 
-    describe('interleaved operations', () => {
-        it('should maintain heap property with mixed push and pop', () => {
-            const heap = new BinaryHeap<number>();
+    it('should return root without removing it', () => {
+      const heap = new BinaryHeap([5, 3, 1]);
 
-            heap.push(10);
-            heap.push(5);
-            expect(heap.pop()).toBe(5);
-
-            heap.push(3);
-            heap.push(7);
-            expect(heap.pop()).toBe(3);
-
-            heap.push(1);
-            expect(heap.pop()).toBe(1);
-            expect(heap.pop()).toBe(7);
-            expect(heap.pop()).toBe(10);
-            expect(heap.pop()).toBeUndefined();
-        });
+      expect(heap.peek()).toBe(1);
+      expect(heap.length).toBe(3);
     });
+  });
+
+  describe('clear', () => {
+    it('should remove all elements', () => {
+      const heap = new BinaryHeap([1, 2, 3]);
+
+      const result = heap.clear();
+
+      expect(heap.length).toBe(0);
+      expect(heap.isEmpty).toBe(true);
+      expect(result).toBe(heap);
+    });
+  });
+
+  describe('toArray', () => {
+    it('should return empty array for empty heap', () => {
+      const heap = new BinaryHeap<number>();
+
+      expect(heap.toArray()).toEqual([]);
+    });
+
+    it('should return a shallow copy', () => {
+      const heap = new BinaryHeap([3, 1, 2]);
+      const arr = heap.toArray();
+
+      arr.push(99);
+
+      expect(heap.length).toBe(3);
+    });
+  });
+
+  describe('toString', () => {
+    it('should return formatted string', () => {
+      const heap = new BinaryHeap([1, 2, 3]);
+
+      expect(heap.toString()).toBe('BinaryHeap(3)');
+    });
+  });
+
+  describe('iterator', () => {
+    it('should iterate over heap elements', () => {
+      const heap = new BinaryHeap([5, 3, 8, 1]);
+      const elements = [...heap];
+
+      expect(elements.length).toBe(4);
+      expect(elements[0]).toBe(1);
+    });
+  });
+
+  describe('custom comparator', () => {
+    it('should work with string length comparator', () => {
+      const heap = new BinaryHeap(['banana', 'apple', 'kiwi', 'fig'], {
+        comparator: (a, b) => a.length - b.length,
+      });
+
+      expect(heap.pop()).toBe('fig');
+      expect(heap.pop()).toBe('kiwi');
+    });
+
+    it('should work with object comparator', () => {
+      interface Task {
+        priority: number;
+        name: string;
+      }
+
+      const heap = new BinaryHeap<Task>(
+        [
+          { priority: 3, name: 'low' },
+          { priority: 1, name: 'high' },
+          { priority: 2, name: 'medium' },
+        ],
+        { comparator: (a, b) => a.priority - b.priority },
+      );
+
+      expect(heap.pop()?.name).toBe('high');
+      expect(heap.pop()?.name).toBe('medium');
+      expect(heap.pop()?.name).toBe('low');
+    });
+  });
+
+  describe('heapify', () => {
+    it('should correctly heapify large arrays', () => {
+      const values = Array.from({ length: 1000 }, () => Math.random() * 1000 | 0);
+      const heap = new BinaryHeap(values);
+      const sorted: number[] = [];
+
+      while (!heap.isEmpty) {
+        sorted.push(heap.pop()!);
+      }
+
+      const expected = [...values].sort((a, b) => a - b);
+
+      expect(sorted).toEqual(expected);
+    });
+  });
+
+  describe('interleaved operations', () => {
+    it('should maintain heap property with mixed push and pop', () => {
+      const heap = new BinaryHeap<number>();
+
+      heap.push(10);
+      heap.push(5);
+      expect(heap.pop()).toBe(5);
+
+      heap.push(3);
+      heap.push(7);
+      expect(heap.pop()).toBe(3);
+
+      heap.push(1);
+      expect(heap.pop()).toBe(1);
+      expect(heap.pop()).toBe(7);
+      expect(heap.pop()).toBe(10);
+      expect(heap.pop()).toBeUndefined();
+    });
+  });
+
+  describe('nullable / falsy elements', () => {
+    it('peek/pop return a legitimately stored null root (not undefined)', () => {
+      // Comparator that ranks null before any number.
+      const heap = new BinaryHeap<number | null>([5, null, 3], {
+        comparator: (a, b) => (a === null ? -1 : b === null ? 1 : a - b),
+      });
+
+      expect(heap.length).toBe(3);
+      expect(heap.peek()).toBeNull();
+      expect(heap.pop()).toBeNull();
+      expect(heap.length).toBe(2);
+    });
+
+    it('peek returns a 0 root rather than collapsing to undefined', () => {
+      const heap = new BinaryHeap([0, 5, 3]);
+
+      expect(heap.peek()).toBe(0);
+    });
+  });
+
+  describe('async iteration', () => {
+    it('yields every element with the root (min) first', async () => {
+      const heap = new BinaryHeap([5, 3, 8, 1]);
+      const out: number[] = [];
+
+      for await (const value of heap)
+        out.push(value);
+
+      expect(out[0]).toBe(1); // heap array order — root first
+      expect([...out].sort((a, b) => a - b)).toEqual([1, 3, 5, 8]);
+    });
+  });
 });

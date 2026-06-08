@@ -1,0 +1,8 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "@robonen dom (browser libraries)",
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "lib": ["ESNext", "DOM", "DOM.Iterable"]
+    }
+}

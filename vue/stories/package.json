@@ -1,0 +1,30 @@
+{
+  "name": "@robonen/stories",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Storybook for @robonen/primitives",
+  "type": "module",
+  "scripts": {
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "dev": "storybook dev -p 6006 --no-open",
+    "build": "storybook build -o storybook-static"
+  },
+  "dependencies": {
+    "@robonen/primitives": "workspace:*",
+    "@robonen/vue": "workspace:*",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@robonen/eslint": "workspace:*",
+    "@robonen/tsconfig": "workspace:*",
+    "@storybook/addon-a11y": "^10.4.2",
+    "@storybook/addon-docs": "^10.4.2",
+    "@storybook/vue3-vite": "^10.4.2",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "eslint": "catalog:",
+    "storybook": "^10.4.2",
+    "vite": "^8.0.16"
+  }
+}

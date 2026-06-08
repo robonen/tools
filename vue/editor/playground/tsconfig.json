@@ -1,0 +1,11 @@
+{
+  "extends": "@robonen/tsconfig/tsconfig.vue.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@editor": ["../src/index.ts"],
+      "@editor/*": ["../src/*"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}

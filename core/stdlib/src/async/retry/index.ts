@@ -55,6 +55,9 @@ export async function retry<Return>(
     shouldRetry,
   } = options;
 
+  // Always make at least one attempt — `times < 1` would otherwise skip the loop
+  // entirely and throw a bare `null`, which is impossible for callers to diagnose.
+  const maxAttempts = times < 1 ? 1 : times;
   const wrappedFn = tryIt(fn);
   const delayFn = isFunction(delay) ? delay : null;
   const delayMs = delayFn ? 0 : delay as number;
@@ -66,7 +69,7 @@ export async function retry<Return>(
   let lastError: Error | null = null;
   let count = 1;
 
-  while (count <= times) {
+  while (count <= maxAttempts) {
     const { error, data } = await wrappedFn({ count, stop });
 
     if (!error)
@@ -82,7 +85,7 @@ export async function retry<Return>(
     count++;
 
     // Don't delay after the last attempt
-    if (count <= times) {
+    if (count <= maxAttempts) {
       const ms = delayFn ? delayFn(count) : delayMs;
 
       if (ms > 0)
@@ -90,6 +93,7 @@ export async function retry<Return>(
     }
   }
 
-  // eslint-disable-next-line eslint/no-throw-literal
+  // lastError is always set by the loop above (at least one attempt runs).
+  // eslint-disable-next-line no-throw-literal -- rethrowing the original caught error verbatim
   throw lastError!;
 }

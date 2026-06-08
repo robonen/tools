@@ -1,5 +1,5 @@
-import {minBigInt} from '../minBigInt';
-import {maxBigInt} from '../maxBigInt';
+import { minBigInt } from '../minBigInt';
+import { maxBigInt } from '../maxBigInt';
 
 /**
  * @name clampBigInt

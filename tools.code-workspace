@@ -16,7 +16,10 @@
 			"path": "infra/renovate"
 		},
 		{
-			"path": "web/vue"
+			"path": "vue/toolkit"
+		},
+		{
+			"path": "vue/primitives"
 		}
 	]
 }

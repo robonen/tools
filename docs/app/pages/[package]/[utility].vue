@@ -1,4 +1,5 @@
 <script setup lang="ts">import { demos } from '#docs/demos';
+import { sections } from '#docs/sections';
 
 const route = useRoute();
 const { resolveEntry } = useDocs();
@@ -18,6 +19,35 @@ if (!entry.value) {
 const pkg = computed(() => entry.value!.pkg);
 
 const demoComponent = computed(() => demos[`${packageSlug.value}/${utilitySlug.value}`] ?? null);
+const sectionComponent = computed(() => sections[`${packageSlug.value}/${utilitySlug.value}`] ?? null);
+
+// ── Doc sections: client-side TOC built from the rendered headings ───────────
+const docRoot = ref<HTMLElement | null>(null);
+const docToc = ref<Array<{ id: string; text: string; depth: number }>>([]);
+
+function buildDocToc() {
+  const el = docRoot.value;
+  if (!el) return;
+  docToc.value = Array.from(el.querySelectorAll('h2, h3')).map((h) => {
+    if (!h.id) {
+      h.id = (h.textContent ?? '')
+        .toLowerCase().trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    }
+    return { id: h.id, text: h.textContent ?? '', depth: h.tagName === 'H2' ? 2 : 3 };
+  });
+}
+
+onMounted(() => {
+  const el = docRoot.value;
+  if (!el) return;
+  buildDocToc();
+  // The section is an async component — rebuild once its content mounts.
+  const observer = new MutationObserver(() => buildDocToc());
+  observer.observe(el, { childList: true, subtree: true });
+  onScopeDispose(() => observer.disconnect());
+});
 
 function ghUrl(path: string) {
   return `https://github.com/robonen/tools/blob/master/${path}`;
@@ -28,6 +58,7 @@ const title = computed(() => {
   const e = entry.value!;
   if (e.kind === 'api') return e.item.name;
   if (e.kind === 'components') return e.component.name;
+  if (e.kind === 'doc') return e.section.title;
   return e.section.title;
 });
 
@@ -45,6 +76,9 @@ const toc = computed(() => {
 
   if (e.kind === 'guide') {
     return extractHeadings(e.section.markdown).map(h => ({ id: h.id, text: h.text, depth: h.depth }));
+  }
+  if (e.kind === 'doc') {
+    return docToc.value;
   }
   if (e.kind === 'components') {
     return e.component.parts.map(p => ({ id: p.name.toLowerCase(), text: p.name, depth: 2 }));
@@ -82,7 +116,7 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
         <header class="mb-8">
           <div class="flex items-center gap-2.5 mb-2 flex-wrap">
             <DocsBadge :kind="entry.item.kind" size="md" />
-            <h1 class="text-2xl font-bold font-mono tracking-tight text-(--fg)">{{ entry.item.name }}</h1>
+            <h1 class="min-w-0 break-words text-2xl font-bold font-mono tracking-tight text-(--fg)">{{ entry.item.name }}</h1>
             <DocsTag v-if="entry.item.since" :label="`v${entry.item.since}`" variant="neutral" />
             <DocsTag v-if="entry.item.hasTests" label="tested" variant="test" />
             <DocsTag v-if="entry.item.hasDemo" label="demo" variant="demo" />
@@ -194,9 +228,16 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
         <DocsComponentAnatomy :component="entry.component" :package-name="pkg.name" />
       </template>
 
-      <!-- ── GUIDE ──────────────────────────────────────────────────────── -->
-      <template v-else>
+      <!-- ── GUIDE (Markdown) ───────────────────────────────────────────── -->
+      <template v-else-if="entry.kind === 'guide'">
         <DocsMarkdown :source="entry.section.markdown" />
+      </template>
+
+      <!-- ── DOC SECTION (hand-authored .vue) ───────────────────────────── -->
+      <template v-else-if="entry.kind === 'doc'">
+        <div ref="docRoot" class="docs-section">
+          <component :is="sectionComponent" />
+        </div>
       </template>
     </article>
 

@@ -9,10 +9,10 @@ export interface Heading {
 export function slugHeading(text: string): string {
   return text
     .toLowerCase()
-    .replace(/`/g, '')
-    .replace(/[^\w\s-]/g, '')
+    .replaceAll('`', '')
+    .replaceAll(/[^\w\s-]/g, '')
     .trim()
-    .replace(/\s+/g, '-');
+    .replaceAll(/\s+/g, '-');
 }
 
 /** Collect h2/h3 headings for the table of contents. */
@@ -28,11 +28,13 @@ export function extractHeadings(markdown: string): Heading[] {
     }
     if (inFence) continue;
 
-    const m = line.match(/^(#{2,3})\s+(.+?)\s*#*$/);
+    const m = line.match(/^(#{2,3})\s+(\S.*)$/);
     if (!m) continue;
 
     const depth = m[1]!.length;
-    const text = m[2]!.replace(/`/g, '').trim();
+    // Strip an optional ATX closing run (a single space then trailing `#`s) without
+    // a backtracking-prone pattern, then drop inline code ticks.
+    const text = m[2]!.replace(/ #+ *$/, '').replaceAll('`', '').trim();
     let id = slugHeading(text);
     const count = seen.get(id) ?? 0;
     seen.set(id, count + 1);
@@ -51,7 +53,7 @@ export function renderMarkdown(markdown: string): string {
   const renderer = new marked.Renderer();
   renderer.heading = function ({ tokens, depth }) {
     const inner = this.parser.parseInline(tokens);
-    const plain = inner.replace(/<[^>]+>/g, '');
+    const plain = inner.replaceAll(/<[^>]+>/g, '');
     let id = slugHeading(plain);
     const count = seen.get(id) ?? 0;
     seen.set(id, count + 1);

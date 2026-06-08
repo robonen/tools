@@ -18,6 +18,7 @@ import type {
   CategoryMeta,
   ComponentMeta,
   ComponentPartMeta,
+  DocSection,
   DocsMetadata,
   EmitMeta,
   GuideSection,
@@ -56,6 +57,7 @@ const PACKAGES: PackageConfig[] = [
   { path: 'core/platform', slug: 'platform', kind: 'api', group: 'core' },
   { path: 'core/fetch', slug: 'fetch', kind: 'api', group: 'core' },
   { path: 'core/encoding', slug: 'encoding', kind: 'api', group: 'core' },
+  { path: 'core/crdt', slug: 'crdt', kind: 'api', group: 'core' },
   // ── vue ──
   { path: 'vue/toolkit', slug: 'vue', kind: 'api', group: 'vue' },
   { path: 'vue/editor', slug: 'editor', kind: 'api', group: 'vue' },
@@ -72,8 +74,8 @@ const PACKAGES: PackageConfig[] = [
 
 function toKebabCase(str: string): string {
   return str
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+    .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replaceAll(/([A-Z])([A-Z][a-z])/g, '$1-$2')
     .toLowerCase();
 }
 
@@ -375,7 +377,7 @@ function extractTypeAlias(typeAlias: TypeAliasDeclaration, sourceFilePath: strin
   };
 }
 
-function collectExportedItems(sourceFile: SourceFile, entryPoint: string, visited: Set<string> = new Set()): ItemMeta[] {
+function collectExportedItems(sourceFile: SourceFile, entryPoint: string, visited = new Set<string>()): ItemMeta[] {
   const filePath = sourceFile.getFilePath();
   if (visited.has(filePath)) return [];
   visited.add(filePath);
@@ -656,7 +658,7 @@ function readPartOrder(indexPath: string): string[] {
   if (!existsSync(indexPath)) return [];
   const src = readFileSync(indexPath, 'utf-8');
   const order: string[] = [];
-  const re = /export\s*\{\s*default\s+as\s+(\w+)\s*\}\s*from\s*['"]\.\/([\w.-]+)\.vue['"]/g;
+  const re = /export\s*\{\s*default\s+as\s+(\w+)\s*\}\s*from\s*['"]\.\/[\w.-]+\.vue['"]/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(src)) !== null) order.push(m[1]!);
   return order;
@@ -751,7 +753,7 @@ function resolveGuideFiles(pkgDir: string, patterns: string[]): string[] {
 }
 
 function titleFromMarkdown(md: string, fallback: string): string {
-  const m = md.match(/^\s*#\s+(.+)$/m);
+  const m = md.match(/^\s*#\s+(\S.*)$/m);
   return m ? m[1]!.trim() : fallback;
 }
 
@@ -783,6 +785,65 @@ function buildGuideSections(pkgDir: string, patterns: string[], pkgDescription: 
   return sections;
 }
 
+// ── Hand-authored .vue doc sections ─────────────────────────────────────────────
+
+/** Read an optional `<!-- key: value -->` directive from a doc SFC. */
+function readDocDirective(src: string, key: string): string | undefined {
+  const m = src.match(new RegExp(`<!--\\s*${key}\\s*:\\s*([^]*?)\\s*-->`));
+  return m ? m[1]!.trim() : undefined;
+}
+
+function humanizeTitle(slug: string): string {
+  return slug
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+/**
+ * Discover hand-authored documentation pages from `<pkg>/docs/*.vue`.
+ *  - `intro.vue` becomes the package landing (isIntro, sorted first).
+ *  - Other files are ordered by a `<!-- order: N -->` directive or a numeric
+ *    filename prefix (`02-concepts.vue`); titles come from `<!-- title: … -->`
+ *    or the humanized filename.
+ */
+function buildDocSections(pkgDir: string): DocSection[] {
+  const docsDir = resolve(pkgDir, 'docs');
+  if (!existsSync(docsDir)) return [];
+
+  const sections: DocSection[] = [];
+  for (const file of readdirSync(docsDir)) {
+    if (!file.endsWith('.vue')) continue;
+
+    const full = resolve(docsDir, file);
+    const src = readFileSync(full, 'utf-8');
+    const base = file.replace(/\.vue$/, '');
+    const isIntro = base === 'intro';
+
+    // Optional numeric prefix on the filename, e.g. "02-concepts" or "02.concepts".
+    const prefixed = base.match(/^(\d+)[-.](.+)$/);
+    const rawName = prefixed ? prefixed[2]! : base;
+
+    const orderDirective = readDocDirective(src, 'order');
+    const order = isIntro
+      ? -1
+      : orderDirective !== undefined
+        ? Number(orderDirective)
+        : prefixed
+          ? Number(prefixed[1])
+          : 100;
+
+    const slug = isIntro ? 'introduction' : slugify(rawName);
+    const title = readDocDirective(src, 'title')
+      ?? (isIntro ? 'Introduction' : humanizeTitle(rawName));
+
+    sections.push({ title, slug, order, isIntro, sourcePath: relative(ROOT, full) });
+  }
+
+  return sections.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+}
+
 // ── Package Extraction ─────────────────────────────────────────────────────────
 
 function extractPackage(config: PackageConfig): PackageMeta | null {
@@ -807,6 +868,7 @@ function extractPackage(config: PackageConfig): PackageMeta | null {
     categories: [],
     components: [],
     sections: [],
+    docs: buildDocSections(pkgDir),
   };
 
   if (config.kind === 'api') {

@@ -65,6 +65,17 @@ export default defineNuxtModule({
     // Register the alias for the virtual module
     nuxt.options.alias['#docs/metadata'] = resolve(nuxt.options.buildDir, 'docs-metadata');
 
+    // Expose the same metadata to Nitro so server routes (e.g. the MCP endpoint
+    // at `server/routes/mcp.post.ts`) can import it without re-running extraction.
+    nuxt.hook('nitro:config', (nitroConfig: { virtual?: Record<string, string | (() => string)> }) => {
+      nitroConfig.virtual ??= {};
+      // Base64-encode the payload so Nitro's build-time text replacements (e.g.
+      // `typeof window` → "undefined") can't corrupt source snippets embedded in
+      // the metadata JSON (demo sources, examples, type signatures).
+      const encoded = Buffer.from(JSON.stringify(metadata), 'utf8').toString('base64');
+      nitroConfig.virtual['#docs/server-metadata'] = () => `export default JSON.parse(Buffer.from(${JSON.stringify(encoded)}, 'base64').toString('utf8'))`;
+    });
+
     // Add types reference
     addTemplate({
       filename: 'docs-metadata-types.d.ts',
@@ -88,6 +99,11 @@ declare module '#docs/metadata' {
 
       for (const pkg of metadata.packages) {
         routes.add(`/${pkg.slug}`);
+
+        // Hand-authored doc sections (any kind). The intro renders on the
+        // package landing, so only non-intro sections get their own route.
+        for (const section of pkg.docs)
+          if (!section.isIntro) routes.add(`/${pkg.slug}/${section.slug}`);
 
         if (pkg.kind === 'api') {
           for (const category of pkg.categories)
@@ -113,6 +129,14 @@ declare module '#docs/metadata' {
       write: true,
       getContents: () => {
         const entries: string[] = [];
+        // An item re-exported from several entry points yields the same key more
+        // than once; dedupe so the generated object literal has no duplicate keys.
+        const seen = new Set<string>();
+        const add = (key: string, demoPath: string) => {
+          if (seen.has(key)) return;
+          seen.add(key);
+          entries.push(`  '${key}': defineAsyncComponent(() => import('${demoPath}')),`);
+        };
 
         for (const pkg of metadata.packages) {
           // api items
@@ -120,7 +144,7 @@ declare module '#docs/metadata' {
             for (const item of cat.items) {
               if (item.hasDemo) {
                 const demoPath = resolve(ROOT, dirname(item.sourcePath), 'demo.vue');
-                entries.push(`  '${pkg.slug}/${item.slug}': defineAsyncComponent(() => import('${demoPath}')),`);
+                add(`${pkg.slug}/${item.slug}`, demoPath);
               }
             }
           }
@@ -128,7 +152,7 @@ declare module '#docs/metadata' {
           for (const component of pkg.components) {
             if (component.hasDemo) {
               const demoPath = resolve(ROOT, component.sourcePath, 'demo.vue');
-              entries.push(`  '${pkg.slug}/${component.slug}': defineAsyncComponent(() => import('${demoPath}')),`);
+              add(`${pkg.slug}/${component.slug}`, demoPath);
             }
           }
         }
@@ -158,6 +182,48 @@ declare module '#docs/metadata' {
 import type { Component } from 'vue';
 declare module '#docs/demos' {
   export const demos: Record<string, Component>;
+}
+`,
+    });
+
+    // Generate hand-authored doc-section import map (`<pkg>/docs/*.vue`)
+    addTemplate({
+      filename: 'docs-sections.ts',
+      write: true,
+      getContents: () => {
+        const entries: string[] = [];
+        for (const pkg of metadata.packages) {
+          for (const section of pkg.docs) {
+            const sectionPath = resolve(ROOT, section.sourcePath);
+            entries.push(`  '${pkg.slug}/${section.slug}': defineAsyncComponent(() => import('${sectionPath}')),`);
+          }
+        }
+
+        if (entries.length === 0) {
+          return `import type { Component } from 'vue';\nexport const sections: Record<string, Component> = {};\n`;
+        }
+
+        return [
+          `import { defineAsyncComponent } from 'vue';`,
+          `import type { Component } from 'vue';`,
+          ``,
+          `export const sections: Record<string, Component> = {`,
+          ...entries,
+          `};`,
+          ``,
+        ].join('\n');
+      },
+    });
+
+    nuxt.options.alias['#docs/sections'] = resolve(nuxt.options.buildDir, 'docs-sections');
+
+    addTemplate({
+      filename: 'docs-sections-types.d.ts',
+      write: true,
+      getContents: () => `
+import type { Component } from 'vue';
+declare module '#docs/sections' {
+  export const sections: Record<string, Component>;
 }
 `,
     });

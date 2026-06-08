@@ -20,8 +20,18 @@ export default defineNuxtConfig({
 
   ssr: true,
 
+  // Dev-only: the file-based payload cache collides on parent+child routes that
+  // share a segment (e.g. `/vue` is written as a file while `/vue/*` needs `vue`
+  // to be a directory → ENOTDIR). Production prerender writes each route to its
+  // own dir, so payload extraction is left enabled there.
+  $development: {
+    experimental: { payloadExtraction: false },
+  },
+
   routeRules: {
     '/**': { prerender: true },
+    // The MCP endpoint is a dynamic POST handler — never prerender it.
+    '/mcp': { prerender: false },
   },
 
   nitro: {

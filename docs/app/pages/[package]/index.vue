@@ -1,5 +1,7 @@
-<script setup lang="ts">const route = useRoute();
-const { getPackage, countEntries } = useDocs();
+<script setup lang="ts">import { sections } from '#docs/sections';
+
+const route = useRoute();
+const { getPackage, countEntries, getIntro } = useDocs();
 
 const slug = computed(() => route.params.package as string);
 const pkg = computed(() => getPackage(slug.value));
@@ -7,6 +9,10 @@ const pkg = computed(() => getPackage(slug.value));
 if (!pkg.value) {
   throw createError({ statusCode: 404, message: `Package "${slug.value}" not found` });
 }
+
+// Hand-authored intro (docs/intro.vue) renders as the package hero when present.
+const intro = computed(() => getIntro(pkg.value!));
+const introComponent = computed(() => intro.value ? sections[`${slug.value}/introduction`] ?? null : null);
 
 useHead({ title: `${pkg.value.name} — @robonen/tools` });
 
@@ -27,9 +33,14 @@ const otherSections = computed(() =>
 
 <template>
   <div v-if="pkg" class="max-w-3xl">
-    <!-- Header -->
-    <header class="mb-8 pb-8 border-b border-(--border)">
-      <div class="flex items-center gap-2.5 mb-2">
+    <!-- Hand-authored intro hero (docs/intro.vue) -->
+    <section v-if="introComponent" class="docs-section mb-12">
+      <component :is="introComponent" />
+    </section>
+
+    <!-- Auto header (shown only when there's no hand-authored intro) -->
+    <header v-else class="mb-8 pb-8 border-b border-(--border)">
+      <div class="flex items-center gap-2.5 mb-2 flex-wrap">
         <h1 class="font-mono text-2xl font-bold tracking-tight text-(--fg)">{{ pkg.name }}</h1>
         <DocsTag :label="`v${pkg.version}`" variant="neutral" />
       </div>
@@ -44,6 +55,11 @@ const otherSections = computed(() =>
       </div>
     </header>
 
+    <!-- When an intro replaces the header, label the auto-generated reference -->
+    <h2 v-if="introComponent && pkg.kind === 'api'" class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4 pt-2">
+      API Reference
+    </h2>
+
     <!-- API: categories of items -->
     <template v-if="pkg.kind === 'api'">
       <section v-for="category in pkg.categories" :key="category.slug" class="mb-10">
@@ -51,7 +67,7 @@ const otherSections = computed(() =>
           {{ category.name }}
           <span class="ml-1 text-(--fg-subtle) normal-case font-normal">· {{ category.items.length }}</span>
         </h2>
-        <div class="grid gap-2">
+        <div class="grid grid-cols-1 gap-2">
           <NuxtLink
             v-for="item in category.items"
             :key="item.slug"
@@ -81,7 +97,7 @@ const otherSections = computed(() =>
         <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4">
           All components <span class="normal-case font-normal">· {{ pkg.components.length }}</span>
         </h2>
-        <div class="grid gap-3 sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <NuxtLink
             v-for="c in pkg.components"
             :key="c.slug"
@@ -113,7 +129,7 @@ const otherSections = computed(() =>
       <DocsMarkdown v-if="overview" :source="overview.markdown" />
       <section v-if="otherSections.length > 0" class="mt-10 pt-8 border-t border-(--border)">
         <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4">Sections</h2>
-        <div class="grid gap-2 sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <NuxtLink
             v-for="s in otherSections"
             :key="s.slug"

@@ -1,4 +1,5 @@
-<script setup lang="ts">import type { Component } from 'vue';
+<script setup lang="ts">
+import type { Component } from 'vue';
 
 const props = defineProps<{
   component: Component;
@@ -18,9 +19,20 @@ watch(showSource, async (show) => {
 
 <template>
   <div class="rounded-xl border border-(--border) overflow-hidden">
-    <!-- Live demo -->
-    <div class="p-8 bg-(--bg-subtle) flex items-center justify-center min-h-32">
-      <component :is="component" />
+    <!-- Live demo — client-only: demos are interactive and use browser APIs,
+         so they must not be instantiated during SSR/prerender. -->
+    <div class="p-4 sm:p-8 bg-(--bg-subtle) flex items-center justify-center min-h-32">
+      <ClientOnly>
+        <component :is="component" />
+        <template #fallback>
+          <div class="flex items-center gap-2 text-sm text-(--fg-subtle)">
+            <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+            Loading demo…
+          </div>
+        </template>
+      </ClientOnly>
     </div>
 
     <!-- Source toggle bar -->

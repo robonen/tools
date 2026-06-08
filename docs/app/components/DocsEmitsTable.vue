@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <div v-if="emits.length > 0" class="overflow-hidden rounded-xl border border-(--border)">
+  <div v-if="emits.length > 0" class="overflow-x-auto rounded-xl border border-(--border)">
     <table class="w-full text-sm border-collapse">
       <thead>
         <tr class="bg-(--bg-subtle) text-left">

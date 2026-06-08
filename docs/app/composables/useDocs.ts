@@ -2,6 +2,7 @@ import metadata from '#docs/metadata';
 import type {
   CategoryMeta,
   ComponentMeta,
+  DocSection,
   DocsMetadata,
   GuideSection,
   ItemMeta,
@@ -13,7 +14,8 @@ import type {
 export type DocEntry
   = | { kind: 'api'; pkg: PackageMeta; category: CategoryMeta; item: ItemMeta }
     | { kind: 'components'; pkg: PackageMeta; component: ComponentMeta }
-    | { kind: 'guide'; pkg: PackageMeta; section: GuideSection };
+    | { kind: 'guide'; pkg: PackageMeta; section: GuideSection }
+    | { kind: 'doc'; pkg: PackageMeta; section: DocSection };
 
 export interface SearchResult {
   pkg: PackageMeta;
@@ -62,10 +64,24 @@ export function useDocs() {
     return pkg.sections.length;
   }
 
+  /** The hand-authored intro section for a package, if any. */
+  function getIntro(pkg: PackageMeta): DocSection | undefined {
+    return pkg.docs.find(s => s.isIntro);
+  }
+
+  /** Non-intro doc sections (the "Guide" list shown in the sidebar). */
+  function getDocSections(pkg: PackageMeta): DocSection[] {
+    return pkg.docs.filter(s => !s.isIntro);
+  }
+
   /** Resolve any `/:package/:slug` route to a normalised entry. */
   function resolveEntry(packageSlug: string, slug: string): DocEntry | undefined {
     const pkg = getPackage(packageSlug);
     if (!pkg) return undefined;
+
+    // Hand-authored doc sections take precedence over auto-generated leaves.
+    const docSection = pkg.docs.find(s => !s.isIntro && s.slug === slug);
+    if (docSection) return { kind: 'doc', pkg, section: docSection };
 
     if (pkg.kind === 'api') {
       for (const category of pkg.categories) {
@@ -139,6 +155,8 @@ export function useDocs() {
     countEntries,
     resolveEntry,
     firstEntrySlug,
+    getIntro,
+    getDocSections,
     search,
     getTotalItems,
   };

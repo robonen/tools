@@ -39,7 +39,7 @@ useHead({ title: '@robonen/tools — Documentation' });
       <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4">
         {{ grp.label }}
       </h2>
-      <div class="grid gap-3 sm:grid-cols-2">
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <NuxtLink
           v-for="pkg in grp.packages"
           :key="pkg.slug"

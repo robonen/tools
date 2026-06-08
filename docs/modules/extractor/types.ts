@@ -46,6 +46,14 @@ export interface PackageMeta {
   // ── kind: 'guide' ──────────────────────────────────────────────────────────
   /** Prose sections rendered from Markdown (kind === 'guide') */
   sections: GuideSection[];
+
+  // ── any kind ───────────────────────────────────────────────────────────────
+  /**
+   * Hand-authored `.vue` documentation pages discovered from `<pkg>/docs/*.vue`.
+   * Independent of `kind` — an `api` package can still ship a rich intro and
+   * several prose sections alongside its auto-generated reference.
+   */
+  docs: DocSection[];
 }
 
 // ── API kind ─────────────────────────────────────────────────────────────────
@@ -150,6 +158,21 @@ export interface GuideSection {
   slug: string;
   /** Raw Markdown content (rendered client-side) */
   markdown: string;
+}
+
+// ── Hand-authored .vue doc sections (any kind) ──────────────────────────────────
+
+export interface DocSection {
+  /** Display title (from a `<!-- title: … -->` comment or the filename). */
+  title: string;
+  /** URL-friendly slug, e.g. "introduction" or "concepts". */
+  slug: string;
+  /** Sort order (from a `<!-- order: N -->` comment or a numeric filename prefix). */
+  order: number;
+  /** `true` for `docs/intro.vue` — rendered as the package landing page. */
+  isIntro: boolean;
+  /** Relative path to the `.vue` file from repo root (for the GitHub source link). */
+  sourcePath: string;
 }
 
 // ── Shared leaf types ──────────────────────────────────────────────────────────

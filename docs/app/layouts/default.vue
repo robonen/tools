@@ -1,4 +1,4 @@
-<script setup lang="ts">const { getGroupedPackages, getPackage } = useDocs();
+<script setup lang="ts">const { getGroupedPackages, getPackage, getIntro, getDocSections } = useDocs();
 const groups = getGroupedPackages();
 
 const route = useRoute();
@@ -91,6 +91,39 @@ watch(() => route.path, () => {
 
                 <!-- Expanded tree for the current package -->
                 <div v-if="currentPackageSlug === pkg.slug && currentPackage" class="mt-1 mb-2 ml-2 pl-3 border-l border-(--border)">
+                  <!-- Hand-authored guide sections (intro + prose pages) -->
+                  <div v-if="currentPackage.docs.length" class="mb-2">
+                    <div class="text-[11px] font-medium text-(--fg-subtle) py-1 px-1">Guide</div>
+                    <ul>
+                      <li v-if="getIntro(currentPackage)">
+                        <NuxtLink
+                          :to="`/${pkg.slug}`"
+                          :class="[
+                            'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
+                            route.path === `/${pkg.slug}`
+                              ? 'text-(--accent-text) bg-(--accent-subtle) font-medium'
+                              : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
+                          ]"
+                        >
+                          Introduction
+                        </NuxtLink>
+                      </li>
+                      <li v-for="s in getDocSections(currentPackage)" :key="s.slug">
+                        <NuxtLink
+                          :to="`/${pkg.slug}/${s.slug}`"
+                          :class="[
+                            'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
+                            isActive(pkg.slug, s.slug)
+                              ? 'text-(--accent-text) bg-(--accent-subtle) font-medium'
+                              : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
+                          ]"
+                        >
+                          {{ s.title }}
+                        </NuxtLink>
+                      </li>
+                    </ul>
+                  </div>
+
                   <!-- api -->
                   <template v-if="currentPackage.kind === 'api'">
                     <div v-for="cat in currentPackage.categories" :key="cat.slug" class="mb-2">

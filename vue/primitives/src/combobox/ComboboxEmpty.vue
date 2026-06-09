@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Fallback content shown when the current search term matches no items. Renders only when
+ * the filtered count is zero, unless `always` is set.
+ */
 export interface ComboboxEmptyProps extends PrimitiveProps {
   /** Render even when items exist but none are filtered out. */
   always?: boolean;

@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A text input that renders the selected date and, when `editable`, lets users
+ * type a date that is parsed and committed back to the picker on blur/Enter.
+ * Aliased as `DatePickerInput`; defaults to a read-only display of the value.
+ */
 export interface DatePickerFieldProps extends PrimitiveProps {
   /** Allow typing into the field. @default false (read-only display) */
   editable?: boolean;

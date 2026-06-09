@@ -1,7 +1,14 @@
 <script lang="ts">
 import type { MenuItemImplEmits, MenuItemImplProps } from './MenuItemImpl.vue';
 
+/**
+ * A mutually-exclusive menu item rendered with `role="menuitemradio"`. Selecting
+ * it sets the enclosing MenuRadioGroup's value to this item's `value`. Pair it
+ * with MenuItemIndicator to show which option is active. Must be used inside a
+ * MenuRadioGroup.
+ */
 export interface MenuRadioItemProps extends MenuItemImplProps {
+  /** The unique value this item represents within its MenuRadioGroup. */
   value: string;
 }
 export type MenuRadioItemEmits = MenuItemImplEmits;

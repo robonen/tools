@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The scrollable list container (`role="listbox"`) that wraps the items. It
+ * receives focus, owns the keyboard handlers (navigation, enter, type-ahead),
+ * and exposes the collection of items to the root.
+ */
 export interface ListboxContentProps extends PrimitiveProps {}
 </script>
 

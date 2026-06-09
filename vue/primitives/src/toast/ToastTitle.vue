@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The toast's heading. Renders the short, prominent line that names the
+ * notification, placed inside a `ToastRoot`.
+ */
 export interface ToastTitleProps extends PrimitiveProps {}
 </script>
 

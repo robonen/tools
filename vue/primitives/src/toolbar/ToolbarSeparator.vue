@@ -1,5 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+
+/**
+ * A visual divider that delimits groups of controls inside a `ToolbarRoot`,
+ * exposed as `role="separator"`. When `orientation` is omitted it inherits the
+ * opposite of the toolbar's orientation (a horizontal toolbar gets a vertical
+ * separator), so it sits correctly across the line of items by default.
+ */
 export interface ToolbarSeparatorProps extends PrimitiveProps {
   orientation?: 'horizontal' | 'vertical';
 

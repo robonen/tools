@@ -1,4 +1,9 @@
 <script lang="ts">
+/**
+ * An optional visual cue (e.g. an arrow or underline) that tracks the currently active
+ * trigger. It teleports into the `NavigationMenuList` wrapper and exposes the active
+ * trigger's size and position as CSS variables for animated highlighting.
+ */
 export interface NavigationMenuIndicatorProps {
   forceMount?: boolean;
 }

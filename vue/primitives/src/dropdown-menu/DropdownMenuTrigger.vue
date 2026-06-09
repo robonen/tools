@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button that toggles the menu open on click, Enter, Space, or the arrow
+ * keys, and serves as the anchor the content is positioned against. Renders a
+ * `<button>` by default and wires up the `aria-haspopup`/`aria-expanded`
+ * accessibility attributes.
+ */
 export interface DropdownMenuTriggerProps extends PrimitiveProps {
   disabled?: boolean;
 }

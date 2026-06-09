@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The focusable, clickable day button inside a `CalendarCell`. Selects its
+ * `day` on click/Enter/Space, drives roving focus and full arrow-key /
+ * Home-End / PageUp-Down keyboard navigation (paging the month when focus
+ * crosses the visible range), and exposes day state through its slot.
+ */
 export interface CalendarCellTriggerProps extends PrimitiveProps {
   /** The day this trigger represents. */
   day: Date;

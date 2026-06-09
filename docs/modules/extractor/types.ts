@@ -98,6 +98,8 @@ export interface ItemMeta {
   demoSource: string;
   /** Whether an index.test.ts file exists alongside */
   hasTests: boolean;
+  /** Statement-coverage percentage for the source file, if coverage data exists */
+  coverage?: number | null;
   /** Related types/interfaces co-located in the same module directory */
   relatedTypes: ItemMeta[];
   /** Relative path to the source file from repo root */
@@ -188,6 +190,11 @@ export interface ParamMeta {
 export interface ReturnMeta {
   type: string;
   description: string;
+  /**
+   * Properties of the returned object, when the return type is one of the
+   * package's own interfaces — rendered as a table like parameters.
+   */
+  properties?: PropertyMeta[];
 }
 
 export interface TypeParamMeta {

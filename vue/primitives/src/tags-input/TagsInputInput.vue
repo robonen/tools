@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The text field where new tags are typed. Commits the current value on Enter,
+ * on the configured delimiter, and (when enabled) on paste, Tab, or blur, and
+ * forwards Backspace/arrow keys to the root for navigating the tag strip.
+ */
 export interface TagsInputInputProps extends PrimitiveProps {
   /** Placeholder text. */
   placeholder?: string;

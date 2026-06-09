@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { MenuContentEmits, MenuContentProps } from '../menu';
 
+/**
+ * The floating surface that holds the menu items, positioned relative to the
+ * trigger. Handles focus management, typeahead, and dismissal on outside click
+ * or Escape; render it inside a portal so it escapes overflow clipping.
+ */
 export interface DropdownMenuContentProps extends MenuContentProps {}
 export type DropdownMenuContentEmits = MenuContentEmits;
 </script>

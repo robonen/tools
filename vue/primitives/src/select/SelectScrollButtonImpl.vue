@@ -1,7 +1,13 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Shared implementation behind the up/down scroll buttons: auto-scrolls the
+ * viewport in `direction` while the pointer hovers it. Internal — use
+ * `SelectScrollUpButton` / `SelectScrollDownButton` instead.
+ */
 export interface SelectScrollButtonImplProps extends PrimitiveProps {
+  /** Scroll direction: `-1` scrolls up, `1` scrolls down. */
   direction: 1 | -1;
 }
 </script>

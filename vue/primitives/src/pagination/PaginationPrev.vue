@@ -1,11 +1,16 @@
 <script lang="ts">
-import type { PrimitiveProps } from '@/primitive';
+import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button that moves to the previous page. Renders as a `<button>`, is
+ * automatically disabled on the first page (or while the pagination is
+ * disabled), and is labelled "Previous Page" for assistive technology.
+ */
 export interface PaginationPrevProps extends PrimitiveProps {}
 </script>
 
 <script setup lang="ts">
-import { Primitive } from '@/primitive';
+import { Primitive } from '../primitive';
 import { computed } from 'vue';
 import { injectPaginationContext } from './context';
 import { useForwardExpose } from '@robonen/vue';

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Groups related items under a shared label (`role="group"`). Wraps a set of
+ * `ListboxItem`s and is labelled by its `ListboxGroupLabel` via `aria-labelledby`.
+ */
 export interface ListboxGroupProps extends PrimitiveProps {}
 </script>
 

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Button that discards the draft, restores the committed value, and leaves edit
+ * mode. It is only shown while editing.
+ */
 export interface EditableCancelTriggerProps extends PrimitiveProps {}
 </script>
 

@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { DialogContentEmits, DialogContentProps } from '../dialog';
 
+/**
+ * The container for the alert's content, rendered into the portal with
+ * `role="alertdialog"`. Hosts the Title, Description, Cancel, and Action parts,
+ * moves focus to Cancel on open, and disables dismissal via outside clicks or
+ * loss of focus so the alert can only be resolved by an explicit choice.
+ */
 export interface AlertDialogContentProps extends Omit<DialogContentProps, 'role'> {}
 export type AlertDialogContentEmits = DialogContentEmits;
 </script>

@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { MenuCheckboxItemEmits, MenuCheckboxItemProps } from '../menu';
 
+/**
+ * A menu item that toggles a boolean (or indeterminate) state. Bind
+ * `v-model:checked` to track the value; pair it with MenubarItemIndicator to
+ * render a check mark when active.
+ */
 export interface MenubarCheckboxItemProps extends MenuCheckboxItemProps {}
 export type MenubarCheckboxItemEmits = MenuCheckboxItemEmits;
 </script>

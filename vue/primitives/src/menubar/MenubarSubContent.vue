@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuSubContentEmits, MenuSubContentProps } from '../menu';
 
+/**
+ * The floating surface for a submenu's items, positioned alongside its
+ * MenubarSubTrigger. Place it inside a MenubarSub.
+ */
 export interface MenubarSubContentProps extends MenuSubContentProps {}
 export type MenubarSubContentEmits = MenuSubContentEmits;
 </script>

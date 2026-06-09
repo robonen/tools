@@ -118,10 +118,17 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
             <DocsBadge :kind="entry.item.kind" size="md" />
             <h1 class="min-w-0 break-words text-2xl font-bold font-mono tracking-tight text-(--fg)">{{ entry.item.name }}</h1>
             <DocsTag v-if="entry.item.since" :label="`v${entry.item.since}`" variant="neutral" />
-            <DocsTag v-if="entry.item.hasTests" label="tested" variant="test" />
+            <DocsTag
+              v-if="entry.item.hasTests"
+              :label="typeof entry.item.coverage === 'number' ? `tested · ${entry.item.coverage}%` : 'tested'"
+              variant="test"
+              :title="typeof entry.item.coverage === 'number' ? `${entry.item.coverage}% statement coverage` : undefined"
+            />
             <DocsTag v-if="entry.item.hasDemo" label="demo" variant="demo" />
           </div>
-          <p v-if="entry.item.description" class="text-(--fg-muted) text-[15px] leading-relaxed">{{ entry.item.description }}</p>
+          <p v-if="entry.item.description" class="text-(--fg-muted) text-[15px] leading-relaxed">
+            <DocsText :text="entry.item.description" />
+          </p>
           <div class="flex items-center gap-4 mt-4 text-sm">
             <a :href="ghUrl(entry.item.sourcePath)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-(--fg-subtle) hover:text-(--fg) transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
@@ -143,7 +150,7 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
 
         <section v-if="entry.item.hasDemo && demoComponent" id="demo" class="mb-8 scroll-mt-20">
           <h2 :class="sectionTitle">Demo</h2>
-          <DocsDemo :component="demoComponent" :source="entry.item.demoSource" />
+          <DocsDemo :component="demoComponent" :source-key="`${packageSlug}/${utilitySlug}`" />
         </section>
 
         <section v-if="entry.item.signatures.length" id="signature" class="mb-8 scroll-mt-20">
@@ -171,10 +178,11 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
 
         <section v-if="entry.item.returns" id="returns" class="mb-8 scroll-mt-20">
           <h2 :class="sectionTitle">Returns</h2>
-          <div class="flex items-baseline gap-2 text-sm flex-wrap">
+          <div class="flex items-baseline gap-2 text-sm flex-wrap" :class="entry.item.returns.properties?.length ? 'mb-3' : ''">
             <code class="font-mono bg-(--bg-inset) border border-(--border) px-2 py-1 rounded text-xs wrap-break-word">{{ entry.item.returns.type }}</code>
-            <span v-if="entry.item.returns.description" class="text-(--fg-muted)">{{ entry.item.returns.description }}</span>
+            <DocsText v-if="entry.item.returns.description" :text="entry.item.returns.description" class="text-(--fg-muted)" />
           </div>
+          <DocsPropsTable v-if="entry.item.returns.properties?.length" :properties="entry.item.returns.properties" />
         </section>
 
         <section v-if="entry.item.properties.length" id="properties" class="mb-8 scroll-mt-20">
@@ -195,7 +203,9 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
                 <DocsBadge :kind="rt.kind" size="sm" />
                 <h3 class="font-mono font-semibold text-sm text-(--fg)">{{ rt.name }}</h3>
               </div>
-              <p v-if="rt.description" class="text-sm text-(--fg-muted) mb-3">{{ rt.description }}</p>
+              <p v-if="rt.description" class="text-sm text-(--fg-muted) mb-3">
+                <DocsText :text="rt.description" />
+              </p>
               <DocsCode v-if="rt.signatures.length" :code="rt.signatures[0]!" />
               <DocsPropsTable v-if="rt.properties.length" :properties="rt.properties" class="mt-3" />
             </div>
@@ -211,7 +221,9 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
             <h1 class="text-2xl font-bold tracking-tight text-(--fg)">{{ entry.component.name }}</h1>
             <DocsTag :label="`${entry.component.parts.length} parts`" variant="neutral" />
           </div>
-          <p v-if="entry.component.description" class="text-(--fg-muted) text-[15px] leading-relaxed">{{ entry.component.description }}</p>
+          <p v-if="entry.component.description" class="text-(--fg-muted) text-[15px] leading-relaxed">
+            <DocsText :text="entry.component.description" />
+          </p>
           <div class="flex items-center gap-4 mt-4 text-sm">
             <a :href="ghUrl(entry.component.sourcePath)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-(--fg-subtle) hover:text-(--fg) transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
@@ -222,7 +234,7 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
 
         <section v-if="entry.component.hasDemo && demoComponent" class="mb-10">
           <h2 :class="sectionTitle">Demo</h2>
-          <DocsDemo :component="demoComponent" :source="entry.component.demoSource" />
+          <DocsDemo :component="demoComponent" :source-key="`${packageSlug}/${utilitySlug}`" />
         </section>
 
         <DocsComponentAnatomy :component="entry.component" :package-name="pkg.name" />

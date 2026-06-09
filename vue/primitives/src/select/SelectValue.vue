@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Displays the text of the currently selected option inside the trigger, or the
+ * `placeholder` when nothing is selected. Renders into a non-interactive span so
+ * pointer events fall through to the trigger.
+ */
 export interface SelectValueProps extends PrimitiveProps {
   /** Text shown when no option is selected. */
   placeholder?: string;

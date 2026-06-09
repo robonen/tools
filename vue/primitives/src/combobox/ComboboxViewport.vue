@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The scrollable region inside ComboboxContent that holds the items. Provides the overflow
+ * container that keeps the highlighted item scrolled into view.
+ */
 export interface ComboboxViewportProps extends PrimitiveProps {}
 </script>
 

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PopperArrowProps } from '../popper';
 
+/**
+ * An optional arrow rendered inside `DatePickerContent` that points back at the
+ * trigger/anchor. Purely decorative; place it as a child of the content.
+ */
 export interface DatePickerArrowProps extends PopperArrowProps {}
 </script>
 

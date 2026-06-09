@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { NavigationMenuContentImplEmits, NavigationMenuContentImplProps } from './NavigationMenuContentImpl.vue';
 
+/**
+ * The panel revealed when its item's trigger is active. Handles mount/unmount via
+ * `Presence`, teleports into the shared `NavigationMenuViewport` when one is present
+ * (otherwise renders inline), and keeps content alive briefly during viewport
+ * transitions. Place one per `NavigationMenuItem` that has a trigger.
+ */
 export interface NavigationMenuContentProps extends NavigationMenuContentImplProps {
   /** Keep mounted regardless of `present`. Useful for transition libraries. */
   forceMount?: boolean;

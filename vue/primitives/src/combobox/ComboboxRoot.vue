@@ -2,6 +2,13 @@
 import type { Direction } from '../config-provider';
 import type { AcceptableValue, ComboboxFilterFunction, ComboboxFilterItem } from './utils';
 
+/**
+ * An autocomplete / typeahead input that filters a list of options as the user types.
+ * Combine a text input with a popup listbox, supporting single or multiple selection,
+ * custom filtering, and full keyboard navigation. Reach for it when users must pick from
+ * a large or searchable set of options; for a small fixed list a plain Select is simpler.
+ * Wraps everything in a Popper and provides shared state to every other Combobox part.
+ */
 export interface ComboboxRootProps<T extends AcceptableValue = AcceptableValue> {
   /** Controlled selected value. Use `v-model`. */
   modelValue?: T | T[];
@@ -68,8 +75,6 @@ const {
   displayValue,
   by,
 } = defineProps<ComboboxRootProps<T>>();
-
-const emit = defineEmits<ComboboxRootEmits<T>>();
 
 const config = useConfig();
 const direction = computed(() => dir ?? config.dir.value);
@@ -203,7 +208,6 @@ function isSelected(v: T): boolean {
 
 function commitValue(next: T | T[] | undefined) {
   value.value = next;
-  emit('update:modelValue', next);
 }
 
 function onValueChange(v: T) {

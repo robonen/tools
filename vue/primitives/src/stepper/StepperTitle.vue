@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The accessible label for a step. Its `id` is wired to the trigger's
+ * `aria-labelledby`, so screen readers announce it when the trigger is focused.
+ */
 export interface StepperTitleProps extends PrimitiveProps {}
 </script>
 

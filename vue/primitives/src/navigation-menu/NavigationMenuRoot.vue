@@ -2,6 +2,14 @@
 import type { Direction } from '../config-provider';
 import type { Orientation } from '../roving-focus';
 
+/**
+ * A collection of navigation links and disclosure menus, typically used for the
+ * primary site header. `NavigationMenuRoot` owns the open state and hover/click
+ * timing for the whole menu, rendering as a `<nav>` landmark and providing context
+ * to every list, item, trigger, content, viewport, and indicator beneath it. Reach
+ * for it over a generic dropdown when you need keyboard-accessible, animatable
+ * mega-menu panels that share a single active state.
+ */
 export interface NavigationMenuRootProps {
   /** Uncontrolled initial value. */
   defaultValue?: string;

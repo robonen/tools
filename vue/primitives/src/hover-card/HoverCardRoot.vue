@@ -1,4 +1,16 @@
 <script lang="ts">
+/**
+ * A rich, floating card that previews related content when the pointer hovers
+ * (or keyboard focus lands) on a trigger, after a short open delay. Built on
+ * Popper for collision-aware positioning, with a grace area so the pointer can
+ * travel from the trigger to the card without it closing.
+ *
+ * Use it for sighted-user preview affordances — a user profile on an @mention,
+ * a link preview, or a glance at a record — never for essential information,
+ * since it is not exposed to touch or assistive technology the way a tooltip is.
+ * The root owns open state and provides context to every part; bind
+ * `v-model:open` (or listen to `update:open`) to observe or control it.
+ */
 export interface HoverCardRootProps {
   /** Controlled open state. Bind with `v-model:open`. */
   open?: boolean;

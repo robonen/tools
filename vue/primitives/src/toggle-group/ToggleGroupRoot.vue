@@ -3,9 +3,18 @@ import type { PrimitiveProps } from '../primitive';
 import type { RovingDirection } from '../utils/roving-focus';
 import type { ToggleGroupType } from './context';
 
+/**
+ * A set of two-state toggle buttons that behave as one control, with full
+ * keyboard roving focus (arrow keys move, Home/End jump to ends). Set `type`
+ * to `'single'` for mutually exclusive options (like a segmented control) or
+ * `'multiple'` to let several be pressed at once (like a text-formatting bar).
+ * This is the container and state owner: it tracks the pressed value(s)
+ * (controlled via `v-model` or uncontrolled via `defaultValue`) and provides
+ * context to each `ToggleGroupItem`. Reach for it to group related toggles
+ * such as text alignment, view modes, or formatting options.
+ */
 export interface ToggleGroupRootProps extends PrimitiveProps {
   type?: ToggleGroupType;
-  modelValue?: string | string[];
   defaultValue?: string | string[];
   disabled?: boolean;
   orientation?: 'horizontal' | 'vertical';
@@ -15,13 +24,12 @@ export interface ToggleGroupRootProps extends PrimitiveProps {
 }
 
 export interface ToggleGroupRootEmits {
-  'update:modelValue': [value: string | string[] | undefined];
   valueChange: [value: string | string[]];
 }
 </script>
 
 <script setup lang="ts">
-import { computed, ref, toRef, watch } from 'vue';
+import { computed, toRef } from 'vue';
 import { resolveNextIndex, rovingKeyToAction } from '../utils/roving-focus';
 import { useCollectionProvider } from '../collection';
 import { useForwardExpose } from '@robonen/vue';
@@ -35,7 +43,6 @@ const {
   dir = 'ltr',
   loop = true,
   rovingFocus = true,
-  modelValue,
   defaultValue,
   as = 'div',
 } = defineProps<ToggleGroupRootProps>();
@@ -44,32 +51,29 @@ const { forwardRef } = useForwardExpose();
 
 const emit = defineEmits<ToggleGroupRootEmits>();
 
+const model = defineModel<string | string[] | undefined>({ default: undefined });
+
 function normalize(v: string | string[] | undefined): string[] {
   if (v === undefined) return [];
   if (Array.isArray(v)) return v.slice();
   return [v];
 }
 
-const localValue = ref<string[]>(
-  normalize(modelValue).length > 0 ? normalize(modelValue) : normalize(defaultValue),
-);
+// Seed the uncontrolled default once; defineModel owns state thereafter.
+if (model.value === undefined && defaultValue !== undefined)
+  model.value = defaultValue;
 
-watch(() => modelValue, (v) => {
-  if (v === undefined) return;
-  const n = normalize(v);
-  if (n.length === localValue.value.length && n.every((x, i) => x === localValue.value[i])) return;
-  localValue.value = n;
-});
+// Normalized string[] view of the public model (string | string[] | undefined).
+const localValue = computed<string[]>(() => normalize(model.value));
 
 function emitValue(next: string[]): void {
-  localValue.value = next;
   if (type === 'single') {
     const v = next[0];
-    emit('update:modelValue', v);
+    model.value = v;
     emit('valueChange', v ?? '');
   }
   else {
-    emit('update:modelValue', next);
+    model.value = next;
     emit('valueChange', next);
   }
 }

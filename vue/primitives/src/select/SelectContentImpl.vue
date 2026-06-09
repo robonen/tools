@@ -3,6 +3,12 @@ import type { DismissableLayerEmits } from '../dismissable-layer';
 import type { FocusScopeEmits } from '../focus-scope';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The mounted body of the content panel: it traps focus, dismisses on outside
+ * pointer/escape, locks body scroll, and handles keyboard navigation and
+ * type-ahead. Rendered by `SelectContent` once open — prefer using
+ * `SelectContent` rather than this part directly.
+ */
 export interface SelectContentImplProps extends PrimitiveProps {
   /** Position mode. @default 'item-aligned' */
   position?: 'item-aligned' | 'popper';

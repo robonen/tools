@@ -1,12 +1,18 @@
 <script lang="ts">
-import type { PrimitiveProps } from '@/primitive';
+import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The container that computes the visible page sequence (page numbers and
+ * ellipsis placeholders) from the root context. Its default slot exposes the
+ * resolved `items` array so you can render a `PaginationListItem` per page and
+ * a `PaginationEllipsis` per gap.
+ */
 export interface PaginationListProps extends PrimitiveProps {}
 </script>
 
 <script setup lang="ts">
 import type { PaginationItem } from './utils';
-import { Primitive } from '@/primitive';
+import { Primitive } from '../primitive';
 import { computed } from 'vue';
 import { getRange } from './utils';
 import { injectPaginationContext } from './context';

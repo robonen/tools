@@ -2,6 +2,14 @@
 import type { PrimitiveProps } from '../primitive';
 import type { ScrollAreaType } from './types';
 
+/**
+ * Provides a styleable, cross-browser scroll container that swaps native scrollbars for
+ * custom ones while preserving native scrolling, keyboard, and accessibility behaviour.
+ * The root holds shared state and renders nothing visible on its own — compose it with a
+ * `ScrollAreaViewport` (the scrollable region), one or two `ScrollAreaScrollbar`s (each
+ * containing a `ScrollAreaThumb`), and an optional `ScrollAreaCorner`. Reach for it when
+ * the default OS scrollbars clash with your design or differ across platforms.
+ */
 export interface ScrollAreaRootProps extends PrimitiveProps {
   /**
    * Visibility behaviour for scrollbars.

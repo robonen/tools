@@ -2,6 +2,15 @@
 import type { PrimitiveProps } from '../primitive';
 import type { CommandFilterFunction } from './utils';
 
+/**
+ * Root of a command palette / fuzzy-finder menu (cmdk-style): owns the search
+ * term, the registry of items and groups, scoring/filtering, and keyboard-driven
+ * highlight + selection. Compose it with `CommandInput`, `CommandList`,
+ * `CommandGroup`, `CommandItem`, `CommandEmpty`, `CommandLoading`, and
+ * `CommandSeparator`. Reach for it whenever you need a searchable, keyboard-first
+ * list of actions or options — a Spotlight-style launcher, an autocomplete menu,
+ * or a quick-switcher.
+ */
 export interface CommandRootProps extends PrimitiveProps {
   /** Controlled selected value. Use `v-model`. */
   modelValue?: string;
@@ -49,8 +58,6 @@ const {
   loop = false,
   label,
 } = defineProps<CommandRootProps>();
-
-const emit = defineEmits<CommandRootEmits>();
 
 const { forwardRef } = useForwardExpose();
 
@@ -179,12 +186,10 @@ function getItemId(val: string): string {
 
 function setModelValue(v: string | undefined) {
   value.value = v;
-  emit('update:modelValue', v);
 }
 
 function setSearchTerm(v: string) {
   search.value = v;
-  emit('update:searchTerm', v);
 }
 
 function setSelectedValue(v: string | undefined) {

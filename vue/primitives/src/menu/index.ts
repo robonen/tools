@@ -13,7 +13,7 @@ export { default as MenuLabel, type MenuLabelProps } from './MenuLabel.vue';
 export { default as MenuPortal, type MenuPortalProps } from './MenuPortal.vue';
 export { default as MenuRadioGroup, type MenuRadioGroupEmits, type MenuRadioGroupProps } from './MenuRadioGroup.vue';
 export { default as MenuRadioItem, type MenuRadioItemEmits, type MenuRadioItemProps } from './MenuRadioItem.vue';
-export { default as MenuRoot, type MenuRootEmits, type MenuRootProps } from './MenuRoot.vue';
+export { default as MenuRoot, type MenuRootProps } from './MenuRoot.vue';
 export { default as MenuSeparator, type MenuSeparatorProps } from './MenuSeparator.vue';
 export { default as MenuSub, type MenuSubEmits, type MenuSubProps } from './MenuSub.vue';
 export { default as MenuSubContent, type MenuSubContentEmits, type MenuSubContentProps } from './MenuSubContent.vue';

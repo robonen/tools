@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PopperAnchorProps } from '../popper';
 
+/**
+ * The element the popup is positioned against, typically wrapping the Input and Trigger.
+ * Acts as the Popper anchor and the boundary used for the blur-to-close heuristic.
+ */
 export interface ComboboxAnchorProps extends PopperAnchorProps {}
 </script>
 

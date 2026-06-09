@@ -1,8 +1,16 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Internal base for every selectable menu item (MenuItem, MenuCheckboxItem,
+ * MenuRadioItem, MenuSubTrigger). It wires up roving-focus, pointer
+ * highlighting, disabled state, and typeahead `textValue`, and emits `select`.
+ * Not used directly — render one of the public item parts instead.
+ */
 export interface MenuItemImplProps extends PrimitiveProps {
+  /** Whether the item is disabled, removing it from focus and selection. */
   disabled?: boolean;
+  /** Optional text used to match the item during typeahead; defaults to the item's trimmed text content. */
   textValue?: string;
 }
 export interface MenuItemImplEmits {

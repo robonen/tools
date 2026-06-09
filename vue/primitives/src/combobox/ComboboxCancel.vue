@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button that clears the current search term and refocuses the input. Typically shown
+ * as an "x" inside the field while the user is typing.
+ */
 export interface ComboboxCancelProps extends PrimitiveProps {}
 </script>
 

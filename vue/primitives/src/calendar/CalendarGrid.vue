@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The `role="grid"` table for a single month. Provides grid context (the month
+ * it renders) to its head/body cells; render one per visible month when
+ * `numberOfMonths > 1`.
+ */
 export interface CalendarGridProps extends PrimitiveProps {
   /** The month this grid represents. Defaults to the root placeholder's month. */
   month?: Date;

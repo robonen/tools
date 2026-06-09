@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A navigable link, rendered as an `<a>` by default, usable as a top-level menu item
+ * or inside a content panel. Selecting it dismisses the open menu (unless the `select`
+ * event is prevented) and marks itself with `aria-current` when `active`.
+ */
 export interface NavigationMenuLinkProps extends PrimitiveProps {
   /** Marks the link as active for styling and aria-current. */
   active?: boolean;

@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Empty-state message shown when the search yields no matching items. By default
+ * it appears only while a search term is active; set `always` to also show it for
+ * an empty list with no query.
+ */
 export interface CommandEmptyProps extends PrimitiveProps {
   /** Render even while there is no active search term. */
   always?: boolean;

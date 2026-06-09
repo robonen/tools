@@ -1,6 +1,14 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A low-level building block that detects when the user interacts away from its
+ * content — pressing Escape, clicking/pointing outside, or moving focus out — and
+ * emits a `dismiss` event so the consumer can close the layer. Layers are tracked
+ * in a global stack so only the topmost one responds, letting dialogs, popovers,
+ * menus, and tooltips nest correctly. Use it to wrap any transient overlay whose
+ * lifecycle you want driven by outside-interaction; it renders no UI of its own.
+ */
 export interface DismissableLayerProps extends PrimitiveProps {
   /**
    * When enabled, outside pointer events are blocked — the rest of the

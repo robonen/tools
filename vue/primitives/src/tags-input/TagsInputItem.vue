@@ -2,6 +2,10 @@
 import type { PrimitiveProps } from '../primitive';
 import type { TagValue } from './context';
 
+/**
+ * A single tag in the strip. Provides item context for its `ItemText` and
+ * `ItemDelete` children and reflects selected/disabled state via data attributes.
+ */
 export interface TagsInputItemProps<U extends TagValue = string> extends PrimitiveProps {
   /** The value associated with this tag. */
   value: U;

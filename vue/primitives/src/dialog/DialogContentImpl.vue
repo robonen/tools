@@ -3,6 +3,11 @@ import type { DismissableLayerEmits } from '../dismissable-layer';
 import type { FocusScopeEmits } from '../focus-scope';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Internal shared implementation behind DialogContent — wraps a FocusScope and
+ * a DismissableLayer and applies the dialog ARIA wiring. Not exported; the modal
+ * and non-modal Content variants render this with the appropriate flags.
+ */
 export interface DialogContentImplProps extends PrimitiveProps {
   /** Trap focus inside the content (modal dialogs). */
   trapFocus?: boolean;

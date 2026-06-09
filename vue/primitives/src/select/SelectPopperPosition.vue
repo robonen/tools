@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PopperContentEmits, PopperContentProps } from '../popper';
 
+/**
+ * The `'popper'` positioning strategy for the content panel: builds on
+ * `PopperContent` for collision-aware floating placement with `side`, `align`,
+ * and offset controls. Chosen internally by `SelectContentImpl` when `position`
+ * is `'popper'`.
+ */
 export type SelectPopperPositionProps = PopperContentProps;
 export type SelectPopperPositionEmits = PopperContentEmits;
 </script>
@@ -23,6 +29,11 @@ const { forwardRef } = useForwardExpose();
     :side="props.side ?? 'bottom'"
     :side-offset="props.sideOffset ?? 4"
     :align="props.align ?? 'start'"
+    :style="{
+      '--primitives-select-content-available-width': 'var(--popper-available-width)',
+      '--primitives-select-content-available-height': 'var(--popper-available-height)',
+      '--primitives-select-content-transform-origin': 'var(--popper-transform-origin)',
+    }"
     @placed="emit('placed')"
   >
     <slot />

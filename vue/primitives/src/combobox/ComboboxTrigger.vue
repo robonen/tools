@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button, usually a chevron next to the input, that toggles the popup open and closed.
+ * Optional: typing in the Input also opens the list.
+ */
 export interface ComboboxTriggerProps extends PrimitiveProps {
   /** Disable the trigger independently from the root. */
   disabled?: boolean;

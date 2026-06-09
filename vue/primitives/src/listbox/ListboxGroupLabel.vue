@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The accessible label for a `ListboxGroup`. Its id is wired to the group's
+ * `aria-labelledby`, so place it inside the group to name the set of items.
+ */
 export interface ListboxGroupLabelProps extends PrimitiveProps {}
 </script>
 

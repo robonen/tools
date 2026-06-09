@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * An accessible label for a ComboboxGroup. Its id is referenced by the group's
+ * `aria-labelledby`, so place it as a direct child of ComboboxGroup.
+ */
 export interface ComboboxLabelProps extends PrimitiveProps {}
 </script>
 

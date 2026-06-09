@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Displays content within a fixed, responsive width-to-height ratio. The
+ * element grows to fill its container's width and derives its height from the
+ * `ratio`, so the box keeps its proportions at any size. Use it to reserve
+ * layout space for images, video, maps, or embeds and avoid content shift.
+ */
 export interface AspectRatioProps extends PrimitiveProps {
   /**
    * Desired width-to-height ratio (e.g. `16 / 9`, `1`, `4 / 3`).
@@ -14,7 +20,7 @@ export interface AspectRatioProps extends PrimitiveProps {
 import { Primitive } from '../primitive';
 import { useForwardExpose } from '@robonen/vue';
 
-useForwardExpose();
+const { forwardRef } = useForwardExpose();
 
 const { ratio = 1, as = 'div' } = defineProps<AspectRatioProps>();
 
@@ -33,7 +39,7 @@ const INNER_STYLE = {
 </script>
 
 <template>
-  <div :style="wrapperStyle" data-aspect-ratio-wrapper>
+  <div :ref="forwardRef" :style="wrapperStyle" data-aspect-ratio-wrapper>
     <Primitive :as="as" :style="INNER_STYLE" :data-aspect-ratio="true">
       <slot />
     </Primitive>

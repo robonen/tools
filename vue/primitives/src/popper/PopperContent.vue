@@ -3,6 +3,18 @@ import type { Align, Side } from './utils';
 import type { Middleware, Placement, ReferenceElement } from '@floating-ui/vue';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The floating element positioned against the anchor. This is the workhorse of
+ * the Popper building block: it runs Floating UI (offset, flip, shift, size,
+ * arrow, hide) to place itself on the chosen side/alignment, keeps the position
+ * updated on scroll/resize/layout shift, avoids collisions with the viewport or
+ * a custom boundary, and exposes `--popper-*` CSS variables plus `data-side` /
+ * `data-align` attributes for styling and transform-origin. Use the Popper parts
+ * to build any anchored overlay — tooltips, popovers, menus, selects — where
+ * content must follow a trigger and stay on-screen. Place it inside a
+ * `PopperRoot` (so it can read the registered anchor) and emit `placed` once the
+ * first position settles.
+ */
 export interface PopperContentProps extends PrimitiveProps {
   /** Preferred side of the anchor. @default 'bottom' */
   side?: Side;

@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button that toggles the select open and anchors the floating content.
+ * Renders as a `role="combobox"` control wired with the appropriate ARIA and
+ * `data-state`/`data-placeholder` attributes; place a `SelectValue` and
+ * `SelectIcon` inside it.
+ */
 export interface SelectTriggerProps extends PrimitiveProps {
   /** Disable this trigger independently from the root. */
   disabled?: boolean;

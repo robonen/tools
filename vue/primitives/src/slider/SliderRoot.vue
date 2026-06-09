@@ -2,9 +2,20 @@
 import type { SliderDirection, SliderOrientation } from './context';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * An accessible slider for picking one or more numeric values from a range by
+ * dragging a thumb along a track or using the keyboard. The root owns the value
+ * state (controlled via `v-model` or uncontrolled via `defaultValue`), snaps to
+ * `step`, clamps to `min`/`max`, and handles pointer drags, focus, and arrow /
+ * Page / Home / End keys. Pass multiple values for a range (multi-thumb) slider
+ * and keep thumbs apart with `minStepsBetweenThumbs`; supports horizontal and
+ * vertical `orientation`, `dir`/`inverted` direction, and emits `valueCommit`
+ * when a drag or keypress settles. It provides context to `SliderTrack`,
+ * `SliderRange`, and `SliderThumb`, and renders hidden form inputs when `name`
+ * is set. Reach for it whenever a user should choose a value within known bounds
+ * (volume, price range, brightness).
+ */
 export interface SliderRootProps extends PrimitiveProps {
-  /** Current value(s) for controlled mode. */
-  modelValue?: number[];
   /** Min value. @default 0 */
   min?: number;
   /** Max value. @default 100 */
@@ -57,7 +68,6 @@ const {
   dir = 'ltr',
   inverted = false,
   disabled = false,
-  modelValue,
   defaultValue,
   name,
   required,
@@ -66,7 +76,12 @@ const {
 
 const { forwardRef } = useForwardExpose();
 
-const emit = defineEmits<SliderRootEmits & { 'update:modelValue': [value: number[]] }>();
+const emit = defineEmits<SliderRootEmits>();
+
+// `defineModel` drives both controlled (`v-model`) and uncontrolled modes; in
+// uncontrolled mode `model.value` is `undefined` until first write, so the
+// internal `localValues` below seeds from `defaultValue`/`min`.
+const model = defineModel<number[]>();
 
 function toArray(v: number | number[] | undefined): number[] {
   if (Array.isArray(v)) return v.slice();
@@ -74,9 +89,9 @@ function toArray(v: number | number[] | undefined): number[] {
   return [];
 }
 
-const d = toArray(defaultValue);
+const seed = model.value !== undefined ? model.value.slice() : toArray(defaultValue);
 // `shallowRef` — the array is always replaced wholesale; no need to proxy items.
-const localValues = shallowRef<number[]>(d.length > 0 ? d : [min]);
+const localValues = shallowRef<number[]>(seed.length > 0 ? seed : [min]);
 
 // Cache decimals per `step` — `String(step).split('.')` out of the pointermove path.
 let stepDecimals = getStepDecimals(step);
@@ -84,18 +99,19 @@ watch(() => step, (s) => {
   stepDecimals = getStepDecimals(s);
 });
 
-watch(() => modelValue, (v) => {
+watch(model, (v) => {
   if (v === undefined) return;
   // Ref-level check is enough; the setter below guards on deep equality again.
   if (v === localValues.value) return;
   localValues.value = v.slice();
-}, { immediate: true });
+});
 
 const values = computed<number[]>({
   get: () => localValues.value,
   set: (v) => {
     localValues.value = v;
-    emit('update:modelValue', v);
+    // `defineModel` emits `update:modelValue` on write — no manual emit needed.
+    model.value = v;
   },
 });
 

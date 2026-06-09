@@ -5,6 +5,16 @@ import type { PrimitiveProps } from '../primitive';
 import type { Ref } from 'vue';
 import { useContextFactory } from '@robonen/vue';
 
+/**
+ * A low-level building block that gives a set of items a single shared tab stop
+ * and lets arrow keys "rove" focus between them — the keyboard model behind
+ * toolbars, tabs, radio groups, menus and similar widgets. Only one item is in
+ * the page tab order at a time; Arrow/Home/End keys move focus and update the
+ * current tab stop, honouring `orientation`, writing `dir` (RTL-aware) and
+ * optional `loop` wrapping. Wrap focusable children in `RovingFocusItem`; this
+ * group renders a thin container and manages entry/exit focus, emitting
+ * `entryFocus` so consumers can override where focus lands on first entry.
+ */
 export interface RovingFocusGroupProps extends PrimitiveProps {
   /** Navigation orientation — decides which arrow keys move focus. */
   orientation?: Orientation;

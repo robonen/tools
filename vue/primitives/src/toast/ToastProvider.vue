@@ -1,14 +1,36 @@
 <script lang="ts">
 import type { SwipeDirection } from './context';
 
+/**
+ * Toast — a succinct, non-disruptive notification that appears in a corner of the
+ * screen and auto-dismisses after a timeout. Use it to confirm actions or surface
+ * background events without interrupting the user's flow.
+ *
+ * `ToastProvider` is the top-level wrapper that holds shared settings (label, default
+ * duration) and coordinates timer pausing across all toasts. Wrap your app (or the
+ * region that renders toasts) in a single provider, render one `ToastViewport` for
+ * placement, and mount a `ToastRoot` per notification.
+ */
 export interface ToastProviderProps {
   /** Accessible label for the toast region. @default 'Notifications' */
   label?: string;
   /** Auto-dismiss duration in ms. Use `Infinity` to disable auto-dismiss. @default 5000 */
   duration?: number;
-  /** Swipe direction to dismiss. @default 'right' */
+  /**
+   * Swipe direction to dismiss.
+   *
+   * NOTE: swipe-to-dismiss is not yet implemented. This value is stored and exposed via
+   * context for forward compatibility, but no swipe gesture is currently wired up.
+   * @default 'right'
+   */
   swipeDirection?: SwipeDirection;
-  /** Minimum swipe distance before a dismiss gesture is recognised. @default 50 */
+  /**
+   * Minimum swipe distance before a dismiss gesture is recognised.
+   *
+   * NOTE: swipe-to-dismiss is not yet implemented (see `swipeDirection`); this value has
+   * no effect until a swipe gesture is added.
+   * @default 50
+   */
   swipeThreshold?: number;
 }
 </script>

@@ -1,5 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+/**
+ * Renders its content only when the parent `RadioGroupItem` is selected,
+ * mirroring that state via `data-state`. Place the filled dot or check mark
+ * inside it; use `forceMount` to keep it mounted for CSS exit animations.
+ */
 export interface RadioGroupIndicatorProps extends PrimitiveProps {
   forceMount?: boolean;
 

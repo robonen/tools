@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { MenuItemImplEmits, MenuItemImplProps } from './MenuItemImpl.vue';
 
+/**
+ * A single actionable menu item that emits `select` and closes the menu when
+ * activated by click, Enter, or Space. Use it for ordinary commands; call
+ * `event.preventDefault()` in `select` to keep the menu open after selection.
+ */
 export interface MenuItemProps extends MenuItemImplProps {}
 export type MenuItemEmits = MenuItemImplEmits;
 </script>

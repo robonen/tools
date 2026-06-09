@@ -1,17 +1,24 @@
 <script lang="ts">
 const DIGIT_RE = /\d/;
 const NON_DIGIT_G = /\D/g;
+
+/**
+ * A single cell of the pin input, identified by its zero-based `index`. Renders
+ * one masked-or-plain character box that reads/writes its slot of the root's
+ * value and handles typing (auto-advancing to the next cell), Backspace/Delete,
+ * arrow/Home/End navigation, and paste (spreading text across cells). Render one
+ * per character, with `index` from `0` to `length - 1`.
+ */
+export interface PinInputInputProps {
+  index: number;
+}
 </script>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, useTemplateRef, watch } from 'vue';
 import { usePinInputContext } from './context';
 
-interface Props {
-  index: number;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<PinInputInputProps>();
 const ctx = usePinInputContext();
 const el = useTemplateRef<HTMLInputElement>('el');
 

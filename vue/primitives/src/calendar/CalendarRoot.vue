@@ -2,6 +2,17 @@
 import type { PrimitiveProps } from '../primitive';
 import type { CalendarMonth, WeekDayFormat } from './utils';
 
+/**
+ * A fully accessible, headless date calendar for picking a single day. The
+ * root owns the selected value and the displayed month ("placeholder"), builds
+ * the localized month grid(s), and wires up roving keyboard navigation,
+ * min/max bounds, and disabled/unavailable predicates. Use it to build an
+ * inline date picker or as the body of a popover/`DatePicker`.
+ *
+ * Compose it with `CalendarHeader` (`CalendarPrev` / `CalendarHeading` /
+ * `CalendarNext`) and one `CalendarGrid` per month. Supports `v-model` for the
+ * selected date and `v-model:placeholder` for the visible month.
+ */
 export interface CalendarRootProps extends PrimitiveProps {
   /** Uncontrolled default selected date. */
   defaultValue?: Date;

@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button that toggles the dialog open. Wires up `aria-haspopup`,
+ * `aria-expanded`, and `aria-controls`, and is the element focus returns to
+ * when the dialog closes.
+ */
 export interface DialogTriggerProps extends PrimitiveProps {}
 </script>
 

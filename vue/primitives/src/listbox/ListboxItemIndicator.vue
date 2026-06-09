@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Renders its content only when the parent `ListboxItem` is selected. Use it
+ * to show a checkmark or other selected-state marker; it is `aria-hidden`.
+ */
 export interface ListboxItemIndicatorProps extends PrimitiveProps {}
 </script>
 

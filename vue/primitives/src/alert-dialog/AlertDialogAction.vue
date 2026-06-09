@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button that confirms the alert and closes the dialog. Use it for the
+ * action being warned about (e.g. "Delete"); wire your own handler to perform
+ * the work, the part only handles closing.
+ */
 export interface AlertDialogActionProps extends PrimitiveProps {}
 </script>
 

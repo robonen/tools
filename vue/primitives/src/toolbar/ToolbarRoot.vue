@@ -2,6 +2,16 @@
 import type { PrimitiveProps } from '../primitive';
 import type { RovingDirection } from '../utils/roving-focus';
 
+/**
+ * A container that groups a set of controls — buttons, toggles, separators —
+ * into a single keyboard-navigable strip (`role="toolbar"`). Like an editor's
+ * formatting bar, the whole toolbar is one tab stop: Tab moves into it, then
+ * arrow keys roam between items (Home/End jump to the ends), with optional
+ * wrap-around via `loop`. It owns the roving-focus state, exposes
+ * `data-orientation` for styling, and provides context to every
+ * `ToolbarButton` and `ToolbarSeparator`. Reach for it to assemble action
+ * bars, formatting toolbars, or any cluster of related controls.
+ */
 export interface ToolbarRootProps extends PrimitiveProps {
   orientation?: 'horizontal' | 'vertical';
   dir?: RovingDirection;

@@ -50,6 +50,16 @@ export default defineNuxtModule({
     };
 
     nuxt.hook('vite:extendConfig', (config) => {
+      // Workspace SOURCE (e.g. @robonen/primitives) references the `__DEV__`
+      // compile-time flag (each package defines it in its own vitest/tsdown
+      // config). The docs bundle consumes that source directly via the aliases
+      // below, so it must define `__DEV__` too — otherwise it throws
+      // "ReferenceError: __DEV__ is not defined" at runtime (e.g. in the
+      // Primitive `as="template"` / Slot path), silently blanking every demo
+      // that hits it. `import.meta.env.DEV` resolves correctly in dev & prod.
+      config.define ??= {};
+      (config.define as Record<string, unknown>).__DEV__ ??= 'import.meta.env.DEV';
+
       const existing = config.resolve?.alias;
       const sourceAliases = [
         { find: '@/composables', replacement: resolve(vueSrc, 'composables') },
@@ -75,8 +85,9 @@ export default defineNuxtModule({
       filename: 'docs-metadata.ts',
       write: true,
       getContents: () => {
-        const json = JSON.stringify(metadata, null, 2);
-        return `export default ${json} as const;`;
+        // No indentation (smaller module) and no `as const` — a multi-MB literal
+        // type is pathological for tsc, and consumers cast to DocsMetadata anyway.
+        return `export default ${JSON.stringify(metadata)};`;
       },
     });
 
@@ -200,6 +211,50 @@ declare module '#docs/metadata' {
 import type { Component } from 'vue';
 declare module '#docs/demos' {
   export const demos: Record<string, Component>;
+}
+`,
+    });
+
+    // Lazy demo SOURCE loaders (raw text) — kept out of the metadata payload and
+    // fetched only when a user opens "View source", so the ~850KB of demo source
+    // never ships in the always-loaded metadata bundle.
+    addTemplate({
+      filename: 'docs-demo-sources.ts',
+      write: true,
+      getContents: () => {
+        const entries: string[] = [];
+        const seen = new Set<string>();
+        const add = (key: string, demoPath: string) => {
+          if (seen.has(key)) return;
+          seen.add(key);
+          entries.push(`  '${key}': () => import('${demoPath}?raw').then(m => m.default),`);
+        };
+
+        for (const pkg of metadata.packages) {
+          for (const cat of pkg.categories)
+            for (const item of cat.items)
+              if (item.hasDemo) add(`${pkg.slug}/${item.slug}`, resolve(ROOT, dirname(item.sourcePath), 'demo.vue'));
+          for (const component of pkg.components)
+            if (component.hasDemo) add(`${pkg.slug}/${component.slug}`, resolve(ROOT, component.sourcePath, 'demo.vue'));
+        }
+
+        return [
+          `export const demoSources: Record<string, () => Promise<string>> = {`,
+          ...entries,
+          `};`,
+          ``,
+        ].join('\n');
+      },
+    });
+
+    nuxt.options.alias['#docs/demo-sources'] = resolve(nuxt.options.buildDir, 'docs-demo-sources');
+
+    addTemplate({
+      filename: 'docs-demo-sources-types.d.ts',
+      write: true,
+      getContents: () => `
+declare module '#docs/demo-sources' {
+  export const demoSources: Record<string, () => Promise<string>>;
 }
 `,
     });

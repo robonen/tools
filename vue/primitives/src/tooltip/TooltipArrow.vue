@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PopperArrowProps } from '../popper';
 
+/**
+ * An optional pointer rendered inside Content that visually connects the
+ * tooltip to its Trigger. Place it as a child of `TooltipContent`; it tracks
+ * the resolved side and alignment automatically.
+ */
 export interface TooltipArrowProps extends PopperArrowProps {}
 </script>
 

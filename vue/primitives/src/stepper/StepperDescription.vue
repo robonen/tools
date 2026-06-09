@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Optional supporting text for a step. Its `id` is wired to the trigger's
+ * `aria-describedby` so it is announced as a description of the step.
+ */
 export interface StepperDescriptionProps extends PrimitiveProps {}
 </script>
 

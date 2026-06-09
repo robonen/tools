@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button that removes every tag at once. No-op when the list is already
+ * empty or the component is disabled.
+ */
 export interface TagsInputClearProps extends PrimitiveProps {}
 </script>
 

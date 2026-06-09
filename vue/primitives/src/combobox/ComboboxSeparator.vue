@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A purely visual divider between items or groups inside the popup. Decorative and hidden
+ * from assistive technology.
+ */
 export interface ComboboxSeparatorProps extends PrimitiveProps {}
 </script>
 

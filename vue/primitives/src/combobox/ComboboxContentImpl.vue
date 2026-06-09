@@ -4,6 +4,10 @@ import type { FocusScopeEmits } from '../focus-scope';
 import type { PopperContentProps } from '../popper';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Internal implementation of the content popup: wires up focus scoping, dismiss-on-outside,
+ * Popper positioning, and the screen-reader result announcer. Use ComboboxContent instead.
+ */
 export interface ComboboxContentImplProps extends PrimitiveProps, /* @vue-ignore */ Partial<PopperContentProps> {
   /** Position strategy. @default 'popper' */
   position?: 'inline' | 'popper';

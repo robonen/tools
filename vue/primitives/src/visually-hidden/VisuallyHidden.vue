@@ -1,11 +1,20 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Visually hides its content while keeping it available to assistive
+ * technology. The element is removed from the visual layout but stays in the
+ * accessibility tree (and remains focusable) so screen readers can still
+ * announce it. Use it for accessible labels, status text, or skip links that
+ * should be heard but not seen — for example a hidden heading, an icon-only
+ * button's name, or extra context for a control.
+ */
 export interface VisuallyHiddenProps extends PrimitiveProps {
   /**
-   * Exclude the element from the accessibility tree entirely.
-   * Useful when the content is purely decorative and must not be announced.
-   * @default false
+   * How the content participates: `'focusable'` keeps it in the accessibility
+   * tree and focusable (visually hidden only — e.g. skip links); `'hidden'`
+   * additionally hides it from layout and focus.
+   * @default 'focusable'
    */
   feature?: 'focusable' | 'hidden';
 }

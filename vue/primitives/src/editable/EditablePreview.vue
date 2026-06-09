@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Read-only display of the current value (or the preview placeholder when
+ * empty). It is focusable and, depending on `activationMode`, enters edit mode
+ * on focus or double-click.
+ */
 export interface EditablePreviewProps extends PrimitiveProps {}
 </script>
 

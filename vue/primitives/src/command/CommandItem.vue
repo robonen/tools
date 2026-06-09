@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A selectable option in the list. Registers itself with the root (so it can be
+ * filtered, highlighted, and selected), reflects highlight/selection/disabled
+ * state via data attributes, and emits `select` when chosen by click or Enter.
+ */
 export interface CommandItemProps extends PrimitiveProps {
   /** Item value — used by filter, selection, and `data-value`. */
   value: string;

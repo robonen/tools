@@ -10,6 +10,7 @@ export * from './teleport';
 export * from './dismissable-layer';
 export * from './dialog';
 export * from './alert-dialog';
+export * from './drawer';
 export * from './scroll-area';
 export * from './separator';
 export * from './label';
@@ -53,3 +54,5 @@ export * from './command';
 
 export * from './calendar';
 export * from './date-picker';
+
+export * from './qr-code';

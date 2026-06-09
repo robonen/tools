@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Button that commits the draft value and leaves edit mode. It is only shown
+ * while editing.
+ */
 export interface EditableSubmitTriggerProps extends PrimitiveProps {}
 </script>
 

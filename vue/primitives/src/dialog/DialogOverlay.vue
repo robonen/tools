@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A full-screen layer rendered behind the Content that dims and covers the page
+ * while a modal dialog is open. Only renders in modal mode; omit it for
+ * non-modal dialogs.
+ */
 export interface DialogOverlayProps extends PrimitiveProps {
   /**
    * Keep overlay mounted even when the dialog is closed — useful for CSS

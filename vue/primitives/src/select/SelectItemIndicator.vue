@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A marker (typically a checkmark) rendered only while its `SelectItem` is the
+ * selected option. Decorative and `aria-hidden`; use inside a `SelectItem`.
+ */
 export interface SelectItemIndicatorProps extends PrimitiveProps {}
 </script>
 

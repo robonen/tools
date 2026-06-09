@@ -70,6 +70,7 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.11",
+    "@robonen/encoding": "workspace:*",
     "@robonen/platform": "workspace:*",
     "@robonen/stdlib": "workspace:*",
     "@robonen/vue": "workspace:*",

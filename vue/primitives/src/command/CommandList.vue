@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Scrollable listbox container that holds the items, groups, and empty/loading
+ * states. Tracks its content height in the `--primitives-command-list-height`
+ * CSS variable so you can animate the palette as results filter in and out.
+ */
 export interface CommandListProps extends PrimitiveProps {}
 </script>
 

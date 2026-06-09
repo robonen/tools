@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The visual marker for a step — typically a numbered circle or check. Defaults
+ * to rendering the step number, and exposes the current `step` and `state` via
+ * slot props so you can swap in icons (e.g. a check when completed).
+ */
 export interface StepperIndicatorProps extends PrimitiveProps {}
 </script>
 

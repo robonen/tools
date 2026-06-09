@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The text input shown while editing. It binds the draft value, auto-focuses
+ * (and optionally selects) when edit mode begins, and handles Enter to submit /
+ * Escape to cancel per the Root's `submitMode`.
+ */
 export interface EditableInputProps extends PrimitiveProps {}
 </script>
 

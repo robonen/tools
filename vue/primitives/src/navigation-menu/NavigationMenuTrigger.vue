@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { ComponentPublicInstance } from 'vue';
 
+/**
+ * The button that opens its item's `NavigationMenuContent` on hover, click, or keyboard.
+ * Reflects open state via `data-state` and `aria-expanded`, and manages the hover/click
+ * timing handshake with the root. Use it inside a `NavigationMenuItem` for entries that
+ * reveal a panel; use `NavigationMenuLink` instead for plain navigation links.
+ */
 export interface NavigationMenuTriggerProps {
   /** Disables interaction with this trigger. */
   disabled?: boolean;

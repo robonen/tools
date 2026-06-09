@@ -1,7 +1,13 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Renders only while its parent MenuCheckboxItem or MenuRadioItem is checked (or
+ * indeterminate), giving you a place to show a check or dot icon. Must be nested
+ * inside a checkbox or radio item, which provides its state via context.
+ */
 export interface MenuItemIndicatorProps extends PrimitiveProps {
+  /** Force mounting the indicator even when unchecked, e.g. to control presence with an external animation library. */
   forceMount?: boolean;
 }
 </script>

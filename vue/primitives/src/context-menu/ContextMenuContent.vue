@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { MenuContentEmits, MenuContentProps } from '../menu';
 
+/**
+ * The floating surface that holds the menu items, positioned at the pointer
+ * where the menu was invoked. Handles focus management, typeahead, and
+ * dismissal on outside click or Escape; render it inside a portal.
+ */
 export interface ContextMenuContentProps extends MenuContentProps {}
 export type ContextMenuContentEmits = MenuContentEmits;
 </script>

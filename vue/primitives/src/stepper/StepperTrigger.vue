@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The interactive control for a step. Clicking or pressing it navigates to the
+ * step (subject to the root's `linear` and `disabled` rules) and it participates
+ * in roving arrow-key focus across all enabled triggers.
+ */
 export interface StepperTriggerProps extends PrimitiveProps {}
 </script>
 

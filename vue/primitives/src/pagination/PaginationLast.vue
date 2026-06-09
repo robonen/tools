@@ -1,11 +1,16 @@
 <script lang="ts">
-import type { PrimitiveProps } from '@/primitive';
+import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button that jumps to the last page. Renders as a `<button>`, is
+ * automatically disabled when already on the last page (or the pagination is
+ * disabled), and is labelled "Last Page" for assistive technology.
+ */
 export interface PaginationLastProps extends PrimitiveProps {}
 </script>
 
 <script setup lang="ts">
-import { Primitive } from '@/primitive';
+import { Primitive } from '../primitive';
 import { computed } from 'vue';
 import { injectPaginationContext } from './context';
 import { useForwardExpose } from '@robonen/vue';

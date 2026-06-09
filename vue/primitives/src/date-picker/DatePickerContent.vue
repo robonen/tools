@@ -3,6 +3,12 @@ import type { DismissableLayerEmits } from '../dismissable-layer';
 import type { FocusScopeEmits } from '../focus-scope';
 import type { PopperContentProps } from '../popper';
 
+/**
+ * The popover panel that holds the calendar. Handles Popper positioning,
+ * presence (mount/unmount on open), focus trapping/restoration, and dismissal
+ * via Escape or outside interaction. Renders only while open unless `forceMount`
+ * is set.
+ */
 export interface DatePickerContentProps extends PopperContentProps {
   /** Keep mounted for CSS exit animations. */
   forceMount?: boolean;

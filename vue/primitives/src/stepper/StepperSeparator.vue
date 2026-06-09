@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The decorative connector drawn between adjacent steps. It is `aria-hidden`
+ * and exposes the owning item's `state` and the stepper `orientation` as data
+ * attributes so the line can be styled to reflect progress.
+ */
 export interface StepperSeparatorProps extends PrimitiveProps {}
 </script>
 

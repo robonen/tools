@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The scrollable region that clips and natively scrolls its content while the OS scrollbars
+ * are visually hidden. Place all scrollable content inside it; it must be a child of
+ * `ScrollAreaRoot`.
+ */
 export interface ScrollAreaViewportProps extends PrimitiveProps {
   /** Inline `nonce` attribute applied to the injected style tag (CSP support). */
   nonce?: string;

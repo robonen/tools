@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { MenuContentEmits, MenuContentProps } from '../menu';
 
+/**
+ * The floating surface that holds a menu's items, positioned below its
+ * MenubarTrigger. Handles focus management, typeahead, and dismissal on outside
+ * click or Escape; render it inside a MenubarPortal so it escapes overflow
+ * clipping.
+ */
 export interface MenubarContentProps extends MenuContentProps {}
 export type MenubarContentEmits = MenuContentEmits;
 </script>

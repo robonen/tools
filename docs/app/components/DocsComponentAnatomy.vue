@@ -19,7 +19,10 @@ const anatomyCode = computed(() => {
 
   const imports = `import {\n${names.map(n => `  ${n},`).join('\n')}\n} from '${importPath.value}';`;
 
-  const [root, ...rest] = names;
+  // Wrap the skeleton in the Root part (not whatever the barrel exports first),
+  // with the remaining parts nested inside it.
+  const root = (props.component.parts.find(p => p.role === 'Root') ?? props.component.parts[0]!).name;
+  const rest = names.filter(n => n !== root);
   let tree: string;
   if (rest.length === 0) {
     tree = `<${root} />`;

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The visible label for a tag. Renders the item's display value and exposes an
+ * id that the surrounding `Item` and `ItemDelete` use for `aria-labelledby`.
+ */
 export interface TagsInputItemTextProps extends PrimitiveProps {}
 </script>
 

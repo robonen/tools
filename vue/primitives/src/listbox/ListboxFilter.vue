@@ -1,6 +1,13 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * An optional text input for filtering the list. While mounted it takes over
+ * focus from the content (driving the list via `aria-activedescendant`),
+ * resets the highlight to the first item on each keystroke, and forwards
+ * Enter / arrow / Home / End keys to the listbox. Filtering of the items
+ * themselves is left to the consumer via `v-model`.
+ */
 export interface ListboxFilterProps extends PrimitiveProps {
   /** Controlled input value. */
   modelValue?: string;

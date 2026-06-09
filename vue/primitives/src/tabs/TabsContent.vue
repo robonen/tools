@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The panel shown when its matching `TabsTrigger` is active. Rendered only
+ * while selected unless `forceMount` keeps it mounted (hidden) for animations
+ * or to preserve state. Pair one with each trigger via a shared `value`.
+ */
 export interface TabsContentProps extends PrimitiveProps {
   /** Value that links this panel to a trigger. */
   value: string;

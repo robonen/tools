@@ -1,5 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+
+/**
+ * The full-length rail the thumbs travel along, rendered inside `SliderRoot`.
+ * It registers itself as the geometry reference for pointer math and starts a
+ * drag (moving the nearest thumb to the click position) when pressed. Use it as
+ * the container for `SliderRange` and one or more `SliderThumb`.
+ */
 export interface SliderTrackProps extends PrimitiveProps {}
 </script>
 

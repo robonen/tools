@@ -1,0 +1,51 @@
+/**
+ * Payment-card brands: detection patterns (IIN/BIN prefixes and ranges), the
+ * number template (`#` = a digit), valid total lengths, and the security-code
+ * info. Derived from the MIT-licensed `credit-card-type` dataset (Braintree).
+ * The template uses the brand's gap positions; the trailing group is sized to the
+ * longest valid length, so shorter numbers simply leave it partly empty.
+ */
+
+/**
+ * A card brand's prefix pattern: an exact prefix string, or an inclusive numeric
+ * range `[min, max]` whose bounds have the same digit length.
+ */
+export type CardPattern = string | readonly [min: number, max: number];
+
+/**
+ * One payment-card brand.
+ */
+export interface CardBrand {
+  /** Brand id, e.g. `'visa'`. */
+  readonly brand: string;
+  /** Display name, e.g. `'Visa'`. */
+  readonly name: string;
+  /** Number template; `#` is a digit, e.g. `'#### #### #### ####'`. */
+  readonly template: string;
+  /** Valid total digit lengths, e.g. `[16, 18, 19]`. */
+  readonly lengths: readonly number[];
+  /** Security code metadata, e.g. `{ name: 'CVV', size: 3 }`. */
+  readonly code: { readonly name: string; readonly size: number };
+  /** IIN/BIN detection patterns (prefixes and ranges). */
+  readonly patterns: readonly CardPattern[];
+}
+
+/**
+ * Every supported card brand. Resolve a number with `findCardBrand`.
+ */
+export const CARD_BRANDS: readonly CardBrand[] = [
+  { brand: 'visa', name: 'Visa', template: '#### #### #### #######', lengths: [16, 18, 19], code: { name: 'CVV', size: 3 }, patterns: ['4'] },
+  { brand: 'mastercard', name: 'Mastercard', template: '#### #### #### ####', lengths: [16], code: { name: 'CVC', size: 3 }, patterns: [[51, 55], [2221, 2229], [223, 229], [23, 26], [270, 271], '2720'] },
+  { brand: 'american-express', name: 'American Express', template: '#### ###### #####', lengths: [15], code: { name: 'CID', size: 4 }, patterns: ['34', '37'] },
+  { brand: 'diners-club', name: 'Diners Club', template: '#### ###### #########', lengths: [14, 16, 19], code: { name: 'CVV', size: 3 }, patterns: [[300, 305], '36', '38', '39'] },
+  { brand: 'discover', name: 'Discover', template: '#### #### #### #######', lengths: [16, 19], code: { name: 'CID', size: 3 }, patterns: ['6011', [644, 649], '65'] },
+  { brand: 'jcb', name: 'JCB', template: '#### #### #### #######', lengths: [16, 17, 18, 19], code: { name: 'CVV', size: 3 }, patterns: ['2131', '1800', [3528, 3589]] },
+  { brand: 'unionpay', name: 'UnionPay', template: '#### #### #### #######', lengths: [14, 15, 16, 17, 18, 19], code: { name: 'CVN', size: 3 }, patterns: ['620', [62100, 62182], [62184, 62187], [62185, 62197], [62200, 62205], [622010, 622999], '622018', [62207, 62209], [623, 626], '6270', '6272', '6276', [627700, 627779], [627781, 627799], [6282, 6289], '6291', '6292', '810', [8110, 8131], [8132, 8151], [8152, 8163], [8164, 8171]] },
+  { brand: 'maestro', name: 'Maestro', template: '#### #### #### #######', lengths: [12, 13, 14, 15, 16, 17, 18, 19], code: { name: 'CVC', size: 3 }, patterns: ['493698', [500000, 504174], [504176, 506698], [506779, 508999], [56, 59], '63', '67', '6'] },
+  { brand: 'elo', name: 'Elo', template: '#### #### #### ####', lengths: [16], code: { name: 'CVE', size: 3 }, patterns: ['401178', '401179', '438935', '457631', '457632', '431274', '451416', '457393', '504175', [506699, 506778], [509000, 509999], '627780', '636297', '636368', [650031, 650033], [650035, 650051], [650405, 650439], [650485, 650538], [650541, 650598], [650700, 650718], [650720, 650727], [650901, 650978], [651652, 651679], [655000, 655019], [655021, 655058]] },
+  { brand: 'mir', name: 'Mir', template: '#### #### #### #######', lengths: [16, 17, 18, 19], code: { name: 'CVP2', size: 3 }, patterns: [[2200, 2204]] },
+  { brand: 'hiper', name: 'Hiper', template: '#### #### #### ####', lengths: [16], code: { name: 'CVC', size: 3 }, patterns: ['637095', '63737423', '63743358', '637568', '637599', '637609', '637612'] },
+  { brand: 'hipercard', name: 'Hipercard', template: '#### #### #### ####', lengths: [16], code: { name: 'CVC', size: 3 }, patterns: ['606282'] },
+  { brand: 'naranja', name: 'Naranja', template: '#### #### #### ####', lengths: [16], code: { name: 'CVV', size: 3 }, patterns: ['589562', '402918', '527572'] },
+  { brand: 'verve', name: 'Verve', template: '#### #### #### #######', lengths: [16, 18, 19], code: { name: 'CVV', size: 3 }, patterns: [[506099, 506127], '506129', [506133, 506150], [506158, 506163], '506166', '506168', '506170', '506173', [506176, 506180], '506184', [506187, 506188], '506191', '506195', '506197', '507865', '507866', [507868, 507877], [507880, 507888], '507900', '507941'] },
+];

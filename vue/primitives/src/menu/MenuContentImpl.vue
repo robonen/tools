@@ -2,14 +2,23 @@
 import type { PopperContentProps } from '../popper';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Internal shared implementation behind MenuContent and MenuSubContent. It
+ * composes Popper positioning, FocusScope, DismissableLayer, and a vertical
+ * RovingFocusGroup, and adds typeahead search and pointer grace-area handling.
+ * Not meant to be used directly — render MenuContent (or MenuSubContent) instead.
+ */
 export interface MenuContentImplProps extends PrimitiveProps, Pick<PopperContentProps,
   | 'side' | 'sideOffset' | 'sideFlip' | 'align' | 'alignOffset' | 'alignFlip'
   | 'avoidCollisions' | 'collisionBoundary' | 'collisionPadding' | 'arrowPadding'
   | 'sticky' | 'hideWhenDetached' | 'positionStrategy' | 'updatePositionStrategy'
   | 'reference' | 'prioritizePosition'
 > {
+  /** Whether keyboard focus should wrap from the last item back to the first (and vice versa). */
   loop?: boolean;
+  /** Whether to trap focus inside the content while open (used for modal menus). */
   trapFocus?: boolean;
+  /** Whether to block pointer events on everything outside the content (used for modal menus). */
   disableOutsidePointerEvents?: boolean;
 }
 

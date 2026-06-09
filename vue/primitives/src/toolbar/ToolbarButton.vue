@@ -1,5 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+
+/**
+ * A focusable control within a `ToolbarRoot`. Registers itself with the
+ * toolbar's roving-focus collection so arrow keys can move to it, carrying the
+ * single `tabindex="0"` only while it is the active item. Renders a `<button>`
+ * by default; use `as`/`asChild` to render a link or any other element.
+ */
 export interface ToolbarButtonProps extends PrimitiveProps {
 
   disabled?: boolean;

@@ -1,6 +1,13 @@
 <script lang="ts">
 import type { PopoverContentImplEmits, PopoverContentImplProps } from './PopoverContentImpl.vue';
 
+/**
+ * The floating panel itself — the positioned container for the popover's body.
+ * Renders only while open and picks a modal or non-modal implementation from
+ * the Root's `modal` setting: modal traps focus, locks body scroll, and blocks
+ * outside pointer events; non-modal does none of these. Emits focus and
+ * dismissal events so consumers can guard against closing.
+ */
 export interface PopoverContentProps extends PopoverContentImplProps {
   /** Keep mounted for CSS exit animations. */
   forceMount?: boolean;

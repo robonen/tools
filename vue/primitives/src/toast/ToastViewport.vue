@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The fixed-position region (an `<ol>`) where toasts are rendered. Provides the
+ * accessible landmark for the toast list, pauses auto-dismiss timers on hover/focus,
+ * and can be focused via a keyboard hotkey. Render exactly one per provider.
+ */
 export interface ToastViewportProps extends PrimitiveProps {
   /** Accessible label for the toast region. Overrides the provider label. */
   label?: string;

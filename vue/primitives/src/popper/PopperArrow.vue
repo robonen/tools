@@ -25,6 +25,12 @@ const TRANSFORM: Record<Side, string> = {
   left: 'translateY(50%) rotate(-90deg) translateX(50%)',
 };
 
+/**
+ * An optional arrow/pointer rendered inside `PopperContent` that points back at
+ * the anchor. It reads the resolved side and arrow offset from the content
+ * context to position and rotate itself against the correct edge, and hides
+ * automatically when it cannot be centered. Must be a child of `PopperContent`.
+ */
 export interface PopperArrowProps extends PrimitiveProps {
   /** Arrow width in pixels. @default 10 */
   width?: number;

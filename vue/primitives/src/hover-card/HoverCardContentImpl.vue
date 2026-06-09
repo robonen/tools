@@ -2,6 +2,12 @@
 import type { PopperContentProps } from '../popper';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Internal implementation of the hover card panel: it wires up Popper
+ * positioning, the dismissable layer, the trigger-to-content grace area, and
+ * selection handling. Rendered by `HoverCardContent`; not exported for direct
+ * use.
+ */
 export interface HoverCardContentImplProps extends PrimitiveProps, Pick<
   PopperContentProps,
   | 'side'

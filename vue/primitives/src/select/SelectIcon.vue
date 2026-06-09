@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The decorative icon shown in the trigger (a chevron by default). Marked
+ * `aria-hidden`; override the default glyph by passing slot content.
+ */
 export interface SelectIconProps extends PrimitiveProps {}
 </script>
 

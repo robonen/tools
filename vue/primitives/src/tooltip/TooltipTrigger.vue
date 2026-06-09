@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The element the tooltip describes and anchors to. Hovering or focusing it
+ * opens the tooltip (after the delay); pointer-down/click closes it unless
+ * `disableClosingTrigger` is set. Wires up `aria-describedby` to the content
+ * and renders as a `<button>` by default.
+ */
 export interface TooltipTriggerProps extends PrimitiveProps {}
 </script>
 

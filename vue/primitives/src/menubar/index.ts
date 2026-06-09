@@ -1,5 +1,5 @@
 export { default as MenubarRoot } from './MenubarRoot.vue';
-export type { MenubarRootProps, MenubarRootEmits } from './MenubarRoot.vue';
+export type { MenubarRootProps } from './MenubarRoot.vue';
 
 export { default as MenubarMenu } from './MenubarMenu.vue';
 export type { MenubarMenuProps } from './MenubarMenu.vue';

@@ -2,11 +2,17 @@
 import type { PrimitiveProps } from '../primitive';
 import type { AvatarImageLoadingStatus } from './context';
 
+/**
+ * The image to display. It loads the `src` out of band and only renders once
+ * the image has successfully loaded, reporting its loading status to the root
+ * so the fallback can take over while loading or on error.
+ */
 export interface AvatarImageProps extends PrimitiveProps {
-
+  /** Image source URL — loaded out of band before the image is shown. */
   src?: string;
+  /** Alternative text describing the image. */
   alt?: string;
-  /** Optional hook to reject loaded images by their dimensions/src. */
+  /** Called whenever the image's loading status changes (`idle`/`loading`/`loaded`/`error`). */
   onLoadingStatusChange?: (status: AvatarImageLoadingStatus) => void;
 }
 </script>

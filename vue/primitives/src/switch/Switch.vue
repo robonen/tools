@@ -1,6 +1,16 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A control that toggles between an on and off state, mirroring a physical
+ * switch. Renders with `role="switch"`, exposes `data-state` and `data-disabled`
+ * for styling, and optionally mirrors its value into a hidden form input via
+ * `name`. The value is generic: it defaults to a boolean but can be any pair of
+ * `truthy`/`falsy` values (strings, numbers, objects compared by identity), and
+ * works uncontrolled (`defaultValue`) or controlled with `v-model`. Use it for
+ * instant settings toggles where the change applies immediately, as opposed to
+ * a checkbox that is typically submitted with a form.
+ */
 export interface SwitchProps<T = boolean> extends PrimitiveProps {
 
   /** Value representing the "on" state. Defaults to `true`. */
@@ -9,7 +19,9 @@ export interface SwitchProps<T = boolean> extends PrimitiveProps {
   falsy?: T;
   /** Initial uncontrolled value. Defaults to `falsy`. */
   defaultValue?: T;
+  /** Prevents toggling and reflects a disabled state to assistive technology. */
   disabled?: boolean;
+  /** Marks the control as required for form submission (sets `aria-required`). */
   required?: boolean;
   /** Name for the hidden form input. If provided, a hidden input mirrors state. */
   name?: string;

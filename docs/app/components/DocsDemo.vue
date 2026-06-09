@@ -1,19 +1,25 @@
 <script setup lang="ts">
 import type { Component } from 'vue';
+import { demoSources } from '#docs/demo-sources';
 
 const props = defineProps<{
   component: Component;
-  source: string;
+  /** Key into the lazy demo-source map (`${pkg}/${slug}`). */
+  sourceKey: string;
 }>();
 
 const showSource = ref(false);
+const source = ref('');
 
 const { highlighted, highlightReactive } = useShiki();
 
+// Fetch the raw demo source only when the user first opens it, then highlight.
 watch(showSource, async (show) => {
-  if (show && !highlighted.value) {
-    await highlightReactive(props.source, 'vue');
-  }
+  if (!show) return;
+  if (!source.value)
+    source.value = (await demoSources[props.sourceKey]?.()) ?? '';
+  if (source.value && !highlighted.value)
+    await highlightReactive(source.value, 'vue');
 });
 </script>
 

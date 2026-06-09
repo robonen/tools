@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button in the menubar that opens its menu and anchors the content.
+ * Toggles on click, opens on Enter / Space / ArrowDown / ArrowUp, and — once any
+ * menu is open — switches to this menu on hover. Arrow keys, Home/End, and
+ * typeahead move focus between sibling triggers.
+ */
 export interface MenubarTriggerProps extends PrimitiveProps {
   disabled?: boolean;
 }

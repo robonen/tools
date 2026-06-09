@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single step within the stepper. Associates its child trigger, indicator,
+ * title, and description with a step number and derives that step's state
+ * (`active`, `completed`, or `inactive`) from the root's current value.
+ */
 export interface StepperItemProps extends PrimitiveProps {
   /** 1-based index associating this item with a step. */
   step: number;

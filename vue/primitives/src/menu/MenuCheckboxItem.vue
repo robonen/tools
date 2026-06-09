@@ -2,8 +2,16 @@
 import type { MenuItemImplEmits, MenuItemImplProps } from './MenuItemImpl.vue';
 import type { CheckedState } from './types';
 
+/**
+ * A menu item that toggles a boolean (or indeterminate) state when selected,
+ * rendering with `role="menuitemcheckbox"`. Pair it with MenuItemIndicator to
+ * show a check mark. Bind `v-model:checked` to control its state, or leave it
+ * uncontrolled with `defaultChecked`.
+ */
 export interface MenuCheckboxItemProps extends MenuItemImplProps {
+  /** The controlled checked state. Use together with `update:checked`; may be `'indeterminate'`. */
   checked?: CheckedState;
+  /** The checked state when uncontrolled. */
   defaultChecked?: CheckedState;
 }
 export interface MenuCheckboxItemEmits extends MenuItemImplEmits {

@@ -2,9 +2,13 @@
 import type { EditableActivationMode, EditablePlaceholder, EditableSubmitMode } from './context';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Inline-editable text field that toggles between a read-only preview and an
+ * editable input. Root owns the value (via `v-model`), edit state, and submit /
+ * cancel behavior, providing them to its parts. Use it for click-to-edit labels,
+ * titles, and table cells where a full form input would be heavy.
+ */
 export interface EditableRootProps extends PrimitiveProps {
-  /** Controlled value. Use `v-model`. */
-  modelValue?: string;
   /** Uncontrolled initial value. @default '' */
   defaultValue?: string;
   /** Placeholder for edit / preview. A single string applies to both. */
@@ -28,7 +32,6 @@ export interface EditableRootProps extends PrimitiveProps {
 }
 
 export interface EditableRootEmits {
-  'update:modelValue': [value: string];
   'update:state': [state: 'edit' | 'submit' | 'cancel'];
   submit: [value: string];
 }
@@ -44,7 +47,6 @@ defineOptions({ inheritAttrs: false });
 
 const {
   as = 'div',
-  modelValue,
   defaultValue = '',
   placeholder = 'Enter text…',
   activationMode = 'focus',
@@ -61,19 +63,24 @@ const emit = defineEmits<EditableRootEmits>();
 
 const { forwardRef, currentElement } = useForwardExpose();
 
-const localValue = ref<string>(modelValue ?? defaultValue);
+// Uncontrolled fallback, seeded from `defaultValue`. In controlled mode the
+// `get` reads the live prop, so local state can never go stale.
+const localValue = ref<string>(defaultValue);
 
-watch(() => modelValue, (v) => {
-  if (v === undefined || v === localValue.value) return;
-  localValue.value = v;
+const model = defineModel<string>({
+  get: v => v ?? localValue.value,
+  set: (v) => {
+    localValue.value = v;
+    return v;
+  },
 });
 
-const inputValue = ref<string>(localValue.value);
+const inputValue = ref<string>(model.value);
 const isEditing = ref<boolean>(startWithEditMode);
 const inputRef = shallowRef<HTMLInputElement | undefined>();
 
-// Keep the draft in sync when modelValue changes from outside.
-watch(localValue, (v) => {
+// Keep the draft in sync when the committed value changes from outside.
+watch(model, (v) => {
   inputValue.value = v;
 });
 
@@ -83,24 +90,23 @@ const resolvedPlaceholder = computed<EditablePlaceholder>(() =>
     : placeholder,
 );
 
-const isEmpty = computed(() => localValue.value === '');
+const isEmpty = computed(() => model.value === '');
 
 function commitModel(v: string): void {
-  if (v === localValue.value) return;
-  localValue.value = v;
-  emit('update:modelValue', v);
+  if (v === model.value) return;
+  model.value = v;
 }
 
 function edit(): void {
   if (disabled || readonly) return;
-  inputValue.value = localValue.value;
+  inputValue.value = model.value;
   isEditing.value = true;
   emit('update:state', 'edit');
 }
 
 function cancel(): void {
   isEditing.value = false;
-  inputValue.value = localValue.value;
+  inputValue.value = model.value;
   emit('update:state', 'cancel');
 }
 
@@ -121,7 +127,7 @@ function onFocusOutCapture(event: FocusEvent): void {
 }
 
 provideEditableContext({
-  modelValue: localValue,
+  modelValue: model,
   inputValue,
   isEditing,
   placeholder: resolvedPlaceholder,
@@ -153,7 +159,7 @@ provideEditableContext({
     @focusout.capture="onFocusOutCapture"
   >
     <slot
-      :model-value="localValue"
+      :model-value="model"
       :is-editing="isEditing"
       :is-empty="isEmpty"
       :edit="edit"

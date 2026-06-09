@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Container that groups the tab triggers and exposes them as an ARIA `tablist`.
+ * Place one inside `TabsRoot`, wrapping the set of `TabsTrigger` elements.
+ */
 export interface TabsListProps extends PrimitiveProps {
 }
 </script>

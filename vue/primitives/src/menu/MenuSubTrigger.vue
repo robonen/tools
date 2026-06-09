@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { MenuItemImplProps } from './MenuItemImpl.vue';
 
+/**
+ * A menu item that opens its parent MenuSub's submenu. It acts as both the
+ * positioning anchor and the trigger, opening on hover (with a grace delay) or
+ * via the directional arrow key and closing on the opposite arrow. Must be used
+ * inside a MenuSub, alongside a MenuSubContent.
+ */
 export interface MenuSubTriggerProps extends MenuItemImplProps {}
 </script>
 

@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { TooltipContentImplEmits, TooltipContentImplProps } from './TooltipContentImpl.vue';
 
+/**
+ * The floating panel that holds the tooltip's label, positioned relative to the
+ * Trigger. It mounts only while the tooltip is open (driven by `Presence`); set
+ * `forceMount` to keep it mounted for CSS exit animations. Side, alignment, and
+ * collision behavior are forwarded to the underlying Popper content.
+ */
 export interface TooltipContentProps extends TooltipContentImplProps {
   /** Keep mounted for CSS exit animations. */
   forceMount?: boolean;

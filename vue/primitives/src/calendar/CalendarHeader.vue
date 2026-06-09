@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Layout container for the calendar's top bar. Holds the `CalendarPrev`,
+ * `CalendarHeading`, and `CalendarNext` controls above the month grid(s).
+ */
 export interface CalendarHeaderProps extends PrimitiveProps {}
 </script>
 

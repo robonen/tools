@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single selectable option. Renders as a `role="option"`, registers its value
+ * and text with the root, becomes the selected value on click/Enter/Space, and
+ * exposes `data-state`/`data-disabled` for styling. Holds a `SelectItemText`
+ * and, optionally, a `SelectItemIndicator`.
+ */
 export interface SelectItemProps extends PrimitiveProps {
   /** The option value. */
   value: string;

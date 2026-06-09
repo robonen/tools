@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * An actionable control inside a toast (e.g. "Undo" or "View"). Renders a button by
+ * default and requires `altText` so the action remains understandable to assistive
+ * technology even when the toast is announced out of context.
+ */
 export interface ToastActionProps extends PrimitiveProps {
   /**
    * Accessible description for screen readers (required).

@@ -1,7 +1,13 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The `'item-aligned'` positioning strategy for the content panel: pins the
+ * panel directly below the trigger, matching its left edge and minimum width.
+ * Chosen internally by `SelectContentImpl` when `position` is `'item-aligned'`.
+ */
 export interface SelectItemAlignedPositionProps extends PrimitiveProps {
+  /** Reading direction, forwarded from the root. */
   dir?: string;
 }
 

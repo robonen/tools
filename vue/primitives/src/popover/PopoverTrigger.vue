@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button that toggles the popover open and closed. Wires up
+ * `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`, and (unless a
+ * custom Anchor is present) acts as the element Content is positioned against.
+ */
 export interface PopoverTriggerProps extends PrimitiveProps {}
 </script>
 

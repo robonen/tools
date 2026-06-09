@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The scrollable `role="listbox"` region inside the content that wraps the
+ * options. Caps its height to the available space and scrolls when the list
+ * overflows; pair it with the scroll buttons for an item-aligned menu.
+ */
 export interface SelectViewportProps extends PrimitiveProps {}
 </script>
 

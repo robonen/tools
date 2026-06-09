@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Progress indicator for asynchronous results — render it inside the list while
+ * fetching items so screen readers announce the loading state. Exposes an
+ * optional `progress` value as an accessible progressbar.
+ */
 export interface CommandLoadingProps extends PrimitiveProps {
   /** Accessible label describing the loading state. */
   label?: string;

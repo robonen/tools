@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Wrapper that groups the preview and input. It mirrors edit/empty/disabled
+ * state via data attributes and, when `autoResize` is set, becomes the grid that
+ * sizes the input to match the preview text.
+ */
 export interface EditableAreaProps extends PrimitiveProps {}
 </script>
 

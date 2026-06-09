@@ -2,19 +2,26 @@
 import type { Direction } from '../config-provider';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A horizontal bar of menus, like the File / Edit / View row in a desktop app.
+ * Each MenubarMenu owns a trigger and its dropdown; the root coordinates them so
+ * only one is open at a time, arrow keys move between triggers, and typeahead
+ * jumps to a trigger by name. Built on top of Menu, so every menu inherits
+ * keyboard navigation, nested submenus, and checkbox/radio items.
+ *
+ * Use it for application-style menu bars in editors, dashboards, and tools. The
+ * root holds which menu is open; bind `v-model` (or listen to
+ * `update:modelValue`) to control or observe the active menu's value.
+ */
 export interface MenubarRootProps extends PrimitiveProps {
-  modelValue?: string;
   defaultValue?: string;
   dir?: Direction;
   loop?: boolean;
 }
-export interface MenubarRootEmits {
-  'update:modelValue': [value: string | undefined];
-}
 </script>
 
 <script setup lang="ts">
-import { computed, onScopeDispose, ref, toRef } from 'vue';
+import { onScopeDispose, ref, toRef } from 'vue';
 
 import { Primitive } from '../primitive';
 import { provideMenubarRootContext } from './context';
@@ -23,28 +30,28 @@ import { useConfig } from '../config-provider';
 import { useForwardExpose } from '@robonen/vue';
 
 const {
-  modelValue,
   defaultValue,
   dir: dirProp,
   loop = true,
   as = 'div',
 } = defineProps<MenubarRootProps>();
-const emit = defineEmits<MenubarRootEmits>();
+
+const localValue = ref<string | undefined>(defaultValue);
+
+const value = defineModel<string | undefined>('modelValue', {
+  default: undefined,
+  get: v => v ?? localValue.value,
+  set: (v) => {
+    localValue.value = v;
+    return v;
+  },
+});
 
 const config = useConfig();
 const dirRef = toRef(() => dirProp ?? config.dir.value);
 const { forwardRef } = useForwardExpose();
 
 const { getItems, CollectionSlot } = useCollectionProvider<string>();
-
-const local = ref<string | undefined>(defaultValue);
-const value = computed({
-  get: () => modelValue !== undefined ? modelValue : local.value,
-  set: (v) => {
-    local.value = v;
-    emit('update:modelValue', v);
-  },
-});
 
 const searchRef = ref('');
 let searchTimer: ReturnType<typeof setTimeout> | undefined;

@@ -1,5 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+
+/**
+ * The text field that displays and edits the value, rendered as a native
+ * `<input role="spinbutton">` wired to the root context. It parses typed input,
+ * mirrors the current value via `aria-valuenow`/`aria-valuemin`/`aria-valuemax`,
+ * and handles Arrow/Page/Home/End keys to step, jump, or clamp to the bounds.
+ */
 export interface NumberFieldInputProps extends PrimitiveProps {
 
   placeholder?: string;

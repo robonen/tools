@@ -2,6 +2,11 @@
 import type { PopperAnchorProps } from '../popper';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The element that opens the hover card on pointer enter or focus and anchors
+ * the floating content to it. Renders as an `<a>` by default; pass a custom
+ * `reference` to position the card against a different element.
+ */
 export interface HoverCardTriggerProps extends PrimitiveProps, Pick<PopperAnchorProps, 'reference'> {}
 </script>
 

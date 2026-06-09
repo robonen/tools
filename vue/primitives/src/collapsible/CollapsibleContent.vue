@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The panel revealed when the collapsible is open. Mounts and unmounts with
+ * the open state (via `Presence`), is referenced by the trigger's
+ * `aria-controls`, and is hidden from layout and assistive tech while closed.
+ */
 export interface CollapsibleContentProps extends PrimitiveProps {
 
   /** Render the content even when closed (useful for animation control). */

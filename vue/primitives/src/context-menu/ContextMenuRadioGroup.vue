@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuRadioGroupEmits, MenuRadioGroupProps } from '../menu';
 
+/**
+ * A group of mutually exclusive `ContextMenuRadioItem`s sharing a single
+ * selected value. Bind `v-model` to track the active choice.
+ */
 export interface ContextMenuRadioGroupProps extends MenuRadioGroupProps {}
 export type ContextMenuRadioGroupEmits = MenuRadioGroupEmits;
 </script>

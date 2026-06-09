@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuSubContentEmits, MenuSubContentProps } from '../menu';
 
+/**
+ * The floating panel of a nested submenu, positioned alongside its
+ * `ContextMenuSubTrigger`. Render it inside a `ContextMenuSub`.
+ */
 export interface ContextMenuSubContentProps extends MenuSubContentProps {}
 export type ContextMenuSubContentEmits = MenuSubContentEmits;
 </script>

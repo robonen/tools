@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The collapsible panel revealed when its item is open. Rendered as an ARIA
+ * `region` labelled by its trigger and mounted/unmounted via `Presence` so
+ * enter/leave transitions can run (use `forceMount` to keep it mounted for
+ * custom animation).
+ */
 export interface AccordionContentProps extends PrimitiveProps {
   /** Keep content mounted even when closed. */
   forceMount?: boolean;

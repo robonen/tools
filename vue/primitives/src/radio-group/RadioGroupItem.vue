@@ -1,5 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+/**
+ * A single selectable option within a `RadioGroupRoot`, rendered as a native
+ * `<button role="radio">`. Clicking or pressing Space selects its `value`;
+ * it reflects selection via `data-state` and participates in the group's
+ * roving tab order. Provides context to a nested `RadioGroupIndicator`.
+ */
 export interface RadioGroupItemProps extends PrimitiveProps {
   value: string;
   disabled?: boolean;

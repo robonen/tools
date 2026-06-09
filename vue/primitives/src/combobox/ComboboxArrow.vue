@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PopperArrowProps } from '../popper';
 
+/**
+ * An optional arrow that visually points from the popup back to the anchor. Renders only
+ * while the combobox is open. Place inside ComboboxContent.
+ */
 export type ComboboxArrowProps = PopperArrowProps;
 </script>
 

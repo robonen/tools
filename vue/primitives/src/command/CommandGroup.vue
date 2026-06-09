@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Labelled section that visually clusters related items under an optional
+ * heading. Hides itself automatically when every item it contains is filtered
+ * out (unless `forceMount`), so empty categories disappear during search.
+ */
 export interface CommandGroupProps extends PrimitiveProps {
   /** Group heading text (rendered when the default slot doesn't override it). */
   heading?: string;

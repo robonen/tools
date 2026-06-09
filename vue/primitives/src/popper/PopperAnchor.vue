@@ -2,6 +2,13 @@
 import type { PrimitiveProps } from '../primitive';
 import type { ReferenceElement } from '@floating-ui/vue';
 
+/**
+ * Marks the element that `PopperContent` positions itself against. Renders its
+ * child and registers it with the `PopperRoot` as the positioning reference;
+ * pass `reference` to anchor to a virtual or external element instead of the
+ * rendered DOM node. Optional — when omitted, the content falls back to its own
+ * `reference` prop or the nearest registered anchor.
+ */
 export interface PopperAnchorProps extends PrimitiveProps {
   /** Custom reference element for positioning. If not provided, uses the rendered element. */
   reference?: ReferenceElement;

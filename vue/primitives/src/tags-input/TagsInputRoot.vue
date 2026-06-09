@@ -2,9 +2,15 @@
 import type { PrimitiveProps } from '../primitive';
 import type { TagValue } from './context';
 
+/**
+ * A headless tags / token input: type a value, commit it on Enter (or paste,
+ * Tab, blur, or a custom delimiter), and manage the resulting list of tags with
+ * full keyboard navigation, duplicate/max guards, and accessible labelling.
+ * Use it for free-form multi-value entry such as email recipients, keywords,
+ * skills, or filter chips. Wraps the `Item`, `ItemText`, `ItemDelete`, `Input`,
+ * and `Clear` parts and provides their shared context.
+ */
 export interface TagsInputRootProps<U extends TagValue = string> extends PrimitiveProps {
-  /** Controlled value. Use `v-model`. */
-  modelValue?: U[];
   /** Uncontrolled initial value. @default [] */
   defaultValue?: U[];
   /** Add on paste (respects `delimiter`). */
@@ -30,7 +36,6 @@ export interface TagsInputRootProps<U extends TagValue = string> extends Primiti
 }
 
 export interface TagsInputRootEmits<U extends TagValue = string> {
-  'update:modelValue': [value: U[]];
   addTag: [value: U];
   removeTag: [value: U];
   invalid: [value: U];
@@ -48,7 +53,6 @@ import { useForwardExpose } from '@robonen/vue';
 
 const {
   as = 'div',
-  modelValue,
   defaultValue,
   addOnPaste = false,
   addOnTab = false,
@@ -64,14 +68,16 @@ const {
 
 const emit = defineEmits<TagsInputRootEmits<T>>();
 
+const model = defineModel<T[]>();
+
 const { forwardRef } = useForwardExpose();
 const config = useConfig();
 const direction = computed(() => dir ?? config.dir.value);
 
 // shallowRef: array is always replaced via commit(), never mutated in place.
-const localValue = shallowRef<T[]>((modelValue ?? defaultValue ?? []).slice()) as Ref<T[]>;
+const localValue = shallowRef<T[]>((model.value ?? defaultValue ?? []).slice()) as Ref<T[]>;
 
-watch(() => modelValue, (v) => {
+watch(model, (v) => {
   if (v === undefined) return;
   const cur = localValue.value;
   if (v.length === cur.length) {
@@ -94,7 +100,7 @@ const { getItems, CollectionSlot } = useCollectionProvider();
 
 function commit(next: T[]): void {
   localValue.value = next;
-  emit('update:modelValue', next);
+  model.value = next;
 }
 
 const convert: (raw: string) => T = convertValue ?? ((raw: string) => raw as unknown as T);

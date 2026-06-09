@@ -3,9 +3,18 @@ import type { ListboxDirection, ListboxOrientation, ListboxSelectionBehavior } f
 import type { ListboxValue } from './utils';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A list of selectable options that supports single or multiple selection,
+ * full keyboard navigation (arrows, Home/End, type-ahead), and optional
+ * hover highlighting. Use it when you need an always-visible selection list
+ * — picking from a set of values, building a custom multi-select, or as the
+ * options surface inside a larger widget.
+ *
+ * The root owns selection state (controlled via `v-model` or uncontrolled
+ * via `defaultValue`), the highlighted item, orientation/direction, and
+ * provides context to every descendant part.
+ */
 export interface ListboxRootProps<U extends ListboxValue = ListboxValue> extends PrimitiveProps {
-  /** Controlled value. Use `v-model`. */
-  modelValue?: U | U[];
   /** Uncontrolled initial value. */
   defaultValue?: U | U[];
   /** Allow multiple selection. */
@@ -25,7 +34,6 @@ export interface ListboxRootProps<U extends ListboxValue = ListboxValue> extends
 }
 
 export interface ListboxRootEmits<U extends ListboxValue = ListboxValue> {
-  'update:modelValue': [value: U | U[] | undefined];
   highlight: [payload: { ref: HTMLElement; value: U } | undefined];
   entryFocus: [event: CustomEvent];
   leave: [event: Event];
@@ -45,7 +53,6 @@ import { useForwardExpose } from '@robonen/vue';
 
 const {
   as = 'div',
-  modelValue,
   defaultValue,
   multiple = false,
   orientation = 'vertical',
@@ -58,11 +65,13 @@ const {
 
 const emit = defineEmits<ListboxRootEmits<T>>();
 
+const model = defineModel<T | T[] | undefined>();
+
 const { forwardRef, currentElement } = useForwardExpose();
 const config = useConfig();
 const direction = computed(() => dir ?? config.dir.value);
 
-const initial = (modelValue ?? defaultValue) as T | T[] | undefined;
+const initial = (model.value ?? defaultValue) as T | T[] | undefined;
 // shallowRef: value is always replaced on commit, never mutated in place.
 const localValue = shallowRef<T | T[] | undefined>(
   multiple
@@ -70,7 +79,7 @@ const localValue = shallowRef<T | T[] | undefined>(
     : (Array.isArray(initial) ? initial[0] : initial),
 ) as Ref<T | T[] | undefined>;
 
-watch(() => modelValue, (v) => {
+watch(model, (v) => {
   if (v === undefined) return;
   const cur = localValue.value;
   if (Array.isArray(v)) {
@@ -116,7 +125,7 @@ function isSelected(value: T): boolean {
 
 function commit(next: T | T[] | undefined): void {
   localValue.value = next;
-  emit('update:modelValue', next);
+  model.value = next;
 }
 
 function onValueChange(val: T): void {

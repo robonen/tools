@@ -9,7 +9,7 @@ export { default as ContextMenuLabel, type ContextMenuLabelProps } from './Conte
 export { default as ContextMenuPortal, type ContextMenuPortalProps } from './ContextMenuPortal.vue';
 export { default as ContextMenuRadioGroup, type ContextMenuRadioGroupEmits, type ContextMenuRadioGroupProps } from './ContextMenuRadioGroup.vue';
 export { default as ContextMenuRadioItem, type ContextMenuRadioItemEmits, type ContextMenuRadioItemProps } from './ContextMenuRadioItem.vue';
-export { default as ContextMenuRoot, type ContextMenuRootEmits, type ContextMenuRootProps } from './ContextMenuRoot.vue';
+export { default as ContextMenuRoot, type ContextMenuRootProps } from './ContextMenuRoot.vue';
 export { default as ContextMenuSeparator, type ContextMenuSeparatorProps } from './ContextMenuSeparator.vue';
 export { default as ContextMenuSub, type ContextMenuSubEmits, type ContextMenuSubProps } from './ContextMenuSub.vue';
 export { default as ContextMenuSubContent, type ContextMenuSubContentEmits, type ContextMenuSubContentProps } from './ContextMenuSubContent.vue';

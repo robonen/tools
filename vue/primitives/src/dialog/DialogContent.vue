@@ -1,6 +1,13 @@
 <script lang="ts">
 import type { DialogContentImplEmits, DialogContentImplProps } from './DialogContentImpl.vue';
 
+/**
+ * The dialog panel itself — the container for Title, Description, and the body.
+ * Renders only while open and picks a modal or non-modal implementation from
+ * the Root's `modal` setting: modal traps focus, locks body scroll, and hides
+ * the rest of the page from assistive tech; non-modal does none of these. Emits
+ * focus and dismissal events so consumers can guard against closing.
+ */
 export interface DialogContentProps extends Omit<DialogContentImplProps, 'trapFocus' | 'disableOutsidePointerEvents'> {
   /** Keep mounted for CSS exit animations. */
   forceMount?: boolean;

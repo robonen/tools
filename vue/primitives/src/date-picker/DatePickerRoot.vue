@@ -2,6 +2,13 @@
 import type { CalendarMonth, CalendarRootProps, WeekDayFormat } from '../calendar';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single-date picker that pairs a popover-anchored calendar with an optional
+ * trigger, field, and hidden form input. Owns the selected date, placeholder
+ * month, and open state, and provides both date-picker and calendar context to
+ * its parts. Use it when you need a compact, accessible "pick one date" control
+ * (e.g. a form field) rather than an always-visible `Calendar`.
+ */
 export interface DatePickerRootProps extends PrimitiveProps,
   Omit<CalendarRootProps, 'as' | 'asChild'> {
   /** Uncontrolled initial open state. */

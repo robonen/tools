@@ -1,6 +1,13 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A thin visual divider that separates and gives meaning to groups of content,
+ * such as items in a menu, sections of a toolbar, or rows in a list. Renders
+ * horizontally or vertically and, unless marked `decorative`, exposes
+ * `role="separator"` with the matching `aria-orientation` to assistive
+ * technology. Use it to break up related content into distinct regions.
+ */
 export interface SeparatorProps extends PrimitiveProps {
   /** The orientation of the separator. */
   orientation?: 'horizontal' | 'vertical';

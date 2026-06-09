@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuItemIndicatorProps } from '../menu';
 
+/**
+ * Renders its content only when the enclosing checkbox or radio item is checked.
+ * Put a check mark or dot inside it as the selection marker.
+ */
 export interface MenubarItemIndicatorProps extends MenuItemIndicatorProps {}
 </script>
 

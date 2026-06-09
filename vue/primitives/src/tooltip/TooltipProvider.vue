@@ -1,4 +1,11 @@
 <script lang="ts">
+/**
+ * Wraps a group of tooltips to share open/close timing and global behavior.
+ * Place it high in the tree (often at the app root); every `TooltipRoot` must
+ * have a Provider ancestor. It governs the hover `delayDuration` and the
+ * `skipDelayDuration` window that lets neighboring tooltips open instantly once
+ * one has shown, plus group-wide defaults each `TooltipRoot` may override.
+ */
 export interface TooltipProviderProps {
   /**
    * Hover delay before opening, in ms.

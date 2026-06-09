@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PopperArrowProps } from '../popper';
 
+/**
+ * An optional arrow that points from the hover card content back toward the
+ * trigger. Place it inside `HoverCardContent`; it tracks the resolved side and
+ * alignment automatically.
+ */
 export interface HoverCardArrowProps extends PopperArrowProps {}
 </script>
 

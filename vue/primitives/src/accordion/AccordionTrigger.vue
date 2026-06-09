@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The interactive header button that toggles its item's content open and
+ * closed. Renders as a `<button>` by default, wires up the correct ARIA
+ * (`aria-expanded`/`aria-controls`) and participates in arrow-key roving
+ * focus across all triggers.
+ */
 export interface AccordionTriggerProps extends PrimitiveProps {
 }
 </script>

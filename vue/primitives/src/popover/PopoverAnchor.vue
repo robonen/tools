@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PopperAnchorProps } from '../popper';
 
+/**
+ * An optional alternate element to position Content against. Place it anywhere
+ * inside Root to anchor the popover to something other than the Trigger — the
+ * Trigger then only toggles open state and no longer drives positioning.
+ */
 export interface PopoverAnchorProps extends PopperAnchorProps {}
 </script>
 

@@ -10,6 +10,11 @@ import { useForwardExpose } from '@robonen/vue';
 import { useScrollAreaRootContext, useScrollAreaScrollbarContext } from './context';
 import { addUnlinkedScrollListener } from './utils';
 
+/**
+ * The draggable handle inside a `ScrollAreaScrollbar`. Its size and position track the
+ * scroll offset, and dragging it scrolls the viewport. Must be rendered inside a
+ * `ScrollAreaScrollbar`.
+ */
 export interface ScrollAreaThumbProps extends PrimitiveProps {
   /** Keep mounted regardless of `hasThumb`. */
   forceMount?: boolean;

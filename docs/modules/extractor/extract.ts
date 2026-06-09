@@ -12,8 +12,8 @@
 
 import { basename, dirname, relative, resolve } from 'node:path';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { Project } from 'ts-morph';
-import type { ClassDeclaration, FunctionDeclaration, InterfaceDeclaration, JSDoc, JSDocTag, MethodDeclaration, PropertyDeclaration, PropertySignature, SourceFile, TypeAliasDeclaration } from 'ts-morph';
+import { Node, Project, SyntaxKind } from 'ts-morph';
+import type { ClassDeclaration, FunctionDeclaration, InterfaceDeclaration, JSDoc, JSDocTag, MethodDeclaration, PropertyDeclaration, PropertySignature, SourceFile, TypeAliasDeclaration, VariableDeclaration } from 'ts-morph';
 import type {
   CategoryMeta,
   ComponentMeta,
@@ -35,6 +35,34 @@ import type {
 
 /** Repository root — docs/modules/extractor → three levels up */
 const ROOT = resolve(import.meta.dirname, '..', '..', '..');
+
+/**
+ * Statement-coverage percentage per source file (repo-relative path), parsed
+ * from Istanbul's `coverage/coverage-final.json` if present. Empty when coverage
+ * hasn't been generated — items then simply omit the coverage badge.
+ */
+function loadCoverage(): Map<string, number> {
+  const map = new Map<string, number>();
+  const file = resolve(ROOT, 'coverage', 'coverage-final.json');
+  if (!existsSync(file)) return map;
+
+  try {
+    const data = JSON.parse(readFileSync(file, 'utf-8')) as Record<string, { s?: Record<string, number> }>;
+    for (const [absPath, entry] of Object.entries(data)) {
+      const counts = Object.values(entry.s ?? {});
+      if (counts.length === 0) continue;
+      const covered = counts.filter(c => c > 0).length;
+      map.set(relative(ROOT, absPath), Math.round((covered / counts.length) * 100));
+    }
+  }
+  catch {
+    // Malformed/partial coverage file — skip rather than fail extraction.
+  }
+
+  return map;
+}
+
+const COVERAGE = loadCoverage();
 
 interface PackageConfig {
   /** Path relative to repo root */
@@ -83,6 +111,18 @@ function slugify(name: string): string {
   return toKebabCase(name);
 }
 
+/**
+ * Clean a type string for display: drop the `import("…").` qualifiers the type
+ * checker emits when resolving types (e.g. `import("vue").Ref<T>` → `Ref<T>`) and
+ * collapse whitespace. Prefer this over raw `.getType().getText()`.
+ */
+function cleanType(text: string): string {
+  return text
+    .replaceAll(/import\((?:"[^"]*"|'[^']*')\)\./g, '')
+    .replaceAll(/\s+/g, ' ')
+    .trim();
+}
+
 function toPascalCase(slug: string): string {
   return slug
     .split(/[-_]/)
@@ -118,8 +158,17 @@ function getExamples(tags: JSDocTag[]): string[] {
   return tags
     .filter(t => t.getTagName() === 'example')
     .map((t) => {
-      const text = t.getCommentText()?.trim() ?? '';
-      return text.replace(/^```(?:ts|typescript)?\n?/, '').replace(/\n?```$/, '').trim();
+      let text = t.getCommentText()?.trim() ?? '';
+      // A leading `<caption>…</caption>` (JSDoc example title) isn't valid code —
+      // turn it into a leading comment so the snippet stays clean & highlightable.
+      let caption = '';
+      const cap = text.match(/^<caption>([\s\S]*?)<\/caption>\s*/i);
+      if (cap) {
+        caption = cap[1]!.trim();
+        text = text.slice(cap[0].length);
+      }
+      text = text.replace(/^```(?:ts|typescript|vue|js|javascript)?\n?/, '').replace(/\n?```$/, '').trim();
+      return caption ? `// ${caption}\n${text}` : text;
     })
     .filter(Boolean);
 }
@@ -130,7 +179,9 @@ function extractParams(tags: JSDocTag[], node: FunctionDeclaration | MethodDecla
 
   for (const param of node.getParameters()) {
     const name = param.getName();
-    const type = param.getType().getText(param);
+    // Prefer the written annotation (`MaybeRefOrGetter<T>`) over the resolved
+    // type, which expands aliases into noise (`T | import("vue").Ref<T> | …`).
+    const type = cleanType(param.getTypeNode()?.getText() ?? param.getType().getText(param));
     const optional = param.isOptional();
     const defaultValue = param.getInitializer()?.getText() ?? null;
 
@@ -156,20 +207,75 @@ function extractParams(tags: JSDocTag[], node: FunctionDeclaration | MethodDecla
 function extractTypeParams(node: FunctionDeclaration | ClassDeclaration | InterfaceDeclaration | TypeAliasDeclaration): TypeParamMeta[] {
   return node.getTypeParameters().map(tp => ({
     name: tp.getName(),
-    constraint: tp.getConstraint()?.getText() ?? null,
-    default: tp.getDefault()?.getText() ?? null,
+    constraint: tp.getConstraint() ? cleanType(tp.getConstraint()!.getText()) : null,
+    default: tp.getDefault() ? cleanType(tp.getDefault()!.getText()) : null,
     description: '',
   }));
 }
 
+/**
+ * When a function returns a plain object — a named interface (`UseXReturn`) OR an
+ * inline object literal (`{ first: HTMLElement | undefined; last: … }`) — expand
+ * its properties so the renderer shows a Name/Type/Description table. Skips
+ * unions/intersections, arrays/tuples, callable (function) types, primitives, and
+ * built-ins (`Ref`/`ComputedRef`/`Promise`/`Map`… whose declaration is in
+ * node_modules) — those keep just the type string.
+ */
+function extractReturnProperties(node: FunctionDeclaration | MethodDeclaration): PropertyMeta[] {
+  const returnType = node.getReturnType();
+
+  if (
+    returnType.isUnion()
+    || returnType.isIntersection()
+    || returnType.isArray()
+    || returnType.isTuple()
+    || returnType.getCallSignatures().length > 0
+    || !returnType.isObject()
+  ) {
+    return [];
+  }
+
+  // A named declaration in node_modules (Ref/Promise/Map…) is a built-in we don't
+  // expand; anonymous object literals have no such declaration → keep going.
+  const symbol = returnType.getAliasSymbol() ?? returnType.getSymbol();
+  const decl = symbol?.getDeclarations()?.[0];
+  if (decl && decl.getSourceFile().isInNodeModules())
+    return [];
+
+  const props: PropertyMeta[] = [];
+  for (const prop of returnType.getProperties()) {
+    const propDecl = prop.getDeclarations()?.[0];
+    if (!propDecl || propDecl.getSourceFile().isInNodeModules())
+      continue;
+
+    // Prefer the written annotation (clean); fall back to the resolved type for
+    // method-style members and inferred object-literal returns.
+    const typeNode = Node.isTyped(propDecl) ? propDecl.getTypeNode() : undefined;
+    const jsdocs = Node.isJSDocable(propDecl) ? propDecl.getJsDocs() : [];
+
+    props.push({
+      name: prop.getName(),
+      type: cleanType(typeNode?.getText() ?? prop.getTypeAtLocation(node).getText(node)),
+      description: getDescription(jsdocs, getJsDocTags(jsdocs)),
+      optional: Node.isQuestionTokenable(propDecl) && propDecl.hasQuestionToken(),
+      defaultValue: null,
+      readonly: false,
+    });
+  }
+
+  return props;
+}
+
 function extractReturnMeta(tags: JSDocTag[], node: FunctionDeclaration | MethodDeclaration): ReturnMeta | null {
-  const returnType = node.getReturnType().getText(node);
+  const returnType = cleanType(node.getReturnTypeNode()?.getText() ?? node.getReturnType().getText(node));
   if (returnType === 'void') return null;
 
   const returnsTag = getTagValue(tags, 'returns') || getTagValue(tags, 'return');
   const description = returnsTag.replace(/^\{[^}]*\}\s*/, '').trim();
 
-  return { type: returnType, description };
+  const properties = extractReturnProperties(node);
+
+  return { type: returnType, description, properties };
 }
 
 function extractMethodMeta(method: MethodDeclaration): MethodMeta {
@@ -192,7 +298,7 @@ function extractPropertyMeta(prop: PropertyDeclaration | PropertySignature): Pro
 
   return {
     name: prop.getName(),
-    type: prop.getType().getText(prop),
+    type: cleanType(prop.getTypeNode?.()?.getText() ?? prop.getType().getText(prop)),
     description: getDescription(jsdocs, tags),
     optional: prop.hasQuestionToken?.() ?? false,
     defaultValue: getTagValue(tags, 'default') || null,
@@ -208,10 +314,11 @@ function hasDemoFile(sourceFilePath: string): boolean {
   return existsSync(resolve(getSourceDir(sourceFilePath), 'demo.vue'));
 }
 
-function readDemoSource(sourceFilePath: string): string {
-  const demoPath = resolve(getSourceDir(sourceFilePath), 'demo.vue');
-  if (!existsSync(demoPath)) return '';
-  return readFileSync(demoPath, 'utf-8');
+// Demo SOURCE is loaded lazily on the client (via `#docs/demo-sources`) only when
+// "View source" is opened, so it is intentionally NOT embedded in the metadata
+// payload (it was ~850KB). `hasDemo`/the lazy map carry what the UI needs.
+function readDemoSource(_sourceFilePath: string): string {
+  return '';
 }
 
 function hasTestFile(sourceFilePath: string): boolean {
@@ -274,7 +381,7 @@ function extractClass(cls: ClassDeclaration, sourceFilePath: string, entryPoint:
     .filter(g => (g.getScope() ?? 'public') === 'public')
     .map(g => ({
       name: g.getName(),
-      type: g.getReturnType().getText(g),
+      type: cleanType(g.getReturnTypeNode()?.getText() ?? g.getReturnType().getText(g)),
       description: getDescription(g.getJsDocs(), getJsDocTags(g.getJsDocs())),
       optional: false,
       defaultValue: null,
@@ -377,6 +484,43 @@ function extractTypeAlias(typeAlias: TypeAliasDeclaration, sourceFilePath: strin
   };
 }
 
+function extractVariable(
+  decl: VariableDeclaration,
+  jsdocs: JSDoc[],
+  tags: JSDocTag[],
+  sourceFilePath: string,
+  entryPoint: string,
+): ItemMeta | null {
+  const name = decl.getName();
+  if (!name || name.startsWith('_')) return null;
+
+  const typeText = cleanType(decl.getTypeNode()?.getText() ?? decl.getType().getText(decl));
+  const keyword = decl.getVariableStatement()?.getDeclarationKind() ?? 'const';
+  // Show the declaration shape, not the (potentially huge) initializer value.
+  const signature = `${keyword} ${name}: ${typeText}`;
+
+  return {
+    name,
+    slug: slugify(name),
+    kind: 'variable',
+    description: getDescription(jsdocs, tags),
+    since: getTagValue(tags, 'since'),
+    signatures: [signature],
+    params: [],
+    returns: null,
+    typeParams: [],
+    examples: getExamples(tags),
+    methods: [],
+    properties: [],
+    hasDemo: hasDemoFile(sourceFilePath),
+    demoSource: readDemoSource(sourceFilePath),
+    hasTests: hasTestFile(sourceFilePath),
+    relatedTypes: [],
+    sourcePath: relative(ROOT, sourceFilePath),
+    entryPoint,
+  };
+}
+
 function collectExportedItems(sourceFile: SourceFile, entryPoint: string, visited = new Set<string>()): ItemMeta[] {
   const filePath = sourceFile.getFilePath();
   if (visited.has(filePath)) return [];
@@ -448,6 +592,21 @@ function collectExportedItems(sourceFile: SourceFile, entryPoint: string, visite
     if (item) items.push(item);
   }
 
+  for (const varStatement of sourceFile.getVariableStatements()) {
+    if (!varStatement.isExported()) continue;
+    const jsdocs = varStatement.getJsDocs();
+    const tags = getJsDocTags(jsdocs);
+    // Gate (like types/interfaces): only documented consts, so we don't surface
+    // every internal constant — desirable but not always.
+    const hasCategory = getTagValue(tags, 'category') !== '';
+    if (!hasCategory && jsdocs.length === 0) continue;
+
+    for (const decl of varStatement.getDeclarations()) {
+      const item = extractVariable(decl, jsdocs, tags, filePath, entryPoint);
+      if (item) items.push(item);
+    }
+  }
+
   for (const exportDecl of sourceFile.getExportDeclarations()) {
     if (!exportDecl.getModuleSpecifierValue()) continue;
     const referencedFile = exportDecl.getModuleSpecifierSourceFile();
@@ -461,13 +620,35 @@ function collectExportedItems(sourceFile: SourceFile, entryPoint: string, visite
  * Groups types/interfaces from `types.ts` files with their sibling
  * class/function items from the same directory as `relatedTypes`.
  */
+/**
+ * A trimmed copy of a type/interface for embedding as a primary's `relatedType`:
+ * keeps the shape (signature/properties/description) but drops the heavy fields
+ * (demo source, examples, nested types, params/returns) that would otherwise be
+ * duplicated into the metadata payload.
+ */
+function slimRelatedType(type: ItemMeta): ItemMeta {
+  return {
+    ...type,
+    examples: [],
+    params: [],
+    returns: null,
+    methods: [],
+    relatedTypes: [],
+    hasDemo: false,
+    demoSource: '',
+  };
+}
+
 function groupCoLocatedTypes(items: ItemMeta[]): ItemMeta[] {
   const typesByDir = new Map<string, ItemMeta[]>();
   const primaryByDir = new Map<string, ItemMeta[]>();
 
   for (const item of items) {
     const dir = dirname(item.sourcePath);
-    const isSecondary = item.sourcePath.endsWith('/types.ts') && (item.kind === 'type' || item.kind === 'interface');
+    // Types/interfaces are documentation-secondary: when a function/class lives
+    // in the same directory they fold into it as `relatedTypes` instead of
+    // competing as standalone pages (keeps the reference to the important items).
+    const isSecondary = item.kind === 'type' || item.kind === 'interface';
 
     const target = isSecondary ? typesByDir : primaryByDir;
     const existing = target.get(dir) ?? [];
@@ -479,8 +660,24 @@ function groupCoLocatedTypes(items: ItemMeta[]): ItemMeta[] {
   for (const [dir, types] of Array.from(typesByDir.entries())) {
     const primaries = primaryByDir.get(dir);
     if (!primaries || primaries.length === 0) continue;
-    for (const primary of primaries) primary.relatedTypes = [...types];
-    for (const t of types) absorbed.add(`${t.entryPoint}:${t.name}`);
+
+    for (const type of types) {
+      // Attach each type to the SINGLE most-relevant primary (longest name-prefix
+      // match, else the first) — never every primary — so it isn't duplicated N×,
+      // and store a slim copy (no demo source / nested types).
+      const typeName = type.name.toLowerCase();
+      let owner = primaries[0]!;
+      let bestLen = -1;
+      for (const primary of primaries) {
+        const primaryName = primary.name.toLowerCase();
+        if (typeName.startsWith(primaryName) && primaryName.length > bestLen) {
+          owner = primary;
+          bestLen = primaryName.length;
+        }
+      }
+      owner.relatedTypes.push(slimRelatedType(type));
+      absorbed.add(`${type.entryPoint}:${type.name}`);
+    }
   }
 
   return items.filter(item => !absorbed.has(`${item.entryPoint}:${item.name}`));
@@ -571,6 +768,28 @@ function buildApiCategories(pkgDir: string): CategoryMeta[] {
 
   const groupedItems = groupCoLocatedTypes(uniqueItems);
 
+  // Per-package slug uniqueness — the [package]/[utility] route keys on slug, so
+  // a function `foo` and interface `Foo` (same kebab slug) would otherwise clash.
+  // Functions/classes keep the base slug; lower-priority kinds get suffixed.
+  const KIND_PRIORITY: Record<string, number> = { function: 0, class: 1, variable: 2, enum: 3, interface: 4, type: 5 };
+  const usedSlugs = new Set<string>();
+  for (const item of [...groupedItems].sort((a, b) => (KIND_PRIORITY[a.kind] ?? 9) - (KIND_PRIORITY[b.kind] ?? 9))) {
+    if (!usedSlugs.has(item.slug)) {
+      usedSlugs.add(item.slug);
+      continue;
+    }
+    let candidate = `${item.slug}-${item.kind}`;
+    let n = 2;
+    while (usedSlugs.has(candidate))
+      candidate = `${item.slug}-${item.kind}-${n++}`;
+    item.slug = candidate;
+    usedSlugs.add(candidate);
+  }
+
+  // Attach statement-coverage % (when coverage data exists) for the test badge.
+  for (const item of groupedItems)
+    item.coverage = COVERAGE.get(item.sourcePath) ?? null;
+
   const categoryMap = new Map<string, ItemMeta[]>();
   for (const item of groupedItems) {
     const cat = inferCategoryFromItem(item);
@@ -620,6 +839,43 @@ function extractEmits(setupScript: string): EmitMeta[] {
 }
 
 let partProjectCounter = 0;
+
+/**
+ * Parse `defineModel(...)` calls from a setup block into the v-model prop(s) +
+ * their `update:*` emit(s) — these don't appear in the `XxxProps` interface or
+ * `defineEmits`, so without this the controlled v-model API is invisible in docs.
+ */
+function extractModels(setupScript: string): { props: PropertyMeta[]; emits: EmitMeta[] } {
+  const props: PropertyMeta[] = [];
+  const emits: EmitMeta[] = [];
+  if (!setupScript.includes('defineModel')) return { props, emits };
+
+  const project = new Project({ useInMemoryFileSystem: true, skipAddingFilesFromTsConfig: true, compilerOptions: { allowJs: true, skipLibCheck: true } });
+  const sf = project.createSourceFile(`__model_${partProjectCounter++}.ts`, setupScript);
+
+  for (const call of sf.getDescendantsOfKind(SyntaxKind.CallExpression)) {
+    if (call.getExpression().getText() !== 'defineModel') continue;
+
+    const typeArg = call.getTypeArguments()[0];
+    const type = typeArg ? cleanType(typeArg.getText()) : 'unknown';
+    const firstArg = call.getArguments()[0];
+    const name = firstArg && Node.isStringLiteral(firstArg) ? firstArg.getLiteralValue() : 'modelValue';
+
+    props.push({
+      name,
+      type,
+      description: name === 'modelValue'
+        ? 'Two-way bound value (`v-model`).'
+        : `Two-way bound value (\`v-model:${name}\`).`,
+      optional: true,
+      defaultValue: null,
+      readonly: false,
+    });
+    emits.push({ name: `update:${name}`, payload: `[value: ${type}]`, description: '' });
+  }
+
+  return { props, emits };
+}
 
 /** Parse the `XxxProps` interface from a `.vue` part using ts-morph in-memory. */
 function extractPartProps(plainScript: string): { props: PropertyMeta[]; description: string } {
@@ -688,12 +944,19 @@ function buildComponents(pkgDir: string): ComponentMeta[] {
     const slug = entry.name;
     const base = toPascalCase(slug);
 
-    // Preserve the anatomy order declared in index.ts; fall back to filenames.
+    // Anatomy = the PUBLIC parts exported from index.ts, in declared order. This
+    // excludes demo.vue and internal parts (*Impl, *Modal/NonModal, *Position, …)
+    // that aren't part of the public API. Fall back to all .vue (minus demo) only
+    // when the barrel exposes no parseable `export { default as X }`.
     const order = readPartOrder(resolve(dir, 'index.ts'));
-    const orderedFiles = [
-      ...order.map(name => `${name}.vue`).filter(f => vueFiles.includes(f)),
-      ...vueFiles.filter(f => !order.includes(f.replace(/\.vue$/, ''))),
-    ];
+    const publicFiles = order.map(name => `${name}.vue`).filter(f => vueFiles.includes(f));
+    const candidates = publicFiles.length > 0
+      ? publicFiles
+      : vueFiles.filter(f => f !== 'demo.vue');
+    // Drop internal implementation/variant parts users never compose directly
+    // (the public part is e.g. `Content`, not `ContentImpl`/`ContentModal`).
+    const INTERNAL_PART = /(?:Impl|ContentModal|ContentNonModal|RootContentModal|RootContentNonModal|Position)\.vue$/;
+    const orderedFiles = candidates.filter(f => !INTERNAL_PART.test(f));
 
     const parts: ComponentPartMeta[] = [];
     let groupDescription = '';
@@ -706,7 +969,17 @@ function buildComponents(pkgDir: string): ComponentMeta[] {
       const name = file.replace(/\.vue$/, '');
       const role = roleFromName(name, base);
       if (role === 'Root' && description && !groupDescription) groupDescription = description;
-      parts.push({ name, role, description, props, emits: extractEmits(setup) });
+
+      // Merge in `defineModel` v-model props/emits (invisible to the interface/
+      // defineEmits parsers), de-duping against any explicitly-declared ones.
+      const models = extractModels(setup);
+      const emits = extractEmits(setup);
+      for (const mp of models.props)
+        if (!props.some(p => p.name === mp.name)) props.push(mp);
+      for (const me of models.emits)
+        if (!emits.some(e => e.name === me.name)) emits.push(me);
+
+      parts.push({ name, role, description, props, emits });
     }
 
     const entryPoint = `./${slug}`;
@@ -720,7 +993,7 @@ function buildComponents(pkgDir: string): ComponentMeta[] {
       entryPoint,
       parts,
       hasDemo,
-      demoSource: hasDemo ? readFileSync(demoPath, 'utf-8') : '',
+      demoSource: '', // loaded lazily client-side via #docs/demo-sources
       sourcePath: relative(ROOT, dir),
     });
   }

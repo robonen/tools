@@ -1,4 +1,9 @@
 <script lang="ts">
+/**
+ * A single menu within the menubar, pairing one MenubarTrigger with its
+ * MenubarContent. Its `value` identifies the menu to the root so it can track
+ * which one is open; if omitted, a stable id is generated automatically.
+ */
 export interface MenubarMenuProps {
   value?: string;
 }

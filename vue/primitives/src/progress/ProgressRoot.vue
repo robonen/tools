@@ -2,6 +2,18 @@
 import type { PrimitiveProps } from '../primitive';
 import type { ProgressState } from './context';
 
+/**
+ * A bar that shows the completion progress of a task, typically a horizontal
+ * fill that grows from empty to full. Use it for file uploads, multi-step form
+ * progress, loading indicators, or any operation whose progress you can measure
+ * (or, with a `null` value, signal as indeterminate).
+ *
+ * The root renders the accessible `progressbar` (wiring up `aria-valuemin`,
+ * `aria-valuemax`, `aria-valuenow`, and `aria-valuetext`) and derives the
+ * current `state` — `indeterminate`, `loading`, or `complete` — which it
+ * provides via context and exposes on the `data-state` attribute. Pair it with
+ * `ProgressIndicator` for the visual fill.
+ */
 export interface ProgressRootProps extends PrimitiveProps {
   /** Current value. `null` denotes an indeterminate progress bar. */
   modelValue?: number | null;

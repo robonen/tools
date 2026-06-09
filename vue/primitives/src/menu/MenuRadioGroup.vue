@@ -1,8 +1,15 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Wraps a set of MenuRadioItems so that only one can be selected at a time,
+ * managing the shared selected value. Bind `v-model` to control the selection,
+ * or supply `defaultValue` to leave it uncontrolled.
+ */
 export interface MenuRadioGroupProps extends PrimitiveProps {
+  /** The controlled selected value. Use together with `update:modelValue`. */
   modelValue?: string;
+  /** The selected value when uncontrolled. */
   defaultValue?: string;
 }
 export interface MenuRadioGroupEmits {

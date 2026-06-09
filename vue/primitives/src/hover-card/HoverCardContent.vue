@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { HoverCardContentImplEmits, HoverCardContentImplProps } from './HoverCardContentImpl.vue';
 
+/**
+ * The floating panel that holds the previewed content. It is positioned against
+ * the trigger and is mounted only while the card is open (gated by `Presence`),
+ * unless `forceMount` is set so you can drive enter/exit animations yourself.
+ */
 export interface HoverCardContentProps extends HoverCardContentImplProps {
   /** Keep mounted for CSS exit animations. */
   forceMount?: boolean;

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuRadioGroupEmits, MenuRadioGroupProps } from '../menu';
 
+/**
+ * Groups MenubarRadioItems into a single-choice set. Bind `v-model` to track the
+ * selected item's value across the group.
+ */
 export interface MenubarRadioGroupProps extends MenuRadioGroupProps {}
 export type MenubarRadioGroupEmits = MenuRadioGroupEmits;
 </script>

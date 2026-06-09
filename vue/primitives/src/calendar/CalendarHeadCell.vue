@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A `scope="col"` weekday header cell (`<th>`). Renders the localized short
+ * label in its slot while exposing the full weekday name as the `aria-label`
+ * when a `day` is provided.
+ */
 export interface CalendarHeadCellProps extends PrimitiveProps {
   /** The day this header cell represents — used for `aria-label`. */
   day?: Date;

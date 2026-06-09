@@ -3,6 +3,12 @@ import type { DismissableLayerEmits } from '../dismissable-layer';
 import type { FocusScopeEmits } from '../focus-scope';
 import type { PopperContentProps } from '../popper';
 
+/**
+ * Internal shared implementation behind PopoverContent — wraps a FocusScope, a
+ * DismissableLayer, and a PopperContent and applies the popover ARIA wiring and
+ * `--popover-*` style variables. Not exported; the modal and non-modal Content
+ * variants render this with the appropriate flags.
+ */
 export interface PopoverContentImplProps extends PopperContentProps {
   /** Trap focus inside the content (modal popovers). */
   trapFocus?: boolean;

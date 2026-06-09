@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuSeparatorProps } from '../menu';
 
+/**
+ * A visual divider between groups of items, exposed as `role="separator"` and
+ * skipped by keyboard navigation.
+ */
 export interface ContextMenuSeparatorProps extends MenuSeparatorProps {}
 </script>
 

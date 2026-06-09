@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button that toggles the collapsible open and closed. Wires up
+ * `aria-expanded`, `aria-controls`, and the disabled state from the root, and
+ * renders as a `<button>` by default.
+ */
 export interface CollapsibleTriggerProps extends PrimitiveProps {}
 </script>
 

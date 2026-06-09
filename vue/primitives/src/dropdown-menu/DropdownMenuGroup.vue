@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuGroupProps } from '../menu';
 
+/**
+ * Groups related items so assistive tech announces them together. Pair it with
+ * a DropdownMenuLabel to give the group an accessible name.
+ */
 export interface DropdownMenuGroupProps extends MenuGroupProps {}
 </script>
 

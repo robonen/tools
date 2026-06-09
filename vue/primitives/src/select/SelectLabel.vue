@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A non-selectable heading for a `SelectGroup`. Renders the text that labels the
+ * group and wires its id to the group's `aria-labelledby`; must be used inside a
+ * `SelectGroup`.
+ */
 export interface SelectLabelProps extends PrimitiveProps {}
 </script>
 

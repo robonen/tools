@@ -1,4 +1,10 @@
 <script lang="ts">
+/**
+ * The horizontal (or vertical) list of menu items. Renders a `RovingFocusGroup`
+ * inside a positioned wrapper that also serves as the track for `NavigationMenuIndicator`.
+ * Place one directly inside `NavigationMenuRoot` (or `NavigationMenuSub`) to hold its
+ * `NavigationMenuItem`s.
+ */
 // This component takes no props of its own (it renders a fixed wrapper + RovingFocusGroup
 // and forwards $attrs). The empty interface is the intentional public prop contract.
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type

@@ -2,6 +2,12 @@
 import type { PopperContentProps } from '../popper';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Internal implementation behind `TooltipContent`: renders the Popper content
+ * inside a dismissable layer, exposes the positioning props, mirrors the popper
+ * CSS variables, and adds the hidden `role="tooltip"` accessible label. Use
+ * `TooltipContent` instead — this is not part of the public anatomy.
+ */
 export interface TooltipContentImplProps extends PrimitiveProps, Pick<
   PopperContentProps,
   | 'side'

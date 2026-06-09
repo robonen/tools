@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The region that captures right-click (and touch long-press), preventing the
+ * native context menu and opening the menu anchored at the pointer position.
+ * Wrap whatever area should respond to a secondary click.
+ */
 export interface ContextMenuTriggerProps extends PrimitiveProps {
   disabled?: boolean;
 }

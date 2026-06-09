@@ -1,7 +1,14 @@
 <script lang="ts">
 import type { MenuContentImplEmits, MenuContentImplProps } from './MenuContentImpl.vue';
 
+/**
+ * The popup surface for a submenu's items. It mounts while the submenu is open,
+ * positions itself to the side of its MenuSubTrigger (flipping for RTL), and
+ * always renders non-modally so the parent menu stays interactive. Must be used
+ * inside a MenuSub.
+ */
 export interface MenuSubContentProps extends MenuContentImplProps {
+  /** Force mounting the content even when closed, e.g. to control presence with an external animation library. */
   forceMount?: boolean;
 }
 export type MenuSubContentEmits = MenuContentImplEmits;

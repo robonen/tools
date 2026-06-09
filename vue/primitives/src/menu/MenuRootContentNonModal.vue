@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// Internal non-modal variant of the menu content: leaves focus untrapped and
+// outside pointer events enabled, so the rest of the page stays interactive
+// while the menu is open. Selected by MenuContent when the root's `modal` prop
+// is false.
 import type { MenuContentImplEmits, MenuContentImplProps } from './MenuContentImpl.vue';
 
 import { shallowRef, watchEffect } from 'vue';

@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { SelectScrollButtonImplProps } from './SelectScrollButtonImpl.vue';
 
+/**
+ * An auto-scroll affordance shown at the top of the viewport when there is
+ * content scrolled out of view above. Scrolls the viewport up while hovered and
+ * hides itself when already at the top.
+ */
 export type SelectScrollUpButtonProps = Omit<SelectScrollButtonImplProps, 'direction'>;
 </script>
 

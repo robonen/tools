@@ -1,7 +1,17 @@
 <script lang="ts">
 import type { MenuContentImplEmits, MenuContentImplProps } from './MenuContentImpl.vue';
 
+/**
+ * The popup surface that holds the menu items. It mounts only while the menu is
+ * open (gated by Presence), positions itself via Popper, and switches between
+ * modal and non-modal behaviour based on the root's `modal` prop. Place items,
+ * groups, labels, separators, and submenus inside it.
+ *
+ * Set `forceMount` to keep it in the DOM when open state is driven externally
+ * (for example, to run exit animations).
+ */
 export interface MenuContentProps extends MenuContentImplProps {
+  /** Force mounting the content even when closed, e.g. to control presence with an external animation library. */
   forceMount?: boolean;
 }
 export type MenuContentEmits = MenuContentImplEmits;

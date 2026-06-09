@@ -2,10 +2,16 @@
 import type { PrimitiveProps } from '../primitive';
 import type { RovingDirection } from '../utils/roving-focus';
 
+/**
+ * A vertically (or horizontally) stacked set of headers that each reveal an
+ * associated panel of content. Use it to let users expand and collapse
+ * sections to manage information density — FAQs, settings groups, or any
+ * place a `Collapsible` per item would be repetitive.
+ *
+ * The root owns open state (single or multiple panels), keyboard roving
+ * focus across triggers, and provides context to every `AccordionItem`.
+ */
 export interface AccordionRootProps extends PrimitiveProps {
-  /** Current open value(s) for controlled mode. */
-  modelValue?: string | string[];
-
   /** Initial value(s) for uncontrolled mode. */
   defaultValue?: string | string[];
 
@@ -30,7 +36,7 @@ export interface AccordionRootProps extends PrimitiveProps {
 </script>
 
 <script setup lang="ts">
-import { computed, shallowRef, toRef, watch } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { resolveNextIndex, rovingKeyToAction } from '../utils/roving-focus';
 import { Primitive } from '../primitive';
 import { provideAccordionContext } from './context';
@@ -45,34 +51,25 @@ const {
   orientation = 'vertical',
   dir = 'ltr',
   loop = true,
-  modelValue,
   defaultValue,
   as = 'div',
 } = defineProps<AccordionRootProps>();
 
 const { forwardRef } = useForwardExpose();
 
-const emit = defineEmits<{ 'update:modelValue': [value: string | string[] | undefined] }>();
-
 type RovingAction = NonNullable<ReturnType<typeof rovingKeyToAction>>;
 
-const openSet = shallowRef<Set<string>>(
-  new Set(toArray(modelValue ?? defaultValue)),
-);
+const localValue = ref<string | string[] | undefined>(defaultValue);
 
-function setEqualsArray(set: Set<string>, arr: string[]): boolean {
-  if (arr.length !== set.size) return false;
-  for (let i = 0; i < arr.length; i++) if (!set.has(arr[i]!)) return false;
-  return true;
-}
-
-watch(() => modelValue, (v) => {
-  if (v === undefined) return;
-  const arr = toArray(v);
-  if (setEqualsArray(openSet.value, arr)) return;
-  openSet.value = new Set(arr);
+const model = defineModel<string | string[] | undefined>({
+  get: v => v ?? localValue.value,
+  set: (v) => {
+    localValue.value = v;
+    return v;
+  },
 });
 
+const openSet = computed<Set<string>>(() => new Set(toArray(model.value)));
 
 function nextOpenSet(cur: Set<string>, value: string): Set<string> {
   const present = cur.has(value);
@@ -88,13 +85,12 @@ function nextOpenSet(cur: Set<string>, value: string): Set<string> {
   return next;
 }
 
-function toEmitValue(set: Set<string>): string | string[] | undefined {
+function toModelValue(set: Set<string>): string | string[] | undefined {
   return type === 'single' ? set.values().next().value : [...set];
 }
 
 function commit(next: Set<string>): void {
-  openSet.value = next;
-  emit('update:modelValue', toEmitValue(next));
+  model.value = toModelValue(next);
 }
 
 function isOpen(value: string): boolean {

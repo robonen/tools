@@ -2,6 +2,19 @@
 import type { FlatItem } from './utils';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A hierarchical list of expandable/collapsible nodes with full keyboard
+ * support. Use it to present nested data — file explorers, navigation
+ * sidebars, category pickers, or any place users drill into parent/child
+ * relationships. Works with either nested or flat source data via the
+ * `getKey` / `getChildren` accessors.
+ *
+ * The root owns selection state (single or multiple, controlled via
+ * `v-model` or uncontrolled via `defaultValue`), expanded state
+ * (`v-model:expanded`), roving focus and arrow/Home/End navigation, and
+ * exposes the computed visible `flatItems` through its default slot for
+ * each `TreeItem` to render.
+ */
 export interface TreeRootProps<U = unknown> extends PrimitiveProps {
   /** Flat or nested item list — children are resolved via `getChildren`. */
   items: readonly U[];
@@ -9,12 +22,8 @@ export interface TreeRootProps<U = unknown> extends PrimitiveProps {
   getKey: (item: U) => string;
   /** Return the children of an item, or `undefined` if it is a leaf. */
   getChildren?: (item: U) => readonly U[] | undefined | null;
-  /** Controlled selected key(s). Use `v-model`. */
-  modelValue?: string | string[];
   /** Uncontrolled initial selected key(s). */
   defaultValue?: string | string[];
-  /** Controlled expanded keys. Use `v-model:expanded`. */
-  expanded?: string[];
   /** Uncontrolled initial expanded keys. */
   defaultExpanded?: string[];
   /** Allow selecting multiple items. @default false */
@@ -25,11 +34,6 @@ export interface TreeRootProps<U = unknown> extends PrimitiveProps {
   dir?: 'ltr' | 'rtl';
   /** When `true`, selecting a parent also selects all of its descendants (requires `multiple`). */
   propagateSelect?: boolean;
-}
-
-export interface TreeRootEmits {
-  'update:modelValue': [value: string | string[] | undefined];
-  'update:expanded': [value: string[]];
 }
 </script>
 
@@ -53,9 +57,7 @@ const {
   items,
   getKey,
   getChildren = ((item: any) => item?.children) as (item: T) => readonly T[] | undefined | null,
-  modelValue,
   defaultValue,
-  expanded,
   defaultExpanded,
   multiple = false,
   disabled = false,
@@ -63,7 +65,8 @@ const {
   propagateSelect = false,
 } = defineProps<TreeRootProps<T>>();
 
-const emit = defineEmits<TreeRootEmits>();
+const selectedModel = defineModel<string | string[] | undefined>();
+const expandedModel = defineModel<string[]>('expanded');
 
 const { forwardRef } = useForwardExpose();
 const config = useConfig();
@@ -79,10 +82,10 @@ function normalize(v: string | string[] | undefined): string[] {
 // --- Selection state ------------------------------------------------------
 
 const localSelected = ref<string[]>(
-  modelValue !== undefined ? normalize(modelValue) : normalize(defaultValue),
+  selectedModel.value !== undefined ? normalize(selectedModel.value) : normalize(defaultValue),
 );
 
-watch(() => modelValue, (v) => {
+watch(selectedModel, (v) => {
   if (v === undefined) return;
   const arr = normalize(v);
   const cur = localSelected.value;
@@ -92,7 +95,7 @@ watch(() => modelValue, (v) => {
 
 function commitSelected(next: string[]): void {
   localSelected.value = next;
-  emit('update:modelValue', multiple ? next : next[0]);
+  selectedModel.value = multiple ? next : next[0];
 }
 
 // O(1) membership lookup — replaces linear `.includes()` that was called once
@@ -168,10 +171,10 @@ function select(value: T): void {
 // --- Expanded state -------------------------------------------------------
 
 const localExpanded = ref<string[]>(
-  expanded !== undefined ? [...expanded] : [...(defaultExpanded ?? [])],
+  expandedModel.value !== undefined ? [...expandedModel.value] : [...(defaultExpanded ?? [])],
 );
 
-watch(() => expanded, (v) => {
+watch(expandedModel, (v) => {
   if (v === undefined) return;
   const cur = localExpanded.value;
   if (v.length === cur.length && v.every((x, i) => x === cur[i])) return;
@@ -186,7 +189,7 @@ function isExpanded(key: string): boolean {
 
 function commitExpanded(next: string[]): void {
   localExpanded.value = next;
-  emit('update:expanded', next);
+  expandedModel.value = next;
 }
 
 function toggleExpanded(value: T): void {

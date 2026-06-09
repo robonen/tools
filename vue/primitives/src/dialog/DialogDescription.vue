@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * An optional supporting description for the dialog. Its id is wired to the
+ * Content's `aria-describedby` so screen readers announce it after the title.
+ */
 export interface DialogDescriptionProps extends PrimitiveProps {}
 </script>
 

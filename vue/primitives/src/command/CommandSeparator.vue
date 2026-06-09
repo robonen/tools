@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Visual divider between groups or items. Hidden automatically while a search
+ * term is active (since filtering collapses the list) unless `alwaysRender` is set.
+ */
 export interface CommandSeparatorProps extends PrimitiveProps {
   /** Render the separator even while the search term is active. */
   alwaysRender?: boolean;

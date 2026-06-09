@@ -2,6 +2,16 @@
 import type { PrimitiveProps } from '../primitive';
 import type { RovingDirection } from '../utils/roving-focus';
 
+/**
+ * A set of layered sections of content — known as tab panels — where only one
+ * panel is shown at a time, each surfaced by its own trigger. Use it to split
+ * related content into switchable views without leaving the page: settings
+ * panes, dashboards, or product detail sections.
+ *
+ * The root owns the selected value (controlled via `v-model` or uncontrolled
+ * via `defaultValue`), orientation, keyboard roving focus across triggers, and
+ * provides context to every `TabsList`, `TabsTrigger`, and `TabsContent`.
+ */
 export interface TabsRootProps extends PrimitiveProps {
   /** Uncontrolled initial value. */
   defaultValue?: string;

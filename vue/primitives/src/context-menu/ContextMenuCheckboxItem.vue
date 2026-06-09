@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { MenuCheckboxItemEmits, MenuCheckboxItemProps } from '../menu';
 
+/**
+ * An item that toggles an on/off (or indeterminate) state, exposing
+ * `aria-checked` for assistive tech. Bind `v-model:checked` and pair it with a
+ * `ContextMenuItemIndicator` to render the checkmark.
+ */
 export interface ContextMenuCheckboxItemProps extends MenuCheckboxItemProps {}
 export type ContextMenuCheckboxItemEmits = MenuCheckboxItemEmits;
 </script>

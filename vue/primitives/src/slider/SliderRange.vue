@@ -1,5 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+
+/**
+ * The filled portion of the track representing the selected span, rendered
+ * inside `SliderTrack`. It reads the values and bounds from context and absolutely
+ * positions itself from the slider's start to the active thumb (or between the
+ * lowest and highest thumbs in range mode), respecting orientation and direction.
+ */
 export interface SliderRangeProps extends PrimitiveProps {}
 </script>
 

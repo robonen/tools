@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { TeleportPrimitiveProps } from '../teleport';
 
+/**
+ * Teleports the Overlay and Content out of the normal DOM flow (by default into
+ * `body`) so they render above the rest of the page and escape `overflow`/
+ * stacking contexts. Mounts its children only while the dialog is open.
+ */
 export interface DialogPortalProps extends TeleportPrimitiveProps {
   /**
    * When true the Portal (and its descendants) remain mounted even when the

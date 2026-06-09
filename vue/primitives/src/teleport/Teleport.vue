@@ -1,4 +1,11 @@
 <script lang="ts">
+/**
+ * Renders its slot content into a different part of the DOM (a portal), wrapping
+ * Vue's built-in `<Teleport>` with SSR-safe defaults and a configurable target.
+ * Use it as the building block for overlay primitives (dialogs, popovers, toasts)
+ * that must escape parent overflow/stacking contexts; the target defaults to the
+ * `teleportTarget` from `ConfigProvider` (`body` unless overridden).
+ */
 export interface TeleportPrimitiveProps {
   /**
    * Target DOM node or CSS selector. When `null`/`undefined`, Vue's built-in

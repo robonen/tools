@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Button that pages the calendar backward (by one month, or by
+ * `numberOfMonths` when paged navigation is enabled). Auto-disables when the
+ * previous page would fall before `minValue` or the calendar is disabled.
+ */
 export interface CalendarPrevProps extends PrimitiveProps {
   /** Override the root's `prevPage` for just this button. */
   prevPage?: (placeholder: Date) => Date;

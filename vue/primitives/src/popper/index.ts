@@ -6,6 +6,7 @@ export { default as PopperArrow } from './PopperArrow.vue';
 export { usePopperRootContext, usePopperContentContext } from './context';
 
 export type { PopperRootContext, PopperContentContext } from './context';
+export type { PopperRootProps } from './PopperRoot.vue';
 export type { PopperAnchorProps } from './PopperAnchor.vue';
 export type { PopperContentEmits, PopperContentProps } from './PopperContent.vue';
 export type { PopperArrowProps } from './PopperArrow.vue';

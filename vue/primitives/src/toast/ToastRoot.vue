@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single toast notification. Manages its own open state and auto-dismiss timer,
+ * and provides context to its `Title`, `Description`, `Action`, and `Close` children.
+ * Control visibility with `v-model:open`; rendering is gated by `Presence` so exit
+ * transitions can play before the element unmounts.
+ */
 export interface ToastRootProps extends PrimitiveProps {
   /** Override the provider's auto-dismiss duration. Use `Infinity` to disable. */
   duration?: number;
@@ -9,7 +15,6 @@ export interface ToastRootProps extends PrimitiveProps {
 }
 
 export interface ToastRootEmits {
-  'update:open': [open: boolean];
   escapeKeyDown: [event: KeyboardEvent];
   pause: [];
   resume: [];
@@ -57,13 +62,19 @@ function startTimer(ms: number) {
   if (ms === Infinity || ms <= 0 || !Number.isFinite(ms)) return;
   closeTimer = setTimeout(() => {
     open.value = false;
-    emit('update:open', false);
   }, ms);
 }
 
 function handleClose() {
   open.value = false;
-  emit('update:open', false);
+}
+
+function handleEscapeKeyDown(event: KeyboardEvent) {
+  emit('escapeKeyDown', event);
+  // Pressing Escape while a toast is focused dismisses it (matches the
+  // ToastClose / auto-dismiss path). Swipe-to-dismiss is not yet implemented.
+  if (!event.defaultPrevented)
+    handleClose();
 }
 
 function pauseTimer() {
@@ -132,7 +143,7 @@ provideToastContext({
       :data-state="open ? 'open' : 'closed'"
       :data-type="type"
       tabindex="-1"
-      @keydown.escape="emit('escapeKeyDown', $event)"
+      @keydown.escape="handleEscapeKeyDown"
     >
       <slot />
     </Primitive>

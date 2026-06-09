@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A visual divider between groups or items in the content. Renders as a
+ * horizontal `role="separator"` and is purely decorative.
+ */
 export interface SelectSeparatorProps extends PrimitiveProps {}
 </script>
 

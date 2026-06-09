@@ -2,6 +2,15 @@
 import type { PrimitiveProps } from '../primitive';
 import type { RovingDirection } from '../utils/roving-focus';
 
+/**
+ * A set of mutually exclusive options where only one may be selected at a time,
+ * built on `role="radiogroup"` with full keyboard roving focus (arrow keys move
+ * and select, Space selects, Home/End jump to ends). The container and state
+ * owner: it tracks the selected value (controlled via `v-model` or uncontrolled
+ * via `defaultValue`), provides context to `RadioGroupItem`, and renders a hidden
+ * form input when `name` is set. Reach for it whenever a user must pick exactly
+ * one choice from a small, visible list.
+ */
 export interface RadioGroupRootProps extends PrimitiveProps {
   defaultValue?: string;
   disabled?: boolean;

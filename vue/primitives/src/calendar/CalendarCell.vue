@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single `role="gridcell"` day container (`<td>`). Reflects the date's state
+ * (selected, disabled, unavailable, outside-view, today) as `data-*`
+ * attributes and `aria-*` for styling, and wraps the focusable
+ * `CalendarCellTrigger`.
+ */
 export interface CalendarCellProps extends PrimitiveProps {
   /** The date this cell represents. */
   date: Date;

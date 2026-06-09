@@ -1,4 +1,9 @@
 <script lang="ts">
+/**
+ * A single entry in a `NavigationMenuList`. Groups one trigger (or link) with its
+ * associated content panel under a shared `value`, and provides the per-item context
+ * that wires focus, tab order, and open state between them.
+ */
 export interface NavigationMenuItemProps {
   /**
    * Unique value associating this item with the active state. Generated

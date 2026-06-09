@@ -36,7 +36,8 @@ defineProps<{
             <span v-else class="text-(--fg-subtle)">—</span>
           </td>
           <td class="py-2.5 px-4 text-(--fg-muted) min-w-48">
-            {{ prop.description || '—' }}
+            <DocsText v-if="prop.description" :text="prop.description" />
+            <span v-else>—</span>
           </td>
         </tr>
       </tbody>

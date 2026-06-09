@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Internal modal variant of the menu content: traps focus, disables outside
+// pointer events, locks body scroll, and hides sibling content from assistive
+// tech. Selected by MenuContent when the root's `modal` prop is true.
 import type { MenuContentImplEmits, MenuContentImplProps } from './MenuContentImpl.vue';
 
 import { shallowRef, watchEffect } from 'vue';

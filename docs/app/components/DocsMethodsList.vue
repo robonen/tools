@@ -23,7 +23,7 @@ defineProps<{
       </div>
 
       <p v-if="method.description" class="text-sm text-(--fg-muted) mb-3">
-        {{ method.description }}
+        <DocsText :text="method.description" />
       </p>
 
       <DocsCode
@@ -38,7 +38,7 @@ defineProps<{
       <div v-if="method.returns" class="mt-2 text-sm">
         <span class="text-(--fg-subtle)">Returns</span>
         <code class="ml-1.5 text-xs font-mono bg-(--bg-inset) border border-(--border) px-1.5 py-0.5 rounded">{{ method.returns.type }}</code>
-        <span v-if="method.returns.description" class="ml-2 text-(--fg-muted)">{{ method.returns.description }}</span>
+        <DocsText v-if="method.returns.description" :text="method.returns.description" class="ml-2 text-(--fg-muted)" />
       </div>
     </div>
   </div>

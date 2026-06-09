@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { ComboboxContentImplEmits, ComboboxContentImplProps } from './ComboboxContentImpl.vue';
 
+/**
+ * The popup listbox that holds the options. Mounts only while open (via Presence) and
+ * positions itself relative to the anchor. Place the Viewport, Items, and Empty inside it.
+ */
 export type ComboboxContentProps = ComboboxContentImplProps;
 export type ComboboxContentEmits = ComboboxContentImplEmits;
 </script>

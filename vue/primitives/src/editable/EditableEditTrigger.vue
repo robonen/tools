@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Button that enters edit mode. It is hidden while editing and disabled when the
+ * Root is disabled.
+ */
 export interface EditableEditTriggerProps extends PrimitiveProps {}
 </script>
 

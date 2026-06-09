@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Fills the square where the horizontal and vertical scrollbars meet. It only renders when
+ * both scrollbars are present and have measurable size; otherwise it is omitted.
+ */
 export type ScrollAreaCornerProps = PrimitiveProps;
 </script>
 

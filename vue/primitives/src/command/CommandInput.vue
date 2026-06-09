@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Search box that drives the command palette: typing updates the root search
+ * term (and re-filters items), while Arrow/Home/End/Enter move the highlight and
+ * commit the selected item. Renders a combobox `<input>` wired up for assistive tech.
+ */
 export interface CommandInputProps extends PrimitiveProps {
   /** Controlled value; falls back to root `searchTerm`. */
   modelValue?: string;

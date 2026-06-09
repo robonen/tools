@@ -1,5 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+/**
+ * Renders its content only when the parent `CheckboxRoot` is checked or
+ * indeterminate, mirroring that state via `data-state`. Place the check/dash
+ * icon inside it; use `forceMount` to keep it mounted for CSS exit animations.
+ */
 export interface CheckboxIndicatorProps extends PrimitiveProps {
   /** Keep mounted even when unchecked (for CSS exit animations). */
   forceMount?: boolean;

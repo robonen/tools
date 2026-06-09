@@ -2,6 +2,13 @@
 import type { FlatItem } from './utils';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single node within a `TreeRoot`, rendered once per visible `flatItem`.
+ * Handles click-to-select, click-to-toggle for parents, keyboard interaction,
+ * and the ARIA treeitem attributes (level, selected, expanded). Exposes
+ * `isExpanded` / `isSelected` / `isDisabled` to its slot for styling and
+ * rendering the node label and expand affordance.
+ */
 export interface TreeItemProps<U = unknown> extends PrimitiveProps {
   /** Flattened item produced by `TreeRoot` (from its default slot). */
   item: FlatItem<U>;

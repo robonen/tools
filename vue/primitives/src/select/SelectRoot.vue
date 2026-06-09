@@ -1,6 +1,20 @@
 <script lang="ts">
 import type { Direction } from '../config-provider';
 
+/**
+ * A custom, fully stylable replacement for the native `<select>` element: a
+ * trigger button that opens a floating listbox of options, with full keyboard
+ * support (arrow keys, Home/End, type-ahead search), focus trapping, and an
+ * optional hidden `<input>` for native form submission.
+ *
+ * Use it when you need a single-choice dropdown whose menu and options must be
+ * styled beyond what a native control allows. The root owns the selected value
+ * and open state and provides context to every part; bind `v-model` for the
+ * value and `v-model:open` (or listen to `update:modelValue` / `update:open`)
+ * to control or observe it. Compose it from a `SelectTrigger` (with
+ * `SelectValue`/`SelectIcon`) plus a portalled `SelectContent` of
+ * `SelectItem`s.
+ */
 export interface SelectRootProps {
   /** Reading direction. Falls back to ConfigProvider. */
   dir?: Direction;
@@ -43,8 +57,6 @@ const {
   defaultOpen = false,
   autocomplete,
 } = defineProps<SelectRootProps>();
-
-const emit = defineEmits<SelectRootEmits>();
 
 const localOpen = ref<boolean>(defaultOpen);
 const open = defineModel<boolean>('open', {
@@ -101,7 +113,6 @@ watch([optionsSet, value], () => {
 function handleValueChange(newValue: SelectValue) {
   value.value = newValue;
   displayValue.value = optionsSet.value.get(newValue);
-  emit('update:modelValue', newValue);
   open.value = false;
 }
 

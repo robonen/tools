@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * An accessible title for the dialog. Its id is wired to the Content's
+ * `aria-labelledby`, so render one inside every dialog (visually hide it if you
+ * do not want it shown).
+ */
 export interface DialogTitleProps extends PrimitiveProps {}
 </script>
 

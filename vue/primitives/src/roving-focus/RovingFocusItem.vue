@@ -1,6 +1,13 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single focusable item within a `RovingFocusGroup`. It registers itself with
+ * the group's collection, exposes itself as the sole tab stop when current
+ * (`tabindex="0"`, others `-1`), and handles the arrow-key navigation that moves
+ * focus to its siblings. Use `focusable` to opt an item out of the tab order and
+ * `active` to mark the current selection so it gets focus on group entry.
+ */
 export interface RovingFocusItemProps extends PrimitiveProps {
   /** Unique tab-stop id. Auto-generated via config `useId` when omitted. */
   tabStopId?: string;

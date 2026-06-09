@@ -2,6 +2,10 @@
 import type { PrimitiveProps } from '../primitive';
 import type { AcceptableValue } from './utils';
 
+/**
+ * A single selectable option in the list. Registers itself for filtering and keyboard
+ * navigation, toggles selection on click, and highlights on pointer move.
+ */
 export interface ComboboxItemProps<T extends AcceptableValue = AcceptableValue> extends PrimitiveProps {
   /** Item value. Selected/registered identity. */
   value: T;

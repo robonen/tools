@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The button that toggles the picker popover open and closed. Acts as the
+ * Popper anchor (unless a custom `DatePickerAnchor` is present) and carries the
+ * dialog-related ARIA wiring (`aria-haspopup`, `aria-expanded`, `aria-controls`).
+ */
 export interface DatePickerTriggerProps extends PrimitiveProps {}
 </script>
 

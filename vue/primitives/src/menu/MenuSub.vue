@@ -1,5 +1,12 @@
 <script lang="ts">
+/**
+ * Establishes a nested submenu. It provides a fresh menu context plus a sub
+ * context shared by its MenuSubTrigger and MenuSubContent, owning the submenu's
+ * open state. Bind `v-model:open` (or listen to `update:open`) to control it;
+ * the default slot also exposes the current `open` value.
+ */
 export interface MenuSubProps {
+  /** The controlled open state of the submenu. Use together with `update:open`. */
   open?: boolean;
 }
 export interface MenuSubEmits {

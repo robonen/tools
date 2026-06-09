@@ -1,9 +1,19 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A draggable handle rendered as `role="slider"`, one per value, placed inside
+ * `SliderTrack`. It registers with the root to claim its index, positions itself
+ * along the track by its value's percentage, and handles keyboard interaction
+ * (arrow keys step by `step`, Page Up/Down by a larger step, Home/End jump to
+ * the bounds) with full ARIA value attributes. Render one thumb for a single
+ * value or several for a range; give each an `aria-label`. Exposes `value` and
+ * `percent` as slot props.
+ */
 export interface SliderThumbProps extends PrimitiveProps {
-  /** Accessible label for this thumb. */
-  'aria-label'?: string;
+  // `aria-label` (and other ARIA attributes) are intentionally NOT declared as
+  // props so they fall through to the rendered `role="slider"` element — give
+  // each thumb an `aria-label` for its accessible name.
 }
 </script>
 

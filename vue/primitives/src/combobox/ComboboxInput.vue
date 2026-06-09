@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The text field users type into to filter options. Owns the search term, ARIA combobox
+ * semantics, and keyboard navigation (arrows, Home/End, Enter to select, Escape to close).
+ */
 export interface ComboboxInputProps extends PrimitiveProps {
   /** Disable the input. */
   disabled?: boolean;

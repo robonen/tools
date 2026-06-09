@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A custom scrollbar track for one axis. It picks the appropriate visibility strategy from
+ * the root's `type` (`auto`, `always`, `scroll`, or `hover`) and renders the matching
+ * scrolling behaviour. Render one for each axis you want scrollable and place a
+ * `ScrollAreaThumb` inside it.
+ */
 export interface ScrollAreaScrollbarProps extends PrimitiveProps {
   /** @default 'vertical' */
   orientation?: 'horizontal' | 'vertical';

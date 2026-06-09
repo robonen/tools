@@ -1,5 +1,9 @@
 import { marked } from 'marked';
 
+// JSDoc `{@link Symbol}` / `{@link Symbol|label}`. The capture starts with a
+// non-space char so the leading `\s+` can't overlap it (no super-linear backtracking).
+const JSDOC_LINK = /\{@link\s+([^\s}|][^}|]*)(?:\|[^}]+)?\}/g;
+
 export interface Heading {
   depth: number;
   text: string;
@@ -44,6 +48,17 @@ export function extractHeadings(markdown: string): Heading[] {
   }
 
   return headings;
+}
+
+/**
+ * Render a short description as INLINE HTML (bold/code/links, no block wrapping).
+ * Used for API/param/property descriptions, which are authored as one-line
+ * markdown with the occasional JSDoc `{@link X}` (shown as inline code).
+ */
+export function renderInline(text: string): string {
+  if (!text) return '';
+  const withLinks = text.replaceAll(JSDOC_LINK, (_m, name: string) => `\`${name.trim()}\``);
+  return marked.parseInline(withLinks, { async: false }) as string;
 }
 
 /** Render markdown to HTML with stable heading ids (matching extractHeadings). */

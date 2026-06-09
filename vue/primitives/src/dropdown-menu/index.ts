@@ -9,7 +9,7 @@ export { default as DropdownMenuLabel, type DropdownMenuLabelProps } from './Dro
 export { default as DropdownMenuPortal, type DropdownMenuPortalProps } from './DropdownMenuPortal.vue';
 export { default as DropdownMenuRadioGroup, type DropdownMenuRadioGroupEmits, type DropdownMenuRadioGroupProps } from './DropdownMenuRadioGroup.vue';
 export { default as DropdownMenuRadioItem, type DropdownMenuRadioItemEmits, type DropdownMenuRadioItemProps } from './DropdownMenuRadioItem.vue';
-export { default as DropdownMenuRoot, type DropdownMenuRootEmits, type DropdownMenuRootProps } from './DropdownMenuRoot.vue';
+export { default as DropdownMenuRoot, type DropdownMenuRootProps } from './DropdownMenuRoot.vue';
 export { default as DropdownMenuSeparator, type DropdownMenuSeparatorProps } from './DropdownMenuSeparator.vue';
 export { default as DropdownMenuSub, type DropdownMenuSubEmits, type DropdownMenuSubProps } from './DropdownMenuSub.vue';
 export { default as DropdownMenuSubContent, type DropdownMenuSubContentEmits, type DropdownMenuSubContentProps } from './DropdownMenuSubContent.vue';

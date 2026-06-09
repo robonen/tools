@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { DismissableLayerEmits, DismissableLayerProps } from '../dismissable-layer';
 
+/**
+ * Internal rendering body for `NavigationMenuContent`. Wraps the panel in a
+ * `FocusScope` and `DismissableLayer`, implementing arrow-key/Tab navigation between
+ * links, escape-to-dismiss, outside-interaction handling, and the `data-motion`
+ * transition attribute. Not part of the public anatomy; use `NavigationMenuContent`.
+ */
 export interface NavigationMenuContentImplProps extends DismissableLayerProps {}
 
 export type NavigationMenuContentImplEmits = DismissableLayerEmits & {

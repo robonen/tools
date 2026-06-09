@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuPortalProps } from '../menu';
 
+/**
+ * Teleports the menu content into the document body (or a chosen target) so it
+ * renders above other content and escapes any `overflow: hidden` ancestor.
+ */
 export interface DropdownMenuPortalProps extends MenuPortalProps {}
 </script>
 

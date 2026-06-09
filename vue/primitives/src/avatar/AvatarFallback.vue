@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Content shown while the image is loading or when it fails to load — typically
+ * the user's initials or a generic icon. It renders only when the image is not
+ * yet `loaded`, and can be delayed to avoid a flash of fallback on fast
+ * connections.
+ */
 export interface AvatarFallbackProps extends PrimitiveProps {
 
   /** Delay in ms before rendering the fallback (avoids flicker on fast networks). */

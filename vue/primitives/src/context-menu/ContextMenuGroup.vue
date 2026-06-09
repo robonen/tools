@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { MenuGroupProps } from '../menu';
 
+/**
+ * Groups a set of related items under one accessible `role="group"`, optionally
+ * labelled by a `ContextMenuLabel`. Use it to organize the menu into sections.
+ */
 export interface ContextMenuGroupProps extends MenuGroupProps {}
 </script>
 

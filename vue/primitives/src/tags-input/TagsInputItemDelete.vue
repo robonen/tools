@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button that removes its parent tag from the list when clicked. Render it
+ * inside `TagsInputItem`; it is labelled by the sibling `ItemText`.
+ */
 export interface TagsInputItemDeleteProps extends PrimitiveProps {}
 </script>
 

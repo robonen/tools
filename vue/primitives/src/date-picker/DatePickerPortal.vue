@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { TeleportPrimitiveProps } from '../teleport';
 
+/**
+ * Teleports the popover content into a different part of the DOM (the body by
+ * default) so it escapes overflow/stacking-context clipping. Wrap
+ * `DatePickerContent` with it when the picker lives inside a scrolled or
+ * transformed container.
+ */
 export interface DatePickerPortalProps extends TeleportPrimitiveProps {}
 </script>
 

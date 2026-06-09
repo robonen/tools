@@ -2,6 +2,11 @@
 import type { ListboxValue } from './utils';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single selectable option (`role="option"`). Clicking, pressing Space, or
+ * pressing Enter while highlighted toggles its selection and emits `select`.
+ * Exposes `isSelected` / `isHighlighted` to its default slot.
+ */
 export interface ListboxItemProps<U extends ListboxValue = ListboxValue> extends PrimitiveProps {
   /** The value of the item. */
   value: U;

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Groups a set of related menu items under `role="group"` for accessibility.
+ * Combine it with a MenuLabel to give the group an accessible name.
+ */
 export interface MenuGroupProps extends PrimitiveProps {}
 </script>
 

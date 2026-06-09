@@ -1,5 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+
+/**
+ * A button that increases the value by one `step` when clicked. Rendered as a
+ * `<button>` by default and hidden from assistive tech (`aria-hidden`, removed
+ * from the tab order) since the input itself is the accessible spinbutton; it
+ * is disabled whenever the root is `disabled` or `readonly`.
+ */
 export interface NumberFieldIncrementProps extends PrimitiveProps {}
 </script>
 

@@ -1,4 +1,17 @@
 <script lang="ts">
+/**
+ * A floating panel anchored to a trigger, used for rich, interactive content
+ * such as forms, settings, or detail cards that can hold focusable elements.
+ * Composed from a Trigger, an optional Anchor, a Portal, and Content (with an
+ * optional Arrow and Close). Positioning is handled by the underlying Popper.
+ *
+ * Root manages the open state and provides context to every part. Bind
+ * `v-model:open` to control it, or rely on the Trigger/Close for uncontrolled
+ * use. Non-modal by default; set `modal` to trap focus, lock scroll, and block
+ * outside pointer events. Reach for a Popover when you need interactive
+ * overlay content; use Tooltip for hover-only labels and Dialog for blocking,
+ * page-level tasks.
+ */
 export interface PopoverRootProps {
   /** Uncontrolled initial open state. Ignored once `v-model:open` is bound. */
   defaultOpen?: boolean;

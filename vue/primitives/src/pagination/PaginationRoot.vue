@@ -1,19 +1,42 @@
 <script lang="ts">
-import type { PrimitiveProps } from '@/primitive';
+import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Splits a large collection into discrete pages and lets users move between
+ * them. Use it for paged tables, search results, or any list too long to show
+ * at once — pair it with server- or client-side data fetching keyed off the
+ * current page.
+ *
+ * The root owns the current page (controlled via `v-model:page` or uncontrolled
+ * via `defaultPage`), derives the total page count from `total` and `pageSize`,
+ * and provides context to every child part (list, items, ellipsis, and the
+ * first/prev/next/last controls). The default slot exposes `page` and
+ * `pageCount`.
+ */
 export interface PaginationRootProps extends PrimitiveProps {
+  /** Total number of items across all pages. */
   total: number;
+
+  /** Number of items per page; combined with `total` to derive the page count. @default 10 */
   pageSize?: number;
+
+  /** Number of page links to show on each side of the current page. @default 1 */
   siblingCount?: number;
+
+  /** Always render the first and last page links, even when ellipses are shown. @default false */
   showEdges?: boolean;
+
+  /** Disable the whole pagination, including every control. @default false */
   disabled?: boolean;
+
+  /** Initial page for uncontrolled usage (when `v-model:page` is not bound). @default 1 */
   defaultPage?: number;
 }
 </script>
 
 <script setup lang="ts">
 import { useForwardExpose, useOffsetPagination } from '@robonen/vue';
-import { Primitive } from '@/primitive';
+import { Primitive } from '../primitive';
 import { providePaginationContext } from './context';
 import { toRef } from 'vue';
 

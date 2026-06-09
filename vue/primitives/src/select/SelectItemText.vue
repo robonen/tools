@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The visible label of a `SelectItem`. Its text is what the root captures to
+ * show in `SelectValue` once the item is chosen, so each item should contain
+ * exactly one; use inside a `SelectItem`.
+ */
 export interface SelectItemTextProps extends PrimitiveProps {}
 </script>
 

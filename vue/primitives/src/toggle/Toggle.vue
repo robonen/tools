@@ -1,6 +1,16 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A two-state button that can be pressed on or off, like a bold or italic
+ * control in a text editor toolbar. Renders a native `<button>` by default
+ * (handling Space/Enter and the `disabled` attribute for you), exposes
+ * `aria-pressed`, `data-state` (`on`/`off`), and `data-disabled` for styling,
+ * and works uncontrolled (`defaultPressed`) or controlled via `v-model:pressed`.
+ * When rendered as a non-button element it synthesizes keyboard activation and
+ * the appropriate `tabindex`/`aria-disabled`. Use it for a single standalone
+ * toggle; for a set of mutually related toggles use `ToggleGroup` instead.
+ */
 export interface ToggleProps extends PrimitiveProps {
 
   /** Uncontrolled initial pressed state. */

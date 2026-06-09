@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PortalProps } from '../teleport';
 
+/**
+ * Teleports the ComboboxContent into another part of the DOM (defaults to `body`) to escape
+ * overflow/stacking-context clipping. Wrap ComboboxContent with it.
+ */
 export interface ComboboxPortalProps extends PortalProps {}
 </script>
 

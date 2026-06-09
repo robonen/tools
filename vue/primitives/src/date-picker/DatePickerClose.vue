@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button that closes the picker popover when clicked. Render it inside
+ * `DatePickerContent` (e.g. a "Done" or dismiss action).
+ */
 export interface DatePickerCloseProps extends PrimitiveProps {}
 </script>
 

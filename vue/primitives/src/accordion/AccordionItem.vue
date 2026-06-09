@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single collapsible section of the accordion, grouping one trigger with
+ * its content. Identified by a unique `value` that the root uses to track
+ * open state; provides item-level context (open, disabled, ids) to its
+ * `AccordionTrigger` and `AccordionContent`.
+ */
 export interface AccordionItemProps extends PrimitiveProps {
   /** Unique value for this item. */
   value: string;

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Groups related items under a shared ComboboxLabel. Hides itself automatically when none
+ * of its items survive the current filter.
+ */
 export interface ComboboxGroupProps extends PrimitiveProps {}
 </script>
 

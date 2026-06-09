@@ -1,13 +1,19 @@
 <script lang="ts">
-import type { PrimitiveProps } from '@/primitive';
+import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A single page link. Renders as a `<button>` that selects its `value` page on
+ * click, marks itself with `aria-current="page"` and `data-selected` when it is
+ * the current page, and is disabled while the pagination is disabled.
+ */
 export interface PaginationListItemProps extends PrimitiveProps {
+  /** The page number this item navigates to. */
   value: number;
 }
 </script>
 
 <script setup lang="ts">
-import { Primitive } from '@/primitive';
+import { Primitive } from '../primitive';
 import { computed } from 'vue';
 import { injectPaginationContext } from './context';
 import { useForwardExpose } from '@robonen/vue';

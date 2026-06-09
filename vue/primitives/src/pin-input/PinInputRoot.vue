@@ -1,12 +1,17 @@
-<script setup lang="ts">
+<script lang="ts">
 import type { PrimitiveProps } from '../primitive';
-import { Primitive } from '../primitive';
-import { computed, ref, toRef, watch } from 'vue';
-import { providePinInputContext } from './context';
-import { useForwardExpose } from '@robonen/vue';
 
-interface Props extends PrimitiveProps {
-  modelValue?: string[];
+/**
+ * A segmented input for short codes — OTP / one-time passwords, 2FA tokens, or
+ * PINs split across one box per character. The interactive root: it owns the
+ * value as a per-cell `string[]` (controlled via `v-model` / `update:modelValue`
+ * or uncontrolled via `defaultValue`), sizes the field to `length`, enforces the
+ * `type` ('text' | 'number') and `mask`, and provides context to each
+ * `PinInputInput`. Emits `complete` once every cell is filled. Use it for
+ * verification codes where each character gets its own cell with auto-advance,
+ * arrow-key navigation, and clipboard paste spreading across cells.
+ */
+export interface PinInputRootProps extends PrimitiveProps {
   defaultValue?: string[];
   length?: number;
   mask?: boolean;
@@ -16,9 +21,15 @@ interface Props extends PrimitiveProps {
   placeholder?: string;
 
 }
+</script>
+
+<script setup lang="ts">
+import { Primitive } from '../primitive';
+import { computed, ref, toRef, watch } from 'vue';
+import { providePinInputContext } from './context';
+import { useForwardExpose } from '@robonen/vue';
 
 const {
-  modelValue,
   defaultValue,
   length = 4,
   mask = false,
@@ -27,13 +38,12 @@ const {
   disabled = false,
   placeholder = '',
   as = 'div',
-} = defineProps<Props>();
+} = defineProps<PinInputRootProps>();
 
 const { forwardRef } = useForwardExpose();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', v: string[]): void;
-  (e: 'complete', v: string): void;
+  complete: [value: string];
 }>();
 
 const lengthRef = computed(() => Math.max(1, length | 0));
@@ -47,9 +57,17 @@ function normalize(v: readonly string[] | undefined): string[] {
   return out;
 }
 
-const value = ref<string[]>(normalize(modelValue ?? defaultValue));
+// `defineModel` owns the `modelValue` prop in both modes: controlled (parent
+// `v-model`) and uncontrolled (its own internal store). Writing `model.value`
+// emits `update:modelValue`, so no manual emit is needed. `value` is the
+// normalized, per-cell `string[]` source of truth read by the inputs — kept as
+// a local ref so synchronous bursts (e.g. paste) always read the latest write
+// rather than a not-yet-propagated controlled prop.
+const model = defineModel<string[]>();
 
-watch(() => modelValue, (v) => {
+const value = ref<string[]>(normalize(model.value ?? defaultValue));
+
+watch(model, (v) => {
   if (v === undefined)
     return;
   const nv = normalize(v);
@@ -78,8 +96,11 @@ function unregister(el: HTMLInputElement): void {
     inputs.value.splice(i, 1);
 }
 
-function emitValue(v: string[]): void {
-  emit('update:modelValue', v);
+function commit(v: string[]): void {
+  // `value` is the synchronous source of truth; `model.value` mirrors it and,
+  // via `defineModel`, emits `update:modelValue`. No manual emit needed.
+  value.value = v;
+  model.value = v;
   if (v.every(ch => ch.length === 1))
     emit('complete', v.join(''));
 }
@@ -92,8 +113,7 @@ function setAt(index: number, char: string): void {
     return;
   const next = value.value.slice();
   next[index] = ch;
-  value.value = next;
-  emitValue(next);
+  commit(next);
 }
 
 function clearAt(index: number): void {
@@ -101,8 +121,7 @@ function clearAt(index: number): void {
     return;
   const next = value.value.slice();
   next[index] = '';
-  value.value = next;
-  emitValue(next);
+  commit(next);
 }
 
 function focusIndex(index: number): void {

@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A button that dismisses the toast it lives in. Renders a button by default and
+ * closes the parent `ToastRoot` via toast context on click.
+ */
 export interface ToastCloseProps extends PrimitiveProps {}
 </script>
 

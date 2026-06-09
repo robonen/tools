@@ -8,6 +8,17 @@ export interface FocusScopeEmits {
   unmountAutoFocus: [event: Event];
 }
 
+/**
+ * A low-level building block that manages keyboard focus for its contents. On
+ * mount it can move focus inside (autofocus), on unmount it restores focus to
+ * the previously focused element, and while active it can loop Tab/Shift+Tab at
+ * the edges and/or trap focus so it cannot leave the container. Scopes are
+ * tracked in a global stack so nested scopes (e.g. a dialog opening over a
+ * popover) hand focus management back and forth correctly. Use it to wrap any
+ * overlay or modal surface that needs accessible focus containment; it renders
+ * no UI of its own. Emits `mountAutoFocus`/`unmountAutoFocus` so the consumer
+ * can override the default focus target.
+ */
 export interface FocusScopeProps extends PrimitiveProps {
   /**
    * Зациклить Tab/Shift+Tab: с последнего элемента — на первый и наоборот.

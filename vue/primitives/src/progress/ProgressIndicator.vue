@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The visual fill of the progress bar, rendered inside `ProgressRoot`. It reads
+ * the value, max, and state from context and exposes them via `data-state`,
+ * `data-value`, and `data-max` (plus matching slot props) so you can size and
+ * style the fill — e.g. translating it by the completion percentage.
+ */
 export interface ProgressIndicatorProps extends PrimitiveProps {}
 </script>
 

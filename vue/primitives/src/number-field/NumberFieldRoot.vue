@@ -1,7 +1,15 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+
+/**
+ * A numeric input with stepper controls, keyboard increment/decrement, and
+ * optional clamping. The interactive root: it owns the value (controlled via
+ * `v-model` / `update:modelValue` or uncontrolled via `defaultValue`), clamps
+ * to `min`/`max`, applies `step`, and provides context to `NumberFieldInput`,
+ * `NumberFieldIncrement`, and `NumberFieldDecrement`. Use it whenever you need
+ * a styled number entry with spinner buttons and arrow-key support.
+ */
 export interface NumberFieldRootProps extends PrimitiveProps {
-  modelValue?: number | null;
   defaultValue?: number | null;
   min?: number;
   max?: number;
@@ -12,7 +20,6 @@ export interface NumberFieldRootProps extends PrimitiveProps {
 }
 
 export interface NumberFieldRootEmits {
-  'update:modelValue': [value: number | null];
   valueChange: [value: number | null];
 }
 </script>
@@ -25,17 +32,23 @@ import { useForwardExpose } from '@robonen/vue';
 import { clamp } from '@robonen/stdlib';
 import { useId } from '../config-provider';
 
-const { step = 1, disabled = false, readonly = false, min, max, modelValue, defaultValue, as = 'div' } = defineProps<NumberFieldRootProps>();
+const { step = 1, disabled = false, readonly = false, min, max, defaultValue, as = 'div' } = defineProps<NumberFieldRootProps>();
 
 const { forwardRef } = useForwardExpose();
 
 const emit = defineEmits<NumberFieldRootEmits>();
 
+// `defineModel` drives both controlled (`v-model`) and uncontrolled modes; in
+// uncontrolled mode `model.value` is `undefined` until first write, so the
+// internal `localValue` below seeds from `defaultValue` and stays the live
+// source of truth (synchronous multi-step updates can't wait on a prop re-flow).
+const model = defineModel<number | null>();
+
 const localValue = ref<number | null>(
-  modelValue !== undefined ? modelValue : (defaultValue ?? null),
+  model.value !== undefined ? model.value : (defaultValue ?? null),
 );
 
-watch(() => modelValue, (v) => {
+watch(model, (v) => {
   if (v === undefined) return;
   if (v === localValue.value) return;
   localValue.value = v;
@@ -46,7 +59,8 @@ function setValue(v: number | null): void {
   const next = v === null ? null : clamp(v, min ?? -Infinity, max ?? Infinity);
   if (next === localValue.value) return;
   localValue.value = next;
-  emit('update:modelValue', next);
+  // `defineModel` emits `update:modelValue` on write — no manual emit needed.
+  model.value = next;
   emit('valueChange', next);
 }
 

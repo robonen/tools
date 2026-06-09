@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PopperArrowProps } from '../popper';
 
+/**
+ * An optional arrow that points from Content back toward the Trigger or Anchor,
+ * tracking the popover's resolved side and alignment. Place inside Content;
+ * pass custom SVG via the default slot to match your panel's styling.
+ */
 export interface PopoverArrowProps extends PopperArrowProps {}
 </script>
 

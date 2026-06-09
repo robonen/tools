@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { SelectScrollButtonImplProps } from './SelectScrollButtonImpl.vue';
 
+/**
+ * An auto-scroll affordance shown at the bottom of the viewport when there is
+ * content scrolled out of view below. Scrolls the viewport down while hovered
+ * and hides itself when already at the bottom.
+ */
 export type SelectScrollDownButtonProps = Omit<SelectScrollButtonImplProps, 'direction'>;
 </script>
 

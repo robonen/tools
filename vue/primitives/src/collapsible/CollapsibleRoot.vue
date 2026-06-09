@@ -1,6 +1,14 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * An interactive component that expands and collapses a panel of content.
+ *
+ * `CollapsibleRoot` owns the open/closed state (controlled via `v-model:open`
+ * or uncontrolled via `defaultOpen`), provides it to the `Trigger` and
+ * `Content` parts, and reflects it as `data-state`. Use it for show/hide
+ * disclosures such as "read more" sections, FAQ entries, or settings panels.
+ */
 export interface CollapsibleRootProps extends PrimitiveProps {
 
   defaultOpen?: boolean;

@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * The clickable control that activates its associated `TabsContent` panel.
+ * Selecting it (by click or keyboard) sets the root value to its `value`.
+ * Render one per tab inside a `TabsList`.
+ */
 export interface TabsTriggerProps extends PrimitiveProps {
   /** Value that links this trigger to a content panel. */
   value: string;

@@ -1,4 +1,10 @@
 <script lang="ts">
+/**
+ * An optional shared container that all `NavigationMenuContent` panels teleport into,
+ * positioned beneath the active trigger and sized to the open panel (exposed as CSS
+ * variables for animating between panels). Render one inside `NavigationMenuRoot` for
+ * a single animated mega-menu surface; omit it to render each content inline.
+ */
 export interface NavigationMenuViewportProps {
   /** Keep mounted regardless of open state. */
   forceMount?: boolean;

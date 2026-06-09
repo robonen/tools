@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { Orientation } from '../roving-focus';
 
+/**
+ * Nests a second navigation menu inside a `NavigationMenuContent` panel, with its
+ * own independent active value while inheriting the parent's timing and direction.
+ * Use it to build multi-level menus where a content panel itself contains a list of
+ * triggers and sub-panels.
+ */
 export interface NavigationMenuSubProps {
   /** Uncontrolled initial value. */
   defaultValue?: string;

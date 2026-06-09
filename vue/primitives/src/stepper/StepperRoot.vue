@@ -2,9 +2,17 @@
 import type { StepperDirection, StepperOrientation } from './context';
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * A multi-step progress control that guides users through a sequence of steps —
+ * checkout flows, onboarding wizards, or any task split into ordered stages.
+ * Use it when you need to show where the user is, which steps are done, and
+ * (optionally) let them jump between steps.
+ *
+ * The root owns the active step (1-based), tracks the total via the Collection,
+ * arbitrates linear vs. free navigation, handles roving keyboard focus across
+ * triggers, and provides context to every `StepperItem`.
+ */
 export interface StepperRootProps extends PrimitiveProps {
-  /** Controlled active step (1-based). Use `v-model`. */
-  modelValue?: number;
   /** Uncontrolled initial step. @default 1 */
   defaultValue?: number;
   /** Orientation. @default 'horizontal' */
@@ -23,7 +31,7 @@ export interface StepperRootEmits {
 </script>
 
 <script setup lang="ts">
-import { computed, ref, toRef, watch } from 'vue';
+import { computed, toRef } from 'vue';
 import { resolveNextIndex, rovingKeyToAction } from '../utils/roving-focus';
 import { Primitive } from '../primitive';
 import { provideStepperRootContext } from './context';
@@ -33,7 +41,6 @@ import { useForwardExpose } from '@robonen/vue';
 
 const {
   as = 'div',
-  modelValue,
   defaultValue = 1,
   orientation = 'horizontal',
   linear = true,
@@ -41,27 +48,26 @@ const {
   dir,
 } = defineProps<StepperRootProps>();
 
-const emit = defineEmits<StepperRootEmits>();
+const model = defineModel<number>();
+
+// Uncontrolled mode: seed the active step from `defaultValue` (parent passed no `v-model`).
+if (model.value === undefined)
+  model.value = defaultValue;
 
 const { forwardRef } = useForwardExpose();
 const config = useConfig();
 
 const direction = computed(() => dir ?? config.dir.value);
 
-const localValue = ref<number>(modelValue ?? defaultValue);
-
-watch(() => modelValue, (v) => {
-  if (v === undefined || v === localValue.value) return;
-  localValue.value = v;
-});
+// Always a defined step for consumers — `model` is seeded above and the setter clamps to numbers.
+const value = computed(() => model.value ?? defaultValue);
 
 const { getItems, CollectionSlot } = useCollectionProvider();
 const total = computed(() => getItems(true).length);
 
 function commit(next: number): void {
-  if (next === localValue.value) return;
-  localValue.value = next;
-  emit('update:modelValue', next);
+  if (next === model.value) return;
+  model.value = next;
 }
 
 function goToStep(step: number): void {
@@ -70,7 +76,7 @@ function goToStep(step: number): void {
   const count = items.length;
   if (count > 0 && step > count) return;
   // respect linear gate — at most one step ahead of current.
-  if (linear && step > localValue.value + 1) return;
+  if (linear && step > value.value + 1) return;
   // skip if target item is marked disabled in DOM.
   const target = items[step - 1]?.ref;
   if (target?.hasAttribute('data-disabled')) return;
@@ -107,7 +113,7 @@ function onTriggerKeyDown(event: KeyboardEvent, el: HTMLElement): void {
 }
 
 provideStepperRootContext({
-  value: localValue,
+  value,
   total,
   orientation: toRef(() => orientation),
   direction,
@@ -131,7 +137,7 @@ provideStepperRootContext({
       :dir="direction"
     >
       <slot
-        :value="localValue"
+        :value="value"
         :total="total"
         :go-to-step="goToStep"
       />

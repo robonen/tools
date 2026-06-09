@@ -1,5 +1,12 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
+/**
+ * A single toggle button within a `ToggleGroupRoot`, rendered as a native
+ * `<button>`. Clicking or pressing Space toggles its `value` on or off; it
+ * reflects its pressed state via `data-state` (`on`/`off`) and participates in
+ * the group's roving tab order. Must be used inside a `ToggleGroupRoot`, whose
+ * `type` determines whether selecting it deselects its siblings.
+ */
 export interface ToggleGroupItemProps extends PrimitiveProps {
   value: string;
   disabled?: boolean;

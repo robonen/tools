@@ -1,6 +1,12 @@
 <script lang="ts">
 import type { PopperAnchorProps } from '../popper';
 
+/**
+ * An optional positioning anchor for the menu content. Render it around the
+ * element the menu should attach to when the open trigger is not itself the
+ * anchor (for example, anchoring a dropdown to a virtual element or the
+ * pointer). When omitted, content is positioned relative to its trigger.
+ */
 export interface MenuAnchorProps extends PopperAnchorProps {}
 </script>
 

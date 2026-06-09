@@ -1,4 +1,17 @@
 <script lang="ts">
+/**
+ * A small floating label that appears on hover or keyboard focus to describe an
+ * otherwise non-obvious control (such as an icon-only button). Composed from a
+ * Trigger, a Portal, and Content (with an optional Arrow); positioning is handled
+ * by the underlying Popper. Tooltips are pointer/focus driven and non-interactive
+ * by design — reach for Popover when the overlay needs focusable content.
+ *
+ * Root owns the per-tooltip open state and provides context to every part. Each
+ * Root must live inside a `TooltipProvider`, which supplies shared delay/skip
+ * timing for a group of tooltips. Bind `v-model:open` to control it, or rely on
+ * the Trigger for uncontrolled use. Props here override the matching Provider
+ * defaults for this one tooltip.
+ */
 export interface TooltipRootProps {
   /** Initial open state in uncontrolled mode. */
   defaultOpen?: boolean;

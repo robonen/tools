@@ -1,6 +1,10 @@
 <script lang="ts">
 import type { PrimitiveProps } from '../primitive';
 
+/**
+ * Marks the selected state of its parent ComboboxItem, e.g. a checkmark. Renders only when
+ * that item is selected.
+ */
 export interface ComboboxItemIndicatorProps extends PrimitiveProps {}
 </script>
 

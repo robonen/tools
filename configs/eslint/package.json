@@ -17,9 +17,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "configs/eslint"
   },
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@10.34.1",
   "engines": {
-    "node": ">=24.13.1"
+    "node": ">=24.16.0"
   },
   "type": "module",
   "files": [
@@ -49,13 +49,13 @@
     "@stylistic/eslint-plugin": "catalog:",
     "@vitest/eslint-plugin": "^1.6.19",
     "eslint-plugin-import-x": "^4.16.2",
-    "eslint-plugin-n": "^18.0.1",
+    "eslint-plugin-n": "^18.1.0",
     "eslint-plugin-regexp": "^3.1.0",
-    "eslint-plugin-unicorn": "^65.0.0",
+    "eslint-plugin-unicorn": "^65.0.1",
     "eslint-plugin-vue": "^10.9.2",
     "globals": "^17.6.0",
     "jiti": "^2.7.0",
-    "typescript-eslint": "^8.60.1",
+    "typescript-eslint": "^8.61.0",
     "vue-eslint-parser": "^10.4.1"
   },
   "devDependencies": {
@@ -66,7 +66,7 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "eslint": ">=9.0.0"
+    "eslint": ">=9.39.4"
   },
   "publishConfig": {
     "access": "public"

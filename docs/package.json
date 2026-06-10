@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@nuxt/fonts": "^0.14.0",
-    "@nuxt/kit": "^4.4.7",
+    "@nuxt/kit": "^4.4.8",
     "@robonen/eslint": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "eslint": "catalog:",

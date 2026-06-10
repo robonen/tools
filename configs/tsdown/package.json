@@ -15,9 +15,9 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "configs/tsdown"
   },
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@10.34.1",
   "engines": {
-    "node": ">=24.13.1"
+    "node": ">=24.16.0"
   },
   "type": "module",
   "exports": {

@@ -359,6 +359,175 @@ describe(useStorageAsync, () => {
     expect(state.value).toBe('value-b');
   });
 
+  // --- Same-tab cross-instance sync (custom backends) ---
+
+  it('syncs two instances sharing the same custom async backend', async () => {
+    const storage = createMockAsyncStorage();
+
+    const writer = await useStorageAsync<string>('shared', 'initial', storage);
+    const reader = await useStorageAsync<string>('shared', 'initial', storage);
+
+    writer.state.value = 'from-writer';
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
+
+    expect(reader.state.value).toBe('from-writer');
+  });
+
+  it('does not echo a received event back into storage', async () => {
+    const storage = createMockAsyncStorage();
+
+    const writer = await useStorageAsync<string>('echo', 'initial', storage);
+    await useStorageAsync<string>('echo', 'initial', storage);
+
+    const setItem = vi.spyOn(storage, 'setItem');
+
+    writer.state.value = 'next';
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    // Only the writer persists; the reader applies the event without writing back
+    expect(setItem).toHaveBeenCalledTimes(1);
+    expect(storage.store.get('echo')).toBe('next');
+  });
+
+  it('resets to defaults on a clear event (key: null)', async () => {
+    const storage = createMockAsyncStorage();
+    storage.store.set('clearable', 'stored');
+
+    const { state } = await useStorageAsync<string>('clearable', 'default', storage);
+
+    expect(state.value).toBe('stored');
+
+    globalThis.dispatchEvent(new CustomEvent('vuetools-storage', {
+      detail: { key: null, oldValue: null, newValue: null, storageArea: storage },
+    }));
+    await nextTick();
+
+    expect(state.value).toBe('default');
+  });
+
+  // --- No-op writes ---
+
+  it('skips the write when storage already holds the serialized value', async () => {
+    const storage = createMockAsyncStorage();
+    storage.store.set('noop', JSON.stringify({ a: 1 }));
+
+    const { state } = await useStorageAsync('noop', { a: 0 }, storage);
+    const setItem = vi.spyOn(storage, 'setItem');
+
+    state.value = { a: 1 };
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(setItem).not.toHaveBeenCalled();
+  });
+
+  // --- Key switch must not copy the previous key's value ---
+
+  it('does not write the old value to the new key on reactive key change', async () => {
+    const storage = createMockAsyncStorage();
+    storage.store.set('key-a', 'value-a');
+    storage.store.set('key-b', 'value-b');
+
+    const keyRef = ref('key-a');
+    const { state } = await useStorageAsync<string>(keyRef, 'default', storage);
+    const setItem = vi.spyOn(storage, 'setItem');
+
+    keyRef.value = 'key-b';
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(state.value).toBe('value-b');
+    expect(setItem).not.toHaveBeenCalled();
+    expect(storage.store.get('key-a')).toBe('value-a');
+    expect(storage.store.get('key-b')).toBe('value-b');
+  });
+
+  it('converges two instances writing conflicting values in the same tick', async () => {
+    const storage = createMockAsyncStorage();
+    storage.store.set('conflict', 'initial');
+
+    const a = await useStorageAsync<string>('conflict', 'initial', storage);
+    const b = await useStorageAsync<string>('conflict', 'initial', storage);
+
+    a.state.value = 'from-a';
+    b.state.value = 'from-b';
+    await nextTick();
+
+    // Let queued writes, dispatched events, and reconciling re-reads settle
+    for (let round = 0; round < 6; round++)
+      await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    const final = storage.store.get('conflict');
+
+    expect(a.state.value).toBe(final);
+    expect(b.state.value).toBe(final);
+  });
+
+  it('finishes an in-flight write against the old key after a same-tick key switch', async () => {
+    const storage = createMockAsyncStorage();
+    storage.store.set('key-a', 'va0');
+    storage.store.set('key-b', 'vb0');
+
+    const keyRef = ref('key-a');
+    const { state } = await useStorageAsync<string>(keyRef, 'default', storage);
+
+    state.value = 'new-a';
+    keyRef.value = 'key-b';
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await nextTick();
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    // The write lands on the key it was meant for, never on the new one
+    expect(storage.store.get('key-a')).toBe('new-a');
+    expect(storage.store.get('key-b')).toBe('vb0');
+    expect(state.value).toBe('vb0');
+  });
+
+  // --- Write ordering ---
+
+  it('keeps queued writes ordered when the backend resolves out of order', async () => {
+    // Pre-seed so writeDefaults does not consume the slow first write
+    const store = new Map<string, string>([['ordered', 'initial']]);
+    let delay = 30;
+
+    const storage: StorageLikeAsync = {
+      getItem: async (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        // First write is slow, subsequent ones fast — without a queue the
+        // fast write would be overwritten by the slow one landing late.
+        const currentDelay = delay;
+        delay = 1;
+
+        return new Promise(resolve => setTimeout(() => {
+          store.set(key, value);
+          resolve();
+        }, currentDelay));
+      },
+      removeItem: async (key: string) => { store.delete(key); },
+    };
+
+    const { state } = await useStorageAsync<string>('ordered', 'initial', storage);
+
+    state.value = 'slow';
+    await nextTick();
+    state.value = 'fast';
+    await nextTick();
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    expect(store.get('ordered')).toBe('fast');
+  });
+
   // --- eventFilter ---
 
   it('applies event filter to writes', async () => {

@@ -23,7 +23,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, watch } from 'vue';
 import { useForwardExpose } from '@robonen/vue';
 import { Primitive } from '../primitive';
 import { useComboboxRootContext } from './context';
-import { OPEN_KEYS } from './utils';
+import { INPUT_OPEN_KEYS } from './utils';
 
 const {
   as = 'input',
@@ -132,7 +132,7 @@ function handleKeyDown(event: KeyboardEvent) {
   if (isDisabled.value) return;
   const { key } = event;
 
-  if (!rootCtx.open.value && OPEN_KEYS.includes(key)) {
+  if (!rootCtx.open.value && INPUT_OPEN_KEYS.includes(key)) {
     event.preventDefault();
     rootCtx.onOpenChange(true);
     return;

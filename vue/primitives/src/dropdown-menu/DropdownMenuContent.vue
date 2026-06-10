@@ -26,7 +26,15 @@ const ddCtx = useDropdownMenuRootContext();
     :aria-labelledby="ddCtx.triggerId.value"
     @close-auto-focus="emit('closeAutoFocus', $event)"
     @escape-key-down="emit('escapeKeyDown', $event)"
-    @pointer-down-outside="emit('pointerDownOutside', $event)"
+    @pointer-down-outside="(event: PointerEvent | MouseEvent) => {
+      const target = event.target as Node
+      // The trigger owns pointerdown toggling — letting the layer also dismiss
+      // here would close the menu before the trigger handler runs and make its
+      // toggle reopen it.
+      const isTriggerPointerDown = ddCtx.triggerRef.value?.contains(target)
+      if (isTriggerPointerDown) event.preventDefault()
+      emit('pointerDownOutside', event)
+    }"
     @focus-outside="emit('focusOutside', $event)"
     @interact-outside="emit('interactOutside', $event)"
     @dismiss="emit('dismiss')"

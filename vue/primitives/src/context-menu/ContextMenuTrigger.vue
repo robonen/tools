@@ -2,7 +2,7 @@
 import type { PrimitiveProps } from '../primitive';
 
 /**
- * The region that captures right-click (and touch long-press), preventing the
+ * The region that captures right-click (and touch/pen long-press), preventing the
  * native context menu and opening the menu anchored at the pointer position.
  * Wrap whatever area should respond to a secondary click.
  */
@@ -59,12 +59,18 @@ function handleContextMenu(event: MouseEvent) {
 
 function handlePointerDown(event: PointerEvent) {
   if (disabled || event.button !== 0) return;
-  if (event.pointerType !== 'touch') return;
+  // Long-press applies to touch AND pen; mouse uses the native contextmenu event.
+  if (event.pointerType === 'mouse') return;
   clearLongPress();
   longPressTimer = setTimeout(() => {
     point.value = { x: event.clientX, y: event.clientY };
     ctxMenuCtx.onOpenChange(true);
   }, LONG_PRESS_DELAY);
+}
+
+function handlePointerMove(event: PointerEvent) {
+  // A drag/scroll gesture must not open the menu after the delay.
+  if (event.pointerType !== 'mouse') clearLongPress();
 }
 
 function handlePointerCancel() {
@@ -77,7 +83,7 @@ function handlePointerUp() {
 </script>
 
 <template>
-  <MenuAnchor :reference="virtualEl">
+  <MenuAnchor as="template" :reference="virtualEl">
     <Primitive
       :ref="forwardRef"
       :as="as"
@@ -85,6 +91,7 @@ function handlePointerUp() {
       :data-disabled="disabled ? '' : undefined"
       @contextmenu="handleContextMenu"
       @pointerdown="handlePointerDown"
+      @pointermove="handlePointerMove"
       @pointercancel="handlePointerCancel"
       @pointerup="handlePointerUp"
     >

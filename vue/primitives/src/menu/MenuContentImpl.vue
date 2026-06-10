@@ -43,7 +43,7 @@ import { PopperContent } from '../popper';
 import { RovingFocusGroup } from '../roving-focus';
 import { useForwardExpose } from '@robonen/vue';
 import { provideMenuContentContext, useMenuContext, useMenuRootContext } from './context';
-import { FIRST_LAST_KEYS, getNextMatch, getOpenState, isPointerInGraceArea } from './utils';
+import { FIRST_LAST_KEYS, LAST_KEYS, focusFirst, getNextMatch, getOpenState, isPointerInGraceArea } from './utils';
 
 const {
   loop = false,
@@ -100,9 +100,9 @@ provideMenuContentContext({
 
 function handleMountAutoFocus(event: Event) {
   event.preventDefault();
-  if (rootCtx.isUsingKeyboardRef.value) {
-    contentElement.value?.focus({ preventScroll: true });
-  }
+  // Always focus the content so key events reach the menu even after a
+  // pointer-open; entryFocus decides whether the first item gets focus.
+  contentElement.value?.focus({ preventScroll: true });
   emit('openAutoFocus', event);
 }
 
@@ -125,6 +125,17 @@ function handleKeyDown(event: KeyboardEvent) {
 
   if (FIRST_LAST_KEYS.includes(event.key)) {
     event.stopPropagation();
+    // While the content itself is focused (e.g. right after a pointer-open),
+    // arrow/Home/End must move focus into the items.
+    const content = contentElement.value;
+    if (content && event.target === content) {
+      event.preventDefault();
+      const items = Array.from(
+        content.querySelectorAll<HTMLElement>('[data-primitives-menu-item]:not([data-disabled])'),
+      );
+      if (LAST_KEYS.includes(event.key)) items.reverse();
+      focusFirst(items);
+    }
   }
 }
 

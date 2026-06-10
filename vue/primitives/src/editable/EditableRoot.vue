@@ -38,7 +38,7 @@ export interface EditableRootEmits {
 </script>
 
 <script setup lang="ts">
-import { computed, ref, shallowRef, toRef, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, shallowRef, toRef, watch } from 'vue';
 import { Primitive } from '../primitive';
 import { provideEditableContext } from './context';
 import { useForwardExpose } from '@robonen/vue';
@@ -105,25 +105,39 @@ function edit(): void {
 }
 
 function cancel(): void {
+  if (!isEditing.value) return;
   isEditing.value = false;
   inputValue.value = model.value;
   emit('update:state', 'cancel');
 }
 
 function submit(): void {
+  if (!isEditing.value) return;
   commitModel(inputValue.value);
   isEditing.value = false;
   emit('update:state', 'submit');
   emit('submit', inputValue.value);
 }
 
+let blurTimer: ReturnType<typeof setTimeout> | undefined;
+onBeforeUnmount(() => clearTimeout(blurTimer));
+
 function onFocusOutCapture(event: FocusEvent): void {
   if (!isEditing.value) return;
   const root = currentElement.value;
   const next = event.relatedTarget as Node | null;
   if (root && next && root.contains(next)) return;
-  if (submitMode === 'blur' || submitMode === 'both') submit();
-  else cancel();
+  // Hiding the focused preview/trigger on entering edit mode fires a
+  // synchronous focusout with relatedTarget=null before the input's autofocus
+  // lands — defer the decision and re-check where focus actually ended up.
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(() => {
+    if (!isEditing.value) return;
+    const active = document.activeElement;
+    if (root && active && root.contains(active)) return;
+    if (submitMode === 'blur' || submitMode === 'both') submit();
+    else cancel();
+  }, 0);
 }
 
 provideEditableContext({

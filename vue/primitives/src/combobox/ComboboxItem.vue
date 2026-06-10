@@ -26,7 +26,6 @@ import { provideComboboxItemContext, useComboboxGroupContext, useComboboxRootCon
 
 const props = defineProps<ComboboxItemProps<T>>();
 
-const { forwardRef, currentElement } = useForwardExpose();
 const rootCtx = useComboboxRootContext();
 let groupCtx: { id: { value: string } } | null = null;
 try {
@@ -43,6 +42,12 @@ const isDisabled = computed(() => rootCtx.disabled.value || !!props.disabled);
 const isSelected = computed(() => rootCtx.isSelected(props.value));
 const isHighlighted = computed(() => rootCtx.selectedValueId.value === id.value);
 const isVisible = computed(() => rootCtx.filterState.value.items.has(id.value));
+
+// defineExpose must run BEFORE useForwardExpose: the composable absorbs a prior
+// expose() into the forwarded object, while a later one would trigger Vue's
+// "expose() should be called only once" warning and clobber the forwarded API.
+defineExpose({ id, isVisible, isHighlighted });
+const { forwardRef, currentElement } = useForwardExpose();
 
 function syncRegistration() {
   rootCtx.onItemRegister(id.value, {
@@ -98,8 +103,6 @@ provideComboboxItemContext({
   isSelected,
   isDisabled,
 });
-
-defineExpose({ id, isVisible, isHighlighted });
 </script>
 
 <template>

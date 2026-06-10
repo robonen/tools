@@ -168,4 +168,73 @@ describe('TagsInput', () => {
     expect((input.element as HTMLInputElement).disabled).toBe(true);
     w.unmount();
   });
+
+  it('tag item is labelled by its ItemText id', async () => {
+    const w = createTagsInput({ defaultValue: ['a'] });
+    // ItemText assigns the shared textId during its own setup, one tick after
+    // the item's first render.
+    await nextTick();
+    const item = w.findComponent(TagsInputItem as Component).element as HTMLElement;
+    const text = w.findComponent(TagsInputItemText as Component).element as HTMLElement;
+    expect(text.id).toBeTruthy();
+    expect(item.getAttribute('aria-labelledby')).toBe(text.id);
+    w.unmount();
+  });
+
+  it('Enter with pending text prevents default synchronously (blocks implicit form submit)', () => {
+    const w = createTagsInput();
+    const input = w.find('input').element as HTMLInputElement;
+    input.value = 'hello';
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    input.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+    w.unmount();
+  });
+
+  it('Enter on an empty input leaves the default action alone', () => {
+    const w = createTagsInput();
+    const input = w.find('input').element as HTMLInputElement;
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    input.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+    w.unmount();
+  });
+
+  // Mirrors demo.vue: Clear lives in a footer wrapper that is a deep
+  // descendant of Root, not a direct slot child.
+  it('Clear injects context when nested deeper inside Root (demo layout)', async () => {
+    const w = mount(
+      defineComponent({
+        setup() {
+          const tags = ref<string[]>(['a', 'b']);
+          return () => h(
+            TagsInputRoot,
+            {
+              modelValue: tags.value,
+              'onUpdate:modelValue': (v: TagValue[]) => (tags.value = v as string[]),
+            },
+            {
+              default: () => [
+                h('div', [
+                  ...tags.value.map(tag =>
+                    h(TagsInputItem, { key: tag, value: tag }, {
+                      default: () => [h(TagsInputItemText, null, { default: () => tag })],
+                    }),
+                  ),
+                  h(TagsInputInput),
+                ]),
+                h('div', [h(TagsInputClear, null, { default: () => 'Clear all' })]),
+              ],
+            },
+          );
+        },
+      }),
+      { attachTo: document.body },
+    );
+    const clearBtn = w.findAll('button').find(b => b.text() === 'Clear all')!;
+    await clearBtn.trigger('click');
+    await nextTick();
+    expect(w.findAllComponents(TagsInputItem as Component)).toHaveLength(0);
+    w.unmount();
+  });
 });

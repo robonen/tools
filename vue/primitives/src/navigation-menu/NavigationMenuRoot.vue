@@ -52,7 +52,7 @@ import { useCollectionProvider } from '../collection';
 import { useConfig } from '../config-provider';
 import { Primitive } from '../primitive';
 import { provideNavigationMenuContext } from './context';
-import { EVENT_ROOT_CONTENT_DISMISS } from './utils';
+import { EVENT_ROOT_CONTENT_DISMISS, NAVIGATION_MENU_COLLECTION_KEY } from './utils';
 
 defineOptions({ inheritAttrs: false });
 
@@ -98,7 +98,7 @@ const indicatorTrack = shallowRef<HTMLElement | undefined>(undefined);
 const viewport = shallowRef<HTMLElement | undefined>(undefined);
 const activeTrigger = shallowRef<HTMLElement | undefined>(undefined);
 
-const { getItems, CollectionSlot } = useCollectionProvider<{ value: string }>();
+const { getItems, CollectionSlot } = useCollectionProvider<{ value: string }>(NAVIGATION_MENU_COLLECTION_KEY);
 
 // Manual debounce — open delay shrinks to 150ms once the menu is open or while
 // the skip window is active (so moving between triggers feels instantaneous).

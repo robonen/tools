@@ -80,7 +80,7 @@ function onKeyDown(event: KeyboardEvent): void {
       all: 'unset',
       gridArea: '1 / 1 / auto / auto',
       visibility: !ctx.isEditing.value ? 'hidden' : undefined,
-    } : undefined"
+    } : (!ctx.isEditing.value ? { display: 'none' } : undefined)"
     aria-label="editable input"
     @input="onInput"
     @keydown="onKeyDown"

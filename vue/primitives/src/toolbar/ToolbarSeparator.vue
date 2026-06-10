@@ -15,6 +15,7 @@ export interface ToolbarSeparatorProps extends PrimitiveProps {
 
 <script setup lang="ts">
 import { Primitive } from '../primitive';
+import { computed } from 'vue';
 import { useForwardExpose } from '@robonen/vue';
 import { useToolbarContext } from './context';
 
@@ -22,7 +23,7 @@ const { as = 'span', orientation } = defineProps<ToolbarSeparatorProps>();
 const { forwardRef } = useForwardExpose();
 const ctx = useToolbarContext();
 // If no orientation passed, inherit from toolbar — but invert (horizontal toolbar needs vertical separator).
-const effective = orientation ?? (ctx.orientation.value === 'horizontal' ? 'vertical' : 'horizontal');
+const effective = computed(() => orientation ?? (ctx.orientation.value === 'horizontal' ? 'vertical' : 'horizontal'));
 </script>
 
 <template>

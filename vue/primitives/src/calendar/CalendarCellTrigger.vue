@@ -29,7 +29,7 @@ import { useForwardExpose } from '@robonen/vue';
 import { computed, nextTick } from 'vue';
 import { Primitive } from '../primitive';
 import { useCalendarGridContext, useCalendarRootContext } from './context';
-import { addDays, addMonths, addYears, formatFullDate, isSameDay, isSameMonth } from './utils';
+import { addDays, addMonths, addYears, formatFullDate, isAfter, isBefore, isSameDay, isSameMonth, toIsoDate } from './utils';
 
 const { as = 'div', day, month } = defineProps<CalendarCellTriggerProps>();
 
@@ -39,7 +39,7 @@ defineSlots<{
 
 const ctx = useCalendarRootContext();
 const gridCtx = useCalendarGridContext();
-const { forwardRef, currentElement } = useForwardExpose();
+const { forwardRef } = useForwardExpose();
 
 const monthValue = computed(() => month ?? gridCtx.month.value);
 
@@ -79,7 +79,7 @@ function focusByDataValue(target: Date) {
   const parent = ctx.parentElement.value;
   if (!parent) return false;
   const el = parent.querySelector<HTMLElement>(
-    `[data-primitives-calendar-cell-trigger][data-value="${target.toISOString().slice(0, 10)}"]:not([data-outside-view])`,
+    `[data-primitives-calendar-cell-trigger][data-value="${toIsoDate(target)}"]:not([data-outside-view])`,
   );
   if (el) {
     el.focus();
@@ -89,8 +89,8 @@ function focusByDataValue(target: Date) {
 }
 
 function shiftFocus(target: Date) {
-  if (ctx.minValue.value && target < ctx.minValue.value) return;
-  if (ctx.maxValue.value && target > ctx.maxValue.value) return;
+  if (ctx.minValue.value && isBefore(target, ctx.minValue.value)) return;
+  if (ctx.maxValue.value && isAfter(target, ctx.maxValue.value)) return;
   ctx.focusedDate.value = target;
   if (focusByDataValue(target)) return;
   // Crossed visible range — page placeholder and retry.
@@ -159,14 +159,12 @@ function handleFocus() {
   ctx.focusedDate.value = day;
 }
 
-const dataValue = computed(() => day.toISOString().slice(0, 10));
+const dataValue = computed(() => toIsoDate(day));
 const tabindex = computed(() => {
   if (isFocusedDate.value) return 0;
   if (isOutsideView.value || isDisabled.value) return undefined;
   return -1;
 });
-
-defineExpose({ currentElement });
 </script>
 
 <template>

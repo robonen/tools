@@ -22,7 +22,7 @@ import { Primitive } from '../primitive';
 import { RovingFocusItem } from '../roving-focus';
 import { VisuallyHidden } from '../visually-hidden';
 import { useNavigationMenuContext, useNavigationMenuItemContext } from './context';
-import { getOpenState } from './utils';
+import { NAVIGATION_MENU_COLLECTION_KEY, getOpenState } from './utils';
 
 defineOptions({ inheritAttrs: false });
 
@@ -31,20 +31,12 @@ const { disabled = false } = defineProps<NavigationMenuTriggerProps>();
 const menuContext = useNavigationMenuContext();
 const itemContext = useNavigationMenuItemContext();
 
-const { CollectionItem } = useCollectionInjector<{ value: string }>();
+const { CollectionItem } = useCollectionInjector<{ value: string }>(NAVIGATION_MENU_COLLECTION_KEY);
 const { forwardRef, currentElement: triggerElement } = useForwardExpose();
 
-// Auto-reset flag that suppresses click→toggle right after a pointermove open.
+// Set after a pointermove open so further pointermoves don't re-fire
+// onTriggerEnter; reset on pointerleave.
 const hasPointerMoveOpened = ref(false);
-let pointerMoveResetTimer: ReturnType<typeof setTimeout> | undefined;
-function markPointerMoveOpened() {
-  hasPointerMoveOpened.value = true;
-  if (pointerMoveResetTimer !== undefined) clearTimeout(pointerMoveResetTimer);
-  pointerMoveResetTimer = setTimeout(() => {
-    hasPointerMoveOpened.value = false;
-    pointerMoveResetTimer = undefined;
-  }, 300);
-}
 
 const wasClickClose = ref(false);
 
@@ -69,7 +61,7 @@ function handlePointerMove(ev: PointerEvent) {
   if (ev.pointerType !== 'mouse') return;
   if (disabled || wasClickClose.value || itemContext.wasEscapeCloseRef.value || hasPointerMoveOpened.value) return;
   menuContext.onTriggerEnter(itemContext.value);
-  markPointerMoveOpened();
+  hasPointerMoveOpened.value = true;
 }
 
 function handlePointerLeave(ev: PointerEvent) {
@@ -83,11 +75,11 @@ function handlePointerLeave(ev: PointerEvent) {
 function handleClick(event: MouseEvent | PointerEvent) {
   const isMouse = !('pointerType' in event) || (event as PointerEvent).pointerType === 'mouse';
   if (isMouse && menuContext.disableClickTrigger.value) return;
-  // If pointermove already opened the menu, ignore the resulting click.
-  if (hasPointerMoveOpened.value) return;
-  if (open.value) menuContext.onItemSelect('');
-  else menuContext.onItemSelect(itemContext.value);
-  wasClickClose.value = open.value;
+  // Capture before onItemSelect mutates modelValue — `open` is a computed over
+  // it, so reading it afterwards would be inverted.
+  const wasOpen = open.value;
+  menuContext.onItemSelect(wasOpen ? '' : itemContext.value);
+  wasClickClose.value = wasOpen;
 }
 
 function handleKeydown(ev: KeyboardEvent) {
@@ -120,8 +112,11 @@ function handleVisuallyHiddenFocus(ev: FocusEvent) {
 </script>
 
 <template>
-  <CollectionItem :value="{ value: itemContext.value }">
-    <RovingFocusItem :focusable="!disabled">
+  <!-- CollectionItem must wrap the button itself (not RovingFocusItem, which
+       renders its own span) so the element registered in the nav collection
+       carries the trigger id that Root/Sub match `activeTrigger` against. -->
+  <RovingFocusItem :focusable="!disabled">
+    <CollectionItem :value="{ value: itemContext.value }">
       <Primitive
         :id="itemContext.triggerId"
         :ref="forwardRef"
@@ -143,8 +138,8 @@ function handleVisuallyHiddenFocus(ev: FocusEvent) {
       >
         <slot />
       </Primitive>
-    </RovingFocusItem>
-  </CollectionItem>
+    </CollectionItem>
+  </RovingFocusItem>
 
   <template v-if="open">
     <VisuallyHidden

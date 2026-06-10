@@ -49,7 +49,7 @@ function onDoubleClick(): void {
       visibility: ctx.isEditing.value ? 'hidden' : undefined,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-    } : undefined"
+    } : (ctx.isEditing.value ? { display: 'none' } : undefined)"
     @focusin="onFocus"
     @dblclick="onDoubleClick"
   >

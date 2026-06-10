@@ -33,24 +33,33 @@ const { forwardRef } = useForwardExpose();
 
 // DOM-order items via Collection primitive. Survives `v-for` reorders and
 // teleport/portal children, unlike a mount-order array.
+// Enabled-only: a disabled button is unfocusable, so letting it into the
+// roving list would freeze navigation on it and drop the toolbar's tab stop.
 const { getItems, CollectionSlot } = useCollectionProvider();
-const items = computed(() => getItems(true).map(i => i.ref));
+const items = computed(() => getItems().map(i => i.ref));
 
 const activeIndex = ref(0);
 
+// Read fresh rather than through `items`: `getItems` filters on live
+// `data-disabled`, which the computed cannot track across runtime toggles.
+function enabledItems(): HTMLElement[] {
+  return getItems().map(i => i.ref);
+}
+
 function focusIndex(i: number): void {
-  const el = items.value[i];
-  if (el) {
-    activeIndex.value = i;
-    el.focus();
-  }
+  const el = enabledItems()[i];
+  if (!el) return;
+  el.focus();
+  // Commit only when focus actually landed, so the tab stop never moves
+  // onto an element that refused focus.
+  if (document.activeElement === el) activeIndex.value = i;
 }
 
 function onItemKeyDown(event: KeyboardEvent, el: HTMLElement): void {
   const action = rovingKeyToAction(event, { orientation, dir, loop });
   if (!action) return;
   event.preventDefault();
-  const list = items.value;
+  const list = enabledItems();
   const idx = list.indexOf(el);
   if (action.absolute === 'home') return focusIndex(0);
   if (action.absolute === 'end') return focusIndex(list.length - 1);

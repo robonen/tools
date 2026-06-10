@@ -85,3 +85,18 @@ jobs:
 
       - name: Test
         run: pnpm --filter "${{ matrix.package }}" --if-present run test
+
+  # Sentinel job — aggregates all matrix results into a single status check.
+  # Add "CI" as the required check in branch protection rules.
+  ci:
+    name: CI
+    needs: check
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: All checks passed
+        run: |
+          if [[ "${{ needs.check.result }}" != "success" ]]; then
+            echo "One or more package checks failed: ${{ needs.check.result }}"
+            exit 1
+          fi

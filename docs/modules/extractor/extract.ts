@@ -166,7 +166,7 @@ function rawExampleText(tag: JSDocTag): string {
     .split('\n')
     .map(line => line.replace(/^\s*\*(?: |\/\s*$)?/, ''))
     .join('\n')
-    .replace(/\s*\*?\/?\s*$/, '');
+    .replace(/\*\/?$/, '').trimEnd();
 }
 
 function getExamples(tags: JSDocTag[]): string[] {

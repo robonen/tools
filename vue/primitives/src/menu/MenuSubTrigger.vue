@@ -65,10 +65,22 @@ function handleKeyDown(event: KeyboardEvent) {
     close();
   }
 }
+
+function handleSelect(event: Event) {
+  // Sub triggers open their submenu instead of closing the menu tree —
+  // this is also the only open path for touch pointers.
+  event.preventDefault();
+  if (!menuCtx.open.value) open();
+}
+
+// PopperAnchor renders as="template" so the item element itself becomes the
+// popper anchor and fallthrough attrs land on the element carrying
+// data-state/highlight (a wrapper div would swallow them). The template must
+// stay single-root without top-level comments — see MenuItemImpl.
 </script>
 
 <template>
-  <PopperAnchor>
+  <PopperAnchor as="template">
     <MenuItemImpl
       v-bind="props"
       :id="subCtx.triggerId.value"
@@ -81,7 +93,7 @@ function handleKeyDown(event: KeyboardEvent) {
       @pointermove="handlePointerMove"
       @pointerleave="handlePointerLeave"
       @keydown="handleKeyDown"
-      @select.prevent
+      @select="handleSelect"
     >
       <slot />
     </MenuItemImpl>

@@ -75,10 +75,17 @@ function handleKeyDown(event: KeyboardEvent) {
     el.click();
   }
 }
+
+// RovingFocusItem renders as="template" so its tab stop (tabindex, focus and
+// keydown handlers, collection registration) merges onto the menu-item element
+// itself — a real wrapper element would split focus handling across two nodes.
+// NB: the template must stay single-root with no top-level comments; consumers
+// resolve this component's element via `$el`/functional refs, and a dev-mode
+// fragment root would point them at the fragment anchor instead.
 </script>
 
 <template>
-  <RovingFocusItem :focusable="!disabled" :active="isHighlighted">
+  <RovingFocusItem as="template" :focusable="!disabled" :active="isHighlighted">
     <Primitive
       :ref="(el: unknown) => { itemRef = el as HTMLElement | null }"
       :as="as"
@@ -88,7 +95,6 @@ function handleKeyDown(event: KeyboardEvent) {
       :data-highlighted="isHighlighted ? '' : undefined"
       :data-disabled="disabled ? '' : undefined"
       :aria-disabled="disabled || undefined"
-      :tabindex="isHighlighted ? 0 : -1"
       @pointermove="handlePointerMove"
       @pointerleave="handlePointerLeave"
       @focus="handleFocus"

@@ -154,11 +154,26 @@ function getDescription(jsdocs: JSDoc[], tags: JSDocTag[]): string {
   return '';
 }
 
+/**
+ * Example text straight from the tag SOURCE. `getCommentText()` runs through
+ * the TS JSDoc parser, which strips each line's leading whitespace — code
+ * indentation is gone. Instead take the raw tag text and remove only the
+ * comment scaffolding (`@example` head, per-line ` * ` prefixes).
+ */
+function rawExampleText(tag: JSDocTag): string {
+  return tag.getText()
+    .replace(/^@example[ \t]?/, '')
+    .split('\n')
+    .map(line => line.replace(/^\s*\*(?: |\/\s*$)?/, ''))
+    .join('\n')
+    .replace(/\s*\*?\/?\s*$/, '');
+}
+
 function getExamples(tags: JSDocTag[]): string[] {
   return tags
     .filter(t => t.getTagName() === 'example')
     .map((t) => {
-      let text = t.getCommentText()?.trim() ?? '';
+      let text = rawExampleText(t).trim();
       // A leading `<caption>…</caption>` (JSDoc example title) isn't valid code —
       // turn it into a leading comment so the snippet stays clean & highlightable.
       let caption = '';

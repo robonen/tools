@@ -21,9 +21,12 @@ const emit = defineEmits<MenuItemEmits>();
 const rootCtx = useMenuRootContext();
 
 function handleSelect(event: Event) {
-  const selectEvent = new CustomEvent(ITEM_SELECT, { bubbles: true, cancelable: true })
-  ;(event.currentTarget as HTMLElement).dispatchEvent(selectEvent);
-  emit('select', event);
+  const target = event.currentTarget as HTMLElement;
+  const selectEvent = new CustomEvent(ITEM_SELECT, { bubbles: true, cancelable: true });
+  // The consumer must receive the cancelable ITEM_SELECT event (not the click)
+  // so `event.preventDefault()` in `@select` actually keeps the menu open.
+  target.addEventListener(ITEM_SELECT, e => emit('select', e), { once: true });
+  target.dispatchEvent(selectEvent);
   if (!selectEvent.defaultPrevented) {
     rootCtx.onClose();
   }

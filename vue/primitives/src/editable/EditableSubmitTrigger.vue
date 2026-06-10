@@ -28,6 +28,7 @@ const { forwardRef } = useForwardExpose();
     :disabled="ctx.disabled.value || undefined"
     :data-disabled="ctx.disabled.value ? '' : undefined"
     :hidden="ctx.isEditing.value ? undefined : ''"
+    :style="ctx.isEditing.value ? undefined : { display: 'none' }"
     @click="ctx.submit"
   >
     <slot>Submit</slot>

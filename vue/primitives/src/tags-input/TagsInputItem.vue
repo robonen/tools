@@ -47,7 +47,7 @@ provideTagsInputItemContext({
     <Primitive
       :ref="forwardRef"
       :as="as"
-      :aria-labelledby="textId.value || undefined"
+      :aria-labelledby="textId || undefined"
       :aria-current="isSelected ? 'true' : undefined"
       :data-state="isSelected ? 'active' : 'inactive'"
       :data-disabled="isDisabled ? '' : undefined"

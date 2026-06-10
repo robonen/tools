@@ -72,6 +72,103 @@ describe('DismissableLayer', () => {
     w.unmount();
   });
 
+  it('does not dismiss when pointerDownOutside.preventDefault() is called on a non-cancelable event', async () => {
+    const outside = document.createElement('button');
+    document.body.appendChild(outside);
+
+    const w = mount(DismissableLayer, {
+      attachTo: document.body,
+      slots: { default: '<button>in</button>' },
+      props: {
+        onPointerDownOutside: (e: Event) => e.preventDefault(),
+      },
+    });
+    await nextTick();
+
+    // PointerEvent constructor defaults to cancelable: false — native
+    // defaultPrevented can never flip, prevention must be tracked separately.
+    outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+
+    expect(w.emitted('pointerDownOutside')).toBeTruthy();
+    expect(w.emitted('dismiss')).toBeFalsy();
+    w.unmount();
+  });
+
+  it('emits focusOutside and dismiss when focus moves outside', async () => {
+    const outside = document.createElement('button');
+    document.body.appendChild(outside);
+
+    const w = mount(DismissableLayer, {
+      attachTo: document.body,
+      slots: { default: '<button data-testid="inside">in</button>' },
+    });
+    await nextTick();
+
+    outside.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+
+    expect(w.emitted('focusOutside')).toBeTruthy();
+    expect(w.emitted('dismiss')).toBeTruthy();
+    w.unmount();
+  });
+
+  it('does not emit focusOutside when focus moves inside', async () => {
+    const w = mount(DismissableLayer, {
+      attachTo: document.body,
+      slots: { default: '<button data-testid="inside">in</button>' },
+    });
+    await nextTick();
+
+    const inside = w.find('[data-testid=inside]').element as HTMLElement;
+    inside.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+
+    expect(w.emitted('focusOutside')).toBeFalsy();
+    expect(w.emitted('dismiss')).toBeFalsy();
+    w.unmount();
+  });
+
+  it('does not dismiss when focusOutside.preventDefault() is called (focusin is non-cancelable)', async () => {
+    const outside = document.createElement('button');
+    document.body.appendChild(outside);
+
+    const w = mount(DismissableLayer, {
+      attachTo: document.body,
+      slots: { default: '<button>in</button>' },
+      props: {
+        onFocusOutside: (e: Event) => e.preventDefault(),
+      },
+    });
+    await nextTick();
+
+    outside.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+
+    expect(w.emitted('focusOutside')).toBeTruthy();
+    expect(w.emitted('dismiss')).toBeFalsy();
+    w.unmount();
+  });
+
+  it('does not dismiss nor emit the specific event when interactOutside.preventDefault() is called', async () => {
+    const outside = document.createElement('button');
+    document.body.appendChild(outside);
+
+    const w = mount(DismissableLayer, {
+      attachTo: document.body,
+      slots: { default: '<button>in</button>' },
+      props: {
+        onInteractOutside: (e: Event) => e.preventDefault(),
+      },
+    });
+    await nextTick();
+
+    outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, composed: true }));
+    outside.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+
+    expect(w.emitted('interactOutside')).toBeTruthy();
+    expect(w.emitted('pointerDownOutside')).toBeFalsy();
+    expect(w.emitted('focusOutside')).toBeFalsy();
+    expect(w.emitted('dismiss')).toBeFalsy();
+    w.unmount();
+  });
+
   it('sets body pointer-events: none when disableOutsidePointerEvents is true', async () => {
     const w = mount(DismissableLayer, {
       attachTo: document.body,

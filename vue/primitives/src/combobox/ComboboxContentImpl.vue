@@ -59,16 +59,21 @@ function handleEscape(event: KeyboardEvent) {
   emit('escapeKeyDown', event);
 }
 
-function handlePointerDownOutside(event: any) {
+// Interactions within the anchor (input, trigger, cancel button, padding) must not
+// dismiss the popup — e.g. the root focuses the input right after opening, which
+// fires a focus-outside from the content layer's perspective.
+function handleInteractOutside(event: PointerEvent | MouseEvent | FocusEvent) {
   const target = event.target as Element | null;
+  const parent = rootCtx.parentElement.value;
   const input = rootCtx.inputElement.value;
   const trigger = rootCtx.triggerElement.value;
-  if (target && (input?.contains(target) || trigger?.contains(target))) {
+  if (target && (parent?.contains(target) || input?.contains(target) || trigger?.contains(target))) {
     event.preventDefault();
-    return;
   }
+}
+
+function handlePointerDownOutside(event: any) {
   emit('pointerDownOutside', event);
-  if (!event.defaultPrevented) rootCtx.onOpenChange(false);
 }
 
 function handleFocusOutside(event: any) {
@@ -92,6 +97,7 @@ function handleCloseAutoFocus(event: Event) {
       as="template"
       :disable-outside-pointer-events="props.disableOutsidePointerEvents ?? false"
       @escape-key-down="handleEscape"
+      @interact-outside="handleInteractOutside"
       @pointer-down-outside="handlePointerDownOutside"
       @focus-outside="handleFocusOutside"
       @dismiss="rootCtx.onOpenChange(false)"

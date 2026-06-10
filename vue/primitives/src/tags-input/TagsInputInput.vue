@@ -49,12 +49,13 @@ function commitCurrent(target: HTMLInputElement): void {
   if (ok) target.value = '';
 }
 
-async function onEnter(event: KeyboardEvent): Promise<void> {
+function onEnter(event: KeyboardEvent): void {
   if (isComposing.value) return;
-  await nextTick();
   if (event.defaultPrevented) return;
   const target = event.target as HTMLInputElement;
   if (!target.value) return;
+  // Must run synchronously: after an await the dispatch is over and Enter's
+  // implicit form submission has already happened.
   event.preventDefault();
   commitCurrent(target);
 }

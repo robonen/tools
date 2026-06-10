@@ -28,7 +28,7 @@ import { COLLECTION_ITEM_ATTR, EVENT_ROOT_CONTENT_DISMISS, getOpenState } from '
 
 defineOptions({ inheritAttrs: false });
 
-defineProps<NavigationMenuContentImplProps>();
+const { as } = defineProps<NavigationMenuContentImplProps>();
 
 const emit = defineEmits<NavigationMenuContentImplEmits>();
 
@@ -133,6 +133,20 @@ function handlePointerDownOutside(ev: PointerEvent | MouseEvent) {
   if (isTrigger || isRootViewport || !menuContext.isRootMenu) ev.preventDefault();
 }
 
+function handleDismiss() {
+  emit('dismiss');
+  const el = currentElement.value;
+  if (menuContext.isRootMenu && el) {
+    // Bubbles up to NavigationMenuRoot's listener (closes the menu) and hits
+    // our own EVENT_ROOT_CONTENT_DISMISS listener (restores content tab order).
+    el.dispatchEvent(new CustomEvent(EVENT_ROOT_CONTENT_DISMISS, { bubbles: true, cancelable: true }));
+  }
+  else {
+    // Submenus: the root listener isn't on an ancestor of this element.
+    menuContext.onItemDismiss();
+  }
+}
+
 // Listen for sibling/global EVENT_ROOT_CONTENT_DISMISS for root menus so links
 // inside content can request the whole root close.
 watchEffect((onCleanup) => {
@@ -155,6 +169,7 @@ watchEffect((onCleanup) => {
     <DismissableLayer
       :id="itemContext.contentId"
       :ref="forwardRef"
+      :as="as"
       :aria-labelledby="itemContext.triggerId"
       :data-motion="motionAttribute"
       :data-state="getOpenState(menuContext.modelValue.value, itemContext.value)"
@@ -167,7 +182,7 @@ watchEffect((onCleanup) => {
       @pointer-down-outside="handlePointerDownOutside"
       @focus-outside="handleFocusOutside"
       @interact-outside="emit('interactOutside', $event)"
-      @dismiss="emit('dismiss')"
+      @dismiss="handleDismiss"
       @pointerenter="emit('pointerEnterContent')"
       @pointerleave="emit('pointerLeaveContent')"
     >

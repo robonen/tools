@@ -1,6 +1,9 @@
 export type AcceptableValue = string | number | boolean | Record<string, unknown>;
 
 export const OPEN_KEYS = ['Enter', ' ', 'ArrowDown', 'ArrowUp', 'PageUp', 'PageDown', 'Home', 'End'];
+// The input is a text field: Space must type a space and Home/End/Page* must move
+// the caret, so only the arrow keys open a closed list (typing opens it via input).
+export const INPUT_OPEN_KEYS = ['ArrowDown', 'ArrowUp'];
 export const SELECTION_KEYS = ['Enter', ' '];
 
 export function clamp(value: number, min: number, max: number): number {

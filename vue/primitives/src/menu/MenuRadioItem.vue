@@ -32,9 +32,11 @@ provideMenuItemIndicatorContext({ checkedState });
 
 function handleSelect(event: Event) {
   radioCtx.onValueChange(value);
-  const selectEvent = new CustomEvent(ITEM_SELECT, { bubbles: true, cancelable: true })
-  ;(event.currentTarget as HTMLElement).dispatchEvent(selectEvent);
-  emit('select', event);
+  const target = event.currentTarget as HTMLElement;
+  const selectEvent = new CustomEvent(ITEM_SELECT, { bubbles: true, cancelable: true });
+  // Emit the cancelable ITEM_SELECT event so `@select` preventDefault works.
+  target.addEventListener(ITEM_SELECT, e => emit('select', e), { once: true });
+  target.dispatchEvent(selectEvent);
   if (!selectEvent.defaultPrevented) rootCtx.onClose();
 }
 </script>

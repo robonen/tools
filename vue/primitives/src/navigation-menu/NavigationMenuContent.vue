@@ -25,7 +25,6 @@ import NavigationMenuContentImpl from './NavigationMenuContentImpl.vue';
 defineOptions({ inheritAttrs: false });
 
 const { forceMount = false, ...rest } = defineProps<NavigationMenuContentProps>();
-void rest;
 
 const emit = defineEmits<NavigationMenuContentEmits>();
 
@@ -45,7 +44,19 @@ watch(
   },
 );
 
-const present = computed(() => open.value || isLastActiveValue.value);
+// The latch never resets when the whole menu closes, so gate it on the viewport
+// still existing — otherwise the Teleport falls back to disabled (inline) and
+// the closed panel would stay mounted in the nav forever.
+watch(
+  () => menuContext.viewport.value,
+  (viewport) => {
+    if (!viewport) isLastActiveValue.value = false;
+  },
+);
+
+const present = computed(
+  () => open.value || (isLastActiveValue.value && !!menuContext.viewport.value),
+);
 
 function handlePointerEnter() {
   menuContext.onContentEnter(itemContext.value);
@@ -62,7 +73,7 @@ function handlePointerLeave() {
   <Teleport :to="menuContext.viewport.value ?? 'body'" :disabled="!menuContext.viewport.value">
     <Presence :present="present" :force-mount="forceMount || !menuContext.unmountOnHide.value">
       <NavigationMenuContentImpl
-        v-bind="$attrs"
+        v-bind="{ ...rest, ...$attrs }"
         @escape-key-down="emit('escapeKeyDown', $event)"
         @pointer-down-outside="emit('pointerDownOutside', $event)"
         @focus-outside="emit('focusOutside', $event)"

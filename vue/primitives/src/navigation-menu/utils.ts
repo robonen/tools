@@ -45,6 +45,14 @@ export function clamp(value: number, min: number, max: number): number {
 /** Selector identifying the link/item nodes for arrow navigation inside content. */
 export const COLLECTION_ITEM_ATTR = 'data-primitives-collection-item';
 
+/**
+ * Namespaced collection key for the trigger collection owned by Root/Sub.
+ * `NavigationMenuList` renders a `RovingFocusGroup` (itself a collection
+ * provider) between Root/Sub and the triggers, so the default key would be
+ * shadowed and the triggers would register into the wrong collection.
+ */
+export const NAVIGATION_MENU_COLLECTION_KEY = 'NavigationMenuCollection';
+
 /** Custom event dispatched by a `NavigationMenuLink` selection. */
 export const LINK_SELECT_EVENT = 'navigationMenu.linkSelect';
 /** Custom event bubbled to the root content when an item dismisses the menu. */

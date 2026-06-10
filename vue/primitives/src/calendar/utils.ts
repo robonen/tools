@@ -4,6 +4,7 @@ import {
   formatDate,
   formatWeekday,
   getWeeks,
+  isSameMonth,
   startOfMonth,
   startOfWeek,
 } from './date-utils';
@@ -13,7 +14,7 @@ export * from './date-utils';
 export interface CalendarMonth {
   /** First day of this month (date-only). */
   value: Date;
-  /** 6×7 grid of dates including leading/trailing adjacent-month days. */
+  /** N×7 grid of dates including leading/trailing adjacent-month days. */
   weeks: Date[][];
 }
 
@@ -21,14 +22,22 @@ export interface CreateMonthsOptions {
   date: Date;
   numberOfMonths: number;
   weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /** Always render 6 weeks per month. @default true */
+  fixedWeeks?: boolean;
 }
 
 /** Build N consecutive months starting from `date`'s month. */
 export function createMonths(opts: CreateMonthsOptions): CalendarMonth[] {
+  const { fixedWeeks = true } = opts;
   const months: CalendarMonth[] = [];
   for (let i = 0; i < opts.numberOfMonths; i++) {
     const m = startOfMonth(addMonths(opts.date, i));
-    months.push({ value: m, weeks: getWeeks(m, opts.weekStartsOn) });
+    let weeks = getWeeks(m, opts.weekStartsOn);
+    // Only trailing weeks can be entirely outside the month — the first week
+    // always contains the 1st.
+    if (!fixedWeeks)
+      weeks = weeks.filter(week => week.some(d => isSameMonth(d, m)));
+    months.push({ value: m, weeks });
   }
   return months;
 }

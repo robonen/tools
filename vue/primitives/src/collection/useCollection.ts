@@ -157,29 +157,55 @@ function createCollectionState<Value = unknown>(): CollectionContext<Value> {
   };
 }
 
-const CollectionCtx = useContextFactory<CollectionContext>('CollectionContext');
+const DEFAULT_COLLECTION_KEY = 'CollectionContext';
+
+// One context factory per namespace key (`useContextFactory` mints a unique
+// Symbol per call). Without namespacing, a collection provider nested inside
+// another (e.g. `RovingFocusGroup` between `NavigationMenuRoot` and
+// `NavigationMenuTrigger`) shadows the outer collection for every descendant.
+const collectionContextFactories = new Map<
+  string,
+  ReturnType<typeof useContextFactory<CollectionContext>>
+>();
+
+function getCollectionContextFactory(key: string) {
+  let factory = collectionContextFactories.get(key);
+  if (!factory) {
+    factory = useContextFactory<CollectionContext>(key);
+    collectionContextFactories.set(key, factory);
+  }
+  return factory;
+}
 
 /**
  * Creates a new collection state and provides it to descendants.
  * Call this in the parent (e.g. `RovingFocusGroup`, `ListboxRoot`).
+ *
+ * Pass a dedicated `key` when the component tree may nest another collection
+ * provider between this one and its injectors, so they don't shadow each other.
  *
  * @example
  * ```ts
  * const { getItems, CollectionSlot } = useCollectionProvider();
  * ```
  */
-export function useCollectionProvider<Value = unknown>(): CollectionContext<Value> {
+export function useCollectionProvider<Value = unknown>(
+  key: string = DEFAULT_COLLECTION_KEY,
+): CollectionContext<Value> {
   const ctx = createCollectionState<Value>();
-  CollectionCtx.provide(ctx as CollectionContext);
+  getCollectionContextFactory(key).provide(ctx as CollectionContext);
   return ctx;
 }
 
 /**
- * Injects the collection context from the nearest `useCollectionProvider()`.
+ * Injects the collection context from the nearest `useCollectionProvider()`
+ * called with the same `key`.
  * Call this in children (e.g. `RovingFocusItem`, `ListboxItem`).
  *
  * @throws when used outside a provider.
  */
-export function useCollectionInjector<Value = unknown>(): CollectionContext<Value> {
-  return CollectionCtx.inject() as CollectionContext<Value>;
+export function useCollectionInjector<Value = unknown>(
+  key: string = DEFAULT_COLLECTION_KEY,
+): CollectionContext<Value> {
+  return getCollectionContextFactory(key).inject() as CollectionContext<Value>;
 }

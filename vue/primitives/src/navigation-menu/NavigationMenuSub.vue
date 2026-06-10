@@ -28,6 +28,7 @@ import { useForwardExpose, useId } from '@robonen/vue';
 import { useCollectionProvider } from '../collection';
 import { Primitive } from '../primitive';
 import { provideNavigationMenuContext, useNavigationMenuContext } from './context';
+import { NAVIGATION_MENU_COLLECTION_KEY } from './utils';
 
 defineOptions({ inheritAttrs: false });
 
@@ -60,7 +61,7 @@ const indicatorTrack = shallowRef<HTMLElement | undefined>(undefined);
 const viewport = shallowRef<HTMLElement | undefined>(undefined);
 const activeTrigger = shallowRef<HTMLElement | undefined>(undefined);
 
-const { getItems, CollectionSlot } = useCollectionProvider<{ value: string }>();
+const { getItems, CollectionSlot } = useCollectionProvider<{ value: string }>(NAVIGATION_MENU_COLLECTION_KEY);
 
 const baseId = useId(undefined, 'primitives-navigation-menu-sub');
 

@@ -36,10 +36,15 @@ onUnmounted(() => {
 function handlePointerDown(event: PointerEvent) {
   if (disabled) return;
   if (event.button !== 0 || event.ctrlKey) return;
-  if (!menuCtx.open.value) {
-    menuCtx.onOpenChange(true);
-    event.preventDefault();
-  }
+  // Toggle on the pre-interaction state: DropdownMenuContent prevents the
+  // dismissable layer from closing on trigger pointerdown, so this handler is
+  // the single owner of the open state for trigger interactions (otherwise
+  // dismiss-then-toggle would immediately reopen the menu).
+  const wasOpen = menuCtx.open.value;
+  menuCtx.onOpenChange(!wasOpen);
+  // Prevent trigger focusing when opening so the content can take focus
+  // without competition.
+  if (!wasOpen) event.preventDefault();
 }
 
 function handleKeyDown(event: KeyboardEvent) {
@@ -52,7 +57,7 @@ function handleKeyDown(event: KeyboardEvent) {
 </script>
 
 <template>
-  <MenuAnchor>
+  <MenuAnchor as="template">
     <Primitive
       :ref="forwardRef"
       :as="as"

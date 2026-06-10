@@ -29,7 +29,7 @@ watchEffect(() => menuCtx.onContentChange(contentRef.value));
     @pointer-down-outside="emit('pointerDownOutside', $event)"
     @focus-outside="emit('focusOutside', $event)"
     @interact-outside="emit('interactOutside', $event)"
-    @dismiss="emit('dismiss')"
+    @dismiss="() => { menuCtx.onOpenChange(false); emit('dismiss') }"
     @entry-focus="emit('entryFocus', $event)"
     @open-auto-focus="emit('openAutoFocus', $event)"
   >

@@ -17,6 +17,7 @@ export interface AspectRatioProps extends PrimitiveProps {
 </script>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Primitive } from '../primitive';
 import { useForwardExpose } from '@robonen/vue';
 
@@ -24,11 +25,11 @@ const { forwardRef } = useForwardExpose();
 
 const { ratio = 1, as = 'div' } = defineProps<AspectRatioProps>();
 
-const wrapperStyle = {
+const wrapperStyle = computed(() => ({
   position: 'relative' as const,
   width: '100%',
   paddingBottom: `${(1 / ratio) * 100}%`,
-};
+}));
 
 // Hoisted constant — the inner style never depends on props, so a single
 // module-level object is reused across all instances.

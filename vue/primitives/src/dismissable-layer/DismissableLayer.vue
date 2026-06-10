@@ -60,17 +60,22 @@ onBeforeUnmount(() => {
   dismissableLayerStack.remove(layer);
 });
 
-function createInteractEvent(event: PointerEvent | MouseEvent | FocusEvent): { defaultPrevented: boolean } {
-  // Emit `interactOutside` first so consumers can cancel before the specific event fires.
+// `focusin` is non-cancelable (and synthetic pointer events may be too), so the
+// native `defaultPrevented` flag can never flip — track prevention via a patched
+// `preventDefault` instead, keeping the "Preventable." emit contract honest.
+function emitPreventable<E extends PointerEvent | MouseEvent | FocusEvent>(
+  event: E,
+  emitEvent: (event: E) => void,
+): boolean {
   let prevented = false;
   const original = event.preventDefault;
   event.preventDefault = () => {
     prevented = true;
     original.call(event);
   };
-  emit('interactOutside', event);
+  emitEvent(event);
   event.preventDefault = original;
-  return { defaultPrevented: prevented };
+  return prevented || event.defaultPrevented;
 }
 
 useEscapeKey((event) => {
@@ -81,10 +86,10 @@ useEscapeKey((event) => {
 
 useClickOutside(nodeRef, (event) => {
   if (!dismissableLayerStack.isTopmost(layer)) return;
-  const interact = createInteractEvent(event);
-  if (interact.defaultPrevented) return;
-  emit('pointerDownOutside', event);
-  if (!event.defaultPrevented) emit('dismiss');
+  // Emit `interactOutside` first so consumers can cancel before the specific event fires.
+  if (emitPreventable(event, e => emit('interactOutside', e))) return;
+  if (emitPreventable(event, e => emit('pointerDownOutside', e))) return;
+  emit('dismiss');
 });
 
 // Focus outside detection — fires when focus leaves this layer to an element
@@ -96,11 +101,9 @@ useEventListener(document, 'focusin', (event: FocusEvent) => {
   if (el === target || el.contains(target)) return;
   if (!dismissableLayerStack.isTopmost(layer)) return;
 
-  const interact = createInteractEvent(event);
-  if (interact.defaultPrevented) return;
-
-  emit('focusOutside', event);
-  if (!event.defaultPrevented) emit('dismiss');
+  if (emitPreventable(event, e => emit('interactOutside', e))) return;
+  if (emitPreventable(event, e => emit('focusOutside', e))) return;
+  emit('dismiss');
 });
 
 // When this layer disables outside pointer events, the body gets a data

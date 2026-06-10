@@ -79,31 +79,17 @@ const {
 const config = useConfig();
 const direction = computed(() => dir ?? config.dir.value);
 
-const localOpen = ref<boolean>(defaultOpen);
 /** Controlled open state. Use `v-model:open`. */
-const open = defineModel<boolean>('open', {
-  default: undefined,
-  get: v => v ?? localOpen.value,
-  set: (v) => {
-    localOpen.value = v;
-    return v;
-  },
-});
+const open = defineModel<boolean>('open', { default: false });
+if (defaultOpen && !open.value) open.value = true;
 
-const initial = (modelValue ?? defaultValue) as T | T[] | undefined;
-const localValue = shallowRef<T | T[] | undefined>(
-  multiple
-    ? (Array.isArray(initial) ? initial.slice() : (initial === undefined ? [] : [initial]))
-    : (Array.isArray(initial) ? initial[0] : initial),
-);
-const value = defineModel<T | T[] | undefined>('modelValue', {
-  default: undefined,
-  get: v => v ?? localValue.value,
-  set: (v) => {
-    localValue.value = v;
-    return v;
-  },
-});
+/** Controlled selected value. Use `v-model`. `undefined` from the parent means "no selection". */
+const value = defineModel<T | T[] | undefined>('modelValue');
+if (modelValue === undefined && defaultValue !== undefined) {
+  value.value = multiple
+    ? (Array.isArray(defaultValue) ? defaultValue.slice() : [defaultValue]) as T[]
+    : (Array.isArray(defaultValue) ? defaultValue[0] : defaultValue) as T;
+}
 
 const searchTerm = ref('');
 const isUserInputted = ref(false);
@@ -228,8 +214,9 @@ function onValueChange(v: T) {
 function onOpenChange(next: boolean) {
   open.value = next;
   if (next) {
-    isUserInputted.value = false;
-    searchTerm.value = '';
+    // When the open was initiated by typing, ComboboxInput already set
+    // searchTerm/isUserInputted — resetting here would wipe the first keystroke.
+    if (!isUserInputted.value) searchTerm.value = '';
     nextTick(() => {
       inputElement.value?.focus();
       highlightSelectedOrFirst();

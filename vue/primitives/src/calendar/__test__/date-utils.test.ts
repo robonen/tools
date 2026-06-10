@@ -5,6 +5,7 @@ import {
   isDateUnavailable,
   isSameDay,
   startOfWeek,
+  toIsoDate,
 } from '../date-utils';
 
 describe('date-utils', () => {
@@ -33,6 +34,13 @@ describe('date-utils', () => {
     const b = new Date(2024, 5, 1, 23, 59);
     expect(isSameDay(a, b)).toBe(true);
     expect(isSameDay(a, new Date(2024, 5, 2))).toBe(false);
+  });
+
+  it('toIsoDate formats from local date fields, regardless of timezone', () => {
+    // toISOString would shift local midnight to the previous UTC day east of UTC.
+    expect(toIsoDate(new Date(2026, 5, 15))).toBe('2026-06-15');
+    expect(toIsoDate(new Date(2026, 0, 5))).toBe('2026-01-05');
+    expect(toIsoDate(new Date(2026, 5, 15, 23, 59, 59))).toBe('2026-06-15');
   });
 
   it('isDateUnavailable honors min/max and predicate', () => {

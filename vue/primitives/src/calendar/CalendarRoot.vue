@@ -80,8 +80,6 @@ import {
   toDateOnly,
 } from './utils';
 
-defineOptions({ inheritAttrs: false });
-
 const {
   as = 'div',
   defaultValue,
@@ -159,6 +157,7 @@ const grid = computed<CalendarMonth[]>(() => createMonths({
   date: placeholder.value,
   numberOfMonths,
   weekStartsOn,
+  fixedWeeks,
 }));
 
 const weekDays = computed(() => getWeekdayLabels(weekStartsOn, locale, weekdayFormat));

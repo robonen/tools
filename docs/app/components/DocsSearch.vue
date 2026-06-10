@@ -71,7 +71,7 @@ onUnmounted(() => globalThis.removeEventListener('keydown', onKeydown));
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
         <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
       </svg>
-      <span class="hidden sm:inline flex-1 text-left">Search…</span>
+      <span class="hidden sm:inline flex-1 text-left font-mono text-[13px]">search…</span>
       <kbd class="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-(--bg) border border-(--border) rounded text-(--fg-subtle)">⌘K</kbd>
     </button>
 
@@ -84,17 +84,15 @@ onUnmounted(() => globalThis.removeEventListener('keydown', onKeydown));
           <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" @click="close" />
 
           <div class="fixed inset-x-0 top-[12vh] mx-auto max-w-xl px-4">
-            <div class="bg-(--bg-elevated) rounded-2xl border border-(--border) shadow-2xl overflow-hidden">
+            <div class="bg-(--bg-elevated) rounded-xl border border-(--border) shadow-2xl overflow-hidden">
               <div class="flex items-center px-4 border-b border-(--border)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-(--fg-subtle) shrink-0">
-                  <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
-                </svg>
+                <span class="font-mono text-base text-(--accent-text) select-none shrink-0">❯</span>
                 <input
                   v-model="query"
                   data-search-input
                   type="text"
-                  placeholder="Search across all packages…"
-                  class="w-full py-3.5 px-3 bg-transparent text-(--fg) placeholder:text-(--fg-subtle) focus:outline-none text-[15px]"
+                  placeholder="search across all packages…"
+                  class="w-full py-3.5 px-3 bg-transparent text-(--fg) placeholder:text-(--fg-subtle) focus:outline-none font-mono text-[14px]"
                 >
                 <kbd class="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono bg-(--bg-inset) border border-(--border) rounded text-(--fg-subtle)">ESC</kbd>
               </div>

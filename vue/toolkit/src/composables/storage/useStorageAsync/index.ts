@@ -1,13 +1,13 @@
-import { computed, ref, shallowRef, toValue, watch } from 'vue';
+import { computed, nextTick, ref, shallowRef, toValue, watch } from 'vue';
 import type { MaybeRefOrGetter, Ref, ShallowRef, UnwrapRef } from 'vue';
-import { isFunction } from '@robonen/stdlib';
+import { SyncMutex, isFunction } from '@robonen/stdlib';
 import type { ConfigurableFlush, ConfigurableWindow } from '@/types';
 import { defaultWindow } from '@/types';
 import type { ConfigurableEventFilter, EventFilter } from '@/utils/filters';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 import { tryOnMounted } from '@/composables/lifecycle/tryOnMounted';
 import { useEventListener } from '@/composables/browser/useEventListener';
-import { guessSerializer, shallowMerge } from '../useStorage';
+import { customStorageEventName, guessSerializer, shallowMerge } from '../useStorage';
 import type { StorageEventLike } from '../useStorage';
 
 export interface StorageSerializerAsync<T> {
@@ -141,12 +141,11 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
 
       if (rawValue === undefined || rawValue === null) {
         if (writeDefaults && defaults !== undefined && defaults !== null) {
-          try {
-            await storage.setItem(keyComputed.value, await serializer.write(defaults));
-          }
-          catch (e) {
-            onError(e);
-          }
+          // Through the FIFO queue so the write is ordered with user writes
+          // and dispatches a change event like any other write; awaited so
+          // the defaults are persisted by the time the composable is ready.
+          queueWrite(defaults, true);
+          await writeQueue;
         }
 
         return defaults;
@@ -168,14 +167,62 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
     }
   }
 
-  async function write(value: T) {
+  // Reentrancy guard: dispatchEvent runs same-tab listeners synchronously, so
+  // while it is on the stack the only incoming event is this instance's own —
+  // which must be ignored. During rapid queued writes the state may already
+  // hold a newer value, and consuming the own (stale) event would clobber it
+  // and ping-pong with the write queue.
+  let dispatchingWriteEvent = false;
+
+  function dispatchWriteEvent(key: string, oldValue: string | null, newValue: string | null) {
+    if (!window)
+      return;
+
+    const payload = {
+      key,
+      oldValue,
+      newValue,
+      storageArea: storage as Storage,
+    };
+
+    dispatchingWriteEvent = true;
+
     try {
+      // Use native StorageEvent for built-in Storage, CustomEvent for custom backends
+      window.dispatchEvent(
+        storage instanceof Storage
+          ? new StorageEvent('storage', payload)
+          : new CustomEvent<StorageEventLike>(customStorageEventName, { detail: payload }),
+      );
+    }
+    finally {
+      dispatchingWriteEvent = false;
+    }
+  }
+
+  async function write(value: T, key: string, onlyIfAbsent = false) {
+    try {
+      const oldValue = await storage.getItem(key) ?? null;
+
+      // A defaults write re-checks at execution time: another instance may
+      // have persisted a value since this was enqueued, and writing the
+      // defaults over it would stomp that newer value.
+      if (onlyIfAbsent && oldValue !== null) {
+        needsReconcile = true;
+        return;
+      }
+
       if (value === undefined || value === null) {
-        await storage.removeItem(keyComputed.value);
+        await storage.removeItem(key);
+        dispatchWriteEvent(key, oldValue, null);
       }
       else {
-        const raw = await serializer.write(value);
-        await storage.setItem(keyComputed.value, raw);
+        const serialized = await serializer.write(value);
+
+        if (oldValue !== serialized) {
+          await storage.setItem(key, serialized);
+          dispatchWriteEvent(key, oldValue, serialized);
+        }
       }
     }
     catch (e) {
@@ -183,10 +230,122 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
     }
   }
 
+  // Bumped on every reactive key switch: in-flight writes finish against
+  // their snapshotted key without touching the new key's state.
+  let keyEpoch = 0;
+
+  // The key writes target. Updated ONLY by the key watcher — by watcher flush
+  // time the keyComputed already reflects a same-tick key change, so a write
+  // enqueued in that flush would otherwise land on the new key.
+  let currentKey = keyComputed.value;
+
+  // Writes still queued or in flight. Foreign events arriving while > 0 are
+  // ordering-ambiguous and deferred to a reconciling re-read after the drain.
+  let pendingWrites = 0;
+  let needsReconcile = false;
+
+  // Bumped when an external event lands in the state — an async snapshot
+  // read (init, key switch, reconcile) that started earlier compares stamps
+  // so it never clobbers the newer value
+  let changeStamp = 0;
+
+  // FIFO write queue: keeps rapid writes ordered when the backend resolves
+  // them out of order, and keeps dispatched event payloads in commit order.
+  let writeQueue: Promise<void> = Promise.resolve();
+
+  function queueWrite(value: T, onlyIfAbsent = false) {
+    // Snapshot the target: a write enqueued before a key switch must land on
+    // the key it was meant for, never on the new one.
+    const target = currentKey;
+
+    pendingWrites++;
+
+    writeQueue = writeQueue
+      .then(() => write(value, target, onlyIfAbsent))
+      .then(() => {
+        pendingWrites--;
+        maybeReconcile();
+      });
+  }
+
+  // Resolve a change deferred by in-flight writes: re-read the source of
+  // truth once instead of trusting possibly-reordered events.
+  function maybeReconcile() {
+    if (pendingWrites > 0 || !needsReconcile)
+      return;
+
+    needsReconcile = false;
+
+    const epoch = keyEpoch;
+    const stamp = changeStamp;
+
+    read().then((value) => {
+      // A key switch or a newer external event supersedes this snapshot
+      if (epoch !== keyEpoch || stamp !== changeStamp)
+        return;
+
+      lockWritesUntilFlush();
+      (state as Ref).value = value;
+    });
+  }
+
   // Apply event filter if provided
   const writeWithFilter: (value: T) => void = eventFilter
-    ? (value: T) => (eventFilter as EventFilter)(() => write(value))
-    : (value: T) => { write(value); };
+    ? (value: T) => (eventFilter as EventFilter)(() => queueWrite(value))
+    : queueWrite;
+
+  // Write-lock prevents the state watcher from writing the just-read value
+  // back to storage when state is updated programmatically (key changes,
+  // cross-instance events). Released via nextTick so it persists through the
+  // pre-flush watcher cycle.
+  const writeLock = new SyncMutex();
+
+  function lockWritesUntilFlush() {
+    writeLock.lock();
+    nextTick(() => writeLock.unlock());
+  }
+
+  async function update(event: StorageEventLike) {
+    if (dispatchingWriteEvent)
+      return;
+
+    if (event.storageArea !== (storage as unknown as StorageEventLike['storageArea']))
+      return;
+
+    if (event.key === null) {
+      changeStamp++;
+      lockWritesUntilFlush();
+      (state as Ref).value = defaults;
+      return;
+    }
+
+    if (event.key !== keyComputed.value)
+      return;
+
+    // A foreign event interleaved with own in-flight writes is ordering-
+    // ambiguous: applying it could revert a newer own value with no later
+    // event to correct it. Defer to one reconciling re-read after the drain.
+    if (pendingWrites > 0) {
+      needsReconcile = true;
+      return;
+    }
+
+    try {
+      const currentSerialized = await serializer.write(state.value as T);
+
+      if (event.newValue === currentSerialized)
+        return;
+
+      const value = await read(event);
+
+      changeStamp++;
+      lockWritesUntilFlush();
+      (state as Ref).value = value;
+    }
+    catch (e) {
+      onError(e);
+    }
+  }
 
   let stopWatch: (() => void) | null = null;
   let stopKeyWatch: (() => void) | null = null;
@@ -196,22 +355,27 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
     stopKeyWatch?.();
   });
 
-  // Event listeners for cross-tab synchronization
+  // Event listeners for cross-tab (native Storage) and same-tab cross-instance
+  // (custom backends) synchronization
   let firstMounted = false;
 
   if (window && listenToStorageChanges) {
-    useEventListener(window, 'storage', (ev: StorageEvent) => {
-      if (initOnMounted && !firstMounted)
-        return;
-      if (ev.key !== keyComputed.value)
-        return;
-      if (ev.storageArea !== storage)
-        return;
+    if (storage instanceof Storage) {
+      useEventListener(window, 'storage', (ev: StorageEvent) => {
+        if (initOnMounted && !firstMounted)
+          return;
 
-      Promise.resolve().then(() => read(ev)).then((value) => {
-        (state as Ref).value = value;
-      });
-    }, { passive: true });
+        update(ev);
+      }, { passive: true });
+    }
+    else {
+      useEventListener(window as any, customStorageEventName as any, ((ev: CustomEvent<StorageEventLike>) => {
+        if (initOnMounted && !firstMounted)
+          return;
+
+        update(ev.detail);
+      }) as any);
+    }
   }
 
   const shell: UseStorageAsyncReturnBase<T, Shallow> = {
@@ -220,13 +384,23 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
   };
 
   function performInit() {
+    const stamp = changeStamp;
+
     return read().then((value) => {
-      (state as Ref).value = value;
+      // An external event applied while the init read was in flight is
+      // fresher than the snapshot — keep it
+      if (stamp === changeStamp) {
+        (state as Ref).value = value;
+      }
+
       isReady.value = true;
-      onReady?.(value);
+      onReady?.(state.value as T);
 
       // Set up watcher AFTER initial state is set — avoids write-back on init
       const stop = watch(state, (newValue) => {
+        if (writeLock.isLocked)
+          return;
+
         writeWithFilter(newValue as T);
       }, { flush, deep });
 
@@ -234,7 +408,17 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
 
       // Watch for key changes
       stopKeyWatch = watch(keyComputed, () => {
+        keyEpoch++;
+        currentKey = keyComputed.value;
+        needsReconcile = false;
+
+        const stamp = changeStamp;
+
         read().then((v) => {
+          if (stamp !== changeStamp)
+            return;
+
+          lockWritesUntilFlush();
           (state as Ref).value = v;
         });
       }, { flush });

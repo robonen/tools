@@ -50,8 +50,9 @@ export default defineNuxtConfig({
 
   fonts: {
     families: [
-      { name: 'Inter', provider: 'google', weights: [400, 500, 600, 700] },
-      { name: 'JetBrains Mono', provider: 'google', weights: [400, 500] },
+      { name: 'IBM Plex Sans', provider: 'google', weights: [400, 500, 600, 700] },
+      { name: 'IBM Plex Mono', provider: 'google', weights: [400, 500, 600] },
+      { name: 'Bricolage Grotesque', provider: 'google', weights: [600, 700, 800] },
     ],
   },
 
@@ -62,8 +63,8 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: 'Auto-generated documentation for the @robonen/tools monorepo' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' },
-        { name: 'theme-color', content: '#0a0a0a', media: '(prefers-color-scheme: dark)' },
+        { name: 'theme-color', content: '#faf8f3', media: '(prefers-color-scheme: light)' },
+        { name: 'theme-color', content: '#161310', media: '(prefers-color-scheme: dark)' },
       ],
       htmlAttrs: {
         lang: 'en',

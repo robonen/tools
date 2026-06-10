@@ -17,6 +17,60 @@ function isActive(pkgSlug: string, slug: string) {
   return route.path === `/${pkgSlug}/${slug}`;
 }
 
+// ── Category tree: collapsed by default, filterable ───────────────────────
+const navQuery = ref('');
+const openCategories = ref(new Set<string>());
+
+function toggleCategory(slug: string) {
+  if (openCategories.value.has(slug))
+    openCategories.value.delete(slug);
+  else
+    openCategories.value.add(slug);
+
+  openCategories.value = new Set(openCategories.value);
+}
+
+// Auto-open the category that contains the current page
+watch([currentPackage, () => route.path], () => {
+  const pkg = currentPackage.value;
+
+  if (!pkg || pkg.kind !== 'api') return;
+
+  for (const category of pkg.categories) {
+    if (category.items.some(item => isActive(pkg.slug, item.slug)))
+      openCategories.value.add(category.slug);
+  }
+
+  openCategories.value = new Set(openCategories.value);
+}, { immediate: true });
+
+// Reset the filter when navigating to another package
+watch(currentPackageSlug, () => {
+  navQuery.value = '';
+});
+
+const visibleCategories = computed(() => {
+  const pkg = currentPackage.value;
+
+  if (!pkg || pkg.kind !== 'api') return [];
+
+  const query = navQuery.value.trim().toLowerCase();
+
+  if (!query) return pkg.categories;
+
+  return pkg.categories
+    .map(category => ({
+      ...category,
+      items: category.items.filter(item => item.name.toLowerCase().includes(query)),
+    }))
+    .filter(category => category.items.length > 0);
+});
+
+function isCategoryOpen(slug: string) {
+  // Filtering expands every matching category
+  return navQuery.value.trim() !== '' || openCategories.value.has(slug);
+}
+
 watch(() => route.path, () => {
   isSidebarOpen.value = false;
 });
@@ -38,10 +92,13 @@ watch(() => route.path, () => {
           </svg>
         </button>
 
-        <NuxtLink to="/" class="flex items-center gap-2 font-semibold text-[15px] mr-auto">
-          <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-(--fg) text-(--bg) text-xs font-bold">R</span>
-          <span class="hidden sm:flex items-center">
-            <span class="text-(--accent-text)">@robonen</span><span class="text-(--fg-subtle)">/</span><span class="text-(--fg)">tools</span>
+        <NuxtLink to="/" class="group flex items-center gap-2.5 mr-auto">
+          <span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-(--accent) text-(--accent-fg) font-mono text-[13px] font-semibold leading-none select-none">
+            ❯
+          </span>
+          <span class="hidden sm:flex items-baseline font-mono text-[13.5px] tracking-tight">
+            <span class="text-(--fg-subtle)">~/</span><span class="text-(--fg) font-medium">robonen</span><span class="text-(--fg-subtle)">/</span><span class="text-(--accent-text) font-medium">tools</span>
+            <span class="ml-1 inline-block w-1.75 h-3.75 translate-y-0.5 bg-(--accent) opacity-0 group-hover:opacity-80 group-hover:animate-pulse" />
           </span>
         </NuxtLink>
 
@@ -71,29 +128,38 @@ watch(() => route.path, () => {
       >
         <nav class="h-full overflow-y-auto py-8 px-4 lg:pr-6 lg:pl-0 overscroll-contain">
           <div v-for="grp in groups" :key="grp.group" class="mb-7">
-            <div class="text-[11px] font-semibold uppercase tracking-wider text-(--fg-subtle) mb-2 px-2">
-              {{ grp.label }}
-            </div>
+            <div class="comment-label mb-2 px-2">{{ grp.label.toLowerCase() }}</div>
             <ul class="space-y-0.5">
               <li v-for="pkg in grp.packages" :key="pkg.slug">
                 <NuxtLink
                   :to="`/${pkg.slug}`"
                   :class="[
-                    'flex items-center justify-between py-1.5 px-2 rounded-lg text-sm transition-colors',
+                    'flex items-center justify-between py-1.5 px-2 rounded-md text-sm transition-colors',
                     currentPackageSlug === pkg.slug
                       ? 'text-(--fg) font-medium bg-(--bg-inset)'
                       : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
                   ]"
                 >
-                  <span>{{ pkg.name.replace('@robonen/', '') }}</span>
-                  <span class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">{{ pkg.kind === 'api' ? 'api' : pkg.kind === 'components' ? 'ui' : 'guide' }}</span>
+                  <span class="font-mono text-[13px]">{{ pkg.name.replace('@robonen/', '') }}</span>
+                  <span class="text-[10px] font-mono text-(--fg-subtle)">{{ pkg.kind === 'api' ? 'api' : pkg.kind === 'components' ? 'ui' : 'guide' }}</span>
                 </NuxtLink>
 
                 <!-- Expanded tree for the current package -->
-                <div v-if="currentPackageSlug === pkg.slug && currentPackage" class="mt-1 mb-2 ml-2 pl-3 border-l border-(--border)">
+                <div v-if="currentPackageSlug === pkg.slug && currentPackage" class="mt-1.5 mb-3 ml-2.5 pl-2.5 border-l border-(--border)">
+                  <!-- Quick filter — the tree below collapses to matches -->
+                  <div v-if="currentPackage.kind === 'api'" class="relative mb-2 mt-1">
+                    <span class="absolute left-2 top-1/2 -translate-y-1/2 font-mono text-[11px] text-(--accent-text) select-none">❯</span>
+                    <input
+                      v-model="navQuery"
+                      type="text"
+                      placeholder="filter…"
+                      class="w-full h-7 pl-6 pr-2 font-mono text-[12px] rounded-md bg-(--bg-subtle) border border-(--border) text-(--fg) placeholder:text-(--fg-subtle) focus:outline-none focus:border-(--border-strong) transition-colors"
+                    >
+                  </div>
+
                   <!-- Hand-authored guide sections (intro + prose pages) -->
-                  <div v-if="currentPackage.docs.length" class="mb-2">
-                    <div class="text-[11px] font-medium text-(--fg-subtle) py-1 px-1">Guide</div>
+                  <div v-if="currentPackage.docs.length && !navQuery" class="mb-2">
+                    <div class="comment-label py-1 px-1">guide</div>
                     <ul>
                       <li v-if="getIntro(currentPackage)">
                         <NuxtLink
@@ -101,7 +167,7 @@ watch(() => route.path, () => {
                           :class="[
                             'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
                             route.path === `/${pkg.slug}`
-                              ? 'text-(--accent-text) bg-(--accent-subtle) font-medium'
+                              ? 'text-(--accent-text) font-medium'
                               : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
                           ]"
                         >
@@ -114,7 +180,7 @@ watch(() => route.path, () => {
                           :class="[
                             'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
                             isActive(pkg.slug, s.slug)
-                              ? 'text-(--accent-text) bg-(--accent-subtle) font-medium'
+                              ? 'text-(--accent-text) font-medium'
                               : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
                           ]"
                         >
@@ -124,22 +190,50 @@ watch(() => route.path, () => {
                     </ul>
                   </div>
 
-                  <!-- api -->
+                  <!-- api: collapsible categories -->
                   <template v-if="currentPackage.kind === 'api'">
-                    <div v-for="cat in currentPackage.categories" :key="cat.slug" class="mb-2">
-                      <div class="text-[11px] font-medium text-(--fg-subtle) py-1 px-1">{{ cat.name }}</div>
-                      <ul>
+                    <div v-if="navQuery && visibleCategories.length === 0" class="py-2 px-1 font-mono text-[11px] text-(--fg-subtle)">
+                      no matches
+                    </div>
+
+                    <div v-for="cat in visibleCategories" :key="cat.slug" class="mb-0.5">
+                      <button
+                        type="button"
+                        class="w-full flex items-center gap-1.5 py-1 px-1 rounded-md cursor-pointer group/cat"
+                        @click="toggleCategory(cat.slug)"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24"
+                          fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                          :class="[
+                            'shrink-0 text-(--fg-subtle) transition-transform duration-150',
+                            isCategoryOpen(cat.slug) ? 'rotate-90' : '',
+                          ]"
+                        >
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                        <span class="comment-label group-hover/cat:text-(--fg-muted) transition-colors">{{ cat.name.toLowerCase() }}</span>
+                        <span class="ml-auto font-mono text-[10px] text-(--fg-subtle) tabular-nums">{{ cat.items.length }}</span>
+                      </button>
+
+                      <ul v-if="isCategoryOpen(cat.slug)" class="mb-1.5">
                         <li v-for="item in cat.items" :key="item.slug">
                           <NuxtLink
                             :to="`/${pkg.slug}/${item.slug}`"
                             :class="[
-                              'block py-1 px-2 text-[13px] rounded-md font-mono transition-colors truncate',
+                              'flex items-center gap-1.5 py-0.75 px-2 text-[13px] rounded-md font-mono transition-colors',
                               isActive(pkg.slug, item.slug)
-                                ? 'text-(--accent-text) bg-(--accent-subtle) font-medium'
+                                ? 'text-(--accent-text) font-medium'
                                 : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
                             ]"
                           >
-                            {{ item.name }}
+                            <span
+                              :class="[
+                                'shrink-0 text-[10px] select-none transition-opacity',
+                                isActive(pkg.slug, item.slug) ? 'opacity-100 text-(--accent-text)' : 'opacity-0',
+                              ]"
+                            >❯</span>
+                            <span class="truncate">{{ item.name }}</span>
                           </NuxtLink>
                         </li>
                       </ul>
@@ -154,7 +248,7 @@ watch(() => route.path, () => {
                         :class="[
                           'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
                           isActive(pkg.slug, c.slug)
-                            ? 'text-(--accent-text) bg-(--accent-subtle) font-medium'
+                            ? 'text-(--accent-text) font-medium'
                             : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
                         ]"
                       >
@@ -171,7 +265,7 @@ watch(() => route.path, () => {
                         :class="[
                           'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
                           isActive(pkg.slug, s.slug)
-                            ? 'text-(--accent-text) bg-(--accent-subtle) font-medium'
+                            ? 'text-(--accent-text) font-medium'
                             : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
                         ]"
                       >

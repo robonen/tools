@@ -85,9 +85,30 @@ export default defineNuxtModule({
       filename: 'docs-metadata.ts',
       write: true,
       getContents: () => {
-        // No indentation (smaller module) and no `as const` — a multi-MB literal
-        // type is pathological for tsc, and consumers cast to DocsMetadata anyway.
-        return `export default ${JSON.stringify(metadata)};`;
+        // Base64-encode the payload (same trick as the Nitro virtual below):
+        // build-time text replacements rewrite tokens like `import.meta.client`
+        // → `true` even inside string literals, because esbuild re-emits
+        // strings with escapes normalized before the replacement plugins run —
+        // so code snippets in examples/demo sources can only reach the page
+        // verbatim if the module text never contains them. Decoded once at
+        // module init; works in the browser, Vue SSR, and prerender.
+        const encoded = Buffer.from(JSON.stringify(metadata), 'utf8').toString('base64');
+
+        return `
+function decodePayload(encoded: string): string {
+  const globalBuffer = (globalThis as { Buffer?: { from: (input: string, encoding: string) => { toString: (encoding: string) => string } } }).Buffer;
+
+  if (globalBuffer)
+    return globalBuffer.from(encoded, 'base64').toString('utf8');
+
+  const binary = atob(encoded);
+  const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+
+  return new TextDecoder().decode(bytes);
+}
+
+export default JSON.parse(decodePayload(${JSON.stringify(encoded)}));
+`;
       },
     });
 

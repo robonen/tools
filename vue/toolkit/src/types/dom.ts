@@ -90,6 +90,22 @@ declare global {
   interface Gamepad {
     readonly hapticActuators?: readonly GamepadHapticActuator[];
   }
+
+  // ---- WebOTP API (https://wicg.github.io/web-otp/) ----
+
+  type OTPTransportType = 'sms';
+
+  interface OTPOptions {
+    transport?: OTPTransportType[];
+  }
+
+  interface CredentialRequestOptions {
+    otp?: OTPOptions;
+  }
+
+  interface OTPCredential extends Credential {
+    readonly code: string;
+  }
 }
 
 export {};

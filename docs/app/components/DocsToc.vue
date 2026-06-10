@@ -46,8 +46,8 @@ function go(id: string) {
 
 <template>
   <nav v-if="items.length > 0" class="text-sm">
-    <div class="text-[11px] font-semibold uppercase tracking-wider text-(--fg-subtle) mb-3">
-      On this page
+    <div class="comment-label mb-3">
+      on this page
     </div>
     <ul class="space-y-1 border-l border-(--border)">
       <li v-for="item in items" :key="item.id">

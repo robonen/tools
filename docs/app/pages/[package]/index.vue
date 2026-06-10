@@ -22,6 +22,35 @@ const kindLabel = computed(() => ({
   guide: 'Guide',
 }[pkg.value!.kind]));
 
+// ── API reference: filterable, chip-navigable categories ──────────────────
+const query = ref('');
+
+const filteredCategories = computed(() => {
+  if (pkg.value?.kind !== 'api') return [];
+
+  const needle = query.value.trim().toLowerCase();
+
+  if (!needle) return pkg.value.categories;
+
+  return pkg.value.categories
+    .map(category => ({
+      ...category,
+      items: category.items.filter(item =>
+        item.name.toLowerCase().includes(needle)
+        || item.description?.toLowerCase().includes(needle),
+      ),
+    }))
+    .filter(category => category.items.length > 0);
+});
+
+const filteredCount = computed(() =>
+  filteredCategories.value.reduce((total, category) => total + category.items.length, 0),
+);
+
+function scrollToCategory(catSlug: string) {
+  document.getElementById(`cat-${catSlug}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // For guide packages, surface the overview section inline.
 const overview = computed(() =>
   pkg.value?.kind === 'guide' ? pkg.value.sections.find(s => s.slug === 'overview') : undefined,
@@ -40,52 +69,75 @@ const otherSections = computed(() =>
 
     <!-- Auto header (shown only when there's no hand-authored intro) -->
     <header v-else class="mb-8 pb-8 border-b border-(--border)">
+      <div class="comment-label mb-3">{{ kindLabel.toLowerCase() }} · {{ countEntries(pkg) }} entries</div>
       <div class="flex items-center gap-2.5 mb-2 flex-wrap">
-        <h1 class="font-mono text-2xl font-bold tracking-tight text-(--fg)">{{ pkg.name }}</h1>
+        <h1 class="font-display text-3xl font-bold tracking-tight text-(--fg)">{{ pkg.name }}</h1>
         <DocsTag :label="`v${pkg.version}`" variant="neutral" />
       </div>
       <p class="text-(--fg-muted) text-[15px] leading-relaxed">{{ pkg.description }}</p>
-      <div class="mt-4 flex items-center gap-3 text-xs text-(--fg-subtle)">
-        <span>{{ kindLabel }}</span>
-        <span>·</span>
-        <span>{{ countEntries(pkg) }} entries</span>
-      </div>
       <div class="mt-5">
         <DocsCode :code="`pnpm add ${pkg.name}`" lang="bash" />
       </div>
     </header>
 
-    <!-- When an intro replaces the header, label the auto-generated reference -->
-    <h2 v-if="introComponent && pkg.kind === 'api'" class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4 pt-2">
-      API Reference
-    </h2>
-
-    <!-- API: categories of items -->
+    <!-- API: filter + category chips + dense reference grid -->
     <template v-if="pkg.kind === 'api'">
-      <section v-for="category in pkg.categories" :key="category.slug" class="mb-10">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4">
-          {{ category.name }}
-          <span class="ml-1 text-(--fg-subtle) normal-case font-normal">· {{ category.items.length }}</span>
+      <div class="sticky top-14 z-20 -mx-2 px-2 py-3 backdrop-blur-md" style="background-color: var(--header-bg)">
+        <div class="relative mb-2.5">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-(--accent-text) select-none">❯</span>
+          <input
+            v-model="query"
+            type="text"
+            :placeholder="`filter ${countEntries(pkg)} entries…`"
+            class="w-full h-10 pl-8 pr-16 font-mono text-sm rounded-md bg-(--bg-elevated) border border-(--border) text-(--fg) placeholder:text-(--fg-subtle) focus:outline-none focus:border-(--accent) transition-colors"
+          >
+          <span v-if="query" class="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[11px] text-(--fg-subtle) tabular-nums">
+            {{ filteredCount }} hits
+          </span>
+        </div>
+
+        <div class="flex gap-1.5 overflow-x-auto pb-1 -mb-1">
+          <button
+            v-for="category in filteredCategories"
+            :key="category.slug"
+            type="button"
+            class="shrink-0 inline-flex items-center gap-1.5 h-6.5 px-2.5 font-mono text-[11px] rounded-full border border-(--border) bg-(--bg-elevated) text-(--fg-muted) hover:border-(--accent) hover:text-(--accent-text) transition-colors cursor-pointer"
+            @click="scrollToCategory(category.slug)"
+          >
+            {{ category.name.toLowerCase() }}
+            <span class="text-(--fg-subtle) tabular-nums">{{ category.items.length }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div v-if="query && filteredCategories.length === 0" class="py-16 text-center">
+        <div class="font-mono text-sm text-(--fg-subtle)">// no matches for "{{ query }}"</div>
+      </div>
+
+      <section
+        v-for="category in filteredCategories"
+        :id="`cat-${category.slug}`"
+        :key="category.slug"
+        class="mb-10 scroll-mt-40 pt-4"
+      >
+        <h2 class="comment-label mb-3">
+          {{ category.name.toLowerCase() }} · {{ category.items.length }}
         </h2>
-        <div class="grid grid-cols-1 gap-2">
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <NuxtLink
             v-for="item in category.items"
             :key="item.slug"
             :to="`/${pkg.slug}/${item.slug}`"
-            class="group flex items-center gap-3 p-3 rounded-xl border border-(--border) bg-(--bg-elevated) hover:border-(--border-strong) hover:bg-(--bg-subtle) transition-all"
+            class="group flex items-start gap-2.5 p-3 rounded-card border border-(--border) bg-(--bg-elevated) hover:border-(--border-strong) hover:shadow-(--shadow-card) transition-all"
           >
-            <DocsBadge :kind="item.kind" />
+            <DocsBadge :kind="item.kind" size="sm" />
             <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-mono text-sm font-medium text-(--fg) group-hover:text-(--accent-text) transition-colors">{{ item.name }}</span>
-                <DocsTag v-if="item.hasTests" label="tested" variant="test" />
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-mono text-[13px] font-medium text-(--fg) group-hover:text-(--accent-text) transition-colors truncate">{{ item.name }}</span>
                 <DocsTag v-if="item.hasDemo" label="demo" variant="demo" />
               </div>
-              <p v-if="item.description" class="text-sm text-(--fg-subtle) mt-0.5 truncate">{{ item.description }}</p>
+              <p v-if="item.description" class="text-[12.5px] text-(--fg-subtle) mt-0.5 line-clamp-1">{{ item.description }}</p>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-(--fg-subtle) group-hover:text-(--accent-text) transition-colors shrink-0">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
           </NuxtLink>
         </div>
       </section>
@@ -94,19 +146,19 @@ const otherSections = computed(() =>
     <!-- Components: gallery -->
     <template v-else-if="pkg.kind === 'components'">
       <section>
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4">
-          All components <span class="normal-case font-normal">· {{ pkg.components.length }}</span>
+        <h2 class="comment-label mb-4">
+          all components · {{ pkg.components.length }}
         </h2>
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div class="stagger grid grid-cols-1 gap-3 sm:grid-cols-2">
           <NuxtLink
             v-for="c in pkg.components"
             :key="c.slug"
             :to="`/${pkg.slug}/${c.slug}`"
-            class="group block p-4 rounded-xl border border-(--border) bg-(--bg-elevated) hover:border-(--border-strong) hover:shadow-(--shadow-card) transition-all"
+            class="group block p-4 rounded-card border border-(--border) bg-(--bg-elevated) hover:border-(--border-strong) hover:shadow-(--shadow-card) transition-all"
           >
             <div class="flex items-center justify-between gap-2 mb-1.5">
               <span class="font-semibold text-(--fg) group-hover:text-(--accent-text) transition-colors">{{ c.name }}</span>
-              <span class="text-[11px] text-(--fg-subtle)">{{ c.parts.length }} parts</span>
+              <span class="font-mono text-[11px] text-(--fg-subtle) tabular-nums">{{ c.parts.length }} parts</span>
             </div>
             <p v-if="c.description" class="text-sm text-(--fg-subtle) line-clamp-2">{{ c.description }}</p>
             <div class="mt-3 flex flex-wrap gap-1">
@@ -117,7 +169,7 @@ const otherSections = computed(() =>
               >
                 {{ part.role }}
               </span>
-              <span v-if="c.parts.length > 4" class="text-[10px] text-(--fg-subtle) px-1">+{{ c.parts.length - 4 }}</span>
+              <span v-if="c.parts.length > 4" class="text-[10px] font-mono text-(--fg-subtle) px-1">+{{ c.parts.length - 4 }}</span>
             </div>
           </NuxtLink>
         </div>
@@ -128,18 +180,16 @@ const otherSections = computed(() =>
     <template v-else>
       <DocsMarkdown v-if="overview" :source="overview.markdown" />
       <section v-if="otherSections.length > 0" class="mt-10 pt-8 border-t border-(--border)">
-        <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4">Sections</h2>
+        <h2 class="comment-label mb-4">sections</h2>
         <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <NuxtLink
             v-for="s in otherSections"
             :key="s.slug"
             :to="`/${pkg.slug}/${s.slug}`"
-            class="group flex items-center justify-between gap-3 p-3.5 rounded-xl border border-(--border) bg-(--bg-elevated) hover:border-(--border-strong) hover:bg-(--bg-subtle) transition-all"
+            class="group flex items-center justify-between gap-3 p-3.5 rounded-card border border-(--border) bg-(--bg-elevated) hover:border-(--border-strong) hover:bg-(--bg-subtle) transition-all"
           >
             <span class="text-sm font-medium text-(--fg) group-hover:text-(--accent-text) transition-colors">{{ s.title }}</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-(--fg-subtle) group-hover:text-(--accent-text) transition-colors shrink-0">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
+            <span class="font-mono text-[11px] text-(--fg-subtle) group-hover:text-(--accent-text) transition-colors">❯</span>
           </NuxtLink>
         </div>
       </section>

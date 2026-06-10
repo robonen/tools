@@ -17,6 +17,7 @@ export * from './useImage';
 export * from './useLocalFonts';
 export * from './useMediaQuery';
 export * from './useObjectUrl';
+export * from './useOtpCredentials';
 export * from './usePermission';
 export * from './usePreferredColorScheme';
 export * from './usePreferredContrast';

@@ -98,14 +98,14 @@ const toc = computed(() => {
   return items;
 });
 
-const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-3';
+const sectionTitle = 'comment-label mb-3';
 </script>
 
 <template>
   <div v-if="entry" class="xl:grid xl:grid-cols-[minmax(0,1fr)_14rem] xl:gap-12">
     <article class="min-w-0 max-w-3xl">
       <!-- Breadcrumb -->
-      <nav class="flex items-center gap-1.5 text-sm text-(--fg-subtle) mb-6">
+      <nav class="flex items-center gap-1.5 font-mono text-[13px] text-(--fg-subtle) mb-6">
         <NuxtLink :to="`/${pkg.slug}`" class="hover:text-(--fg) transition-colors">{{ pkg.name }}</NuxtLink>
         <span>/</span>
         <span class="text-(--fg)">{{ title }}</span>
@@ -116,7 +116,7 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
         <header class="mb-8">
           <div class="flex items-center gap-2.5 mb-2 flex-wrap">
             <DocsBadge :kind="entry.item.kind" size="md" />
-            <h1 class="min-w-0 break-words text-2xl font-bold font-mono tracking-tight text-(--fg)">{{ entry.item.name }}</h1>
+            <h1 class="min-w-0 break-words text-[1.6rem] font-semibold font-mono tracking-tight text-(--fg)">{{ entry.item.name }}</h1>
             <DocsTag v-if="entry.item.since" :label="`v${entry.item.since}`" variant="neutral" />
             <DocsTag
               v-if="entry.item.hasTests"
@@ -218,7 +218,7 @@ const sectionTitle = 'text-xs font-semibold uppercase tracking-wider text-(--fg-
         <header class="mb-8">
           <div class="flex items-center gap-2.5 mb-2 flex-wrap">
             <DocsBadge kind="component" size="md" />
-            <h1 class="text-2xl font-bold tracking-tight text-(--fg)">{{ entry.component.name }}</h1>
+            <h1 class="font-display text-[1.7rem] font-bold tracking-tight text-(--fg)">{{ entry.component.name }}</h1>
             <DocsTag :label="`${entry.component.parts.length} parts`" variant="neutral" />
           </div>
           <p v-if="entry.component.description" class="text-(--fg-muted) text-[15px] leading-relaxed">

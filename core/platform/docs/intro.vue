@@ -21,49 +21,49 @@
         primitives that overlays, dialogs, and editors depend on — focus guards, tabbable-edge
         detection, sibling hiding for screen readers, and CSS animation settling — and ships them
         SSR-aware and dependency-free. It is the low-level layer that powers
-        <NuxtLink to="/primitives">@robonen/primitives</NuxtLink> and the editor.
+        <NuxtLink to="/primitives">@robonen/primitives</NuxtLink> and Writekit.
       </p>
     </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">
           Focus, done right
         </h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+        <p class="mt-1.5 text-sm text-fg-muted">
           Shadow-DOM-aware active-element lookup, scroll-free focusing, and first/last tabbable-edge
-          detection via a fast <code class="text-(--accent-text)">TreeWalker</code> — the bones of any focus trap.
+          detection via a fast <code class="text-accent-text">TreeWalker</code> — the bones of any focus trap.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">
           Accessible isolation
         </h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
-          <code class="text-(--accent-text)">hideOthers</code> marks every sibling
-          <code class="text-(--accent-text)">aria-hidden</code>, ref-counted across layers, preserving
-          <code class="text-(--accent-text)">aria-live</code> regions. A dependency-free port of <code>aria-hidden</code>.
+        <p class="mt-1.5 text-sm text-fg-muted">
+          <code class="text-accent-text">hideOthers</code> marks every sibling
+          <code class="text-accent-text">aria-hidden</code>, ref-counted across layers, preserving
+          <code class="text-accent-text">aria-live</code> regions. A dependency-free port of <code>aria-hidden</code>.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">
           Animation lifecycle
         </h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+        <p class="mt-1.5 text-sm text-fg-muted">
           Detect running animations and transitions, then settle exit animations cleanly with
           fill-mode flash prevention — so unmounts wait for the CSS to finish.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">
           Multi-runtime safe
         </h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
-          A resolved <code class="text-(--accent-text)">_global</code> and an
-          <code class="text-(--accent-text)">isClient</code> flag that work across Node, Bun, Deno, and the
+        <p class="mt-1.5 text-sm text-fg-muted">
+          A resolved <code class="text-accent-text">_global</code> and an
+          <code class="text-accent-text">isClient</code> flag that work across Node, Bun, Deno, and the
           browser — guards baked in so SSR never throws.
         </p>
       </div>
@@ -150,10 +150,10 @@ if (isClient) {
   _global.addEventListener('resize', onResize);
 }`" />
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-subtle) p-4 text-sm text-(--fg-muted)">
-      <strong class="text-(--fg)">SSR note:</strong> browser helpers touch the DOM, so call them
+    <div class="rounded-xl border border-border bg-bg-subtle p-4 text-sm text-fg-muted">
+      <strong class="text-fg">SSR note:</strong> browser helpers touch the DOM, so call them
       inside event handlers or after mount.
-      <code class="text-(--accent-text)">hideOthers</code> already no-ops when <code>document</code> is
+      <code class="text-accent-text">hideOthers</code> already no-ops when <code>document</code> is
       undefined, and <code>/multi</code> is import-safe everywhere.
     </div>
 

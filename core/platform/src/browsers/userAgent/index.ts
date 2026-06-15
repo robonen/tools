@@ -19,6 +19,17 @@ export function testUserAgentPlatform(re: RegExp): boolean | undefined {
     : undefined;
 }
 
+// Detection patterns hoisted to module scope so they're compiled once, not on
+// every call. All are stateless (no `g`/`y` flag), so reuse is behavior-safe.
+const MAC_RE = /^Mac/;
+const IPHONE_RE = /^iPhone/;
+const IPAD_RE = /^iPad/;
+// eslint-disable-next-line regexp/no-unused-capturing-group
+const SAFARI_RE = /^((?!chrome|android).)*safari/i;
+const FIREFOX_RE = /Firefox/;
+const MOBILE_RE = /Mobile/;
+const FXIOS_RE = /FxiOS/;
+
 /**
  * @name isMac
  * @category Browsers
@@ -30,7 +41,7 @@ export function testUserAgentPlatform(re: RegExp): boolean | undefined {
  * @since 0.0.5
  */
 export function isMac(): boolean | undefined {
-  return testUserAgentPlatform(/^Mac/);
+  return testUserAgentPlatform(MAC_RE);
 }
 
 /**
@@ -43,7 +54,7 @@ export function isMac(): boolean | undefined {
  * @since 0.0.5
  */
 export function isIPhone(): boolean | undefined {
-  return testUserAgentPlatform(/^iPhone/);
+  return testUserAgentPlatform(IPHONE_RE);
 }
 
 /**
@@ -58,7 +69,7 @@ export function isIPhone(): boolean | undefined {
  */
 export function isIPad(): boolean | undefined {
   return (
-    testUserAgentPlatform(/^iPad/)
+    testUserAgentPlatform(IPAD_RE)
     // iPadOS 13+ lies and reports as a Mac; touch support gives it away.
     || (isMac() && navigator.maxTouchPoints > 1)
   );
@@ -91,8 +102,7 @@ export function isSafari(): boolean {
   if (typeof navigator === 'undefined')
     return false;
 
-  // eslint-disable-next-line regexp/no-unused-capturing-group
-  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  return SAFARI_RE.test(navigator.userAgent);
 }
 
 /**
@@ -111,7 +121,7 @@ export function isMobileFirefox(): boolean {
 
   const userAgent = navigator.userAgent;
   return (
-    (/Firefox/.test(userAgent) && /Mobile/.test(userAgent)) // Android Firefox
-    || /FxiOS/.test(userAgent) // iOS Firefox
+    (FIREFOX_RE.test(userAgent) && MOBILE_RE.test(userAgent)) // Android Firefox
+    || FXIOS_RE.test(userAgent) // iOS Firefox
   );
 }

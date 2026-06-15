@@ -61,6 +61,11 @@ const ALLOWED_VALUE_ESCAPES = /%(?:2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g;
 // encodeURIComponent escapes: %23 # | %24 $ | %26 & | %2B + | %5E ^ | %60 ` | %7C |
 const ALLOWED_NAME_ESCAPES = /%(?:2[346B]|5E|60|7C)/g;
 
+// Runs of percent-escapes to decode in a cookie value, and the `()` pair a
+// cookie name must escape. Global, but `replaceAll` resets lastIndex per call.
+const PERCENT_ESCAPE_RE = /(?:%[\dA-F]{2})+/gi;
+const PAREN_RE = /[()]/g;
+
 /**
  * @name encodeCookieValue
  * @category Browsers
@@ -104,7 +109,7 @@ export function decodeCookieValue(value: string): string {
     value = value.slice(1, -1);
 
   try {
-    return value.replaceAll(/(?:%[\dA-F]{2})+/gi, decodeURIComponent);
+    return value.replaceAll(PERCENT_ESCAPE_RE, decodeURIComponent);
   }
   catch {
     return value;
@@ -129,7 +134,7 @@ export function decodeCookieValue(value: string): string {
 export function encodeCookieName(name: string): string {
   return encodeURIComponent(name)
     .replaceAll(ALLOWED_NAME_ESCAPES, decodeURIComponent)
-    .replaceAll(/[()]/g, c => c === '(' ? '%28' : '%29');
+    .replaceAll(PAREN_RE, c => c === '(' ? '%28' : '%29');
 }
 
 /**

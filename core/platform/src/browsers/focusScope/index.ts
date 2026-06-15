@@ -85,7 +85,7 @@ export function getTabbableCandidates(container: HTMLElement): HTMLElement[] {
     acceptNode: (node: HTMLElement) => {
       const isHiddenInput = node.tagName === 'INPUT' && (node as HTMLInputElement).type === 'hidden';
 
-      if ((node as any).disabled || node.hidden || isHiddenInput)
+      if ((node as HTMLElement & { disabled?: boolean }).disabled || node.hidden || isHiddenInput)
         return NodeFilter.FILTER_SKIP;
 
       return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;

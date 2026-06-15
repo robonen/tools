@@ -10,8 +10,9 @@
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "dev": "nuxt dev",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
+    "build:deps": "pnpm --filter @robonen/stdlib --filter @robonen/platform --filter @robonen/fetch --filter @robonen/encoding --filter @robonen/crdt --filter @robonen/vue --filter @robonen/primitives --filter @robonen/writekit build",
+    "build": "pnpm run build:deps && nuxt build",
+    "generate": "pnpm run build:deps && nuxt generate",
     "preview": "nuxt preview",
     "extract": "jiti ./modules/extractor/extract.ts"
   },

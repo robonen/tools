@@ -77,7 +77,7 @@ jobs:
       # browser. playwright is a direct devDep of these packages, so run its CLI
       # in the package context (--filter) — it isn't resolvable from the root.
       - name: Install Playwright Chromium
-        if: matrix.package == '@robonen/primitives' || matrix.package == '@robonen/editor'
+        if: matrix.package == '@robonen/primitives' || matrix.package == '@robonen/writekit'
         run: pnpm --filter "${{ matrix.package }}" exec playwright install --with-deps chromium
 
       - name: Lint
@@ -87,7 +87,7 @@ jobs:
         run: pnpm --filter "${{ matrix.package }}" --if-present run test
 
   # Sentinel job — aggregates all matrix results into a single status check.
-  # Add "CI" as the required check in branch protection rules.
+  # Add "CI" as the required status check in the branch protection rules.
   ci:
     name: CI
     needs: check

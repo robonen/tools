@@ -1,0 +1,433 @@
+<script lang="ts">
+import type { Direction } from '../../utilities/config-provider';
+import type { AcceptableValue, ComboboxFilterFunction, ComboboxFilterItem } from './utils';
+
+/**
+ * An autocomplete / typeahead input that filters a list of options as the user types.
+ * Combine a text input with a popup listbox, supporting single or multiple selection,
+ * custom filtering, and full keyboard navigation. Reach for it when users must pick from
+ * a large or searchable set of options; for a small fixed list a plain Select is simpler.
+ * Wraps everything in a Popper and provides shared state to every other Combobox part.
+ */
+export interface ComboboxRootProps<T extends AcceptableValue = AcceptableValue> {
+  /** Controlled selected value. Use `v-model`. */
+  modelValue?: T | T[];
+  /** Uncontrolled initial value. */
+  defaultValue?: T | T[];
+  /** Uncontrolled default open state. */
+  defaultOpen?: boolean;
+  /** Allow selecting multiple values. */
+  multiple?: boolean;
+  /** Reading direction. Falls back to `ConfigProvider`. */
+  dir?: Direction;
+  /** Disable the whole combobox. */
+  disabled?: boolean;
+  /** Mark as required for native form validation. */
+  required?: boolean;
+  /** Native input name for form submission. */
+  name?: string;
+  /** Reset the search term when the input is blurred. @default true */
+  resetSearchTermOnBlur?: boolean;
+  /** Reset the search term when a value is selected (single mode). @default true */
+  resetSearchTermOnSelect?: boolean;
+  /** Clear the model value (to `undefined`, or `[]` when `multiple`) when the search is cleared via ComboboxCancel. @default false */
+  resetModelValueOnClear?: boolean;
+  /** Open the combobox when the input is focused. Root-level default for every ComboboxInput; a per-input prop still overrides it. @default false */
+  openOnFocus?: boolean;
+  /** Open the combobox when the input is clicked. Root-level default for every ComboboxInput; a per-input prop still overrides it. @default false */
+  openOnClick?: boolean;
+  /** Highlight items on pointer hover. Set `false` to opt out of pointermove highlighting. @default true */
+  highlightOnHover?: boolean;
+  /** Skip the built-in filter; render every item regardless of search term. */
+  ignoreFilter?: boolean;
+  /** Custom filter implementation. Overrides the default substring match. */
+  filterFunction?: ComboboxFilterFunction;
+  /** Map the current model value to the input's display value. */
+  displayValue?: (value: T | T[] | undefined) => string;
+  /** Compare values by key, or via a custom comparator. */
+  by?: string | ((a: T, b: T) => boolean);
+}
+
+export interface ComboboxRootEmits<T extends AcceptableValue = AcceptableValue> {
+  'update:modelValue': [value: T | T[] | undefined];
+  'update:open': [open: boolean];
+  /** Fired whenever the highlighted (active-descendant) item changes; payload is `undefined` when nothing is highlighted. */
+  highlight: [payload: { value: T; ref: HTMLElement | undefined } | undefined];
+}
+</script>
+
+<script setup lang="ts" generic="T extends AcceptableValue = AcceptableValue">
+import type { ShallowRef } from 'vue';
+import type { ComboboxFilterState, ComboboxItemInfo } from './context';
+
+import { computed, nextTick, ref, shallowRef, toRef, triggerRef, watch } from 'vue';
+
+import { useConfig, useId } from '../../utilities/config-provider';
+import { PopperRoot } from '../../overlays/popper';
+import { provideComboboxRootContext } from './context';
+import { defaultFilter, valueComparator } from './utils';
+
+defineOptions({ inheritAttrs: false });
+
+const {
+  modelValue,
+  defaultValue,
+  defaultOpen = false,
+  multiple = false,
+  dir,
+  disabled = false,
+  required = false,
+  name,
+  resetSearchTermOnBlur = true,
+  resetSearchTermOnSelect = true,
+  resetModelValueOnClear = false,
+  openOnFocus = false,
+  openOnClick = false,
+  highlightOnHover = true,
+  ignoreFilter = false,
+  filterFunction,
+  displayValue,
+  by,
+} = defineProps<ComboboxRootProps<T>>();
+
+const emit = defineEmits<ComboboxRootEmits<T>>();
+
+const config = useConfig();
+const direction = computed(() => dir ?? config.dir.value);
+
+/** Controlled open state. Use `v-model:open`. */
+const open = defineModel<boolean>('open', { default: false });
+if (defaultOpen && !open.value) open.value = true;
+
+/** Controlled selected value. Use `v-model`. `undefined` from the parent means "no selection". */
+const value = defineModel<T | T[] | undefined>('modelValue');
+if (modelValue === undefined && defaultValue !== undefined) {
+  value.value = multiple
+    ? (Array.isArray(defaultValue) ? defaultValue.slice() : [defaultValue]) as T[]
+    : (Array.isArray(defaultValue) ? defaultValue[0] : defaultValue) as T;
+}
+
+const searchTerm = ref('');
+const isUserInputted = ref(false);
+
+const contentId = useId(undefined, 'combobox-content');
+
+const triggerElement = shallowRef<HTMLElement | undefined>(undefined);
+const inputElement = shallowRef<HTMLInputElement | undefined>(undefined);
+const contentElement = shallowRef<HTMLElement | undefined>(undefined);
+const parentElement = shallowRef<HTMLElement | undefined>(undefined);
+
+const selectedValue = shallowRef<T | undefined>(undefined) as ShallowRef<T | undefined>;
+const selectedValueId = ref<string | undefined>(undefined);
+
+const allItems = shallowRef(new Map<string, ComboboxItemInfo<T>>());
+const allGroups = shallowRef(new Map<string, Set<string>>());
+
+function onItemRegister(id: string, info: ComboboxItemInfo<T>) {
+  allItems.value.set(id, info);
+  triggerRef(allItems);
+}
+
+function onItemUnregister(id: string) {
+  allItems.value.delete(id);
+  triggerRef(allItems);
+}
+
+function onGroupRegister(groupId: string) {
+  if (!allGroups.value.has(groupId)) {
+    allGroups.value.set(groupId, new Set());
+    triggerRef(allGroups);
+  }
+}
+
+function onGroupUnregister(groupId: string) {
+  allGroups.value.delete(groupId);
+  triggerRef(allGroups);
+}
+
+function onGroupItemRegister(groupId: string, itemId: string) {
+  let set = allGroups.value.get(groupId);
+  if (!set) {
+    set = new Set();
+    allGroups.value.set(groupId, set);
+  }
+  set.add(itemId);
+  triggerRef(allGroups);
+}
+
+function onGroupItemUnregister(groupId: string, itemId: string) {
+  const set = allGroups.value.get(groupId);
+  if (set) {
+    set.delete(itemId);
+    triggerRef(allGroups);
+  }
+}
+
+const filterRef = toRef(() => filterFunction);
+const ignoreFilterRef = toRef(() => ignoreFilter);
+
+const filterState = computed<ComboboxFilterState>(() => {
+  const items = allItems.value;
+  const groups = allGroups.value;
+
+  if (!searchTerm.value || ignoreFilterRef.value || !isUserInputted.value) {
+    return {
+      count: items.size,
+      items: new Set(items.keys()),
+      groups: new Set(groups.keys()),
+    };
+  }
+
+  const candidates: ComboboxFilterItem[] = [];
+  for (const [id, info] of items) candidates.push({ id, textValue: info.textValue });
+
+  const fn = filterRef.value ?? defaultFilter;
+  const filtered = fn(candidates, searchTerm.value);
+
+  const visibleItems = new Set<string>();
+  for (let i = 0; i < filtered.length; i++) visibleItems.add(filtered[i]!.id);
+
+  const visibleGroups = new Set<string>();
+  for (const [groupId, set] of groups) {
+    for (const itemId of set) {
+      if (visibleItems.has(itemId)) {
+        visibleGroups.add(groupId);
+        break;
+      }
+    }
+  }
+
+  return {
+    count: visibleItems.size,
+    items: visibleItems,
+    groups: visibleGroups,
+  };
+});
+
+function isSelected(v: T): boolean {
+  return valueComparator(value.value as T | T[] | undefined, v, by);
+}
+
+function commitValue(next: T | T[] | undefined) {
+  value.value = next;
+}
+
+function onValueChange(v: T) {
+  if (multiple) {
+    const cur = Array.isArray(value.value) ? [...(value.value as T[])] : [];
+    const idx = cur.findIndex(i => valueComparator(i, v, by));
+    if (idx === -1) cur.push(v);
+    else cur.splice(idx, 1);
+    commitValue(cur);
+    inputElement.value?.focus();
+  }
+  else {
+    commitValue(v);
+    open.value = false;
+  }
+}
+
+function onOpenChange(next: boolean) {
+  open.value = next;
+  if (next) {
+    // When the open was initiated by typing, ComboboxInput already set
+    // searchTerm/isUserInputted — resetting here would wipe the first keystroke.
+    if (!isUserInputted.value) searchTerm.value = '';
+    nextTick(() => {
+      inputElement.value?.focus();
+      highlightSelectedOrFirst();
+    });
+  }
+  else {
+    setTimeout(() => {
+      if (resetSearchTermOnBlur) searchTerm.value = '';
+      isUserInputted.value = false;
+    }, 1);
+  }
+}
+
+function onSelectedValueChange(v: T | undefined, id?: string) {
+  selectedValue.value = v;
+  selectedValueId.value = id;
+}
+
+function clearModelValue() {
+  commitValue(multiple ? ([] as T[]) : undefined);
+}
+
+// `selectedValueId` is the single source of truth for the active-descendant, so
+// emitting `highlight` off its change covers keyboard, hover, and programmatic
+// highlight paths without instrumenting each call site.
+watch(selectedValueId, (id) => {
+  if (id === undefined) {
+    emit('highlight', undefined);
+    return;
+  }
+  const value = selectedValue.value;
+  if (value === undefined) {
+    emit('highlight', undefined);
+    return;
+  }
+  const root = contentElement.value ?? parentElement.value;
+  const el = root?.querySelector<HTMLElement>(`#${CSS.escape(id)}`) ?? undefined;
+  emit('highlight', { value, ref: el });
+});
+
+function getVisibleItemElements(): HTMLElement[] {
+  const root = contentElement.value ?? parentElement.value;
+  if (!root) return [];
+  const all = Array.from(root.querySelectorAll<HTMLElement>('[data-primitives-combobox-item]'));
+  const visible: HTMLElement[] = [];
+  const filterIds = filterState.value.items;
+  for (let i = 0; i < all.length; i++) {
+    const el = all[i]!;
+    if (el.dataset['disabled'] === '') continue;
+    const id = el.id;
+    if (!id || filterIds.has(id)) visible.push(el);
+  }
+  return visible;
+}
+
+function readValueFromElement(el: HTMLElement): T | undefined {
+  const id = el.id;
+  if (!id) return undefined;
+  return allItems.value.get(id)?.value;
+}
+
+function highlightItemById(id: string | undefined) {
+  if (!id) {
+    selectedValue.value = undefined;
+    selectedValueId.value = undefined;
+    return;
+  }
+  const info = allItems.value.get(id);
+  if (!info) return;
+  selectedValue.value = info.value;
+  selectedValueId.value = id;
+  const root = contentElement.value ?? parentElement.value;
+  const el = root?.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+  el?.scrollIntoView({ block: 'nearest' });
+}
+
+function highlightFirstItem() {
+  const els = getVisibleItemElements();
+  if (els.length === 0) {
+    selectedValue.value = undefined;
+    selectedValueId.value = undefined;
+    return;
+  }
+  highlightItemById(els[0]!.id);
+}
+
+function highlightSelectedOrFirst() {
+  const cur = value.value;
+  if (cur !== undefined && !Array.isArray(cur)) {
+    for (const [id, info] of allItems.value) {
+      if (valueComparator(cur, info.value, by) && !info.disabled) {
+        highlightItemById(id);
+        return;
+      }
+    }
+  }
+  highlightFirstItem();
+}
+
+watch(open, (isOpen) => {
+  if (!isOpen) {
+    selectedValue.value = undefined;
+    selectedValueId.value = undefined;
+  }
+});
+
+function onSearchTermChange(v: string) {
+  searchTerm.value = v;
+}
+
+function onUserInputtedChange(v: boolean) {
+  isUserInputted.value = v;
+}
+
+provideComboboxRootContext({
+  modelValue: value,
+  onValueChange,
+  multiple: toRef(() => multiple),
+  open,
+  onOpenChange,
+  disabled: toRef(() => disabled),
+  dir: direction,
+  name: toRef(() => name),
+  required: toRef(() => required),
+  by,
+  isSelected,
+
+  searchTerm,
+  onSearchTermChange,
+  resetSearchTermOnBlur: toRef(() => resetSearchTermOnBlur),
+  resetSearchTermOnSelect: toRef(() => resetSearchTermOnSelect),
+  resetModelValueOnClear: toRef(() => resetModelValueOnClear),
+  openOnFocus: toRef(() => openOnFocus),
+  openOnClick: toRef(() => openOnClick),
+  highlightOnHover: toRef(() => highlightOnHover),
+  ignoreFilter: ignoreFilterRef,
+  filterFunction: filterRef,
+  displayValue: displayValue as ((v: unknown) => string) | undefined,
+  clearModelValue,
+
+  isUserInputted,
+  onUserInputtedChange,
+
+  contentId,
+  triggerElement,
+  onTriggerChange: (el) => { triggerElement.value = el; },
+  inputElement,
+  onInputChange: (el) => { inputElement.value = el; },
+  contentElement,
+  onContentChange: (el) => { contentElement.value = el; },
+  parentElement,
+  onParentChange: (el) => { parentElement.value = el; },
+
+  selectedValue,
+  selectedValueId,
+  onSelectedValueChange,
+
+  allItems,
+  onItemRegister,
+  onItemUnregister,
+  allGroups,
+  onGroupRegister,
+  onGroupUnregister,
+  onGroupItemRegister,
+  onGroupItemUnregister,
+
+  filterState,
+
+  getVisibleItemElements,
+  highlightItemById,
+  highlightFirstItem,
+});
+
+defineExpose({
+  filterState,
+  highlightFirstItem,
+  highlightItemById,
+  // Avoid unused warnings — surfaced for advanced consumers
+  readValueFromElement,
+});
+</script>
+
+<template>
+  <PopperRoot>
+    <slot :open="open" :model-value="value" />
+    <input
+      v-if="name"
+      type="hidden"
+      :name="name"
+      :value="Array.isArray(value) ? JSON.stringify(value) : (value ?? '')"
+      :required="required"
+      :disabled="disabled"
+      aria-hidden="true"
+      style="display: none"
+      tabindex="-1"
+    />
+  </PopperRoot>
+</template>

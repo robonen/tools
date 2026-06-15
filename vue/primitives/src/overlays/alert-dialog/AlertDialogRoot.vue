@@ -1,0 +1,48 @@
+<script lang="ts">
+import type { DialogRootProps } from '../dialog';
+
+/**
+ * A modal dialog that interrupts the user with important content and expects a
+ * deliberate response. Built on top of Dialog, but always modal and rendered
+ * with `role="alertdialog"` — focus moves to the Cancel button on open and
+ * outside clicks are ignored, so the user must explicitly confirm or cancel.
+ *
+ * Use it for destructive or irreversible actions (deleting data, discarding
+ * changes); for non-blocking content prefer Dialog instead. Manages open state
+ * and provides context to all parts. Bind `v-model:open` to control it.
+ */
+export interface AlertDialogRootProps extends Omit<DialogRootProps, 'modal'> {}
+
+export interface AlertDialogRootEmits {
+  /** Fired when the open state changes — the `v-model:open` update channel. */
+  'update:open': [value: boolean | undefined];
+}
+</script>
+
+<script setup lang="ts">
+import { useForwardExpose } from '@robonen/vue';
+import { DialogRoot } from '../dialog';
+
+defineOptions({ inheritAttrs: false });
+
+const { defaultOpen } = defineProps<AlertDialogRootProps>();
+const openModel = defineModel<boolean | undefined>('open', { default: undefined });
+
+defineSlots<{
+  /** Default slot exposing the live open state and a close helper. */
+  default?: (props: { open: boolean | undefined; close: () => void }) => unknown;
+}>();
+
+useForwardExpose();
+</script>
+
+<template>
+  <DialogRoot
+    :default-open="defaultOpen"
+    :modal="true"
+    :open="openModel"
+    @update:open="openModel = $event"
+  >
+    <slot :open="openModel" :close="() => { openModel = false; }" />
+  </DialogRoot>
+</template>

@@ -1,0 +1,37 @@
+<script lang="ts">
+import type { PrimitiveProps } from '../../internal/primitive';
+
+/**
+ * The button that toggles the collapsible open and closed. Wires up
+ * `aria-expanded`, `aria-controls`, and the disabled state from the root, and
+ * renders as a `<button>` by default.
+ */
+export interface CollapsibleTriggerProps extends PrimitiveProps {}
+</script>
+
+<script setup lang="ts">
+import { Primitive } from '../../internal/primitive';
+import { useCollapsibleContext } from './context';
+import { useForwardExpose } from '@robonen/vue';
+
+const { as = 'button' } = defineProps<CollapsibleTriggerProps>();
+
+const { forwardRef } = useForwardExpose();
+const ctx = useCollapsibleContext();
+</script>
+
+<template>
+  <Primitive
+    :ref="forwardRef"
+    :as="as"
+    :type="as === 'button' ? 'button' : undefined"
+    :aria-expanded="ctx.open.value"
+    :aria-controls="ctx.contentId.value"
+    :data-state="ctx.open.value ? 'open' : 'closed'"
+    :data-disabled="ctx.disabled.value ? '' : undefined"
+    :disabled="as === 'button' ? ctx.disabled.value : undefined"
+    @click="ctx.onToggle"
+  >
+    <slot :open="ctx.open.value" />
+  </Primitive>
+</template>

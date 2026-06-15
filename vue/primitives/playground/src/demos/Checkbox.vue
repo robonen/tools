@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { CheckedState } from '@primitives/checkbox';
-import { CheckboxIndicator, CheckboxRoot } from '@primitives/checkbox';
+import type { CheckedState } from '@primitives/forms/checkbox';
+import { CheckboxIndicator, CheckboxRoot } from '@primitives/forms/checkbox';
 
 const checked = ref<CheckedState>(false);
 const disabled = ref(false);

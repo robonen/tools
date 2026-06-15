@@ -24,35 +24,35 @@
     </p>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="m-0 text-sm font-semibold text-(--fg)">Unstyled by design</h3>
-        <p class="mt-2 mb-0 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="m-0 text-sm font-semibold text-fg">Unstyled by design</h3>
+        <p class="mt-2 mb-0 text-sm text-fg-muted">
           No CSS shipped. Primitives render the DOM you ask for and expose state via
           data attributes, so you bring your own styles — Tailwind, vanilla CSS, anything.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="m-0 text-sm font-semibold text-(--fg)">Accessible out of the box</h3>
-        <p class="mt-2 mb-0 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="m-0 text-sm font-semibold text-fg">Accessible out of the box</h3>
+        <p class="mt-2 mb-0 text-sm text-fg-muted">
           Focus scopes, roving tabindex, visually-hidden labels and correct ARIA roles
           are handled for you. The suite is tested against
           <code>axe-core</code> in a real browser.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="m-0 text-sm font-semibold text-(--fg)">Controlled or uncontrolled</h3>
-        <p class="mt-2 mb-0 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="m-0 text-sm font-semibold text-fg">Controlled or uncontrolled</h3>
+        <p class="mt-2 mb-0 text-sm text-fg-muted">
           Bind state with <code>v-model</code> when you need control, or set a
           <code>defaultValue</code> / <code>defaultOpen</code> and let the primitive
           manage itself.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="m-0 text-sm font-semibold text-(--fg)">Composable & polymorphic</h3>
-        <p class="mt-2 mb-0 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="m-0 text-sm font-semibold text-fg">Composable & polymorphic</h3>
+        <p class="mt-2 mb-0 text-sm text-fg-muted">
           Every part takes an <code>as</code> prop, or use <code>as="template"</code>
           to merge behavior onto your own element. Floating UI powers positioning for
           popovers, tooltips and menus.

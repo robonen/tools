@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionRoot,
   AccordionTrigger,
-} from '@primitives/accordion';
+} from '@primitives/disclosure/accordion';
 
 const value = ref<string | string[] | undefined>('a');
 const type = ref<'single' | 'multiple'>('single');

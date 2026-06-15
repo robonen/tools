@@ -1,0 +1,9 @@
+import { base, compose, imports, stylistic, tests, typescript, vue } from '@robonen/eslint';
+
+export default compose(base, typescript, vue, imports, stylistic, {
+  name: 'writekit/overrides',
+  files: ['**/*.vue'],
+  rules: {
+    '@stylistic/no-multiple-empty-lines': 'off',
+  },
+}, tests);

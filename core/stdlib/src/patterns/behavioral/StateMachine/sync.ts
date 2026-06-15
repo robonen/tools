@@ -125,6 +125,9 @@ export function createMachine<
 export function createMachine(config: {
   initial: string;
   context?: unknown;
+  // Overload-implementation signature: the typed overloads above expose the real
+  // per-context API; `any` here accepts every concrete `SyncStateNodeConfig<C>`
+  // (contravariant in `C`, so `unknown` would reject them).
   states: Record<string, SyncStateNodeConfig<any>>;
 }): StateMachine {
   return new StateMachine(

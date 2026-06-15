@@ -124,6 +124,9 @@ export function createAsyncMachine<
 export function createAsyncMachine(config: {
   initial: string;
   context?: unknown;
+  // Overload-implementation signature: the typed overloads above expose the real
+  // per-context API; `any` here accepts every concrete `AsyncStateNodeConfig<C>`
+  // (contravariant in `C`, so `unknown` would reject them).
   states: Record<string, AsyncStateNodeConfig<any>>;
 }): AsyncStateMachine {
   return new AsyncStateMachine(

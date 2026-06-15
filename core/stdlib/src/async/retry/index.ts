@@ -11,13 +11,13 @@ export interface RetryOptions {
 export type RetryFunction<Return> = (
   args: {
     count: number;
-    stop: (error: any) => void;
+    stop: (error: unknown) => void;
   },
 ) => Promise<Return>;
 
 class RetryEarlyExitError {
-  cause: any;
-  constructor(cause: any) {
+  cause: unknown;
+  constructor(cause: unknown) {
     this.cause = cause;
   }
 }
@@ -62,7 +62,7 @@ export async function retry<Return>(
   const delayFn = isFunction(delay) ? delay : null;
   const delayMs = delayFn ? 0 : delay as number;
 
-  const stop = (error?: any): never => {
+  const stop = (error?: unknown): never => {
     throw new RetryEarlyExitError(error);
   };
 

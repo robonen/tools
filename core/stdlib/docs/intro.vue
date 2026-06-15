@@ -30,7 +30,7 @@ if (error) {
     <!-- Hero -->
     <div class="prose-docs">
       <h1>@robonen/stdlib</h1>
-      <p class="text-lg text-(--fg-muted)">
+      <p class="text-lg text-fg-muted">
         A platform-independent standard library of tools, utilities, and helpers for TypeScript —
         arrays, async, math, data structures, and patterns, all tree-shakeable and fully typed.
       </p>
@@ -48,30 +48,30 @@ if (error) {
 
     <!-- Feature highlights -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">Fully typed</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">Fully typed</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           Generic signatures preserve element and key types end to end, so inference keeps
           working through <code>groupBy</code>, <code>partition</code>, <code>zip</code>, and friends.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">Zero dependencies</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">Zero dependencies</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           No transitive dependencies and no platform assumptions. The same code runs in Node,
           the browser, Deno, Bun, and edge runtimes.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">Tree-shakeable</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">Tree-shakeable</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           Each utility is a standalone export with no shared side effects. Import a single
           function and ship only that function.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">Batteries included</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">Batteries included</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           Beyond array and math helpers you get data structures
           (<code>Deque</code>, <code>BinaryHeap</code>, <code>LinkedList</code>) and patterns
           (<code>StateMachine</code>, <code>PubSub</code>, <code>Command</code>).
@@ -126,16 +126,16 @@ if (error) {
     </div>
 
     <!-- Where to next -->
-    <div class="rounded-lg border border-(--border) bg-(--bg-elevated) p-5">
-      <h2 class="text-base font-semibold text-(--fg) mb-2">Where to next</h2>
-      <p class="text-sm text-(--fg-muted) mb-3">
+    <div class="rounded-lg border border-border bg-bg-elevated p-5">
+      <h2 class="text-base font-semibold text-fg mb-2">Where to next</h2>
+      <p class="text-sm text-fg-muted mb-3">
         Browse the full API reference below, or jump straight to a popular utility:
       </p>
       <ul class="flex flex-wrap gap-2 m-0 p-0 list-none">
         <li>
           <NuxtLink
             to="/stdlib/group-by"
-            class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-subtle) px-3 py-1.5 text-sm text-(--accent-text) hover:bg-(--bg-inset) focus:ring-(--ring)"
+            class="inline-flex items-center rounded-md border border-border bg-bg-subtle px-3 py-1.5 text-sm text-accent-text hover:bg-bg-inset focus:ring-ring"
           >
             groupBy
           </NuxtLink>
@@ -143,7 +143,7 @@ if (error) {
         <li>
           <NuxtLink
             to="/stdlib/try-it"
-            class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-subtle) px-3 py-1.5 text-sm text-(--accent-text) hover:bg-(--bg-inset) focus:ring-(--ring)"
+            class="inline-flex items-center rounded-md border border-border bg-bg-subtle px-3 py-1.5 text-sm text-accent-text hover:bg-bg-inset focus:ring-ring"
           >
             tryIt
           </NuxtLink>
@@ -151,7 +151,7 @@ if (error) {
         <li>
           <NuxtLink
             to="/stdlib/retry"
-            class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-subtle) px-3 py-1.5 text-sm text-(--accent-text) hover:bg-(--bg-inset) focus:ring-(--ring)"
+            class="inline-flex items-center rounded-md border border-border bg-bg-subtle px-3 py-1.5 text-sm text-accent-text hover:bg-bg-inset focus:ring-ring"
           >
             retry
           </NuxtLink>
@@ -159,7 +159,7 @@ if (error) {
         <li>
           <NuxtLink
             to="/stdlib/clamp"
-            class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-subtle) px-3 py-1.5 text-sm text-(--accent-text) hover:bg-(--bg-inset) focus:ring-(--ring)"
+            class="inline-flex items-center rounded-md border border-border bg-bg-subtle px-3 py-1.5 text-sm text-accent-text hover:bg-bg-inset focus:ring-ring"
           >
             clamp
           </NuxtLink>
@@ -167,7 +167,7 @@ if (error) {
         <li>
           <NuxtLink
             to="/stdlib/debounce"
-            class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-subtle) px-3 py-1.5 text-sm text-(--accent-text) hover:bg-(--bg-inset) focus:ring-(--ring)"
+            class="inline-flex items-center rounded-md border border-border bg-bg-subtle px-3 py-1.5 text-sm text-accent-text hover:bg-bg-inset focus:ring-ring"
           >
             debounce
           </NuxtLink>

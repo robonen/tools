@@ -3,9 +3,9 @@
  * @category Types
  * @description To string any value
  *
- * @param {any} value
+ * @param {unknown} value
  * @returns {string}
  *
  * @since 0.0.2
  */
-export const toString = (value: any): string => Object.prototype.toString.call(value);
+export const toString = (value: unknown): string => Object.prototype.toString.call(value);

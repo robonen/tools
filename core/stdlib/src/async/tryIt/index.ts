@@ -1,4 +1,4 @@
-export type TryItReturn<Return> = Return extends PromiseLike<any>
+export type TryItReturn<Return> = Return extends PromiseLike<unknown>
   ? Promise<{ error: Error; data: undefined } | { error: undefined; data: Awaited<Return> }>
   : { error: Error; data: undefined } | { error: undefined; data: Return };
 
@@ -7,11 +7,11 @@ function isThenable(value: unknown): value is PromiseLike<unknown> {
     && typeof (value as PromiseLike<unknown>).then === 'function';
 }
 
-function onResolve(data: any) {
+function onResolve(data: unknown) {
   return { error: undefined, data };
 }
 
-function onReject(error: any) {
+function onReject(error: unknown) {
   return { error, data: undefined };
 }
 
@@ -32,7 +32,7 @@ function onReject(error: any) {
  *
  * @since 0.0.3
  */
-export function tryIt<Args extends any[], Return>(
+export function tryIt<Args extends unknown[], Return>(
   fn: (...args: Args) => Return,
 ) {
   return (...args: Args): TryItReturn<Return> => {

@@ -38,7 +38,6 @@ describe('complex', () => {
     });
 
     it('true for class instances and null-prototype objects', () => {
-      // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- fixture for the instance check
       class Foo {}
 
       expect(isObject(new Foo())).toBe(true);

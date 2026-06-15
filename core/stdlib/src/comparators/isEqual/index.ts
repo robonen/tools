@@ -1,4 +1,4 @@
-function equals(a: any, b: any, seen: WeakMap<object, unknown>): boolean {
+function equals(a: unknown, b: unknown, seen: WeakMap<object, unknown>): boolean {
   if (a === b)
     return true;
 
@@ -65,7 +65,7 @@ function equals(a: any, b: any, seen: WeakMap<object, unknown>): boolean {
     return false;
 
   for (const key of aKeys) {
-    if (!Object.prototype.hasOwnProperty.call(b, key) || !equals(a[key], b[key], seen))
+    if (!Object.prototype.hasOwnProperty.call(b, key) || !equals((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], seen))
       return false;
   }
 

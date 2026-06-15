@@ -66,22 +66,22 @@ function clearAll(): void {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="grid grid-cols-2 gap-3">
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-        <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">resolver runs</p>
-        <p class="mt-1 font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ runs }}</p>
+      <div class="demo-card p-4">
+        <p class="demo-label">resolver runs</p>
+        <p class="demo-stat mt-1 text-3xl">{{ runs }}</p>
       </div>
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-        <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">cached keys</p>
-        <p class="mt-1 font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ cacheSize }}</p>
+      <div class="demo-card p-4">
+        <p class="demo-label">cached keys</p>
+        <p class="demo-stat mt-1 text-3xl">{{ cacheSize }}</p>
       </div>
     </div>
 
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">fib(n)</span>
-        <span class="font-mono text-sm tabular-nums text-(--fg-muted)">key: {{ fib.generateKey(input) }}</span>
+        <span class="demo-label">fib(n)</span>
+        <span class="font-mono text-sm tabular-nums text-fg-muted">key: {{ fib.generateKey(input) }}</span>
       </div>
       <div class="flex items-center gap-3">
         <input
@@ -89,37 +89,37 @@ function clearAll(): void {
           type="range"
           min="0"
           max="40"
-          class="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-(--bg-inset) accent-(--accent)"
+          class="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-bg-inset accent-accent"
         >
-        <span class="w-8 text-right font-mono text-sm tabular-nums text-(--fg)">{{ input }}</span>
+        <span class="w-8 text-right font-mono text-sm tabular-nums text-fg">{{ input }}</span>
       </div>
     </div>
 
     <div class="flex flex-wrap gap-2">
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @click="compute()"
       >
         Compute
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="compute(true)"
       >
         load (force)
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="evictCurrent"
       >
         delete(n)
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="cacheSize === 0 && history.length === 0"
         @click="clearAll"
       >
@@ -127,19 +127,19 @@ function clearAll(): void {
       </button>
     </div>
 
-    <div class="flex max-h-44 flex-col gap-2 overflow-y-auto rounded-xl border border-(--border) bg-(--bg-elevated) p-3">
-      <p v-if="history.length === 0" class="py-5 text-center text-sm italic text-(--fg-subtle)">
+    <div class="demo-card flex max-h-44 flex-col gap-2 overflow-y-auto p-3">
+      <p v-if="history.length === 0" class="py-5 text-center text-sm italic text-fg-subtle">
         Compute a value — repeat the same n to see a cache hit.
       </p>
       <div
         v-for="entry in history"
         :key="entry.id"
-        class="flex items-center gap-2 rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2 font-mono text-sm tabular-nums text-(--fg)"
+        class="flex items-center gap-2 rounded-lg border border-border bg-bg-inset px-3 py-2 font-mono text-sm tabular-nums text-fg"
       >
-        <span class="text-(--fg-subtle)">fib({{ entry.n }})</span>
-        <span class="text-(--fg-subtle)">=</span>
-        <span class="min-w-0 flex-1 truncate text-(--accent-text)">{{ entry.value }}</span>
-        <span class="text-xs text-(--fg-subtle)">{{ entry.computedAt }}</span>
+        <span class="text-fg-subtle">fib({{ entry.n }})</span>
+        <span class="text-fg-subtle">=</span>
+        <span class="min-w-0 flex-1 truncate text-accent-text">{{ entry.value }}</span>
+        <span class="text-xs text-fg-subtle">{{ entry.computedAt }}</span>
         <span
           class="shrink-0 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold uppercase"
           :class="entry.hit

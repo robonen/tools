@@ -2,14 +2,14 @@ import { customRef, watch } from 'vue';
 import type {
   ComputedGetter,
   ComputedRef,
+  MultiWatchSources,
   WatchOptions,
   WatchSource,
   WatchStopHandle,
   WritableComputedOptions,
   WritableComputedRef,
 } from 'vue';
-
-type MultiWatchSources = Array<WatchSource<unknown> | object>;
+import { isFunction } from '@robonen/stdlib';
 
 export interface ComputedWithControlExtra<T> {
   /**
@@ -146,7 +146,7 @@ export function computedWithControl<T>(
 function isGetter<T>(
   fn: ComputedGetter<T> | WritableComputedOptions<T>,
 ): fn is ComputedGetter<T> {
-  return typeof fn === 'function';
+  return isFunction(fn);
 }
 
 function noopTrack(): void {}

@@ -28,9 +28,9 @@ function clear(): void {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Auto-growing textarea
       </label>
       <textarea
@@ -38,16 +38,16 @@ function clear(): void {
         v-model="input"
         placeholder="Start typing…"
         rows="1"
-        class="w-full resize-none overflow-y-auto rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm leading-relaxed text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input resize-none overflow-y-auto leading-relaxed"
       />
     </div>
 
-    <div class="flex flex-col gap-2 rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card flex flex-col gap-2 p-4">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           Max height
         </span>
-        <span class="font-mono text-sm tabular-nums text-(--fg)">{{ maxHeight }}px</span>
+        <span class="font-mono text-sm tabular-nums text-fg">{{ maxHeight }}px</span>
       </div>
       <input
         v-model.number="maxHeight"
@@ -55,11 +55,11 @@ function clear(): void {
         min="80"
         max="400"
         step="20"
-        class="w-full accent-(--accent)"
+        class="w-full accent-accent"
       >
-      <div class="flex items-center justify-between border-t border-(--border) pt-2 text-xs">
-        <span class="text-(--fg-muted)">{{ input.length }} chars</span>
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 font-medium text-(--fg-muted)">
+      <div class="flex items-center justify-between border-t border-border pt-2 text-xs">
+        <span class="text-fg-muted">{{ input.length }} chars</span>
+        <span class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-inset px-2 py-0.5 font-medium text-fg-muted">
           {{ resizes }} resizes
         </span>
       </div>
@@ -68,21 +68,21 @@ function clear(): void {
     <div class="flex flex-wrap gap-2">
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @click="loadSample"
       >
         Load sample
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="triggerResize"
       >
         Trigger resize
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!input"
         @click="clear"
       >

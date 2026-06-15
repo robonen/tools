@@ -17,39 +17,39 @@ const sample = 'Select any part of this paragraph with your cursor. '
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
-    <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Select some text</span>
+  <div class="demo-stack max-w-md">
+    <span class="demo-label">Select some text</span>
 
-    <p class="select-text rounded-xl border border-(--border) bg-(--bg-elevated) p-4 text-sm leading-relaxed text-(--fg) selection:bg-(--accent) selection:text-(--accent-fg)">
+    <p class="demo-card select-text p-4 text-sm leading-relaxed text-fg selection:bg-accent selection:text-accent-fg">
       {{ sample }}
     </p>
 
     <div class="grid grid-cols-3 gap-2">
-      <div class="flex flex-col items-center gap-0.5 rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <span class="font-mono text-2xl font-bold tabular-nums text-(--fg)">{{ charCount }}</span>
-        <span class="text-xs text-(--fg-subtle)">chars</span>
+      <div class="flex flex-col items-center gap-0.5 rounded-lg border border-border bg-bg-inset p-3">
+        <span class="demo-stat text-2xl">{{ charCount }}</span>
+        <span class="text-xs text-fg-subtle">chars</span>
       </div>
-      <div class="flex flex-col items-center gap-0.5 rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <span class="font-mono text-2xl font-bold tabular-nums text-(--fg)">{{ wordCount }}</span>
-        <span class="text-xs text-(--fg-subtle)">words</span>
+      <div class="flex flex-col items-center gap-0.5 rounded-lg border border-border bg-bg-inset p-3">
+        <span class="demo-stat text-2xl">{{ wordCount }}</span>
+        <span class="text-xs text-fg-subtle">words</span>
       </div>
-      <div class="flex flex-col items-center gap-0.5 rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <span class="font-mono text-2xl font-bold tabular-nums text-(--fg)">{{ ranges.length }}</span>
-        <span class="text-xs text-(--fg-subtle)">ranges</span>
+      <div class="flex flex-col items-center gap-0.5 rounded-lg border border-border bg-bg-inset p-3">
+        <span class="demo-stat text-2xl">{{ ranges.length }}</span>
+        <span class="text-xs text-fg-subtle">ranges</span>
       </div>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Selected text</span>
-      <p v-if="text" class="mt-1.5 break-words font-mono text-sm text-(--accent-text)">
+    <div class="rounded-lg border border-border bg-bg-inset p-3">
+      <span class="demo-label">Selected text</span>
+      <p v-if="text" class="mt-1.5 break-words font-mono text-sm text-accent-text">
         “{{ text }}”
       </p>
-      <p v-else class="mt-1.5 font-mono text-sm text-(--fg-subtle)">
+      <p v-else class="mt-1.5 font-mono text-sm text-fg-subtle">
         Nothing selected yet.
       </p>
     </div>
 
-    <div v-if="rects.length" class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-xs text-(--fg-muted) tabular-nums">
+    <div v-if="rects.length" class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-xs text-fg-muted tabular-nums">
       first rect · {{ Math.round(rects[0]!.width) }} × {{ Math.round(rects[0]!.height) }} px
     </div>
   </div>

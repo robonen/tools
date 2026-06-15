@@ -1,21 +1,8 @@
 import { watch } from 'vue';
-import type { MaybeRefOrGetter, WatchCallback, WatchHandle, WatchOptions, WatchSource } from 'vue';
+import type { MaybeRefOrGetter, MultiWatchSources, WatchCallback, WatchHandle, WatchOptions, WatchSource } from 'vue';
 import { createFilterWrapper, throttleFilter } from '@/utils/filters';
 import type { EventFilter } from '@/utils/filters';
-
-type MultiWatchSources = Array<WatchSource<unknown> | object>;
-
-type MapSources<T> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V> ? V : T[K] extends object ? T[K] : never;
-};
-
-type MapOldSources<T, Immediate> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V>
-    ? Immediate extends true ? V | undefined : V
-    : T[K] extends object
-      ? Immediate extends true ? T[K] | undefined : T[K]
-      : never;
-};
+import type { MapOldSources, MapSources } from '@/types/watch';
 
 export interface WatchThrottledOptions<Immediate> extends WatchOptions<Immediate> {
   /**
@@ -84,13 +71,18 @@ export function watchThrottled(
     throttle = 0,
     trailing = true,
     leading = true,
-    eventFilter = throttleFilter(throttle, trailing, leading),
+    eventFilter,
     ...watchOptions
   } = options as WatchThrottledOptions<boolean> & { eventFilter?: EventFilter };
 
+  // Honour a caller-supplied eventFilter if present; otherwise build a throttle
+  // filter from the timing options (built lazily so a custom filter skips it).
+  const filter: EventFilter = eventFilter
+    ?? throttleFilter(throttle, trailing, leading);
+
   return watch(
     source,
-    createFilterWrapper(eventFilter, cb),
+    createFilterWrapper(filter, cb),
     watchOptions,
   );
 }

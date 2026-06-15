@@ -10,6 +10,12 @@ export type StylePatch = Record<string, string>;
  */
 export type TranslateAxis = 'x' | 'y';
 
+// Parsing patterns hoisted to module scope (compiled once, reused). All are
+// stateless (no `g`/`y` flag), so sharing across calls is behavior-safe.
+const MATRIX3D_RE = /^matrix3d\((.+)\)$/;
+const MATRIX_RE = /^matrix\((.+)\)$/;
+const EM_REM_RE = /(?:em|rem)\s*$/i;
+
 // Remembers the styles that {@link setStyle} overwrote, keyed by element, so
 // {@link resetStyle} can put them back. A WeakMap lets the entry be collected
 // once the element is gone.
@@ -114,7 +120,7 @@ export function getTranslate(element: HTMLElement, axis: TranslateAxis): number 
     // @ts-expect-error — vendor-prefixed transforms only exist in some browsers
     = style.transform || style.webkitTransform || style.mozTransform;
 
-  let match = transform.match(/^matrix3d\((.+)\)$/);
+  let match = transform.match(MATRIX3D_RE);
   if (match) {
     // matrix3d: the translate components live at indices 12 (x) and 13 (y).
     // https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/matrix3d
@@ -123,7 +129,7 @@ export function getTranslate(element: HTMLElement, axis: TranslateAxis): number 
 
   // matrix: the translate components live at indices 4 (x) and 5 (y).
   // https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/matrix
-  match = transform.match(/^matrix\((.+)\)$/);
+  match = transform.match(MATRIX_RE);
   return match ? Number.parseFloat(match[1].split(', ')[axis === 'y' ? 5 : 4]) : null;
 }
 
@@ -187,4 +193,32 @@ export function isInView(element: HTMLElement): boolean {
     && rect.bottom <= window.visualViewport.height - 40
     && rect.right <= window.visualViewport.width
   );
+}
+
+/**
+ * @name pxValue
+ * @category Browsers
+ * @description Parse a CSS length token (`"1024px"`, `"48em"`, `"30rem"`,
+ * `"50%"`) into a pixel number. `em`/`rem` use the conventional 16px root size.
+ * Returns `NaN` for non-numeric input.
+ *
+ * @param {string} value The CSS length token to parse
+ * @returns {number} The value in pixels, or `NaN` when not parseable
+ *
+ * @example
+ * pxValue('30rem'); // 480
+ * pxValue('1024px'); // 1024
+ *
+ * @since 0.0.5
+ */
+export function pxValue(value: string): number {
+  const number = Number.parseFloat(value);
+
+  if (Number.isNaN(number))
+    return Number.NaN;
+
+  if (EM_REM_RE.test(value))
+    return number * 16;
+
+  return number;
 }

@@ -58,29 +58,29 @@ const lastDuration = computed(() => {
 </script>
 
 <template>
-  <div class="w-full max-w-md flex flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div v-if="!isSupported" class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-600 dark:text-amber-400">
       <code class="font-mono">PerformanceObserver</code> is not supported in this browser.
     </div>
 
     <template v-else>
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-4">
+      <div class="demo-card p-4 flex flex-col gap-4">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Performance entries</span>
-          <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
-            <span class="size-1.5 rounded-full transition" :class="isActive ? 'bg-emerald-500' : 'bg-(--fg-subtle)'" />
+          <span class="demo-label">Performance entries</span>
+          <span class="demo-badge">
+            <span class="size-1.5 rounded-full transition" :class="isActive ? 'bg-emerald-500' : 'bg-fg-subtle'" />
             {{ isActive ? 'Observing' : 'Paused' }}
           </span>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-          <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-2 text-center">
-            <div class="font-mono text-lg font-bold tabular-nums text-(--fg)">{{ total }}</div>
-            <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">entries seen</div>
+          <div class="rounded-lg border border-border bg-bg-inset p-2 text-center">
+            <div class="demo-stat text-lg">{{ total }}</div>
+            <div class="text-[10px] uppercase tracking-wide text-fg-subtle">entries seen</div>
           </div>
-          <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-2 text-center">
-            <div class="font-mono text-lg font-bold tabular-nums text-(--fg)">{{ lastDuration.toFixed(2) }}</div>
-            <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">last measure ms</div>
+          <div class="rounded-lg border border-border bg-bg-inset p-2 text-center">
+            <div class="demo-stat text-lg">{{ lastDuration.toFixed(2) }}</div>
+            <div class="text-[10px] uppercase tracking-wide text-fg-subtle">last measure ms</div>
           </div>
         </div>
 
@@ -89,20 +89,20 @@ const lastDuration = computed(() => {
             <li
               v-for="(entry, i) in entries"
               :key="`${entry.name}-${i}`"
-              class="flex items-center justify-between gap-3 rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-1.5"
+              class="flex items-center justify-between gap-3 rounded-lg border border-border bg-bg-inset px-3 py-1.5"
             >
               <span class="flex min-w-0 items-center gap-2">
                 <span
-                  class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-elevated) px-1.5 py-0.5 text-[10px] font-medium uppercase text-(--fg-muted)"
+                  class="inline-flex items-center rounded-md border border-border bg-bg-elevated px-1.5 py-0.5 text-[10px] font-medium uppercase text-fg-muted"
                 >{{ entry.type }}</span>
-                <span class="truncate font-mono text-xs text-(--fg)">{{ entry.name }}</span>
+                <span class="truncate font-mono text-xs text-fg">{{ entry.name }}</span>
               </span>
-              <span class="shrink-0 font-mono text-xs tabular-nums text-(--fg-muted)">{{ entry.duration.toFixed(1) }}ms</span>
+              <span class="shrink-0 font-mono text-xs tabular-nums text-fg-muted">{{ entry.duration.toFixed(1) }}ms</span>
             </li>
           </ul>
           <div
             v-else
-            class="rounded-lg border border-dashed border-(--border) bg-(--bg-inset) p-6 text-center text-sm text-(--fg-subtle)"
+            class="rounded-lg border border-dashed border-border bg-bg-inset p-6 text-center text-sm text-fg-subtle"
           >
             No entries yet — run a measured task
           </div>
@@ -112,21 +112,21 @@ const lastDuration = computed(() => {
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+          class="demo-btn-primary flex-1"
           @click="measureWork"
         >
           Run measured task
         </button>
         <button
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="toggle"
         >
           {{ isActive ? 'Pause' : 'Resume' }}
         </button>
       </div>
 
-      <p class="text-xs text-(--fg-subtle)">
+      <p class="text-xs text-fg-subtle">
         Each task emits User Timing <code class="font-mono">mark</code>/<code class="font-mono">measure</code> entries that the observer streams in live.
       </p>
     </template>

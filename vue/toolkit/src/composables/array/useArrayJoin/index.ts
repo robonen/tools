@@ -1,5 +1,6 @@
 import { computed, toValue } from 'vue';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
+import { isFunction } from '@robonen/stdlib';
 
 export type UseArrayJoinReturn = ComputedRef<string>;
 
@@ -30,7 +31,7 @@ export function useArrayJoin(
     // reactive items first lets the computed track per-item ref dependencies.
     let needsUnwrap = false;
     for (const item of resolved) {
-      if (typeof item === 'function' || (typeof item === 'object' && item !== null && 'value' in item)) {
+      if (isFunction(item) || (typeof item === 'object' && item !== null && 'value' in item)) {
         needsUnwrap = true;
         break;
       }

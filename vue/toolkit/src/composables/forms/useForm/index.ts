@@ -1,6 +1,7 @@
 import { computed, reactive, readonly, ref, toValue } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
 import { get, isEqual, isObject, set, toArray } from '@robonen/stdlib';
+import type { Collection } from '@robonen/stdlib';
 import { cloneFnDefault } from '@/composables/reactivity/useCloned';
 import { tryOnMounted } from '@/composables/lifecycle/tryOnMounted';
 import { provideFormContext } from './context';
@@ -57,13 +58,13 @@ export type {
  * Recursively assign `source` into the reactive `target`, deep-merging plain
  * objects and cloning leaf values so callers can't share mutable references.
  */
-function deepAssign(target: Record<string, any>, source: Record<string, any>): void {
+function deepAssign(target: Record<string, unknown>, source: Record<string, unknown>): void {
   for (const key of Object.keys(source)) {
     const value = source[key];
     const current = target[key];
 
     if (isObject(value) && isObject(current))
-      deepAssign(current, value);
+      deepAssign(current as Record<string, unknown>, value as Record<string, unknown>);
     else
       target[key] = cloneFnDefault(value);
   }
@@ -123,8 +124,8 @@ export function useForm<TInput extends object, TOutput = TInput>(
   // Every path a field has been declared for (drives setTouched("all")).
   const knownFields = new Set<string>();
 
-  function readPath(path: string): any {
-    return get(values as any, path);
+  function readPath(path: string): unknown {
+    return get(values as Collection, path);
   }
 
   // ---- derived state ----------------------------------------------------
@@ -181,7 +182,7 @@ export function useForm<TInput extends object, TOutput = TInput>(
     // Merge per-field function validators on top of schema/resolver errors.
     for (const [path, validators] of fieldValidators) {
       for (const validator of validators) {
-        const messages = normalizeFieldResult(await validator(get(values as any, path), values as TInput));
+        const messages = normalizeFieldResult(await validator(get(values as Collection, path), values as Record<string, unknown>));
         if (messages.length > 0)
           (resultErrors[path] ??= []).push(...messages);
       }
@@ -234,7 +235,7 @@ export function useForm<TInput extends object, TOutput = TInput>(
   }
 
   function isFieldDirty(path: FieldPath<TInput>): boolean {
-    return !isEqual(readPath(path as string), get(initialSnapshot as any, path as string));
+    return !isEqual(readPath(path as string), get(initialSnapshot as Collection, path as string));
   }
 
   function isFieldTouched(path: FieldPath<TInput>): boolean {
@@ -252,7 +253,7 @@ export function useForm<TInput extends object, TOutput = TInput>(
     value: FieldPathValue<TInput, P>,
     setOptions?: SetValueOptions,
   ): void {
-    set(values as any, path as string, value);
+    set(values as Collection, path as string, value);
 
     if (setOptions?.shouldTouch) {
       touchedMap[path as string] = true;
@@ -272,7 +273,7 @@ export function useForm<TInput extends object, TOutput = TInput>(
         delete (values as Record<string, unknown>)[key];
     }
 
-    deepAssign(values as Record<string, any>, next as Record<string, any>);
+    deepAssign(values as Record<string, unknown>, next as Record<string, unknown>);
 
     if (shouldValidate('value'))
       void validate();
@@ -309,7 +310,7 @@ export function useForm<TInput extends object, TOutput = TInput>(
 
     for (const key of Object.keys(values as object))
       delete (values as Record<string, unknown>)[key];
-    deepAssign(values as Record<string, any>, initialSnapshot as Record<string, any>);
+    deepAssign(values as Record<string, unknown>, initialSnapshot as Record<string, unknown>);
 
     errorsMap.value = state?.errors ? { ...state.errors } : {};
 
@@ -324,8 +325,8 @@ export function useForm<TInput extends object, TOutput = TInput>(
   }
 
   function resetField<P extends FieldPath<TInput>>(path: P, value?: FieldPathValue<TInput, P>): void {
-    const next = value !== undefined ? value : get(initialSnapshot as any, path as string);
-    set(values as any, path as string, cloneFnDefault(next));
+    const next = value !== undefined ? value : get(initialSnapshot as Collection, path as string);
+    set(values as Collection, path as string, cloneFnDefault(next));
     delete errorsMap.value[path as string];
     delete touchedMap[path as string];
   }

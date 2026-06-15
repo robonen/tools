@@ -62,7 +62,10 @@ export const base: FlatConfigArray = [
     rules: {
       /* ── eslint core ──────────────────────────────────────── */
       eqeqeq: 'error',
-      'no-console': 'warn',
+      /* Allow intentional `console.warn`/`console.error` — used for library dev
+         diagnostics (a11y/validation warnings, often `__DEV__`-guarded). Stray
+         `console.log`/`debug`/`info` are still flagged. */
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'error',
       'no-eval': 'error',
       'no-var': 'error',

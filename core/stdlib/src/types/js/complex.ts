@@ -5,117 +5,117 @@ import { toString } from './casts';
  * @category Types
  * @description Check if a value is an array
  *
- * @param {any} value
- * @returns {value is any[]}
+ * @param {unknown} value
+ * @returns {value is T[]}
  *
  * @since 0.0.2
  */
-export const isArray = (value: any): value is any[] => Array.isArray(value);
+export const isArray = <T = unknown>(value: unknown): value is T[] => Array.isArray(value);
 
 /**
  * @name isObject
  * @category Types
  * @description Check if a value is an object
  *
- * @param {any} value
+ * @param {unknown} value
  * @returns {value is object}
  *
  * @since 0.0.2
  */
-export const isObject = (value: any): value is object => toString(value) === '[object Object]';
+export const isObject = (value: unknown): value is object => toString(value) === '[object Object]';
 
 /**
  * @name isRegExp
  * @category Types
  * @description Check if a value is a regexp
  *
- * @param {any} value
+ * @param {unknown} value
  * @returns {value is RegExp}
  *
  * @since 0.0.2
  */
-export const isRegExp = (value: any): value is RegExp => toString(value) === '[object RegExp]';
+export const isRegExp = (value: unknown): value is RegExp => toString(value) === '[object RegExp]';
 
 /**
  * @name isDate
  * @category Types
  * @description Check if a value is a date
  *
- * @param {any} value
+ * @param {unknown} value
  * @returns {value is Date}
  *
  * @since 0.0.2
  */
-export const isDate = (value: any): value is Date => toString(value) === '[object Date]';
+export const isDate = (value: unknown): value is Date => toString(value) === '[object Date]';
 
 /**
  * @name isError
  * @category Types
  * @description Check if a value is an error
  *
- * @param {any} value
+ * @param {unknown} value
  * @returns {value is Error}
  *
  * @since 0.0.2
  */
-export const isError = (value: any): value is Error => toString(value) === '[object Error]';
+export const isError = (value: unknown): value is Error => toString(value) === '[object Error]';
 
 /**
  * @name isPromise
  * @category Types
  * @description Check if a value is a promise
  *
- * @param {any} value
- * @returns {value is Promise<any>}
+ * @param {unknown} value
+ * @returns {value is Promise<unknown>}
  *
  * @since 0.0.2
  */
-export const isPromise = (value: any): value is Promise<any> => toString(value) === '[object Promise]';
+export const isPromise = (value: unknown): value is Promise<unknown> => toString(value) === '[object Promise]';
 
 /**
  * @name isMap
  * @category Types
  * @description Check if a value is a map
  *
- * @param {any} value
- * @returns {value is Map<any, any>}
+ * @param {unknown} value
+ * @returns {value is Map<unknown, unknown>}
  *
  * @since 0.0.2
  */
-export const isMap = (value: any): value is Map<any, any> => toString(value) === '[object Map]';
+export const isMap = (value: unknown): value is Map<unknown, unknown> => toString(value) === '[object Map]';
 
 /**
  * @name isSet
  * @category Types
  * @description Check if a value is a set
  *
- * @param {any} value
- * @returns {value is Set<any>}
+ * @param {unknown} value
+ * @returns {value is Set<unknown>}
  *
  * @since 0.0.2
  */
-export const isSet = (value: any): value is Set<any> => toString(value) === '[object Set]';
+export const isSet = (value: unknown): value is Set<unknown> => toString(value) === '[object Set]';
 
 /**
  * @name isWeakMap
  * @category Types
  * @description Check if a value is a weakmap
  *
- * @param {any} value
- * @returns {value is WeakMap<object, any>}
+ * @param {unknown} value
+ * @returns {value is WeakMap<object, unknown>}
  *
  * @since 0.0.2
  */
-export const isWeakMap = (value: any): value is WeakMap<object, any> => toString(value) === '[object WeakMap]';
+export const isWeakMap = (value: unknown): value is WeakMap<object, unknown> => toString(value) === '[object WeakMap]';
 
 /**
  * @name isWeakSet
  * @category Types
  * @description Check if a value is a weakset
  *
- * @param {any} value
+ * @param {unknown} value
  * @returns {value is WeakSet<object>}
  *
  * @since 0.0.2
  */
-export const isWeakSet = (value: any): value is WeakSet<object> => toString(value) === '[object WeakSet]';
+export const isWeakSet = (value: unknown): value is WeakSet<object> => toString(value) === '[object WeakSet]';

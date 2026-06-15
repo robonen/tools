@@ -35,13 +35,13 @@ const matchIndex = computed(() =>
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="space-y-3">
       <div class="flex items-center justify-between">
-        <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)" for="maxPrice">
+        <label class="demo-label" for="maxPrice">
           Max price
         </label>
-        <span class="font-mono text-sm tabular-nums text-(--fg)">${{ maxPrice }}</span>
+        <span class="font-mono text-sm tabular-nums text-fg">${{ maxPrice }}</span>
       </div>
       <input
         id="maxPrice"
@@ -50,28 +50,28 @@ const matchIndex = computed(() =>
         min="20"
         max="400"
         step="5"
-        class="w-full accent-(--accent)"
+        class="w-full accent-accent"
       >
-      <label class="flex cursor-pointer items-center gap-2 text-sm text-(--fg-muted)">
-        <input v-model="inStockOnly" type="checkbox" class="accent-(--accent)">
+      <label class="flex cursor-pointer items-center gap-2 text-sm text-fg-muted">
+        <input v-model="inStockOnly" type="checkbox" class="accent-accent">
         In stock only
       </label>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-      <p class="mb-1 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+    <div class="rounded-lg border border-border bg-bg-inset p-3">
+      <p class="demo-label mb-1">
         First match
       </p>
       <template v-if="firstMatch">
         <div class="flex items-baseline justify-between">
-          <span class="text-sm font-medium text-(--fg)">{{ firstMatch.name }}</span>
-          <span class="font-mono text-sm tabular-nums text-(--fg)">${{ firstMatch.price }}</span>
+          <span class="text-sm font-medium text-fg">{{ firstMatch.name }}</span>
+          <span class="font-mono text-sm tabular-nums text-fg">${{ firstMatch.price }}</span>
         </div>
-        <p class="mt-1 font-mono text-xs text-(--fg-subtle)">
+        <p class="mt-1 font-mono text-xs text-fg-subtle">
           index {{ matchIndex }} · id {{ firstMatch.id }}
         </p>
       </template>
-      <p v-else class="text-sm text-(--fg-subtle)">
+      <p v-else class="text-sm text-fg-subtle">
         No product matches the filters
       </p>
     </div>
@@ -82,8 +82,8 @@ const matchIndex = computed(() =>
         :key="product.id"
         class="flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition"
         :class="product.id === firstMatch?.id
-          ? 'border-(--accent) bg-(--accent-subtle) text-(--accent-text)'
-          : 'border-(--border) bg-(--bg-elevated) text-(--fg-muted)'"
+          ? 'border-accent bg-accent-subtle text-accent-text'
+          : 'border-border bg-bg-elevated text-fg-muted'"
       >
         <span class="flex items-center gap-2">
           {{ product.name }}

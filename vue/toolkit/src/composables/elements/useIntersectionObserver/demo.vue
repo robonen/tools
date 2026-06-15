@@ -48,10 +48,10 @@ const activeId = computed(() => {
 </script>
 
 <template>
-  <div class="w-full max-w-md flex flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Scroll spy</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">Scroll spy</span>
+      <span class="demo-badge">
         active: {{ activeId ?? '—' }}
       </span>
     </div>
@@ -64,8 +64,8 @@ const activeId = computed(() => {
           :key="s.id"
           class="flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition"
           :class="activeId === s.id
-            ? 'border-(--border-strong) bg-(--bg-inset) text-(--fg)'
-            : 'border-transparent text-(--fg-muted)'"
+            ? 'border-border-strong bg-bg-inset text-fg'
+            : 'border-transparent text-fg-muted'"
         >
           <span class="size-2 rounded-full transition" :class="[s.color, activeId === s.id ? 'opacity-100' : 'opacity-30']" />
           {{ s.label }}
@@ -75,29 +75,29 @@ const activeId = computed(() => {
       <!-- Scrollable content; each section is an observed target. -->
       <div
         ref="root"
-        class="h-56 flex-1 overflow-y-auto rounded-xl border border-(--border) bg-(--bg-inset) p-3 flex flex-col gap-3 scroll-smooth"
+        class="h-56 flex-1 overflow-y-auto rounded-xl border border-border bg-bg-inset p-3 flex flex-col gap-3 scroll-smooth"
       >
         <section
           v-for="s in sections"
           :key="s.id"
           ref="itemEls"
           :data-id="s.id"
-          class="rounded-lg border border-(--border) bg-(--bg-elevated) p-4 transition"
-          :class="activeId === s.id ? 'ring-2 ring-(--ring)' : ''"
+          class="rounded-lg border border-border bg-bg-elevated p-4 transition"
+          :class="activeId === s.id ? 'ring-2 ring-ring' : ''"
         >
-          <h3 class="text-sm font-semibold text-(--fg)">{{ s.label }}</h3>
-          <p class="mt-1 text-xs text-(--fg-subtle)">
+          <h3 class="text-sm font-semibold text-fg">{{ s.label }}</h3>
+          <p class="mt-1 text-xs text-fg-subtle">
             Visibility: {{ Math.round((ratios[s.id] ?? 0) * 100) }}%
           </p>
-          <div class="mt-2 h-16 rounded bg-(--bg-inset)" />
+          <div class="mt-2 h-16 rounded bg-bg-inset" />
         </section>
       </div>
     </div>
 
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between">
-        <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)" for="io-threshold">Active threshold</label>
-        <span class="font-mono text-xs tabular-nums text-(--fg-muted)">{{ Math.round(threshold * 100) }}%</span>
+        <label class="demo-label" for="io-threshold">Active threshold</label>
+        <span class="font-mono text-xs tabular-nums text-fg-muted">{{ Math.round(threshold * 100) }}%</span>
       </div>
       <input
         id="io-threshold"
@@ -106,9 +106,9 @@ const activeId = computed(() => {
         min="0.1"
         max="0.9"
         step="0.1"
-        class="w-full accent-(--accent) cursor-pointer"
+        class="w-full accent-accent cursor-pointer"
       >
-      <p class="text-xs text-(--fg-subtle)">A section becomes active once at least this much of it is visible inside the scroll root.</p>
+      <p class="text-xs text-fg-subtle">A section becomes active once at least this much of it is visible inside the scroll root.</p>
     </div>
   </div>
 </template>

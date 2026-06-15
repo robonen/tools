@@ -43,24 +43,24 @@ const { isLoading } = useInfiniteScroll(
 <template>
   <div class="flex w-full max-w-sm flex-col gap-3">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Repositories</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted) tabular-nums">
+      <span class="demo-label">Repositories</span>
+      <span class="demo-badge tabular-nums">
         {{ items.length }} / {{ MAX_ITEMS }} loaded
       </span>
     </div>
 
     <div
       ref="scrollEl"
-      class="h-72 overflow-y-auto rounded-xl border border-(--border) bg-(--bg-elevated) p-2"
+      class="demo-card h-72 overflow-y-auto p-2"
     >
       <ul class="flex flex-col gap-1.5">
         <li
           v-for="repo in items"
           :key="repo.id"
-          class="flex items-center justify-between gap-3 rounded-lg border border-(--border) bg-(--bg) px-3 py-2"
+          class="flex items-center justify-between gap-3 rounded-lg border border-border bg-bg px-3 py-2"
         >
-          <span class="truncate font-mono text-sm text-(--fg)">{{ repo.name }}</span>
-          <span class="inline-flex items-center gap-1 text-xs font-medium tabular-nums text-(--fg-muted)">
+          <span class="truncate font-mono text-sm text-fg">{{ repo.name }}</span>
+          <span class="inline-flex items-center gap-1 text-xs font-medium tabular-nums text-fg-muted">
             <span class="text-amber-500">★</span>{{ repo.stars.toLocaleString() }}
           </span>
         </li>
@@ -68,22 +68,22 @@ const { isLoading } = useInfiniteScroll(
 
       <div
         v-if="isLoading"
-        class="flex items-center justify-center gap-2 py-4 text-sm text-(--fg-subtle)"
+        class="flex items-center justify-center gap-2 py-4 text-sm text-fg-subtle"
       >
-        <span class="size-3.5 animate-spin rounded-full border-2 border-(--border-strong) border-t-transparent" />
+        <span class="size-3.5 animate-spin rounded-full border-2 border-border-strong border-t-transparent" />
         Loading more…
       </div>
 
       <div
         v-else-if="!canLoadMore()"
-        class="py-4 text-center text-sm text-(--fg-subtle)"
+        class="py-4 text-center text-sm text-fg-subtle"
       >
         You've reached the end.
       </div>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
-      Scroll to within <span class="font-medium text-(--fg-muted)">24px</span> of the bottom to fetch the next page.
+    <p class="text-xs text-fg-subtle">
+      Scroll to within <span class="font-medium text-fg-muted">24px</span> of the bottom to fetch the next page.
     </p>
   </div>
 </template>

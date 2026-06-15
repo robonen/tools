@@ -42,7 +42,7 @@ const tone: Record<LogEntry['level'], string> = {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex gap-1.5">
       <button
         v-for="level in levels"
@@ -50,38 +50,38 @@ const tone: Record<LogEntry['level'], string> = {
         type="button"
         class="flex-1 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
         :class="filter === level
-          ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-          : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset)'"
+          ? 'border-transparent bg-accent text-accent-fg'
+          : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset'"
         @click="filter = level"
       >
         {{ level }}
       </button>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-      <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+    <div class="rounded-lg border border-border bg-bg-inset p-3">
+      <p class="demo-label">
         Latest “{{ filter }}” entry
       </p>
       <template v-if="latest">
-        <p class="mt-1 font-mono text-sm text-(--fg)">{{ latest.message }}</p>
-        <p class="mt-1 font-mono text-xs text-(--fg-subtle)">#{{ latest.id }}</p>
+        <p class="mt-1 font-mono text-sm text-fg">{{ latest.message }}</p>
+        <p class="mt-1 font-mono text-xs text-fg-subtle">#{{ latest.id }}</p>
       </template>
-      <p v-else class="mt-1 text-sm text-(--fg-subtle)">
+      <p v-else class="mt-1 text-sm text-fg-subtle">
         No “{{ filter }}” entries yet
       </p>
     </div>
 
-    <ul class="flex max-h-44 flex-col gap-1 overflow-y-auto rounded-lg border border-(--border) bg-(--bg-elevated) p-2">
+    <ul class="flex max-h-44 flex-col gap-1 overflow-y-auto rounded-lg border border-border bg-bg-elevated p-2">
       <li
         v-for="entry in log"
         :key="entry.id"
         class="flex items-center gap-2 rounded-md px-2 py-1 font-mono text-xs transition"
-        :class="entry.id === latest?.id ? 'bg-(--accent-subtle)' : ''"
+        :class="entry.id === latest?.id ? 'bg-accent-subtle' : ''"
       >
         <span class="w-10 shrink-0 font-semibold uppercase" :class="tone[entry.level]">
           {{ entry.level }}
         </span>
-        <span class="truncate text-(--fg-muted)">{{ entry.message }}</span>
+        <span class="truncate text-fg-muted">{{ entry.message }}</span>
       </li>
     </ul>
 
@@ -90,7 +90,7 @@ const tone: Record<LogEntry['level'], string> = {
         v-for="level in levels"
         :key="level"
         type="button"
-        class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn flex-1"
         @click="append(level)"
       >
         + {{ level }}

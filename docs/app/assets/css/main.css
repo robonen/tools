@@ -16,48 +16,113 @@
   --radius-card: 0.5rem;
 }
 
+/* ── Semantic colour utilities ─────────────────────────────────────────────
+   Register the runtime theme tokens as Tailwind colours so templates use clean
+   utilities (`bg-bg`, `text-fg`, `border-border`, `ring-ring`, `bg-accent`…)
+   instead of the `bg-(--bg)` arbitrary-value escape hatch. `inline` makes each
+   utility emit `var(--token)` directly, so it stays switchable by the `.dark`
+   override below AND gains opacity modifiers (`bg-bg/80` → color-mix). The raw
+   `--token`s remain the single source of truth (consumed directly via `var()`
+   in the prose/identity CSS); these are thin aliases over them. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-inset: var(--bg-inset);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-text: var(--accent-text);
+  --color-header-bg: var(--header-bg);
+  --color-ring: var(--ring);
+}
+
+/* ── Demo design-system shortcuts ──────────────────────────────────────────
+   The package demo.vue files share a small visual vocabulary: a width-capped
+   vertical shell, a code-comment eyebrow label, button/badge chrome, inputs,
+   and card surfaces. These were copy-pasted as identical Tailwind strings
+   across ~240 demos. Collapsed here into semantic utilities so the look is
+   tuned in one place. Each is the common CORE of its pattern — per-demo extras
+   (max-width, padding, disabled states, w-full, sizes) stay on the element, so
+   the rendered result is unchanged. */
+@utility demo-stack {
+  @apply flex w-full flex-col gap-4;
+}
+@utility demo-label {
+  @apply text-xs font-medium uppercase tracking-wide text-fg-subtle;
+}
+@utility demo-card {
+  @apply rounded-xl border border-border bg-bg-elevated;
+}
+@utility demo-btn {
+  @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.98];
+}
+@utility demo-btn-primary {
+  @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-transparent bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition hover:bg-accent-hover active:scale-[0.98];
+}
+@utility demo-badge {
+  @apply inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-inset px-2 py-0.5 text-xs font-medium text-fg-muted;
+}
+@utility demo-input {
+  @apply w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-fg transition placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-ring;
+}
+@utility demo-stat {
+  @apply font-mono font-bold tabular-nums text-fg;
+}
+
 /* ── Semantic design tokens — ink on warm paper, signal-orange instruments ──
    The site reads like a tool-maker's field manual: warm neutral surfaces,
    hairline rules, international-orange accents, code-comment labels. */
 :root {
-  --bg: #faf8f3;
-  --bg-subtle: #f4f1e8;
-  --bg-elevated: #fffdf8;
-  --bg-inset: #eeeadf;
-  --border: #e5dfd0;
-  --border-strong: #cfc6b1;
-  --fg: #211e18;
-  --fg-muted: #5d574b;
-  --fg-subtle: #93897a;
-  --accent: #d9480f;
-  --accent-hover: #bf3f0d;
-  --accent-fg: #fffdf8;
-  --accent-subtle: #f7e7d8;
-  --accent-text: #c2410c;
-  --header-bg: rgba(250, 248, 243, 0.82);
-  --ring: rgba(217, 72, 15, 0.35);
-  --shadow-card: 0 1px 2px rgba(56, 44, 28, 0.05), 0 1px 3px rgba(56, 44, 28, 0.07);
+  /* Colours are OKLCH (perceptually uniform — even lightness steps, predictable
+     hue) and are exact equivalents of the original hand-tuned sRGB palette.
+     Translucent tokens derive from their base via color-mix(), so they track
+     theme + accent retuning automatically instead of duplicating a literal. */
+  --bg: oklch(0.9793 0.007 88.64);
+  --bg-subtle: oklch(0.958 0.0124 91.52);
+  --bg-elevated: oklch(0.9942 0.0069 88.64);
+  --bg-inset: oklch(0.9371 0.0153 90.24);
+  --border: oklch(0.9043 0.0211 88.73);
+  --border-strong: oklch(0.8282 0.0303 87.56);
+  --fg: oklch(0.2363 0.012 84.56);
+  --fg-muted: oklch(0.4588 0.0204 84.58);
+  --fg-subtle: oklch(0.6346 0.0249 78.12);
+  --accent: oklch(0.5999 0.1905 37.88);
+  --accent-hover: oklch(0.5461 0.1724 37.96);
+  --accent-fg: oklch(0.9942 0.0069 88.64);
+  --accent-subtle: oklch(0.9367 0.0266 65.68);
+  --accent-text: oklch(0.5534 0.1739 38.4);
+  --header-bg: color-mix(in oklch, var(--bg) 82%, transparent);
+  --ring: color-mix(in oklch, var(--accent) 35%, transparent);
+  --shadow-card: 0 1px 2px oklch(0.302 0.0319 74.11 / 0.05), 0 1px 3px oklch(0.302 0.0319 74.11 / 0.07);
   color-scheme: light;
 }
 
 .dark {
-  --bg: #161310;
-  --bg-subtle: #1b1813;
-  --bg-elevated: #211d17;
-  --bg-inset: #2a251c;
-  --border: #322c22;
-  --border-strong: #4a4231;
-  --fg: #ece7db;
-  --fg-muted: #b2a995;
-  --fg-subtle: #7d7363;
-  --accent: #ff7d33;
-  --accent-hover: #ff9a59;
-  --accent-fg: #1d0e04;
-  --accent-subtle: #3a2415;
-  --accent-text: #ff9c63;
-  --header-bg: rgba(22, 19, 16, 0.82);
-  --ring: rgba(255, 125, 51, 0.4);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.5);
+  --bg: oklch(0.1892 0.0077 67.33);
+  --bg-subtle: oklch(0.2107 0.0106 80.56);
+  --bg-elevated: oklch(0.2332 0.0127 78);
+  --bg-inset: oklch(0.267 0.0176 82.2);
+  --border: oklch(0.2964 0.0194 80.44);
+  --border-strong: oklch(0.3822 0.0294 85.68);
+  --fg: oklch(0.9286 0.0169 88);
+  --fg-muted: oklch(0.7369 0.0298 86.66);
+  --fg-subtle: oklch(0.56 0.0269 79.61);
+  --accent: oklch(0.7294 0.1789 46.57);
+  --accent-hover: oklch(0.7788 0.1452 51.83);
+  --accent-fg: oklch(0.1825 0.0328 56.53);
+  --accent-subtle: oklch(0.284 0.042 54.49);
+  --accent-text: oklch(0.7835 0.139 49.63);
+  /* --header-bg is not re-declared: the :root color-mix tracks --bg, which we
+     override above. Only --ring needs a tweak (slightly stronger in dark). */
+  --ring: color-mix(in oklch, var(--accent) 40%, transparent);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 1px 3px oklch(0 0 0 / 0.5);
   color-scheme: dark;
 }
 

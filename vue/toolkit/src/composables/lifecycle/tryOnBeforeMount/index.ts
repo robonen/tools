@@ -1,9 +1,7 @@
-import { nextTick, onBeforeMount } from 'vue';
+import { onBeforeMount } from 'vue';
 import type { ComponentInternalInstance } from 'vue';
-import { getLifeCycleTarger } from '@/utils';
+import { runTryOnLifecycle } from '@/utils/lifecycle';
 import type { VoidFunction } from '@robonen/stdlib';
-
-// TODO: test
 
 export interface TryOnBeforeMountOptions {
   sync?: boolean;
@@ -30,17 +28,5 @@ export interface TryOnBeforeMountOptions {
  * @since 0.0.1
  */
 export function tryOnBeforeMount(fn: VoidFunction, options: TryOnBeforeMountOptions = {}) {
-  const {
-    sync = true,
-    target,
-  } = options;
-
-  const instance = getLifeCycleTarger(target);
-
-  if (instance)
-    onBeforeMount(fn, instance);
-  else if (sync)
-    fn();
-  else
-    nextTick(fn);
+  runTryOnLifecycle(onBeforeMount, fn, options);
 }

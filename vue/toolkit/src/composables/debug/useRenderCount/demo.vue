@@ -15,33 +15,33 @@ function nudgeTint() {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col items-center gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Render count</span>
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col items-center gap-2">
+      <span class="demo-label">Render count</span>
       <span
-        class="font-mono text-3xl font-bold tabular-nums text-(--fg) transition-colors"
+        class="demo-stat text-3xl transition-colors"
         :style="{ color: `hsl(${tint} 70% 55%)` }"
       >{{ renderCount }}</span>
-      <span class="text-xs text-(--fg-subtle)">renders since mount</span>
+      <span class="text-xs text-fg-subtle">renders since mount</span>
     </div>
 
     <label class="flex flex-col gap-1">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Bound input</span>
+      <span class="demo-label">Bound input</span>
       <input
         v-model="message"
         type="text"
         placeholder="Type to re-render…"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </label>
 
-    <p class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-sm text-(--fg)">
+    <p class="rounded-lg border border-border bg-bg-inset p-3 text-sm text-fg">
       {{ message }}
     </p>
 
     <button
       type="button"
-      class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+      class="demo-btn"
       @click="nudgeTint"
     >
       Force re-render (shift color)

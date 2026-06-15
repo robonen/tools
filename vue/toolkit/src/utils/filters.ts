@@ -142,7 +142,7 @@ export function createFilterWrapper<T extends AnyFunction>(
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
   // Promises scheduled but not yet resolved by an invocation. The filter may
   // drop intermediate invokes (debounce) — they all settle on the next real one.
-  let pending: Array<{ resolve: (value: any) => void; reject: (reason?: unknown) => void }> = [];
+  let pending: Array<{ resolve: (value: Awaited<ReturnType<T>>) => void; reject: (reason?: unknown) => void }> = [];
 
   function wrapper(this: unknown, ...args: Parameters<T>) {
     return new Promise<Awaited<ReturnType<T>>>((resolve, reject) => {

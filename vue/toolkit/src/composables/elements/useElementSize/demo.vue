@@ -25,12 +25,12 @@ function fmt(n: number) {
 </script>
 
 <template>
-  <div class="w-full max-w-md flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-4">
+  <div class="demo-stack max-w-md">
+    <div class="demo-card p-4 flex flex-col gap-4">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">ResizeObserver</span>
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
-          <span class="size-1.5 rounded-full" :class="observing ? 'bg-emerald-500' : 'bg-(--fg-subtle)'" />
+        <span class="demo-label">ResizeObserver</span>
+        <span class="demo-badge">
+          <span class="size-1.5 rounded-full" :class="observing ? 'bg-emerald-500' : 'bg-fg-subtle'" />
           {{ observing ? 'Observing' : 'Stopped' }}
         </span>
       </div>
@@ -40,25 +40,25 @@ function fmt(n: number) {
         ref="target"
         readonly
         :style="{ padding: `${padding}px` }"
-        class="w-full min-h-24 resize rounded-lg border border-(--border-strong) bg-(--bg-inset) text-sm leading-relaxed text-(--fg-muted) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="w-full min-h-24 resize rounded-lg border border-border-strong bg-bg-inset text-sm leading-relaxed text-fg-muted focus:outline-none focus:ring-2 focus:ring-ring"
       >Drag the bottom-right corner to resize me. The width and height update live as the ResizeObserver fires. Border-box sizing includes the padding below.</textarea>
 
       <div class="grid grid-cols-2 gap-3">
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-center">
-          <div class="font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ fmt(width) }}</div>
-          <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">width px</div>
+        <div class="rounded-lg border border-border bg-bg-inset p-3 text-center">
+          <div class="demo-stat text-3xl">{{ fmt(width) }}</div>
+          <div class="text-[10px] uppercase tracking-wide text-fg-subtle">width px</div>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-center">
-          <div class="font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ fmt(height) }}</div>
-          <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">height px</div>
+        <div class="rounded-lg border border-border bg-bg-inset p-3 text-center">
+          <div class="demo-stat text-3xl">{{ fmt(height) }}</div>
+          <div class="text-[10px] uppercase tracking-wide text-fg-subtle">height px</div>
         </div>
       </div>
     </div>
 
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between">
-        <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)" for="size-padding">Padding (border-box)</label>
-        <span class="font-mono text-xs tabular-nums text-(--fg-muted)">{{ padding }}px</span>
+        <label class="demo-label" for="size-padding">Padding (border-box)</label>
+        <span class="font-mono text-xs tabular-nums text-fg-muted">{{ padding }}px</span>
       </div>
       <input
         id="size-padding"
@@ -67,20 +67,20 @@ function fmt(n: number) {
         min="0"
         max="40"
         step="2"
-        class="w-full accent-(--accent) cursor-pointer"
+        class="w-full accent-accent cursor-pointer"
       >
     </div>
 
     <button
       type="button"
-      class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+      class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
       :disabled="!observing"
       @click="toggleObserver"
     >
       {{ observing ? 'Stop observing' : 'Observer stopped' }}
     </button>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       With <span class="font-mono">box: 'border-box'</span> the reported size includes padding, so the slider changes the numbers without resizing the element.
     </p>
   </div>

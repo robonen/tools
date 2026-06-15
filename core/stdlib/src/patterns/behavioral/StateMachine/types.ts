@@ -58,7 +58,7 @@ export type AsyncStateNodeConfig<Context> = StateNodeConfig<Context, MaybePromis
 export type ExtractStates<T> = keyof T & string;
 
 export type ExtractEvents<T> = {
-  [K in keyof T]: T[K] extends { readonly on?: Readonly<Record<infer E extends string, any>> }
+  [K in keyof T]: T[K] extends { readonly on?: Readonly<Record<infer E extends string, unknown>> }
     ? E
     : never;
 }[keyof T];

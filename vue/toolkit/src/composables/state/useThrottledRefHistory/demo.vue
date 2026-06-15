@@ -26,14 +26,14 @@ function formatTime(ts: number): string {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <!-- Live value -->
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card p-4">
       <div class="flex items-baseline justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           Live value
         </span>
-        <span class="font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ value }}</span>
+        <span class="demo-stat text-3xl">{{ value }}</span>
       </div>
 
       <input
@@ -41,16 +41,16 @@ function formatTime(ts: number): string {
         type="range"
         min="0"
         max="100"
-        class="mt-3 w-full cursor-pointer accent-(--accent)"
+        class="mt-3 w-full cursor-pointer accent-accent"
       >
-      <p class="mt-2 text-xs text-(--fg-subtle)">
+      <p class="mt-2 text-xs text-fg-subtle">
         Drag the slider — only one snapshot is committed per {{ throttle }}ms.
       </p>
     </div>
 
     <!-- Throttle interval -->
     <div class="flex items-center justify-between gap-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Throttle
       </span>
       <div class="flex gap-1.5">
@@ -60,8 +60,8 @@ function formatTime(ts: number): string {
           type="button"
           class="inline-flex items-center justify-center rounded-lg border px-2.5 py-1 text-sm font-medium tabular-nums transition active:scale-[0.98] cursor-pointer"
           :class="throttle === ms
-            ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="throttle = ms"
         >
           {{ ms }}ms
@@ -73,7 +73,7 @@ function formatTime(ts: number): string {
     <div class="flex items-center gap-2">
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!canUndo"
         @click="undo"
       >
@@ -81,7 +81,7 @@ function formatTime(ts: number): string {
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!canRedo"
         @click="redo"
       >
@@ -89,7 +89,7 @@ function formatTime(ts: number): string {
       </button>
       <button
         type="button"
-        class="ml-auto inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn ml-auto"
         @click="clear"
       >
         Clear
@@ -97,24 +97,24 @@ function formatTime(ts: number): string {
     </div>
 
     <!-- Committed snapshots -->
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-2">
+    <div class="demo-card p-2">
       <ul class="flex max-h-40 flex-col gap-1 overflow-y-auto">
         <li
           v-for="(record, i) in history"
           :key="record.timestamp + '-' + i"
           class="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm"
-          :class="i === 0 ? 'bg-(--accent-subtle)' : ''"
+          :class="i === 0 ? 'bg-accent-subtle' : ''"
         >
-          <span class="font-mono text-xs text-(--fg-subtle) tabular-nums">
+          <span class="font-mono text-xs text-fg-subtle tabular-nums">
             {{ formatTime(record.timestamp) }}
           </span>
           <span
             class="flex-1 font-mono tabular-nums"
-            :class="i === 0 ? 'font-medium text-(--accent-text)' : 'text-(--fg-muted)'"
+            :class="i === 0 ? 'font-medium text-accent-text' : 'text-fg-muted'"
           >
             {{ record.snapshot }}
           </span>
-          <span v-if="i === 0" class="text-xs font-medium text-(--accent-text)">latest</span>
+          <span v-if="i === 0" class="text-xs font-medium text-accent-text">latest</span>
         </li>
       </ul>
     </div>

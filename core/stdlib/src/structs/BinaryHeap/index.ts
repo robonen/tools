@@ -14,7 +14,7 @@ export interface BinaryHeapOptions<T> {
  * @param {number} b Second element
  * @returns {number} Negative if a < b, positive if a > b, zero if equal
  */
-const defaultComparator: Comparator<any> = (a: number, b: number) => a - b;
+const defaultComparator: Comparator<number> = (a: number, b: number) => a - b;
 
 /**
  * @name BinaryHeap
@@ -49,7 +49,8 @@ export class BinaryHeap<T> implements BinaryHeapLike<T> {
      * @param {BinaryHeapOptions<T>} [options] Heap configuration
      */
   constructor(initialValues?: T[] | T, options?: BinaryHeapOptions<T>) {
-    this.comparator = options?.comparator ?? defaultComparator;
+    // Numeric default; cast bridges it to the caller's `T` when no comparator is given.
+    this.comparator = options?.comparator ?? (defaultComparator as Comparator<T>);
 
     if (initialValues !== null && initialValues !== undefined) {
       const items = isArray(initialValues) ? initialValues : [initialValues];

@@ -27,36 +27,36 @@
 
     <!-- Feature cards -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">High-level QR in one call</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">High-level QR in one call</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           <code>encodeText</code> and <code>encodeBinary</code> pick the smallest
           version and optimal segment modes for you, then hand back an immutable
           <code>QrCode</code> grid.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">Render-agnostic output</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">Render-agnostic output</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           A <code>QrCode</code> is just a square of modules. Read each one with
           <code>getModule(x, y)</code> and draw to SVG, canvas, or anything else —
           no rendering opinions baked in.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">Standalone Reed-Solomon</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">Standalone Reed-Solomon</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           The GF(2^8) error-correction core — <code>multiply</code>,
           <code>computeDivisor</code>, <code>computeRemainder</code> — is exported
           on its own, reusable beyond QR.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">Zero dependencies, fully typed</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">Zero dependencies, fully typed</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           Tree-shakeable ESM and CJS builds with no third-party runtime deps, hot
           loops backed by typed arrays, and end-to-end TypeScript types.
         </p>

@@ -2,7 +2,7 @@ import { computed, ref, toValue, watch } from 'vue';
 import type { MaybeRefOrGetter, Ref } from 'vue';
 import { cloneFnDefault } from '@/composables/reactivity/useCloned';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
-import { isEqual } from '@robonen/stdlib';
+import { isArray, isEqual } from '@robonen/stdlib';
 import { injectFormContext } from '../useForm/context';
 import { normalizeFieldResult, runStandardSchema } from '../useForm/validation';
 import type {
@@ -40,7 +40,7 @@ import type {
  *
  * @since 0.0.16
  */
-export function useField<T = any>(
+export function useField<T = unknown>(
   path: MaybeRefOrGetter<string>,
   options: UseFieldOptions<T> = {},
 ): UseFieldReturn<T> {
@@ -223,7 +223,7 @@ export function useField<T = any>(
       localTouched.value = touched;
     },
     setErrors: (message) => {
-      localErrors.value = message === null ? [] : Array.isArray(message) ? message : [message];
+      localErrors.value = message === null ? [] : isArray(message) ? message : [message];
     },
     validate: runLocal,
     reset: () => {

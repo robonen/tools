@@ -16,20 +16,20 @@ const channels = [
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Notification channels</span>
+  <div class="demo-stack max-w-sm">
+    <span class="demo-label">Notification channels</span>
 
     <div class="flex flex-col gap-2">
       <label
         v-for="ch in channels"
         :key="ch.key"
-        class="flex cursor-pointer items-center justify-between rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-2.5 transition hover:border-(--border-strong)"
+        class="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-bg-elevated px-3 py-2.5 transition hover:border-border-strong"
       >
-        <span class="text-sm font-medium text-(--fg)">{{ ch.label }}</span>
+        <span class="text-sm font-medium text-fg">{{ ch.label }}</span>
         <input
           v-model="ch.model.value"
           type="checkbox"
-          class="size-4 cursor-pointer accent-(--accent)"
+          class="size-4 cursor-pointer accent-accent"
         >
       </label>
     </div>
@@ -41,7 +41,7 @@ const channels = [
         : 'border-amber-500/30 bg-amber-500/10'"
     >
       <div class="flex flex-col">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">logicOr(email, sms, push)</span>
+        <span class="demo-label">logicOr(email, sms, push)</span>
         <span
           class="text-sm font-medium"
           :class="hasChannel
@@ -49,7 +49,7 @@ const channels = [
             : 'text-amber-600 dark:text-amber-400'"
         >{{ hasChannel ? 'At least one channel is on' : 'Pick a channel to get notified' }}</span>
       </div>
-      <span class="font-mono text-2xl font-bold tabular-nums text-(--fg)">{{ hasChannel }}</span>
+      <span class="demo-stat text-2xl">{{ hasChannel }}</span>
     </div>
   </div>
 </template>

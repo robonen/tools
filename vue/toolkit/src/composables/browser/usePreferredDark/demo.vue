@@ -8,9 +8,9 @@ const label = computed(() => (isDark.value ? 'Dark' : 'Light'));
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         prefers-color-scheme: dark
       </span>
       <span
@@ -25,7 +25,7 @@ const label = computed(() => (isDark.value ? 'Dark' : 'Light'));
 
     <!-- A miniature sky scene that flips between day and night. -->
     <div
-      class="relative flex h-40 items-end overflow-hidden rounded-xl border border-(--border) p-4 transition-colors duration-500"
+      class="relative flex h-40 items-end overflow-hidden rounded-xl border border-border p-4 transition-colors duration-500"
       :class="isDark
         ? 'bg-gradient-to-b from-slate-900 to-slate-700'
         : 'bg-gradient-to-b from-sky-300 to-sky-100'"
@@ -60,12 +60,12 @@ const label = computed(() => (isDark.value ? 'Dark' : 'Light'));
       </span>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums">
       const isDark = usePreferredDark()
-      <span class="text-(--fg-subtle)"> // </span>{{ isDark }}
+      <span class="text-fg-subtle"> // </span>{{ isDark }}
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Read-only: switch your OS to dark/light mode to watch the scene change.
     </p>
   </div>

@@ -2,7 +2,7 @@ import { ref, shallowRef, watch } from 'vue';
 import type { Ref, ShallowRef, UnwrapRef } from 'vue';
 import { isFunction, sleep } from '@robonen/stdlib';
 
-export interface UseAsyncStateOptions<Shallow extends boolean, Data = any> {
+export interface UseAsyncStateOptions<Shallow extends boolean, Data = unknown> {
   delay?: number;
   shallow?: Shallow;
   immediate?: boolean;
@@ -12,7 +12,7 @@ export interface UseAsyncStateOptions<Shallow extends boolean, Data = any> {
   onSuccess?: (data: Data) => void;
 }
 
-export interface UseAsyncStateReturnBase<Data, Params extends any[], Shallow extends boolean> {
+export interface UseAsyncStateReturnBase<Data, Params extends unknown[], Shallow extends boolean> {
   state: Shallow extends true ? ShallowRef<Data> : Ref<UnwrapRef<Data>>;
   isLoading: Ref<boolean>;
   isReady: Ref<boolean>;
@@ -21,7 +21,7 @@ export interface UseAsyncStateReturnBase<Data, Params extends any[], Shallow ext
   executeImmediately: (...params: Params) => Promise<Data>;
 }
 
-export type UseAsyncStateReturn<Data, Params extends any[], Shallow extends boolean>
+export type UseAsyncStateReturn<Data, Params extends unknown[], Shallow extends boolean>
   = & UseAsyncStateReturnBase<Data, Params, Shallow>
     & PromiseLike<UseAsyncStateReturnBase<Data, Params, Shallow>>;
 
@@ -30,7 +30,7 @@ export type UseAsyncStateReturn<Data, Params extends any[], Shallow extends bool
  * @category State
  * @description A composable that provides a state for async operations without setup blocking
  */
-export function useAsyncState<Data, Params extends any[] = [], Shallow extends boolean = true>(
+export function useAsyncState<Data, Params extends unknown[] = [], Shallow extends boolean = true>(
   maybePromise: Promise<Data> | ((...args: Params) => Promise<Data>),
   initialState: Data,
   options?: UseAsyncStateOptions<Shallow, Data>,
@@ -50,7 +50,7 @@ export function useAsyncState<Data, Params extends any[] = [], Shallow extends b
   const isLoading = ref(false);
   const isReady = ref(false);
 
-  const execute = async (actualDelay = delay, ...params: any[]) => {
+  const execute = async (actualDelay = delay, ...params: unknown[]) => {
     if (resetOnExecute)
       state.value = initialState;
 

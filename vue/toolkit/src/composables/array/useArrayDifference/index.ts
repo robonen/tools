@@ -1,6 +1,6 @@
 import { computed, toValue } from 'vue';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { isObject, isString } from '@robonen/stdlib';
+import { isFunction, isNumber, isObject, isString, isSymbol } from '@robonen/stdlib';
 
 /**
  * Comparator deciding whether two array elements are considered equal.
@@ -24,7 +24,7 @@ export interface UseArrayDifferenceOptions<T> {
   comparator?: UseArrayDifferenceComparatorFn<T> | keyof T;
 }
 
-export type UseArrayDifferenceReturn<T = any>
+export type UseArrayDifferenceReturn<T = unknown>
   = ComputedRef<T[]>;
 
 function isArrayDifferenceOptions<T>(value: unknown): value is UseArrayDifferenceOptions<T> {
@@ -101,11 +101,11 @@ export function useArrayDifference<T>(
   // Resolve the comparator once instead of rebuilding it on every recompute.
   let compare: UseArrayDifferenceComparatorFn<T>;
 
-  if (isString(resolved) || typeof resolved === 'symbol' || typeof resolved === 'number') {
+  if (isString(resolved) || isSymbol(resolved) || isNumber(resolved)) {
     const key = resolved as keyof T;
     compare = (value, othVal) => value[key] === othVal[key];
   }
-  else if (typeof resolved === 'function') {
+  else if (isFunction(resolved)) {
     compare = resolved;
   }
   else {

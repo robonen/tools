@@ -36,14 +36,14 @@ function removeAt(index: number) {
 </script>
 
 <template>
-  <div class="w-full max-w-md flex flex-col gap-4">
-    <label class="flex items-center justify-between gap-3 rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Starting budget</span>
+  <div class="demo-stack max-w-md">
+    <label class="demo-card flex items-center justify-between gap-3 p-4">
+      <span class="demo-label">Starting budget</span>
       <input
         v-model.number="startingBudget"
         type="number"
         step="50"
-        class="w-28 rounded-lg border border-(--border) bg-(--bg) px-3 py-1.5 text-right font-mono text-sm tabular-nums text-(--fg) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="w-28 rounded-lg border border-border bg-bg px-3 py-1.5 text-right font-mono text-sm tabular-nums text-fg transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-ring"
       >
     </label>
 
@@ -51,34 +51,34 @@ function removeAt(index: number) {
       <li
         v-for="(expense, index) in expenses"
         :key="index"
-        class="flex items-center justify-between gap-3 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-2"
+        class="flex items-center justify-between gap-3 rounded-lg border border-border bg-bg-elevated px-3 py-2"
       >
-        <span class="flex-1 truncate text-sm text-(--fg)">{{ expense.label }}</span>
+        <span class="flex-1 truncate text-sm text-fg">{{ expense.label }}</span>
         <span class="font-mono text-sm tabular-nums text-rose-600 dark:text-rose-400">
           &minus;{{ formatter.format(expense.amount) }}
         </span>
         <button
-          class="inline-flex size-6 items-center justify-center rounded-md text-(--fg-subtle) transition hover:bg-(--bg-inset) hover:text-(--fg) active:scale-[0.98] cursor-pointer"
+          class="inline-flex size-6 items-center justify-center rounded-md text-fg-subtle transition hover:bg-bg-inset hover:text-fg active:scale-[0.98] cursor-pointer"
           aria-label="Remove expense"
           @click="removeAt(index)"
         >
           &times;
         </button>
       </li>
-      <li v-if="expenses.length === 0" class="rounded-lg border border-dashed border-(--border) px-3 py-4 text-center text-sm text-(--fg-subtle)">
+      <li v-if="expenses.length === 0" class="rounded-lg border border-dashed border-border px-3 py-4 text-center text-sm text-fg-subtle">
         No expenses — full budget remains.
       </li>
     </ul>
 
     <button
-      class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+      class="demo-btn"
       @click="add"
     >
       + Add charge
     </button>
 
-    <div class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Remaining</span>
+    <div class="flex items-center justify-between rounded-lg border border-border bg-bg-inset p-3">
+      <span class="demo-label">Remaining</span>
       <span
         class="font-mono text-2xl font-bold tabular-nums"
         :class="remaining < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'"

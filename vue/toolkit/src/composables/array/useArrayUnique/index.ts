@@ -1,6 +1,6 @@
 import { computed, toValue } from 'vue';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { isString, unique } from '@robonen/stdlib';
+import { isFunction, isNumber, isString, isSymbol, unique } from '@robonen/stdlib';
 
 /**
  * Equality comparator deciding whether two array elements are duplicates.
@@ -66,12 +66,12 @@ export function useArrayUnique<T>(
   // Resolve the comparison strategy once, not on every recompute.
 
   // Key of T (string | number | symbol) -> O(n) first-seen-wins key de-dup.
-  if (isString(comparator) || typeof comparator === 'symbol' || typeof comparator === 'number') {
+  if (isString(comparator) || isSymbol(comparator) || isNumber(comparator)) {
     const key = comparator as keyof T;
     return computed<T[]>(() => uniqueByKey(resolve(list), element => element[key] as PropertyKey));
   }
 
-  if (typeof comparator === 'function') {
+  if (isFunction(comparator)) {
     // A unary key extractor stays O(n); a binary comparator falls back to O(n²)
     // pairwise comparison (unavoidable for arbitrary equality). Branch on arity.
     if (comparator.length <= 1) {

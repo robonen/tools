@@ -1,0 +1,23 @@
+<script lang="ts">
+import type { MenuRadioGroupEmits, MenuRadioGroupProps } from '../menu';
+
+/**
+ * Groups DropdownMenuRadioItems into a single-choice set. Bind `v-model` to
+ * track the selected item's value across the group.
+ */
+export interface DropdownMenuRadioGroupProps extends MenuRadioGroupProps {}
+export type DropdownMenuRadioGroupEmits = MenuRadioGroupEmits;
+</script>
+
+<script setup lang="ts">
+import { useForwardExpose } from '@robonen/vue';
+import { MenuRadioGroup } from '../menu';
+
+const props = defineProps<DropdownMenuRadioGroupProps>();
+const emit = defineEmits<DropdownMenuRadioGroupEmits>();
+useForwardExpose();
+</script>
+
+<template>
+  <MenuRadioGroup v-bind="props" @update:model-value="emit('update:modelValue', $event)"><slot /></MenuRadioGroup>
+</template>

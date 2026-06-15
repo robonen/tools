@@ -40,7 +40,7 @@ export interface UseImageOptions {
 export interface UseImageAsyncStateOptions
   extends UseAsyncStateOptions<true, HTMLImageElement | undefined>, ConfigurableWindow {}
 
-export type UseImageReturn = UseAsyncStateReturn<HTMLImageElement | undefined, any[], true>;
+export type UseImageReturn = UseAsyncStateReturn<HTMLImageElement | undefined, [], true>;
 
 interface LoadImageContext {
   window?: Window;

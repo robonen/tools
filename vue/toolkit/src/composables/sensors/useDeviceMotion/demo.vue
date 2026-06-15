@@ -39,19 +39,19 @@ const rotation = computed(() => [
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div v-if="!isSupported" class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-300">
       DeviceMotionEvent is not supported in this browser.
     </div>
 
     <template v-else>
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-4">
+      <div class="demo-card p-4 flex flex-col gap-4">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Device motion</span>
+          <span class="demo-label">Device motion</span>
           <span
-            class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)"
+            class="demo-badge"
           >
-            <span class="size-1.5 rounded-full transition" :class="permissionGranted ? 'bg-emerald-500' : 'bg-(--fg-subtle)'" />
+            <span class="size-1.5 rounded-full transition" :class="permissionGranted ? 'bg-emerald-500' : 'bg-fg-subtle'" />
             {{ permissionGranted ? 'Listening' : 'Idle' }}
           </span>
         </div>
@@ -59,38 +59,38 @@ const rotation = computed(() => [
         <!-- Live magnitude gauge from acceleration incl. gravity (m/s²) -->
         <div class="flex flex-col gap-1.5">
           <div class="flex items-baseline justify-between">
-            <span class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">|a| incl. gravity</span>
-            <span class="font-mono text-sm tabular-nums text-(--fg-muted)">{{ magnitude.toFixed(2) }} m/s²</span>
+            <span class="text-[10px] uppercase tracking-wide text-fg-subtle">|a| incl. gravity</span>
+            <span class="font-mono text-sm tabular-nums text-fg-muted">{{ magnitude.toFixed(2) }} m/s²</span>
           </div>
-          <div class="h-2 overflow-hidden rounded-full bg-(--bg-inset)">
+          <div class="h-2 overflow-hidden rounded-full bg-bg-inset">
             <div
-              class="h-full rounded-full bg-(--accent) transition-all duration-150"
+              class="h-full rounded-full bg-accent transition-all duration-150"
               :style="{ width: `${Math.min(magnitude / 20 * 100, 100)}%` }"
             />
           </div>
         </div>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3">
-        <span class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">Acceleration (m/s²)</span>
+      <div class="demo-card p-4 flex flex-col gap-3">
+        <span class="text-[10px] uppercase tracking-wide text-fg-subtle">Acceleration (m/s²)</span>
         <div class="grid grid-cols-3 gap-2">
-          <div v-for="axis in axes" :key="axis.key" class="rounded-lg border border-(--border) bg-(--bg-inset) p-2 text-center">
-            <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">{{ axis.label }}</div>
-            <div class="font-mono text-base font-bold tabular-nums text-(--fg)">{{ fmt(axis.value) }}</div>
+          <div v-for="axis in axes" :key="axis.key" class="rounded-lg border border-border bg-bg-inset p-2 text-center">
+            <div class="text-[10px] uppercase tracking-wide text-fg-subtle">{{ axis.label }}</div>
+            <div class="demo-stat text-base">{{ fmt(axis.value) }}</div>
           </div>
         </div>
 
-        <span class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">Rotation rate (deg/s)</span>
+        <span class="text-[10px] uppercase tracking-wide text-fg-subtle">Rotation rate (deg/s)</span>
         <div class="grid grid-cols-3 gap-2">
-          <div v-for="r in rotation" :key="r.key" class="rounded-lg border border-(--border) bg-(--bg-inset) p-2 text-center">
-            <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">{{ r.label }}</div>
-            <div class="font-mono text-base font-bold tabular-nums text-(--fg)">{{ fmt(r.value) }}</div>
+          <div v-for="r in rotation" :key="r.key" class="rounded-lg border border-border bg-bg-inset p-2 text-center">
+            <div class="text-[10px] uppercase tracking-wide text-fg-subtle">{{ r.label }}</div>
+            <div class="demo-stat text-base">{{ fmt(r.value) }}</div>
           </div>
         </div>
 
         <div class="flex items-center justify-between text-xs">
-          <span class="text-(--fg-subtle)">Sampling interval</span>
-          <span class="font-mono tabular-nums text-(--fg-muted)">{{ interval ? `${interval} ms` : '—' }}</span>
+          <span class="text-fg-subtle">Sampling interval</span>
+          <span class="font-mono tabular-nums text-fg-muted">{{ interval ? `${interval} ms` : '—' }}</span>
         </div>
       </div>
 
@@ -98,12 +98,12 @@ const rotation = computed(() => [
       <button
         v-if="requirePermissions && !permissionGranted"
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @click="ensurePermissions"
       >
         Enable motion access
       </button>
-      <p v-else class="text-xs text-(--fg-subtle)">
+      <p v-else class="text-xs text-fg-subtle">
         Move or tilt your device to see acceleration and rotation update in real time.
       </p>
     </template>

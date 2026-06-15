@@ -26,7 +26,7 @@ const rules = computedEager(() => [
 ]);
 
 const tones = [
-  'bg-(--border)',
+  'bg-border',
   'bg-red-500',
   'bg-amber-500',
   'bg-sky-500',
@@ -35,45 +35,45 @@ const tones = [
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex flex-col gap-2">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)" for="pwd">Password</label>
+      <label class="demo-label" for="pwd">Password</label>
       <input
         id="pwd"
         v-model="password"
         type="text"
         placeholder="Type a password…"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </div>
 
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between">
-        <span class="text-sm text-(--fg-muted)">Strength</span>
-        <span class="font-mono text-sm font-medium tabular-nums text-(--fg)">{{ label }}</span>
+        <span class="text-sm text-fg-muted">Strength</span>
+        <span class="font-mono text-sm font-medium tabular-nums text-fg">{{ label }}</span>
       </div>
       <div class="flex gap-1.5">
         <div
           v-for="i in 4"
           :key="i"
           class="h-1.5 flex-1 rounded-full transition-colors duration-300"
-          :class="i <= score ? tones[score] : 'bg-(--bg-inset)'"
+          :class="i <= score ? tones[score] : 'bg-bg-inset'"
         />
       </div>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-2">
+    <div class="demo-card p-4 flex flex-col gap-2">
       <div
         v-for="rule in rules"
         :key="rule.text"
         class="flex items-center gap-2 text-sm transition-colors"
-        :class="rule.ok ? 'text-(--fg)' : 'text-(--fg-subtle)'"
+        :class="rule.ok ? 'text-fg' : 'text-fg-subtle'"
       >
         <span
           class="grid size-4 place-items-center rounded-full text-[10px] transition-colors"
           :class="rule.ok
             ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
-            : 'bg-(--bg-inset) text-(--fg-subtle)'"
+            : 'bg-bg-inset text-fg-subtle'"
         >
           {{ rule.ok ? '✓' : '○' }}
         </span>
@@ -81,8 +81,8 @@ const tones = [
       </div>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums flex items-center justify-between">
-      <span class="text-(--fg-muted)">length</span>
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums flex items-center justify-between">
+      <span class="text-fg-muted">length</span>
       <span>{{ length }}</span>
     </div>
   </div>

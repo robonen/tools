@@ -1,28 +1,7 @@
 import { isArray } from '@robonen/stdlib';
 import { computed, toValue } from 'vue';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-
-export type MaybeRefOrGetterArgs<T>
-  = Array<MaybeRefOrGetter<T>> | [MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>];
-
-/**
- * Resolve a variadic args tuple (numbers, refs/getters, or a single reactive
- * array of refs/getters) into a flat array of resolved values.
- */
-function resolveArgs(args: MaybeRefOrGetterArgs<number>): number[] {
-  // Fast path: single reactive-array argument (the common useMin(arrayRef) case).
-  if (args.length === 1) {
-    const value = toValue(args[0] as MaybeRefOrGetter<number | Array<MaybeRefOrGetter<number>>>);
-
-    if (isArray(value))
-      return value.map(item => toValue(item));
-
-    return [value];
-  }
-
-  // Variadic path: each argument is a single number/ref/getter.
-  return (args as Array<MaybeRefOrGetter<number>>).map(arg => toValue(arg));
-}
+import type { MaybeComputedRefArgs } from '@/types';
 
 /**
  * @name useMin
@@ -47,6 +26,26 @@ function resolveArgs(args: MaybeRefOrGetterArgs<number>): number[] {
  */
 export function useMin(array: MaybeRefOrGetter<Array<MaybeRefOrGetter<number>>>): ComputedRef<number>;
 export function useMin(...args: Array<MaybeRefOrGetter<number>>): ComputedRef<number>;
-export function useMin(...args: MaybeRefOrGetterArgs<number>): ComputedRef<number> {
-  return computed<number>(() => Math.min(...resolveArgs(args)));
+export function useMin(...args: MaybeComputedRefArgs<number>): ComputedRef<number> {
+  return computed<number>(() => {
+    // Avoid Math.min(...array): large spreads can overflow the call stack, and
+    // a single pass skips the intermediate flattened array that flatMap builds.
+    let min = Number.POSITIVE_INFINITY;
+
+    for (const arg of args) {
+      const value = toValue(arg);
+
+      if (isArray(value)) {
+        for (const item of value) {
+          const inner = toValue(item);
+          if (inner < min) min = inner;
+        }
+      }
+      else if (value < min) {
+        min = value;
+      }
+    }
+
+    return min;
+  });
 }

@@ -23,14 +23,14 @@ const presets = ['42.50', '3.14159', '255.9', 'abc', '-12'];
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <label class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Source value</span>
+      <span class="demo-label">Source value</span>
       <input
         v-model="source"
         type="text"
         placeholder="Type a number…"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </label>
 
@@ -39,36 +39,36 @@ const presets = ['42.50', '3.14159', '255.9', 'abc', '-12'];
         v-for="v in presets"
         :key="v"
         type="button"
-        class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted) transition hover:bg-(--bg-elevated) hover:border-(--border-strong) cursor-pointer"
+        class="inline-flex items-center rounded-md border border-border bg-bg-inset px-2 py-0.5 text-xs font-medium text-fg-muted transition hover:bg-bg-elevated hover:border-border-strong cursor-pointer"
         @click="source = v"
       >
         {{ v }}
       </button>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) divide-y divide-(--border)">
+    <div class="demo-card divide-y divide-border">
       <div
         v-for="variant in variants"
         :key="variant.label"
         class="flex items-center justify-between gap-3 px-4 py-2.5"
       >
         <div class="flex flex-col">
-          <span class="font-mono text-sm text-(--fg)">{{ variant.label }}</span>
-          <span class="text-xs text-(--fg-subtle)">{{ variant.desc }}</span>
+          <span class="font-mono text-sm text-fg">{{ variant.label }}</span>
+          <span class="text-xs text-fg-subtle">{{ variant.desc }}</span>
         </div>
         <span
           class="font-mono text-lg font-semibold tabular-nums"
-          :class="Number.isNaN(variant.value) ? 'text-amber-600 dark:text-amber-400' : 'text-(--fg)'"
+          :class="Number.isNaN(variant.value) ? 'text-amber-600 dark:text-amber-400' : 'text-fg'"
         >
           {{ Number.isNaN(variant.value) ? 'NaN' : variant.value }}
         </span>
       </div>
     </div>
 
-    <p class="text-xs text-(--fg-subtle) leading-relaxed">
-      One reactive source, four <span class="font-mono text-(--accent-text)">useToNumber</span>
-      instances. Try <span class="font-mono text-(--fg-muted)">abc</span> to see how
-      <span class="font-mono text-(--fg-muted)">nanToZero</span> and clamping tame invalid input.
+    <p class="text-xs text-fg-subtle leading-relaxed">
+      One reactive source, four <span class="font-mono text-accent-text">useToNumber</span>
+      instances. Try <span class="font-mono text-fg-muted">abc</span> to see how
+      <span class="font-mono text-fg-muted">nanToZero</span> and clamping tame invalid input.
     </p>
   </div>
 </template>

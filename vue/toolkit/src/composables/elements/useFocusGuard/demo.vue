@@ -26,31 +26,31 @@ const fields = [
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <component :is="GuardHost" v-if="enabled" />
 
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Focus guards</span>
+      <span class="demo-label">Focus guards</span>
       <span
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium transition"
         :class="enabled
           ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-          : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+          : 'border-border bg-bg-inset text-fg-muted'"
       >
-        <span class="size-1.5 rounded-full" :class="enabled ? 'bg-emerald-500' : 'bg-(--fg-subtle)'" />
+        <span class="size-1.5 rounded-full" :class="enabled ? 'bg-emerald-500' : 'bg-fg-subtle'" />
         {{ enabled ? 'Mounted' : 'Off' }}
       </span>
     </div>
 
     <!-- A small focusable form to feel tab order with the guards active. -->
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3">
+    <div class="demo-card p-4 flex flex-col gap-3">
       <div v-for="f in fields" :key="f.id" class="flex flex-col gap-1">
-        <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)" :for="f.id">{{ f.label }}</label>
+        <label class="demo-label" :for="f.id">{{ f.label }}</label>
         <input
           :id="f.id"
           :value="f.value"
           type="text"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="demo-input"
           @focus="focused = f.label"
           @blur="focused = null"
         >
@@ -58,7 +58,7 @@ const fields = [
 
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @focus="focused = 'Submit'"
         @blur="focused = null"
       >
@@ -66,19 +66,19 @@ const fields = [
       </button>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums">
       focused: {{ focused ?? 'nothing' }}
     </div>
 
     <button
       type="button"
-      class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+      class="demo-btn"
       @click="enabled = !enabled"
     >
       {{ enabled ? 'Remove focus guards' : 'Mount focus guards' }}
     </button>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Guards are invisible <span class="font-mono">tabindex="0"</span> sentinels inserted at the page boundaries. Tab past the last field with them on to feel focus wrap around for overlays and modals.
     </p>
   </div>

@@ -40,7 +40,7 @@ const stateColor = computed(() => {
     case 'running': return 'bg-emerald-500';
     case 'paused': return 'bg-amber-500';
     case 'finished': return 'bg-sky-500';
-    default: return 'bg-(--border-strong)';
+    default: return 'bg-border-strong';
   }
 });
 
@@ -48,7 +48,7 @@ const rates = [0.5, 1, 2] as const;
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-600 dark:text-amber-400"
@@ -57,28 +57,28 @@ const rates = [0.5, 1, 2] as const;
     </div>
 
     <template v-else>
-      <div class="flex h-28 items-center justify-center overflow-hidden rounded-xl border border-(--border) bg-(--bg-inset)">
+      <div class="flex h-28 items-center justify-center overflow-hidden rounded-xl border border-border bg-bg-inset">
         <div
           ref="target"
-          class="size-12 bg-(--accent) shadow-lg"
+          class="size-12 bg-accent shadow-lg"
         />
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-          <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <div class="rounded-lg border border-border bg-bg-inset p-3">
+          <div class="demo-label">
             State
           </div>
           <div class="mt-1 flex items-center gap-2">
             <span class="inline-block size-2 rounded-full transition" :class="stateColor" />
-            <span class="font-mono text-sm text-(--fg)">{{ playState }}</span>
+            <span class="font-mono text-sm text-fg">{{ playState }}</span>
           </div>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-          <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <div class="rounded-lg border border-border bg-bg-inset p-3">
+          <div class="demo-label">
             Current time
           </div>
-          <div class="mt-1 font-mono text-sm tabular-nums text-(--fg)">
+          <div class="mt-1 font-mono text-sm tabular-nums text-fg">
             {{ elapsed }}
           </div>
         </div>
@@ -86,31 +86,31 @@ const rates = [0.5, 1, 2] as const;
 
       <div class="grid grid-cols-3 gap-2">
         <button
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+          class="demo-btn-primary"
           @click="play"
         >
           Play
         </button>
         <button
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="pause"
         >
           Pause
         </button>
         <button
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="reverse"
         >
           Reverse
         </button>
         <button
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="finish"
         >
           Finish
         </button>
         <button
-          class="col-span-2 inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn col-span-2"
           @click="cancel"
         >
           Cancel
@@ -118,7 +118,7 @@ const rates = [0.5, 1, 2] as const;
       </div>
 
       <div class="flex flex-col gap-2">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <div class="demo-label">
           Playback rate
         </div>
         <div class="flex gap-2">
@@ -127,8 +127,8 @@ const rates = [0.5, 1, 2] as const;
             :key="rate"
             class="flex-1 rounded-lg border px-3 py-1.5 text-sm font-medium tabular-nums transition active:scale-[0.98] cursor-pointer"
             :class="playbackRate === rate
-              ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-              : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+              ? 'border-transparent bg-accent text-accent-fg'
+              : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
             @click="playbackRate = rate"
           >
             {{ rate }}×

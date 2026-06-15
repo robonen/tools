@@ -1,5 +1,6 @@
 export * from './animationLifecycle';
 export * from './cookies';
+export * from './dom';
 export * from './domStyle';
 export * from './focusGuard';
 export * from './focusScope';

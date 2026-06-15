@@ -27,7 +27,7 @@ function load(index: number, delta: number) {
 </script>
 
 <template>
-  <div class="w-full max-w-md flex flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div
       class="flex items-center gap-3 rounded-xl border p-4 transition"
       :class="hasOverloaded
@@ -43,7 +43,7 @@ function load(index: number, delta: number) {
       </p>
     </div>
 
-    <label class="flex items-center justify-between gap-3 text-sm text-(--fg-muted)">
+    <label class="flex items-center justify-between gap-3 text-sm text-fg-muted">
       <span>Alert threshold</span>
       <span class="flex items-center gap-2">
         <input
@@ -51,9 +51,9 @@ function load(index: number, delta: number) {
           type="range"
           min="40"
           max="100"
-          class="accent-(--accent)"
+          class="accent-accent"
         >
-        <span class="w-10 text-right font-mono tabular-nums text-(--fg)">{{ threshold }}%</span>
+        <span class="w-10 text-right font-mono tabular-nums text-fg">{{ threshold }}%</span>
       </span>
     </label>
 
@@ -61,31 +61,31 @@ function load(index: number, delta: number) {
       <li
         v-for="(server, index) in servers"
         :key="server.name"
-        class="rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-2.5"
+        class="rounded-lg border border-border bg-bg-elevated px-3 py-2.5"
       >
         <div class="mb-1.5 flex items-center justify-between">
-          <span class="font-mono text-sm text-(--fg)">{{ server.name }}</span>
+          <span class="font-mono text-sm text-fg">{{ server.name }}</span>
           <span class="flex items-center gap-2">
             <span
               class="font-mono text-sm tabular-nums"
-              :class="server.cpu > threshold ? 'text-amber-600 dark:text-amber-400' : 'text-(--fg-muted)'"
+              :class="server.cpu > threshold ? 'text-amber-600 dark:text-amber-400' : 'text-fg-muted'"
             >{{ server.cpu }}%</span>
             <button
-              class="inline-flex size-6 items-center justify-center rounded-md border border-(--border) bg-(--bg-elevated) text-(--fg) transition hover:bg-(--bg-inset) active:scale-[0.98] cursor-pointer"
+              class="inline-flex size-6 items-center justify-center rounded-md border border-border bg-bg-elevated text-fg transition hover:bg-bg-inset active:scale-[0.98] cursor-pointer"
               aria-label="Decrease load"
               @click="load(index, -10)"
             >&minus;</button>
             <button
-              class="inline-flex size-6 items-center justify-center rounded-md border border-(--border) bg-(--bg-elevated) text-(--fg) transition hover:bg-(--bg-inset) active:scale-[0.98] cursor-pointer"
+              class="inline-flex size-6 items-center justify-center rounded-md border border-border bg-bg-elevated text-fg transition hover:bg-bg-inset active:scale-[0.98] cursor-pointer"
               aria-label="Increase load"
               @click="load(index, 10)"
             >+</button>
           </span>
         </div>
-        <div class="h-1.5 w-full overflow-hidden rounded-full bg-(--bg-inset)">
+        <div class="h-1.5 w-full overflow-hidden rounded-full bg-bg-inset">
           <div
             class="h-full rounded-full transition-all"
-            :class="server.cpu > threshold ? 'bg-amber-500' : 'bg-(--accent)'"
+            :class="server.cpu > threshold ? 'bg-amber-500' : 'bg-accent'"
             :style="{ width: `${server.cpu}%` }"
           />
         </div>

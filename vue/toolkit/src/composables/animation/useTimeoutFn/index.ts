@@ -21,7 +21,7 @@ export interface UseTimeoutFnOptions {
   immediateCallback?: boolean;
 }
 
-export interface UseTimeoutFnReturn<Args extends any[]> {
+export interface UseTimeoutFnReturn<Args extends unknown[]> {
   /**
    * Whether the timeout is currently pending
    */

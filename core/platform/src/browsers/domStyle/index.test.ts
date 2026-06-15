@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { assignStyle, getTranslate, isInView, resetStyle, setStyle } from './index';
+import { assignStyle, getTranslate, isInView, pxValue, resetStyle, setStyle } from './index';
 
 function makeEl(): HTMLElement {
   const el = document.createElement('div');
@@ -101,5 +101,21 @@ describe('isInView', () => {
     expect(isInView(el)).toBe(false);
 
     Object.defineProperty(globalThis, 'visualViewport', { value: original, configurable: true });
+  });
+});
+
+describe('pxValue', () => {
+  it('parses raw px / unitless numbers', () => {
+    expect(pxValue('1024px')).toBe(1024);
+    expect(pxValue('768')).toBe(768);
+  });
+
+  it('treats em/rem as 16px', () => {
+    expect(pxValue('30rem')).toBe(480);
+    expect(pxValue('1.5em')).toBe(24);
+  });
+
+  it('returns NaN for non-numeric input', () => {
+    expect(pxValue('auto')).toBeNaN();
   });
 });

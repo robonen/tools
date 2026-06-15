@@ -33,7 +33,7 @@ export interface UseWebWorkerOptions extends ConfigurableWindow {
   onError?: (event: ErrorEvent | MessageEvent) => void;
 }
 
-export interface UseWebWorkerReturn<Data = any> {
+export interface UseWebWorkerReturn<Data = unknown> {
   /**
    * The latest data received from the worker via `postMessage`
    */
@@ -79,7 +79,7 @@ export interface UseWebWorkerReturn<Data = any> {
  *
  * @since 0.0.15
  */
-export function useWebWorker<Data = any>(
+export function useWebWorker<Data = unknown>(
   source: WebWorkerSource,
   options: UseWebWorkerOptions = {},
 ): UseWebWorkerReturn<Data> {
@@ -94,9 +94,13 @@ export function useWebWorker<Data = any>(
   const data = shallowRef<Data | null>(null);
   const worker = shallowRef<Worker | undefined>();
 
-  const post = ((message: any, transfer?: any) => {
-    if (worker.value)
-      worker.value.postMessage(message, transfer);
+  const post = ((message: unknown, transfer?: Transferable[] | StructuredSerializeOptions) => {
+    if (worker.value) {
+      if (Array.isArray(transfer))
+        worker.value.postMessage(message, transfer);
+      else
+        worker.value.postMessage(message, transfer);
+    }
   }) as WorkerPostMessage;
 
   const terminate: VoidFunction = () => {

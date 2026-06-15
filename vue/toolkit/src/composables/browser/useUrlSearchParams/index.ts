@@ -54,6 +54,9 @@ export interface UseUrlSearchParamsOptions<T> extends ConfigurableWindow {
   stringify?: (params: URLSearchParams) => string;
 }
 
+// `Record<string, any>` is the idiomatic "any object shape" constraint here: `T` is
+// caller-supplied and flows straight back out, so an interface (no implicit index
+// signature) must still satisfy the bound — `Record<string, unknown>` would reject those.
 export type UseUrlSearchParamsReturn<T extends Record<string, any> = UrlParams>
   = T;
 
@@ -87,6 +90,8 @@ export type UseUrlSearchParamsReturn<T extends Record<string, any> = UrlParams>
  *
  * @since 0.0.15
  */
+// `Record<string, any>` constraint mirrors `UseUrlSearchParamsReturn`: caller-supplied
+// `T` flows back out, so interface types must satisfy the bound (see note above).
 export function useUrlSearchParams<T extends Record<string, any> = UrlParams>(
   mode: UrlSearchParamsMode = 'history',
   options: UseUrlSearchParamsOptions<T> = {},
@@ -104,7 +109,7 @@ export function useUrlSearchParams<T extends Record<string, any> = UrlParams>(
   if (!window)
     return reactive({ ...initialValue }) as UseUrlSearchParamsReturn<T>;
 
-  const state = reactive<Record<string, any>>({});
+  const state = reactive<Record<string, string | string[] | null | undefined>>({});
 
   const getRawParams = (): string => {
     if (mode === 'history')
@@ -160,7 +165,9 @@ export function useUrlSearchParams<T extends Record<string, any> = UrlParams>(
       else if (removeFalsyValues && !value)
         params.delete(key);
       else
-        params.set(key, value);
+        // `set` coerces to string at runtime; do it explicitly so null/undefined (when
+        // not stripped above) match the WHATWG ToString behaviour the old `any` masked.
+        params.set(key, String(value));
     }
     return params;
   };

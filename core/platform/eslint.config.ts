@@ -1,4 +1,4 @@
-import { base, compose, imports, stylistic, typescript } from '@robonen/eslint';
+import { base, compose, imports, stylistic, tests, typescript } from '@robonen/eslint';
 
 export default compose(base, typescript, imports, stylistic, {
   name: 'platform/overrides',
@@ -6,4 +6,4 @@ export default compose(base, typescript, imports, stylistic, {
   rules: {
     'unicorn/prefer-global-this': 'off',
   },
-});
+}, tests);

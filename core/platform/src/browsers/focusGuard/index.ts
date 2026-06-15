@@ -20,16 +20,18 @@
  */
 export function focusGuard(namespace = 'focus-guard') {
   const guardAttr = `data-${namespace}`;
+  // Build the attribute selector once per guard, not on every create/remove call.
+  const guardSelector = `[${guardAttr}]`;
 
   const createGuard = () => {
-    const edges = document.querySelectorAll(`[${guardAttr}]`);
+    const edges = document.querySelectorAll(guardSelector);
 
     document.body.insertAdjacentElement('afterbegin', edges[0] ?? createGuardAttrs(guardAttr));
     document.body.insertAdjacentElement('beforeend', edges[1] ?? createGuardAttrs(guardAttr));
   };
 
   const removeGuard = () => {
-    document.querySelectorAll(`[${guardAttr}]`).forEach(element => element.remove());
+    document.querySelectorAll(guardSelector).forEach(element => element.remove());
   };
 
   return {

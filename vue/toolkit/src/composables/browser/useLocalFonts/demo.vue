@@ -34,14 +34,14 @@ function familyStyle(name: string) {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex items-center justify-between gap-3">
-      <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <p class="demo-label">
         Local Font Access
       </p>
       <span
         v-if="fonts.length"
-        class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted) tabular-nums"
+        class="demo-badge tabular-nums"
       >
         {{ fonts.length }} faces · {{ familyCount }} families
       </span>
@@ -57,7 +57,7 @@ function familyStyle(name: string) {
     <template v-else>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="loading"
         @click="pickFonts"
       >
@@ -76,28 +76,28 @@ function familyStyle(name: string) {
           v-model="filter"
           type="search"
           placeholder="Filter by name…"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="demo-input"
         >
 
-        <ul class="max-h-56 divide-y divide-(--border) overflow-y-auto rounded-xl border border-(--border) bg-(--bg-elevated)">
+        <ul class="demo-card max-h-56 divide-y divide-border overflow-y-auto">
           <li
             v-for="font in filtered"
             :key="font.postscriptName"
             class="flex items-baseline justify-between gap-3 px-3 py-2"
           >
             <span
-              class="truncate text-base text-(--fg)"
+              class="truncate text-base text-fg"
               :style="familyStyle(font.fullName)"
             >
               {{ font.fullName }}
             </span>
-            <span class="shrink-0 font-mono text-xs text-(--fg-subtle)">
+            <span class="shrink-0 font-mono text-xs text-fg-subtle">
               {{ font.style }}
             </span>
           </li>
           <li
             v-if="!filtered.length"
-            class="px-3 py-6 text-center text-sm text-(--fg-subtle)"
+            class="px-3 py-6 text-center text-sm text-fg-subtle"
           >
             No fonts match "{{ filter }}"
           </li>
@@ -106,7 +106,7 @@ function familyStyle(name: string) {
 
       <p
         v-else-if="!error && !loading"
-        class="rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-6 text-center text-sm text-(--fg-subtle)"
+        class="rounded-lg border border-border bg-bg-inset px-3 py-6 text-center text-sm text-fg-subtle"
       >
         Click above to grant the <code class="font-mono">local-fonts</code> permission and list your fonts.
       </p>

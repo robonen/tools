@@ -38,23 +38,23 @@ const keys: { id: SortKey; label: string }[] = [
 </script>
 
 <template>
-  <div class="w-full max-w-md flex flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex items-center justify-between gap-2">
-      <div class="inline-flex rounded-lg border border-(--border) bg-(--bg-elevated) p-0.5">
+      <div class="inline-flex rounded-lg border border-border bg-bg-elevated p-0.5">
         <button
           v-for="key in keys"
           :key="key.id"
           class="rounded-md px-3 py-1 text-sm font-medium transition cursor-pointer"
           :class="sortKey === key.id
-            ? 'bg-(--accent) text-(--accent-fg)'
-            : 'text-(--fg-muted) hover:text-(--fg)'"
+            ? 'bg-accent text-accent-fg'
+            : 'text-fg-muted hover:text-fg'"
           @click="sortKey = key.id"
         >
           {{ key.label }}
         </button>
       </div>
       <button
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="descending = !descending"
       >
         {{ descending ? 'Desc ↓' : 'Asc ↑' }}
@@ -65,22 +65,22 @@ const keys: { id: SortKey; label: string }[] = [
       <li
         v-for="(player, index) in sorted"
         :key="player.name"
-        class="flex items-center gap-3 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-2.5"
+        class="flex items-center gap-3 rounded-lg border border-border bg-bg-elevated px-3 py-2.5"
       >
-        <span class="w-6 text-center font-mono text-sm tabular-nums text-(--fg-subtle)">
+        <span class="w-6 text-center font-mono text-sm tabular-nums text-fg-subtle">
           {{ index + 1 }}
         </span>
-        <span class="flex-1 text-sm font-medium text-(--fg)">{{ player.name }}</span>
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+        <span class="flex-1 text-sm font-medium text-fg">{{ player.name }}</span>
+        <span class="demo-badge">
           Lv {{ player.level }}
         </span>
-        <span class="w-16 text-right font-mono text-sm font-semibold tabular-nums text-(--fg)">
+        <span class="w-16 text-right font-mono text-sm font-semibold tabular-nums text-fg">
           {{ player.score.toLocaleString() }}
         </span>
       </li>
     </ol>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Stable sort — players with an equal {{ sortKey }} keep their original order. The source array is left untouched.
     </p>
   </div>

@@ -6,7 +6,7 @@ export interface AsyncPoolOptions {
   signal?: AbortSignal;
 }
 
-interface PoolEntry<T = any> {
+interface PoolEntry<T = unknown> {
   task: (signal: AbortSignal) => Promise<T>;
   resolve: (value: T) => void;
   reject: (reason: unknown) => void;
@@ -115,7 +115,9 @@ export class AsyncPool {
       reject(this.signal.reason);
       return promise;
     }
-    const entry = { task, resolve, reject } as PoolEntry<T>;
+    // Stored in a homogeneous queue: the per-call T is erased to PoolEntry<unknown>.
+    // run() resolves/rejects with unknown values, so this is sound at runtime.
+    const entry = { task, resolve, reject } as unknown as PoolEntry;
     if (this.activeCount < this.limit) {
       this.run(entry);
     }

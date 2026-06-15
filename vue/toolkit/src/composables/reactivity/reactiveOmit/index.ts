@@ -1,5 +1,5 @@
 import { toValue } from 'vue';
-import { omit } from '@robonen/stdlib';
+import { isFunction, omit } from '@robonen/stdlib';
 import { reactiveComputed } from '@/composables/reactivity/reactiveComputed';
 
 /**
@@ -67,7 +67,7 @@ export function reactiveOmit<T extends object, K extends keyof T>(
   ...keys: Array<K | K[] | ReactiveOmitPredicate<T>>
 ): ReactiveOmitReturn<T, K> {
   const first = keys[0];
-  const predicate = typeof first === 'function'
+  const predicate = isFunction(first)
     ? first as ReactiveOmitPredicate<T>
     : undefined;
 

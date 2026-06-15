@@ -1,0 +1,542 @@
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > screenToContent — over N points 1376ms
+   · 100 points   1,192,582.00  0.0000  0.8000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.78%   596291
+   · 1000 points    143,410.00  0.0000  0.2000  0.0070  0.0000  0.1000  0.1000  0.1000  ±2.68%    71705
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > contentToScreen — over N points 1375ms
+   · 100 points   1,182,360.00  0.0000  6.5000  0.0008  0.0000  0.0000  0.1000  0.1000  ±4.42%   591180
+   · 1000 points    146,178.76  0.0000  0.3000  0.0068  0.0000  0.1000  0.1000  0.1000  ±2.69%    73104
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > round-trip screen→content→screen — over N points 1365ms
+   · 100 points   1,179,437.99  0.0000  0.2000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.77%   589719
+   · 1000 points    141,443.71  0.0000  0.2000  0.0071  0.0000  0.1000  0.1000  0.1000  ±2.68%    70736
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > zoomAtPointer — over N anchor points 1373ms
+   · 100 points   1,095,020.00  0.0000  0.2000  0.0009  0.0000  0.0000  0.1000  0.1000  ±2.76%   547510
+   · 1000 points    128,084.38  0.0000  0.2000  0.0078  0.0000  0.1000  0.1000  0.1000  ±2.67%    64055
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > clampViewport — zoom-only (no extent) 1343ms
+   · 100 viewports   964,282.00  0.0000  0.3000  0.0010  0.0000  0.1000  0.1000  0.1000  ±2.77%   482141
+   · 1000 viewports  107,640.47  0.0000  0.2000  0.0093  0.0000  0.1000  0.1000  0.1000  ±2.65%    53831
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > clampViewport — with translate extent 1330ms
+   · 100 viewports   902,672.00  0.0000  0.2000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   451336
+   · 1000 viewports   97,734.45  0.0000  0.4000  0.0102  0.0000  0.1000  0.1000  0.1000  ±2.66%    48877
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > clampViewport — degenerate extent (centring branch) 1334ms
+   · 100 viewports   919,704.06  0.0000  0.3000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   459944
+   · 1000 viewports  105,346.00  0.0000  0.2000  0.0095  0.0000  0.1000  0.1000  0.1000  ±2.64%    52673
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > wheelToZoomFactor — over N wheel events 1232ms
+   · 100 events   174,063.19  0.0000  0.4000  0.0057  0.0000  0.1000  0.1000  0.1000  ±2.70%    87049
+   · 1000 events   16,542.00  0.0000  0.4000  0.0605  0.1000  0.2000  0.2000  0.2000  ±2.01%     8271
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > wheel-zoom pipeline (factor → clamp → zoomAtPointer) 1238ms
+   · 100 steps   205,246.00  0.0000  0.3000  0.0049  0.0000  0.1000  0.1000  0.1000  ±2.72%   102623
+   · 1000 steps   19,588.00  0.0000  0.4000  0.0511  0.1000  0.2000  0.2000  0.2000  ±2.11%     9794
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > drag-pan move (translate + clamp) 1316ms
+   · 100 moves   822,331.53  0.0000  0.2000  0.0012  0.0000  0.1000  0.1000  0.1000  ±2.76%   411248
+   · 1000 moves   85,706.86  0.0000  0.2000  0.0117  0.0000  0.1000  0.1000  0.1000  ±2.62%    42862
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > fitViewTransform 2304ms
+   · single fit  7,124,967.01  0.0000  4.5000  0.0001  0.0000  0.0000  0.0000  0.1000  ±3.29%  3563196
+   · 100 fits    1,157,900.00  0.0000  1.0000  0.0009  0.0000  0.0000  0.1000  0.1000  ±2.80%   578950
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > measureContentRect (real getBoundingClientRect) 616ms
+   · 100 measurements  17,414.52  0.0000  2.0000  0.0574  0.1000  0.2000  0.2000  0.2000  ±2.20%     8709
+ ✓ |chromium| src/canvas/zoom-pan/__test__/ZoomPan.bench.ts > ViewportRoot — mount with N tiles 1236ms
+   · 50 tiles — mount + unmount   2,345.61  0.2000  14.2000  0.4263  0.4000  1.0000  6.5000  13.7000  ±10.02%     1204
+   · 500 tiles — mount + unmount    875.12  0.9000   8.1000  1.1427  1.1000  5.4000  6.8000   8.1000   ±5.54%      438
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > ruler ticks — timecode (per pan/zoom) 1933ms
+   · timecodeTicks — 100-clip span (~150s)                  53,809.24  0.0000  0.3000  0.0186  0.0000  0.1000  0.1000  0.2000  ±2.52%    26910
+   · timecodeTicks — 1000-clip span (~1500s)                18,988.20  0.0000  0.3000  0.0527  0.1000  0.2000  0.2000  0.2000  ±2.11%     9496
+   · timecodeTicks — wide window, fixed viewport (1200px)  838,271.99  0.0000  0.3000  0.0012  0.0000  0.1000  0.1000  0.1000  ±2.77%   419136
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > ruler ticks — wall clock (per pan/zoom) 1233ms
+   · timeTicks — 100-clip span (~150s)    157,950.41  0.0000  0.4000  0.0063  0.0000  0.1000  0.1000  0.1000  ±2.71%    78991
+   · timeTicks — 1000-clip span (~1500s)   32,748.00  0.0000  0.6000  0.0305  0.1000  0.1000  0.2000  0.2000  ±2.39%    16374
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > scale projection (scaleLinear over clips) 1741ms
+   · scaleLinear — project 100 clip edges   3,262,253.56  0.0000  0.2000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1631453
+   · scaleLinear — project 1000 clip edges    466,074.79  0.0000  0.2000  0.0021  0.0000  0.1000  0.1000  0.1000  ±2.74%   233084
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > timecode formatting (per clip label) 1826ms
+   · timeToTimecode — 100 clip durations           113,117.38  0.0000  0.2000  0.0088  0.0000  0.1000  0.1000  0.1000  ±2.65%    56570
+   · timeToTimecode — 1000 clip durations           11,245.75  0.0000  0.4000  0.0889  0.1000  0.2000  0.2000  0.3000  ±1.71%     5624
+   · framesToTimecode — 1000 (raw, pre-converted)   14,099.18  0.0000  0.3000  0.0709  0.1000  0.2000  0.2000  0.2000  ±1.88%     7051
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > snapToFrame (nudge / grid granularity) 1537ms
+   · snapToFrame — 100 clip starts   2,369,298.14  0.0000  0.3000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.77%  1184886
+   · snapToFrame — 1000 clip starts    308,024.40  0.0000  0.1000  0.0032  0.0000  0.1000  0.1000  0.1000  ±2.73%   154043
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > marquee hit-test (clipIntersectsTime per pointer move) 1743ms
+   · clipIntersectsTime — 100 clips   3,878,759.99  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1939380
+   · clipIntersectsTime — 1000 clips    600,243.95  0.0000  0.1000  0.0017  0.0000  0.1000  0.1000  0.1000  ±2.75%   300182
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > clipsDuration (auto-duration recompute) 1897ms
+   · clipsDuration — 100 clips   4,189,313.97  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2094657
+   · clipsDuration — 1000 clips    639,822.00  0.0000  0.1000  0.0016  0.0000  0.1000  0.1000  0.1000  ±2.75%   319911
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > applyClipChanges (controlled reducer) 1828ms
+   · applyClipChanges — 100 clips / 100 changes    115,978.00  0.0000  0.3000  0.0086  0.0000  0.1000  0.1000  0.1000  ±2.67%    57989
+   · applyClipChanges — 1000 clips / 1000 changes   10,148.00  0.0000  0.5000  0.0985  0.1000  0.2000  0.2000  0.3000  ±1.65%     5074
+   · applyClipChanges — 1000 clips / single move    17,258.00  0.0000  0.4000  0.0579  0.1000  0.2000  0.2000  0.3000  ±2.05%     8629
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > applyTrackChanges (controlled reducer) 1236ms
+   · applyTrackChanges — 50 tracks / 50 patches    190,324.00  0.0000  0.3000  0.0053  0.0000  0.1000  0.1000  0.1000  ±2.71%    95162
+   · applyTrackChanges — 500 tracks / 500 patches   18,284.00  0.0000  0.4000  0.0547  0.1000  0.2000  0.2000  0.3000  ±2.09%     9142
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > TimelineRoot — mount (full tree) 1446ms
+   · mount — 4 tracks / 50 clips    196.51   3.7000  52.7000   5.0889   4.3000  52.7000  52.7000  52.7000  ±20.03%       99
+   · mount — 8 tracks / 500 clips  22.7790  34.9000  94.4000  43.9000  41.2000  94.4000  94.4000  94.4000  ±23.28%       12
+ ✓ |chromium| src/canvas/timeline/__test__/Timeline.bench.ts > TimelineRoot — update after prop change 2151ms
+   · zoom change (pxPerSecond) — 8 tracks / 500 clips  14.4949  59.8000  138.30  68.9900  62.1000  138.30  138.30  138.30  ±25.29%       10
+   · clips-array swap — 8 tracks / 500 clips           13.0225  66.7000  150.90  76.7900  70.0000  150.90  150.90  150.90  ±24.30%       10
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > buildEvaluator — build cost 5205ms
+   · linear — 16 anchors        1,234,628.00  0.0000  0.3000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.77%   617314
+   · linear — 256 anchors         125,932.00  0.0000  0.3000  0.0079  0.0000  0.1000  0.1000  0.1000  ±2.67%    62966
+   · monotone — 16 anchors        383,598.00  0.0000  0.2000  0.0026  0.0000  0.1000  0.1000  0.1000  ±2.74%   191799
+   · monotone — 256 anchors        33,197.36  0.0000  0.2000  0.0301  0.1000  0.1000  0.1000  0.2000  ±2.37%    16602
+   · catmull-rom — 16 anchors      79,434.11  0.0000  1.5000  0.0126  0.0000  0.1000  0.1000  0.1000  ±2.79%    39725
+   · catmull-rom — 256 anchors     50,563.89  0.0000  1.5000  0.0198  0.0000  0.1000  0.1000  0.2000  ±2.70%    25287
+   · bezier — 16 anchors          720,043.99  0.0000  0.2000  0.0014  0.0000  0.1000  0.1000  0.1000  ±2.75%   360094
+   · bezier — 256 anchors          68,496.00  0.0000  0.2000  0.0146  0.0000  0.1000  0.1000  0.1000  ±2.58%    34248
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > evaluator sampling — 256 samples 2576ms
+   · linear                            343,429.32  0.0000  0.2000  0.0029  0.0000  0.1000  0.1000  0.1000  ±2.73%   171749
+   · monotone                          592,140.00  0.0000  0.1000  0.0017  0.0000  0.1000  0.1000  0.1000  ±2.75%   296070
+   · catmull-rom                       248,890.00  0.0000  0.2000  0.0040  0.0000  0.1000  0.1000  0.1000  ±2.72%   124445
+   · bezier (Newton-Raphson per call)  161,676.00  0.0000  0.2000  0.0062  0.0000  0.1000  0.1000  0.1000  ±2.69%    80838
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > evaluator sampling — 1024 samples (stress) 1848ms
+   · monotone — 16 anchors                        156,256.00  0.0000  0.2000  0.0064  0.0000  0.1000  0.1000  0.1000  ±2.68%    78128
+   · monotone — 256 anchors (deep binary search)  111,976.00  0.0000  0.2000  0.0089  0.0000  0.1000  0.1000  0.1000  ±2.65%    55988
+   · bezier — 16 anchors                           48,394.00  0.0000  0.3000  0.0207  0.0000  0.1000  0.1000  0.2000  ±2.50%    24197
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > build + sample 256 (full per-edit, 16 anchors) 1864ms
+   · monotone     185,120.98  0.0000  0.5000  0.0054  0.0000  0.1000  0.1000  0.1000  ±2.71%    92579
+   · catmull-rom   58,420.32  0.0000  1.5000  0.0171  0.0000  0.1000  0.1000  0.2000  ±2.75%    29216
+   · bezier       120,559.89  0.0000  0.3000  0.0083  0.0000  0.1000  0.1000  0.1000  ±2.67%    60292
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > toLUT — spline lookup table 1841ms
+   · monotone — 256 entries   110,670.00  0.0000  0.3000  0.0090  0.0000  0.1000  0.1000  0.1000  ±2.65%    55335
+   · monotone — 1024 entries   27,216.56  0.0000  0.2000  0.0367  0.1000  0.1000  0.2000  0.2000  ±2.29%    13611
+   · bezier — 256 entries      82,832.00  0.0000  0.3000  0.0121  0.0000  0.1000  0.1000  0.1000  ±2.62%    41416
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > curve path `d` build — sampled polyline (256 samples) 1217ms
+   · monotone — sample + project + buildPolylinePath     40,060.00  0.0000  2.3000  0.0250  0.0000  0.1000  0.1000  0.2000  ±2.61%    20030
+   · catmull-rom — sample + project + buildPolylinePath  36,482.00  0.0000  1.9000  0.0274  0.1000  0.1000  0.1000  0.2000  ±2.53%    18241
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > curve path `d` build — bezier segment chain 1242ms
+   · 16 anchors (15 segments)    234,902.00  0.0000  1.6000  0.0043  0.0000  0.1000  0.1000  0.1000  ±2.87%   117451
+   · 256 anchors (255 segments)   11,619.68  0.0000  2.1000  0.0861  0.1000  0.2000  0.2000  0.5000  ±2.14%     5811
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > spline primitives — per-call baselines 5370ms
+   · linearInterpolate — 256-pt table lookup  7,088,362.35  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3544890
+   · catmullRom — 16-pt parametric eval       7,313,673.99  0.0000  0.7000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.79%  3656837
+   · evalCubicBezier — single cubic eval      6,966,088.85  0.0000  0.7000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.79%  3483741
+   · monotoneCubic — build closure (16 pts)     510,439.91  0.0000  0.3000  0.0020  0.0000  0.1000  0.1000  0.1000  ±2.75%   255271
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > anchor housekeeping 2732ms
+   · sortAnchors — 16 (unsorted)   1,003,727.99  0.0000  0.3000  0.0010  0.0000  0.0000  0.1000  0.1000  ±2.77%   501864
+   · sortAnchors — 256 (unsorted)     46,338.73  0.0000  0.4000  0.0216  0.0000  0.1000  0.1000  0.2000  ±2.49%    23174
+   · anchorsToPoints — 16          1,232,089.59  0.0000  0.6000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.78%   616168
+   · anchorsToPoints — 256           125,538.00  0.0000  0.3000  0.0080  0.0000  0.1000  0.1000  0.1000  ±2.67%    62769
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > pointer-move clamp math 7694ms
+   · clampAnchorX — interior anchor (neighbour clamp), 16      7,403,125.41  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3702303
+   · clampAnchorX — interior anchor (neighbour clamp), 256     7,373,969.27  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3687722
+   · clampAnchorY — domain clamp                               7,443,999.99  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3722000
+   · simulated updateAnchor step — clamp + slice-replace, 16   6,432,109.99  0.0000  7.2000  0.0002  0.0000  0.0000  0.0000  0.1000  ±3.96%  3216055
+   · simulated updateAnchor step — clamp + slice-replace, 256  5,501,865.63  0.0000  0.3000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.78%  2751483
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > simulated drag stroke (60 frames, monotone, 16 anchors) 603ms
+   · clamp + rebuild + sample-256 per frame  3,084.00  0.2000  0.8000  0.3243  0.4000  0.4000  0.5000  0.7000  ±0.94%     1542
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > mount — Root + Curve + N Points 2026ms
+   · 50 points (monotone)            231.22   3.0000  52.5000   4.3248   3.4000  25.9000  52.5000  52.5000  ±21.15%      121
+   · 500 points (monotone, stress)  23.6220  32.1000   101.60  42.3333  38.5000   101.60   101.60   101.60  ±28.33%       12
+   · 50 points (bezier path)         239.62   2.9000  78.0000   4.1733   3.2000   9.8000  78.0000  78.0000  ±30.21%      120
+ ✓ |chromium| src/canvas/curve-editor/__test__/CurveEditor.bench.ts > update after prop change (50 points) 1215ms
+   · switch interpolation monotone→bezier→monotone  165.90  5.1000  10.5000  6.0277  5.6000  10.5000  10.5000  10.5000  ±5.79%       83
+   · replace model array (commit an edit)           118.34  7.5000  12.3000  8.4500  8.1000  12.3000  12.3000  12.3000  ±4.39%       60
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > rotatePoint — kernel 2625ms
+   · rotatePoint × 100                  4,186,828.67  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2093833
+   · rotatePoint × 1000                   893,619.28  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   446899
+   · rotateVector (origin-free) × 1000    896,738.65  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   448459
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > pointer angle math 3950ms
+   · pointerAngle × 100         3,031,405.99  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1515703
+   · pointerAngle × 1000          889,550.00  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   444775
+   · shortestAngleDelta × 1000    900,573.89  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   450377
+   · normalizeRotation × 1000   1,020,559.89  0.0000  0.1000  0.0010  0.0000  0.0000  0.1000  0.1000  ±2.76%   510382
+   · snapRotation (15°) × 1000  1,030,022.00  0.0000  0.1000  0.0010  0.0000  0.0000  0.1000  0.1000  ±2.76%   515011
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > rotate drag — per-frame 1280ms
+   · rotationFromPointer × 100 frames   533,194.00  0.0000  0.1000  0.0019  0.0000  0.1000  0.1000  0.1000  ±2.75%   266597
+   · rotationFromPointer × 1000 frames   52,782.00  0.0000  0.2000  0.0189  0.0000  0.1000  0.1000  0.1000  ±2.51%    26391
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > resizeEdge — per-frame 3636ms
+   · resizeEdge corner (no options) × 100                    108,148.00  0.0000  0.3000  0.0092  0.0000  0.1000  0.1000  0.1000  ±2.65%    54074
+   · resizeEdge corner (no options) × 1000                    10,806.00  0.0000  0.5000  0.0925  0.1000  0.2000  0.2000  0.3000  ±1.67%     5403
+   · resizeEdge aspect-locked corner × 1000                    8,762.25  0.0000  0.4000  0.1141  0.1000  0.2000  0.2000  0.3000  ±1.50%     4382
+   · resizeEdge symmetric (Alt) corner × 1000                  9,848.00  0.0000  0.3000  0.1015  0.1000  0.2000  0.2000  0.3000  ±1.55%     4924
+   · resizeEdge edge handle × 1000                            13,704.00  0.0000  0.3000  0.0730  0.1000  0.2000  0.2000  0.2000  ±1.85%     6852
+   · rotated scale frame (rotateVector → resizeEdge) × 1000    8,680.53  0.0000  0.4000  0.1152  0.2000  0.2000  0.2000  0.3000  ±1.55%     4342
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > aspect + axes helpers 1376ms
+   · applyAspectRatio × 1000                 421,907.62  0.0000  0.1000  0.0024  0.0000  0.1000  0.1000  0.1000  ±2.74%   210996
+   · handleAxes × 8 positions × 125 (=1000)  967,260.00  0.0000  0.1000  0.0010  0.0000  0.1000  0.1000  0.1000  ±2.76%   483630
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > constrain + move 2025ms
+   · constrainRect × 1000          901,852.00  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   450926
+   · moveBox × 1000                 61,595.68  0.0000  0.2000  0.0162  0.0000  0.1000  0.1000  0.2000  ±2.56%    30804
+   · resolvePivot (center) × 1000  898,150.37  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   449165
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > local ⇄ world 703ms
+   · localToWorld → worldToLocal round-trip × 1000  892,126.00  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   446063
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > decomposeTransform — corners 1230ms
+   · decomposeTransform × 100   175,760.00  0.0000  0.5000  0.0057  0.0000  0.1000  0.1000  0.1000  ±2.72%    87880
+   · decomposeTransform × 1000   15,972.00  0.0000  0.3000  0.0626  0.1000  0.2000  0.2000  0.2000  ±2.00%     7986
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > TransformBoxRoot — mount full part set 7944ms
+   · mount + unmount — 1 box (root + 8 handles + rotate + status)  1,188.34   0.5000  47.3000   0.8415   0.7000   6.2000   6.8000  47.3000  ±19.41%      595
+   · mount + unmount — 50 boxes                                     26.9024  28.2000  95.9000  37.1714  34.1000  95.9000  95.9000  95.9000  ±26.49%       14
+   · mount + unmount — 500 boxes (stress)                            2.5223   338.90   636.70   396.47   373.10   636.70   636.70   636.70  ±19.60%       10
+ ✓ |chromium| src/canvas/transform-box/__test__/TransformBox.bench.ts > TransformBoxRoot — update after transform change 1010ms
+   · mount → setProps(transform) → update — 50 boxes  30.7515  27.7000  36.6000  32.5188  34.6000  36.6000  36.6000  36.6000  ±5.11%       16
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > edge-paths — straight 1308ms
+   · 100 edges   664,128.00  0.0000  0.5000  0.0015  0.0000  0.1000  0.1000  0.1000  ±2.78%   332064
+   · 1000 edges   72,543.49  0.0000  0.5000  0.0138  0.0000  0.1000  0.1000  0.2000  ±2.61%    36279
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > edge-paths — bezier 1221ms
+   · 100 edges   77,522.00  0.0000  0.8000  0.0129  0.0000  0.1000  0.1000  0.2000  ±2.64%    38761
+   · 1000 edges   6,873.25  0.0000  0.6000  0.1455  0.2000  0.3000  0.3000  0.4000  ±1.43%     3438
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > edge-paths — smoothstep (corner builder) 1209ms
+   · 100 edges   13,001.40  0.0000  0.6000  0.0769  0.1000  0.2000  0.2000  0.4000  ±1.88%     6502
+   · 1000 edges   1,290.19  0.6000  1.3000  0.7751  0.8000  1.1000  1.3000  1.3000  ±0.87%      646
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > edge-paths — step (zero-radius smoothstep) 1208ms
+   · 100 edges   12,797.44  0.0000  0.5000  0.0781  0.1000  0.2000  0.2000  0.4000  ±1.89%     6400
+   · 1000 edges   1,268.48  0.6000  1.6000  0.7883  0.8000  1.3000  1.5000  1.6000  ±1.08%      635
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > pointer math — screenToFlow 1772ms
+   · 100 moves   3,327,878.00  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1663939
+   · 1000 moves    533,703.26  0.0000  0.1000  0.0019  0.0000  0.1000  0.1000  0.1000  ±2.75%   266905
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > pointer math — flowToScreen 1695ms
+   · 100 points   3,548,374.33  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1774542
+   · 1000 points    596,212.76  0.0000  0.1000  0.0017  0.0000  0.1000  0.1000  0.1000  ±2.75%   298166
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > pointer math — zoomAtPointer (wheel zoom) 1708ms
+   · 100 wheel steps   3,119,281.99  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1559641
+   · 1000 wheel steps    466,404.72  0.0000  0.1000  0.0021  0.0000  0.1000  0.1000  0.1000  ±2.74%   233249
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > pointer math — snapPoint (drag with snap-to-grid) 1399ms
+   · 100 moves   1,187,976.00  0.0000  0.1000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.76%   593988
+   · 1000 moves    137,674.00  0.0000  0.2000  0.0073  0.0000  0.1000  0.1000  0.1000  ±2.67%    68837
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > getNodesBounds 1430ms
+   · 100 nodes   1,637,925.99  0.0000  0.1000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.76%   818963
+   · 1000 nodes    167,484.00  0.0000  0.2000  0.0060  0.0000  0.1000  0.1000  0.1000  ±2.69%    83742
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > fitViewTransform (bounds + fit) 1421ms
+   · 100 nodes   1,622,870.00  0.0000  0.4000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.77%   811435
+   · 1000 nodes    168,224.36  0.0000  0.1000  0.0059  0.0000  0.1000  0.1000  0.1000  ±2.69%    84129
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > getNodePositionAbsolute — parent chain (depth 64) 1295ms
+   · single leaf walk       725,752.85  0.0000  0.1000  0.0014  0.0000  0.1000  0.1000  0.1000  ±2.75%   362949
+   · 64 nodes (all walked)   25,778.00  0.0000  0.2000  0.0388  0.1000  0.1000  0.2000  0.2000  ±2.25%    12889
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > visibleFlowRect + getVisibleNodeIds (node cull) 1309ms
+   · 100 nodes   800,992.00  0.0000  0.1000  0.0012  0.0000  0.1000  0.1000  0.1000  ±2.75%   400496
+   · 1000 nodes   80,856.00  0.0000  0.2000  0.0124  0.0000  0.1000  0.1000  0.1000  ±2.60%    40428
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > getVisibleEdgeIds (edge cull by visible node set) 1310ms
+   · 100 edges   796,650.67  0.0000  0.2000  0.0013  0.0000  0.1000  0.1000  0.1000  ±2.76%   398405
+   · 1000 edges   79,270.15  0.0000  0.3000  0.0126  0.0000  0.1000  0.1000  0.1000  ±2.60%    39643
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > getNodesInsideRect (marquee selection) 1429ms
+   · 100 nodes   1,742,606.00  0.0000  0.4000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.78%   871303
+   · 1000 nodes    159,956.01  0.0000  0.3000  0.0063  0.0000  0.1000  0.1000  0.1000  ±2.69%    79994
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > findClosestHandle (connect-drag snapping) 1216ms
+   · 100 nodes   3,915.22  0.1000  0.6000  0.2554  0.3000  0.4000  0.4000  0.6000  ±1.04%     1958
+   · 1000 nodes    360.41  2.7000  3.2000  2.7746  2.8000  3.2000  3.2000  3.2000  ±0.45%      181
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > applyNodeChanges (drag → position changes) 1223ms
+   · 100 position changes   115,198.00  0.0000  0.4000  0.0087  0.0000  0.1000  0.1000  0.1000  ±2.68%    57599
+   · 1000 position changes   10,344.00  0.0000  0.5000  0.0967  0.1000  0.2000  0.2000  0.4000  ±1.67%     5172
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > applyEdgeChanges (select changes) 1223ms
+   · 100 select changes   113,930.00  0.0000  0.4000  0.0088  0.0000  0.1000  0.1000  0.1000  ±2.68%    56965
+   · 1000 select changes   10,150.00  0.0000  0.5000  0.0985  0.1000  0.2000  0.2000  0.3000  ±1.63%     5075
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > addEdge (dedupe scan on connect) 1271ms
+   · append into 100 edges   422,387.52  0.0000  0.3000  0.0024  0.0000  0.1000  0.1000  0.1000  ±2.75%   211236
+   · append into 1000 edges   41,092.00  0.0000  0.3000  0.0243  0.0000  0.1000  0.1000  0.2000  ±2.47%    20546
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > FlowRoot — mount + unmount 1879ms
+   · 50 nodes / 50 edges     127.81   5.7000  43.9000   7.8242   6.8000  43.9000  43.9000  43.9000  ±16.28%       66
+   · 500 nodes / 500 edges  13.8007  64.9000   104.80  72.4600  72.8000   104.80   104.80   104.80  ±11.67%       10
+ ✓ |chromium| src/canvas/flow/__test__/Flow.bench.ts > FlowRoot — re-render after prop change (viewport pan) 4494ms
+   · 50 nodes — viewport setProps                     78.8022  9.3000  97.7000  12.6900  10.0000  97.7000  97.7000  97.7000  ±35.07%       40
+   · 500 nodes — nodes setProps (controlled replace)   3.8464  234.50   331.70   259.98   258.90   331.70   331.70   331.70   ±7.26%       10
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > tick generation — timeTicks (seconds mode) 1585ms
+   · realistic window (~15s @ 40px/s)  2,270,653.88  0.0000  0.5000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.80%  1135554
+   · stress window (1000s @ 4px/s)       628,932.00  0.0000  0.3000  0.0016  0.0000  0.1000  0.1000  0.1000  ±2.76%   314466
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > tick generation — timecodeTicks (timecode mode) 2025ms
+   · realistic window                      659,680.07  0.0000  5.2000  0.0015  0.0000  0.1000  0.1000  0.1000  ±3.44%   329906
+   · stress window                         212,063.59  0.0000  0.3000  0.0047  0.0000  0.1000  0.1000  0.1000  ±2.72%   106053
+   · realistic window — drop-frame labels  639,334.00  0.0000  0.3000  0.0016  0.0000  0.1000  0.1000  0.1000  ±2.76%   319667
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > tick generation — frameTicks (frames mode) 1226ms
+   · realistic window — timecode ticker w/ frame labels  13,785.24  0.0000  0.2000  0.0725  0.1000  0.2000  0.2000  0.2000  ±1.87%     6894
+   · stress window — integer-frame axis                   3,373.33  0.2000  0.4000  0.2964  0.3000  0.4000  0.4000  0.4000  ±0.90%     1687
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > tick generation — niceTicks (generic axis) 1620ms
+   · realistic window  2,482,165.58  0.0000  0.4000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.78%  1241331
+   · stress window       689,030.00  0.0000  0.3000  0.0015  0.0000  0.1000  0.1000  0.1000  ±2.76%   344515
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > projection math — scaleLinear (time → px) 2085ms
+   · 100 values   5,357,289.99  0.0000  4.6000  0.0002  0.0000  0.0000  0.0000  0.1000  ±3.29%  2678645
+   · 1000 values    954,867.03  0.0000  0.1000  0.0010  0.0000  0.1000  0.1000  0.1000  ±2.76%   477529
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > projection math — scaleLinear (px → time, invert) 2082ms
+   · 100 pixels   5,374,567.97  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2687284
+   · 1000 pixels    897,614.00  0.0000  0.1000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   448807
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > projection math — roundToStep (snap, pointer path) 1228ms
+   · 100 values   145,666.87  0.0000  1.2000  0.0069  0.0000  0.1000  0.1000  0.1000  ±2.72%    72848
+   · 1000 values   13,971.21  0.0000  0.4000  0.0716  0.1000  0.2000  0.2000  0.2000  ±1.90%     6987
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > useScale — projector closures 1260ms
+   · scale() × 1000                   24,637.07  0.0000  0.3000  0.0406  0.1000  0.2000  0.2000  0.2000  ±2.24%    12321
+   · invert() × 100 (pointer sweep)  362,189.56  0.0000  5.2000  0.0028  0.0000  0.1000  0.1000  0.1000  ±3.41%   181131
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > label formatting — per mode 3045ms
+   · formatClock × 1000 (seconds)                    58,456.00  0.0000  0.4000  0.0171  0.0000  0.1000  0.1000  0.2000  ±2.55%    29228
+   · formatTimecode × 1000 (timecode)                14,244.00  0.0000  0.4000  0.0702  0.1000  0.2000  0.2000  0.2000  ±1.92%     7122
+   · framesToTimecode × 1000 — drop-frame            11,798.00  0.0000  0.3000  0.0848  0.1000  0.2000  0.2000  0.2000  ±1.75%     5899
+   · formatFrames × 1000 (frames)                       126.51  7.8000  8.0000  7.9047  7.9000  8.0000  8.0000  8.0000  ±0.20%       64
+   · formatTimeForMode × 1000 — dispatch (timecode)  14,360.00  0.0000  0.5000  0.0696  0.1000  0.2000  0.2000  0.2000  ±1.90%     7180
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > mode plumbing 3848ms
+   · modeToTickKind × 3 modes  7,138,575.98  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3569288
+   · tickFormatFor × 3 modes   7,160,973.99  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3580487
+   · secondsToFrames × 1000      900,848.00  0.0000  0.2000  0.0011  0.0000  0.1000  0.1000  0.1000  ±2.76%   450424
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > TimeRulerRoot — mount 1816ms
+   · mount — seconds mode   3,622.55  0.1000   7.5000  0.2760  0.3000  0.5000  5.6000   6.9000  ±7.69%     1812
+   · mount — timecode mode  3,641.08  0.1000  15.8000  0.2746  0.3000  0.5000  4.9000  10.0000  ±9.53%     1826
+   · mount — frames mode    3,690.00  0.1000  17.4000  0.2710  0.3000  0.4000  3.8000   5.9000  ±8.82%     1845
+ ✓ |chromium| src/canvas/time-ruler/__test__/TimeRuler.bench.ts > TimeRulerRoot — re-render after prop change 1807ms
+   · zoom change (pan/zoom gesture stream)               2,864.85  0.2000  16.5000  0.3491  0.3000  0.6000  4.5000   5.0000   ±8.18%     1433
+   · offset change (pan stream)                          2,864.85  0.2000  19.1000  0.3491  0.3000  0.6000  4.7000  18.3000  ±11.20%     1433
+   · mode change (timecode → frames, regenerate ladder)  2,636.42  0.2000  19.4000  0.3793  0.4000  0.7000  4.7000   5.4000   ±9.04%     1319
+ ✓ |chromium| src/internal/pointer-drag/__test__/PointerDrag.bench.ts > resolveAxisLock — per-frame axis decision 4332ms
+   · static axis "x" — fast path (100 frames)                   5,190,889.99  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2595445
+   · axis "both", no shift-lock (100 frames)                    5,139,134.18  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2570081
+   · axis "both" + shift-lock dominant-axis pick (100 frames)   3,188,760.26  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1594699
+   · axis "both" + shift-lock dominant-axis pick (1000 frames)    536,272.00  0.0000  0.1000  0.0019  0.0000  0.1000  0.1000  0.1000  ±2.75%   268136
+ ✓ |chromium| src/internal/pointer-drag/__test__/PointerDrag.bench.ts > computeFrame — single frame (feature on/off matrix) 4741ms
+   · free move, no snap/bounds/rect                            7,265,881.98  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3632941
+   · axis-locked + scalar snap + bounds + rect (all features)  7,268,978.27  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3635216
+   · tuple snap + bounds (per-axis grid)                       7,100,307.97  0.0000  0.3000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3550154
+ ✓ |chromium| src/internal/pointer-drag/__test__/PointerDrag.bench.ts > computeFrame — full gesture stream 2307ms
+   · 100 frames — free move (no snap/bounds)      2,542,427.52  0.0000  0.1000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.77%  1271468
+   · 100 frames — snap + bounds + rect            1,352,931.41  0.0000  0.1000  0.0007  0.0000  0.0000  0.1000  0.1000  ±2.76%   676601
+   · 1000 frames — snap + bounds + rect (stress)    158,140.37  0.0000  0.2000  0.0063  0.0000  0.1000  0.1000  0.1000  ±2.68%    79086
+ ✓ |chromium| src/internal/pointer-drag/__test__/PointerDrag.bench.ts > simulated flush() pipeline — resolveAxisLock + computeFrame 2103ms
+   · 100 moves — shift-lock, no snap/bounds                   1,252,108.00  0.0000  0.2000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.76%   626054
+   · 100 moves — shift-lock + snap + bounds + rect              714,692.00  0.0000  0.2000  0.0014  0.0000  0.1000  0.1000  0.1000  ±2.76%   357346
+   · 1000 moves — shift-lock + snap + bounds + rect (stress)     71,891.62  0.0000  0.2000  0.0139  0.0000  0.1000  0.1000  0.1000  ±2.59%    35953
+ ✓ |chromium| src/internal/pointer-drag/__test__/PointerDrag.bench.ts > usePointerDrag — mount N instances 1444ms
+   · mount 50 draggable handles            3,532.68  0.1000  16.5000  0.2831  0.3000  4.5000  5.5000  8.6000  ±10.78%     1778
+   · mount 500 draggable handles (stress)    375.97  2.0000   9.8000  2.6598  2.3000  8.8000  9.8000  9.8000   ±8.40%      189
+ ✓ |chromium| src/internal/pointer-drag/__test__/PointerDrag.bench.ts > usePointerDrag — update after prop change 806ms
+   · 50 handles → re-render to 60 handles  1,159.21  0.2000  379.80  0.8627  0.4000  5.2000  5.8000  379.80  ±105.99%      814
+ ✓ |chromium| src/internal/pointer-drag/__test__/PointerDrag.bench.ts > usePointerDrag — live event round-trip (rAF-coalesced) 2625ms
+   · mount + down + 20 moves + up  5.7202  173.00  176.30  174.82  176.10  176.30  176.30  176.30  ±0.48%       10
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > countBars 3183ms
+   · small body (300px)   7,352,141.59  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3676806
+   · large body (1800px)  7,120,649.88  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3561037
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > resamplePeaks — by source length (100 buckets) 2620ms
+   · 100 peaks                   1,162,090.00  0.0000  0.4000  0.0009  0.0000  0.0000  0.1000  0.1000  ±2.82%   581045
+   · 1000 peaks                    274,426.00  0.0000  0.3000  0.0036  0.0000  0.1000  0.1000  0.1000  ±2.74%   137213
+   · 10000 peaks                    32,241.55  0.0000  0.3000  0.0310  0.1000  0.1000  0.2000  0.2000  ±2.39%    16124
+   · 10000 peaks (Float32Array)     28,240.00  0.0000  0.4000  0.0354  0.1000  0.2000  0.2000  0.2000  ±2.35%    14120
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > resamplePeaks — by bucket count (10000 peaks) 1815ms
+   · 100 buckets              30,416.00  0.0000  0.3000  0.0329  0.1000  0.1000  0.2000  0.2000  ±2.37%    15208
+   · 600 buckets              24,258.00  0.0000  0.4000  0.0412  0.1000  0.2000  0.2000  0.2000  ±2.27%    12129
+   · upsample → 2000 buckets  17,884.42  0.0000  0.4000  0.0559  0.1000  0.2000  0.2000  0.3000  ±2.12%     8944
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > resamplePeaks — windowed slice (zoom/scroll) 1219ms
+   · full window — 600 buckets over 10000      24,211.16  0.0000  0.4000  0.0413  0.1000  0.2000  0.2000  0.3000  ±2.26%    12108
+   · 25% zoom window — 600 buckets over slice  81,302.00  0.0000  0.5000  0.0123  0.0000  0.1000  0.1000  0.2000  ±2.65%    40651
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > buildBars — bars-mode geometry 1837ms
+   · 100 bars from 1000 peaks                  192,124.00  0.0000  0.4000  0.0052  0.0000  0.1000  0.1000  0.1000  ±2.73%    96062
+   · 600 bars from 10000 peaks                  20,179.96  0.0000  0.5000  0.0496  0.1000  0.2000  0.2000  0.3000  ±2.19%    10092
+   · 600 bars from 10000 peaks (Float32Array)   20,065.99  0.0000  0.5000  0.0498  0.1000  0.2000  0.2000  0.3000  ±2.19%    10035
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > buildBars — sliding window (simulated scrub/zoom recompute) 608ms
+   · 600 bars, window slides per iteration  48,556.00  0.0000  0.3000  0.0206  0.0000  0.1000  0.1000  0.2000  ±2.52%    24278
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > buildPathPoints — path-mode silhouette 1229ms
+   · 256 samples from 1000 peaks    143,684.00  0.0000  0.3000  0.0070  0.0000  0.1000  0.1000  0.1000  ±2.68%    71842
+   · 1024 samples from 10000 peaks   17,946.41  0.0000  0.4000  0.0557  0.1000  0.2000  0.2000  0.2000  ±2.08%     8975
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > buildSmoothPath — Catmull-Rom path string 1814ms
+   · 256 points, tension 0    20,822.00  0.0000  12.7000  0.0480  0.1000  0.2000  0.2000  0.3000  ±5.58%    10411
+   · 256 points, tension 0.5  21,690.00  0.0000   1.8000  0.0461  0.1000  0.2000  0.2000  0.3000  ±2.49%    10845
+   · 1024 points, tension 0    3,891.22  0.1000   1.9000  0.2570  0.3000  0.5000  0.6000  1.9000  ±1.71%     1946
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > WaveformRoot + WaveformBars — mount 1212ms
+   · mount with ~50-bar fixture   3,469.92  0.1000  25.3000  0.2882  0.3000  0.6000  4.6000  14.5000  ±12.57%     1736
+   · mount with ~500-bar fixture  2,211.16  0.3000   7.5000  0.4523  0.4000  2.1000  2.3000   3.4000   ±4.26%     1110
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > WaveformRoot — update after prop change 1209ms
+   · currentTime change → patch        3,270.69  0.1000   4.4000  0.3057  0.3000  0.6000  3.7000   4.3000   ±5.00%     1636
+   · peaks swap → re-resample + patch  3,008.00  0.1000  26.9000  0.3324  0.3000  0.4000  4.2000  18.1000  ±13.36%     1504
+ ✓ |chromium| src/canvas/waveform/__test__/Waveform.bench.ts > WaveformRoot + WaveformPath — mount 1212ms
+   · path mode, 256 samples   3,722.51  0.1000  26.3000  0.2686  0.3000  0.4000  4.8000  21.6000  ±14.62%     1862
+   · path mode, 1024 samples  3,783.24  0.1000  24.8000  0.2643  0.2000  0.5000  4.8000  23.8000  ±14.72%     1892
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > sampleKeyframes — single sample by curve size 2895ms
+   · 100 keyframes — sample mid-range   6,003,987.24  0.0000  0.4000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  3002594
+   · 1000 keyframes — sample mid-range  6,322,849.43  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  3162057
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > sampleKeyframes — full curve sweep (per-frame readout) 1241ms
+   · 100 keyframes × 120 samples   131,984.00  0.0000  0.3000  0.0076  0.0000  0.1000  0.1000  0.1000  ±2.68%    65992
+   · 1000 keyframes × 120 samples  132,100.00  0.0000  0.4000  0.0076  0.0000  0.1000  0.1000  0.1000  ±2.68%    66050
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > solveBezierX — easing solve 1954ms
+   · identity (linear) × 64             4,689,626.08  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2345282
+   · ease-in-out (Newton-Raphson) × 64    684,475.11  0.0000  0.1000  0.0015  0.0000  0.1000  0.1000  0.1000  ±2.75%   342306
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > sortKeyframes — reconcile / commit 1289ms
+   · 100 keyframes (reverse-sorted input)   572,597.48  0.0000  0.3000  0.0017  0.0000  0.1000  0.1000  0.1000  ±2.77%   286356
+   · 1000 keyframes (reverse-sorted input)   58,944.00  0.0000  0.5000  0.0170  0.0000  0.1000  0.1000  0.2000  ±2.58%    29472
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > clampKeyframeTime — neighbour clamp (pointer drag) 1495ms
+   · 100 keyframes × 100 moves   1,118,014.00  0.0000  0.1000  0.0009  0.0000  0.0000  0.1000  0.1000  ±2.76%   559007
+   · 1000 keyframes × 100 moves  1,098,890.23  0.0000  0.1000  0.0009  0.0000  0.0000  0.1000  0.1000  ±2.76%   549555
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > snapTimeToFrame — frame-grid quantize 942ms
+   · 100 quantize ops @30fps  2,803,763.98  0.0000  0.4000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.77%  1401882
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > defaultKeyframeValueText — aria-valuetext 653ms
+   · 100 value-text formats (with property)  374,868.00  0.0000  2.1000  0.0027  0.0000  0.1000  0.1000  0.1000  ±2.87%   187434
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > KeyframeTrackRoot — mount + unmount 3241ms
+   · mount 50 keyframes   124.68  6.5000  17.3000  8.0206  7.5000  17.3000  17.3000  17.3000  ±7.59%       63
+   · mount 500 keyframes  5.5850  167.40   205.80  179.05  182.80   205.80   205.80   205.80  ±4.79%       10
+ ✓ |chromium| src/canvas/keyframe-track/__test__/KeyframeTrack.bench.ts > KeyframeTrackRoot — re-render after prop change 3593ms
+   · 50 keyframes — duration change + flush   106.93  8.1000  14.6000  9.3519  8.8000  14.6000  14.6000  14.6000  ±5.96%       54
+   · 500 keyframes — duration change + flush  5.0792  191.20   211.80  196.88  198.90   211.80   211.80   211.80  ±2.12%       10
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > evalCubicBezier — sweep t 2273ms
+   · 100 params   5,712,887.99  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2856444
+   · 1000 params  1,745,702.86  0.0000  0.1000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.76%   873026
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > cubicBezierTangent — sweep t 2221ms
+   · 100 params   5,713,947.23  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2857545
+   · 1000 params  1,732,195.56  0.0000  0.1000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.76%   866271
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > solveBezierX — ease (x→y) 1966ms
+   · 100 params                            430,674.00  0.0000  0.3000  0.0023  0.0000  0.1000  0.1000  0.1000  ±2.75%   215337
+   · 1000 params                            75,640.00  0.0000  0.2000  0.0132  0.0000  0.1000  0.1000  0.1000  ±2.59%    37820
+   · 1000 params — identity short-circuit  746,870.00  0.0000  0.1000  0.0013  0.0000  0.1000  0.1000  0.1000  ±2.75%   373435
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > cubicBezier1D — scalar Bernstein 799ms
+   · 1000 params  1,727,796.00  0.0000  0.1000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.76%   863898
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > catmullRom — sweep t 2559ms
+   · 50 knots × 100 params             573,049.39  0.0000  0.2000  0.0017  0.0000  0.1000  0.1000  0.1000  ±2.75%   286582
+   · 500 knots × 100 params            566,750.00  0.0000  0.2000  0.0018  0.0000  0.1000  0.1000  0.1000  ±2.75%   283375
+   · 500 knots × 1000 params            61,514.00  0.0000  0.2000  0.0163  0.0000  0.1000  0.1000  0.2000  ±2.56%    30757
+   · 500 knots × 1000 params — closed   25,026.00  0.0000  0.5000  0.0400  0.1000  0.2000  0.2000  0.2000  ±2.28%    12513
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > monotoneCubic — build 1223ms
+   · 100 knots   107,972.00  0.0000  0.4000  0.0093  0.0000  0.1000  0.1000  0.1000  ±2.65%    53986
+   · 1000 knots   11,616.00  0.0000  0.4000  0.0861  0.1000  0.2000  0.2000  0.3000  ±1.74%     5808
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > monotoneCubic — apply (pre-built fn) 1841ms
+   · 100 knots → 256-LUT    112,353.53  0.0000  0.2000  0.0089  0.0000  0.1000  0.1000  0.1000  ±2.65%    56188
+   · 1000 knots → 256-LUT    98,026.39  0.0000  0.3000  0.0102  0.0000  0.1000  0.1000  0.1000  ±2.64%    49023
+   · 1000 knots → 1024-LUT   22,792.00  0.0000  0.3000  0.0439  0.1000  0.2000  0.2000  0.2000  ±2.19%    11396
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > monotoneCubic — build + apply (knots changed) 1211ms
+   · 100 knots → build + 256-LUT   51,035.79  0.0000  0.3000  0.0196  0.0000  0.1000  0.1000  0.2000  ±2.51%    25523
+   · 1000 knots → build + 256-LUT  10,241.95  0.0000  0.4000  0.0976  0.1000  0.2000  0.2000  0.3000  ±1.64%     5122
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > linearInterpolate — query sweep 1218ms
+   · 100 knots × 1000 queries   58,300.00  0.0000  0.2000  0.0172  0.0000  0.1000  0.1000  0.2000  ±2.54%    29150
+   · 1000 knots × 1000 queries  45,376.00  0.0000  0.2000  0.0220  0.0000  0.1000  0.1000  0.2000  ±2.47%    22688
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > sampleToPolyline — bezier curve 1256ms
+   · 100 segments   302,246.00  0.0000  0.2000  0.0033  0.0000  0.1000  0.1000  0.1000  ±2.73%   151123
+   · 1000 segments   29,642.07  0.0000  0.2000  0.0337  0.1000  0.1000  0.2000  0.2000  ±2.33%    14824
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > sampleFnToPolyline — monotone curve 1244ms
+   · 100 segments   237,716.46  0.0000  0.2000  0.0042  0.0000  0.1000  0.1000  0.1000  ±2.72%   118882
+   · 1000 segments   24,476.00  0.0000  0.3000  0.0409  0.1000  0.2000  0.2000  0.2000  ±2.24%    12238
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > buildPolylinePath — string concat 1248ms
+   · 100 points   292,709.46  0.0000  5.2000  0.0034  0.0000  0.1000  0.1000  0.1000  ±3.40%   146384
+   · 1000 points   20,331.93  0.0000  4.1000  0.0492  0.1000  0.2000  0.2000  0.3000  ±2.83%    10168
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > buildSmoothPath — Catmull-Rom cubics 1836ms
+   · 50 points                 164,496.00  0.0000  1.7000  0.0061  0.0000  0.1000  0.1000  0.1000  ±2.90%    82248
+   · 500 points                 11,876.00  0.0000  2.8000  0.0842  0.1000  0.2000  0.3000  0.5000  ±2.30%     5938
+   · 500 points — tension 0.5   11,907.62  0.0000  1.5000  0.0840  0.1000  0.2000  0.2000  0.8000  ±2.10%     5955
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > buildBezierPath — single segment 1584ms
+   · 1 segment  7,229,343.95  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3614672
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > pointer-move — smooth path rebuild 622ms
+   · drag mutate + buildSmoothPath (64 points)  124,047.19  0.0000  3.3000  0.0081  0.0000  0.1000  0.1000  0.1000  ±3.04%    62036
+ ✓ |chromium| src/internal/spline/__test__/Spline.bench.ts > pointer-move — curve recompute 609ms
+   · mutate knot + monotoneCubic + 256-LUT (100 knots)  50,884.00  0.0000  0.4000  0.0197  0.0000  0.1000  0.1000  0.2000  ±2.52%    25442
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > math: scaleLinear (pointer projection) 2187ms
+   · scaleLinear ×100   5,601,259.99  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2800630
+   · scaleLinear ×1000  1,711,881.63  0.0000  0.1000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.76%   856112
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > math: roundToStep (snap-to-step hot path) 1223ms
+   · roundToStep ×100   139,038.19  0.0000  0.4000  0.0072  0.0000  0.1000  0.1000  0.1000  ±2.69%    69533
+   · roundToStep ×1000   14,550.00  0.0000  0.3000  0.0687  0.1000  0.2000  0.2000  0.2000  ±1.93%     7275
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > math: getStepDecimals (per-step cache miss) 609ms
+   · getStepDecimals ×1000 (varied step)  57,814.44  0.0000  0.4000  0.0173  0.0000  0.1000  0.1000  0.2000  ±2.55%    28913
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > math: getClosestValueIndex (nearest-thumb pick) 1233ms
+   · 100 thumbs ×100 picks   185,872.83  0.0000  0.2000  0.0054  0.0000  0.1000  0.1000  0.1000  ±2.70%    92955
+   · 1000 thumbs ×100 picks   19,448.00  0.0000  0.2000  0.0514  0.1000  0.2000  0.2000  0.2000  ±2.09%     9724
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > math: hasMinStepsBetweenSortedValues (drag invariant) 2044ms
+   · 100 values   5,019,368.13  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2510186
+   · 1000 values  1,238,818.25  0.0000  0.1000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.76%   619533
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > math: niceNum (tick rounding primitive) 866ms
+   · niceNum ×1000 (varied magnitude)  1,927,046.59  0.0000  0.1000  0.0005  0.0000  0.0000  0.1000  0.1000  ±2.76%   963716
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > ticks: niceTicks (realistic vs stress) 2234ms
+   · realistic (600s axis)           2,542,638.00  0.0000  0.4000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.78%  1271319
+   · stress (10h axis, dense range)    186,886.00  0.0000  0.3000  0.0054  0.0000  0.1000  0.1000  0.1000  ±2.72%    93443
+   · stress + custom format            164,223.16  0.0000  0.4000  0.0061  0.0000  0.1000  0.1000  0.1000  ±2.73%    82128
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > ticks: timeTicks (human time ladder) 1426ms
+   · realistic (600s axis)           1,647,574.49  0.0000  0.4000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.77%   823952
+   · stress (10h axis, dense range)     53,833.23  0.0000  0.3000  0.0186  0.0000  0.1000  0.1000  0.2000  ±2.53%    26922
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > ticks: timecodeTicks (frame-aligned, fps conversion) 1297ms
+   · realistic (600s @ 30fps)                   548,354.33  0.0000  0.4000  0.0018  0.0000  0.1000  0.1000  0.1000  ±2.77%   274232
+   · stress (10h @ 29.97fps drop-frame labels)   57,158.00  0.0000  0.4000  0.0175  0.0000  0.1000  0.1000  0.2000  ±2.57%    28579
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > ticks: frameTicks (integer-frame axis) 1210ms
+   · realistic (18000-frame axis)            15,666.00  0.0000  0.2000  0.0638  0.1000  0.2000  0.2000  0.2000  ±1.96%     7833
+   · stress (1.08M-frame axis, dense range)     583.65  1.6000  2.2000  1.7134  1.7000  1.8000  1.8000  2.2000  ±0.45%      292
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > timecode: framesToTimecode label formatting 1843ms
+   · non-drop ×100           131,950.00  0.0000  0.5000  0.0076  0.0000  0.1000  0.1000  0.1000  ±2.69%    65975
+   · drop-frame 29.97 ×100    98,946.00  0.0000  0.4000  0.0101  0.0000  0.1000  0.1000  0.1000  ±2.65%    49473
+   · drop-frame 29.97 ×1000   11,649.67  0.0000  0.5000  0.0858  0.1000  0.2000  0.2000  0.2000  ±1.76%     5826
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > timecode: scalar label formatters 2705ms
+   · formatClock ×1000                 38,464.00  0.0000  0.5000  0.0260  0.1000  0.1000  0.1000  0.2000  ±2.44%    19232
+   · formatTimecode ×1000 (@30fps)     14,127.17  0.0000  0.5000  0.0708  0.1000  0.2000  0.2000  0.3000  ±1.93%     7065
+   · formatFrames ×1000                   125.00  7.8000  8.1000  8.0000  8.0000  8.1000  8.1000  8.1000  ±0.20%       63
+   · secondsToFrames ×1000          1,958,522.30  0.0000  0.1000  0.0005  0.0000  0.0000  0.1000  0.1000  ±2.76%   979457
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > useScale: composable construction 2233ms
+   · build (plain options)         3,913,615.30  0.0000  0.2000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1957199
+   · build (clamp + step + ticks)  3,798,454.33  0.0000  5.6000  0.0003  0.0000  0.0000  0.0000  0.1000  ±3.54%  1899607
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > useScale: pointer-move loop (scale/invert/roundValue) 1825ms
+   · invert+round ×100 events   75,092.00  0.0000  0.3000  0.0133  0.0000  0.1000  0.1000  0.1000  ±2.59%    37546
+   · invert+round ×1000 events   7,250.55  0.0000  0.5000  0.1379  0.2000  0.3000  0.3000  0.4000  ±1.43%     3626
+   · scale ×1000 events         32,496.00  0.0000  0.2000  0.0308  0.1000  0.1000  0.2000  0.2000  ±2.36%    16248
+ ✓ |chromium| src/internal/scale/__test__/Scale.bench.ts > useScale: reactive tick recompute on domain change (zoom/pan) 664ms
+   · zoom step → recompute ticks/major/minor  425,508.00  0.0000  11.8000  0.0024  0.0000  0.1000  0.1000  0.1000  ±6.84%   212754
+ ✓ |chromium| src/color/color-area/__test__/ColorArea.bench.ts > pointer → saturation/value math 2226ms
+   · pointerToSV — 100 moves (ltr)        2,405,101.98  0.0000  0.1000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.77%  1202551
+   · pointerToSV — 1000 moves (ltr)         333,625.28  0.0000  0.1000  0.0030  0.0000  0.1000  0.1000  0.1000  ±2.73%   166846
+   · pointerToSV — 1000 moves (rtl flip)    336,208.76  0.0000  0.1000  0.0030  0.0000  0.1000  0.1000  0.1000  ±2.73%   168138
+ ✓ |chromium| src/color/color-area/__test__/ColorArea.bench.ts > clampChannel — channel clamp 681ms
+   · clampChannel — 1000 calls  675,342.93  0.0000  0.2000  0.0015  0.0000  0.1000  0.1000  0.1000  ±2.75%   337739
+ ✓ |chromium| src/color/color-area/__test__/ColorArea.bench.ts > hsvToRgb — hue background recompute 1839ms
+   · hsvToRgb — 100 colors                187,550.00  0.0000  0.4000  0.0053  0.0000  0.1000  0.1000  0.1000  ±2.71%    93775
+   · hsvToRgb — 1000 colors                21,726.00  0.0000  0.3000  0.0460  0.1000  0.2000  0.2000  0.2000  ±2.19%    10863
+   · hsvaToCss — 1000 colors (full hsva)   15,998.80  0.0000  0.3000  0.0625  0.1000  0.2000  0.2000  0.2000  ±1.96%     8001
+ ✓ |chromium| src/color/color-area/__test__/ColorArea.bench.ts > preserve-hue setters — drag/key commit 1228ms
+   · setSaturationValue — 1000 commits (sweep incl. grey)  477.43  1.7000  14.6000  2.0946  1.9000   9.7000   9.8000  14.6000   ±8.93%      239
+   · setSaturation + setValue — 1000 key nudges            215.27  3.7000  20.6000  4.6454  4.0000  14.5000  20.6000  20.6000  ±11.18%      108
+ ✓ |chromium| src/color/color-area/__test__/ColorArea.bench.ts > mount — ColorAreaRoot + N thumbs 1574ms
+   · mount + unmount — 50 thumbs    481.33   1.6000   8.4000   2.0776   1.8000   8.1000   8.3000   8.4000  ±7.89%      241
+   · mount + unmount — 500 thumbs  48.6003  16.5000  31.7000  20.5760  24.1000  31.7000  31.7000  31.7000  ±8.52%       25
+ ✓ |chromium| src/color/color-area/__test__/ColorArea.bench.ts > update — re-render after HSVA change 603ms
+   · 1 thumb — mount then patch new HSVA  8,746.25  0.0000  14.5000  0.1143  0.1000  0.2000  0.3000  6.4000  ±9.94%     4374
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > histogramMax — peak scan 4098ms
+   · 100 bins                          4,995,467.98  0.0000  0.1000  0.0002  0.0000  0.0000  0.0000  0.1000  ±2.77%  2497734
+   · 256 bins                          3,199,458.11  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1600049
+   · 1000 bins                         1,277,438.00  0.0000  0.1000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.76%   638719
+   · 256 bins — all zero (guard path)  3,267,112.59  0.0000  0.1000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.77%  1633883
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > projectBars — linear (peak scan + normalise + alloc) 1886ms
+   · 100 bins   340,717.86  0.0000  1.0000  0.0029  0.0000  0.1000  0.1000  0.1000  ±2.76%   170393
+   · 256 bins   141,573.69  0.0000  0.5000  0.0071  0.0000  0.1000  0.1000  0.1000  ±2.70%    70801
+   · 1000 bins   35,842.00  0.0000  0.6000  0.0279  0.1000  0.1000  0.1000  0.2000  ±2.44%    17921
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > projectBars — log (log1p per bin + alloc) 1865ms
+   · 100 bins   269,120.18  0.0000  0.6000  0.0037  0.0000  0.1000  0.1000  0.1000  ±2.73%   134587
+   · 256 bins   107,862.00  0.0000  0.6000  0.0093  0.0000  0.1000  0.1000  0.1000  ±2.68%    53931
+   · 1000 bins   24,446.00  0.0000  0.9000  0.0409  0.1000  0.2000  0.2000  0.2000  ±2.29%    12223
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > projectBars — all-zero guard (no NaN, no divide) 1244ms
+   · 256 bins — linear  144,297.14  0.0000  0.6000  0.0069  0.0000  0.1000  0.1000  0.1000  ±2.72%    72163
+   · 256 bins — log     142,830.00  0.0000  0.5000  0.0070  0.0000  0.1000  0.1000  0.1000  ±2.71%    71415
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > projectBarHeight — per-bin scalar (1000x loop) 1613ms
+   · linear x1000  1,734,069.99  0.0000  0.2000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.76%   867035
+   · log x1000     1,715,284.95  0.0000  0.1000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.76%   857814
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > per-channel projection (RGB composite, record data) 1209ms
+   · 4 channels x 100 bins x 2 scales   33,410.00  0.0000  1.1000  0.0299  0.1000  0.1000  0.1000  0.2000  ±2.45%    16705
+   · 4 channels x 1000 bins x 2 scales   3,681.26  0.1000  0.9000  0.2716  0.3000  0.4000  0.4000  0.9000  ±1.11%     1841
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > HistogramRoot + HistogramBars — mount 1843ms
+   · 50 bars (linear)   1,078.00  0.6000  31.0000  0.9276  0.8000   5.1000   5.2000  31.0000  ±13.21%      539
+   · 500 bars (linear)    137.50  5.5000  40.9000  7.2725  6.3000  40.9000  40.9000  40.9000  ±14.68%       69
+   · 500 bars (log)       135.59  5.6000  49.4000  7.3750  6.3000  49.4000  49.4000  49.4000  ±17.87%       68
+ ✓ |chromium| src/canvas/histogram/__test__/Histogram.bench.ts > HistogramRoot + HistogramBars — update after prop change 1266ms
+   · 500 bars — scaleType linear → log                      96.9721  8.8000  13.6000  10.3122  12.2000  13.6000  13.6000  13.6000   ±4.41%       49
+   · record data — channel l → rgb (expand to 3 primaries)   166.20  4.6000  47.2000   6.0167   5.0000  47.2000  47.2000  47.2000  ±17.36%       84
+ ✓ |chromium| src/internal/utils/__test__/getRawChildren.bench.ts > getRawChildren 4228ms
+   · flat elements                  6,294,584.19  0.0000  4.6000  0.0002  0.0000  0.0000  0.0000  0.1000  ±3.32%  3148551
+   · mixed elements and comments    1,001,372.00  0.0000  0.3000  0.0010  0.0000  0.0000  0.1000  0.1000  ±2.77%   500686
+   · single fragment with children  1,208,230.35  0.0000  0.3000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.77%   604236
+   · nested fragments (depth 5)       499,336.13  0.0000  0.3000  0.0020  0.0000  0.1000  0.1000  0.1000  ±2.75%   249718
+   · wide fragment (50 children)       86,290.74  0.0000  0.4000  0.0116  0.0000  0.1000  0.1000  0.1000  ±2.63%    43154
+ ✓ |chromium| src/internal/utils/__test__/getRawChildren.bench.ts > getRawChildren — BAIL path 2383ms
+   · 1 keyed fragment (no BAIL)          1,520,578.00  0.0000  0.3000  0.0007  0.0000  0.0000  0.1000  0.1000  ±2.78%   760289
+   · 2 keyed fragments (BAIL triggered)  1,533,169.38  0.0000  0.4000  0.0007  0.0000  0.0000  0.1000  0.1000  ±2.79%   766738
+   · 3 keyed fragments (BAIL triggered)  1,175,990.00  0.0000  0.4000  0.0009  0.0000  0.0000  0.1000  0.1000  ±2.77%   587995
+ ✓ |chromium| src/internal/utils/__test__/getRawChildren.bench.ts > patch — optimized vs BAIL patchFlag 2535ms
+   · patch with TEXT patchFlag        188,428.83  0.0000  3.6000  0.0053  0.0000  0.1000  0.1000  0.1000  ±5.49%    94384
+   · patch with BAIL patchFlag        186,314.00  0.0000  3.8000  0.0054  0.0000  0.1000  0.1000  0.1000  ±5.34%    93157
+   · patch with CLASS patchFlag       186,798.64  0.0000  5.4000  0.0054  0.0000  0.1000  0.1000  0.1000  ±5.87%    93418
+   · patch with CLASS→BAIL patchFlag  189,736.00  0.0000  3.9000  0.0053  0.0000  0.1000  0.1000  0.1000  ±5.56%    94868
+ ✓ |chromium| src/internal/primitive/__test__/Primitive.bench.ts > baseline: raw h() 2736ms
+   · h() — 1 attr    2,030,339.94  0.0000  0.5000  0.0005  0.0000  0.0000  0.0000  0.1000  ±2.79%  1015373
+   · h() — 5 attrs   2,006,400.00  0.0000  4.1000  0.0005  0.0000  0.0000  0.0000  0.1000  ±3.20%  1003200
+   · h() — 15 attrs  1,971,350.00  0.0000  0.5000  0.0005  0.0000  0.0000  0.1000  0.1000  ±2.79%   985675
+ ✓ |chromium| src/internal/primitive/__test__/Primitive.bench.ts > baseline: raw cloneVNode() 3321ms
+   · cloneVNode — 1 attr    4,866,745.99  0.0000  4.4000  0.0002  0.0000  0.0000  0.0000  0.1000  ±3.26%  2433373
+   · cloneVNode — 5 attrs   3,803,831.25  0.0000  0.4000  0.0003  0.0000  0.0000  0.0000  0.1000  ±2.78%  1902296
+   · cloneVNode — 15 attrs  2,318,270.00  0.0000  0.3000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.77%  1159135
+ ✓ |chromium| src/internal/primitive/__test__/Primitive.bench.ts > Primitive vs h() 2658ms
+   · h("div") — baseline                        1,979,428.12  0.0000  5.8000  0.0005  0.0000  0.0000  0.0000  0.1000  ±3.58%   989912
+   · Primitive({ as: "div" })                   2,033,420.00  0.0000  0.4000  0.0005  0.0000  0.0000  0.0000  0.1000  ±2.78%  1016710
+   · Primitive({ as: "template" }) — Slot mode  2,260,389.99  0.0000  0.4000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.78%  1130195
+ ✓ |chromium| src/internal/primitive/__test__/Primitive.bench.ts > Slot — scaling by attrs 2697ms
+   · 1 attr                  2,604,471.11  0.0000  4.7000  0.0004  0.0000  0.0000  0.0000  0.1000  ±3.32%  1302496
+   · 5 attrs                 2,245,925.99  0.0000  0.3000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.77%  1122963
+   · 15 attrs (mixed types)  1,642,142.00  0.0000  0.3000  0.0006  0.0000  0.0000  0.1000  0.1000  ±2.77%   821071
+ ✓ |chromium| src/internal/primitive/__test__/Primitive.bench.ts > Slot — edge cases 2331ms
+   · child with comments to skip  1,212,457.51  0.0000  0.3000  0.0008  0.0000  0.0000  0.1000  0.1000  ±2.77%   606350
+   · no default slot              7,219,866.03  0.0000  0.1000  0.0001  0.0000  0.0000  0.0000  0.1000  ±2.77%  3610655
+ ✓ |chromium| src/internal/primitive/__test__/Primitive.bench.ts > Slot — fresh attrs per call 1768ms
+   · 5 attrs (stable ref)  2,232,887.43  0.0000  0.3000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.78%  1116667
+   · 5 attrs (new object)  2,244,653.07  0.0000  0.4000  0.0004  0.0000  0.0000  0.0000  0.1000  ±2.79%  1122551
+ ✓ |chromium| src/internal/primitive/__test__/Primitive.bench.ts > Primitive — mount + update via render() 1852ms
+   · h("div") — mount + update                       135,494.00  0.0000   6.2000  0.0074  0.0000  0.1000  0.1000  0.1000   ±6.78%    67747
+   · Primitive({ as: "div" }) — mount + update        39,210.00  0.0000   6.5000  0.0255  0.0000  0.1000  0.1000  0.2000   ±6.71%    19605
+   · Primitive({ as: "template" }) — mount + update   39,744.05  0.0000  19.9000  0.0252  0.0000  0.1000  0.1000  0.2000  ±10.03%    19876

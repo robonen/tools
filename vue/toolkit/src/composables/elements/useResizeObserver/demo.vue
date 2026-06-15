@@ -22,10 +22,10 @@ const { isSupported, isActive, pause, resume } = useResizeObserver(
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">ResizeObserver</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">ResizeObserver</span>
+      <span class="demo-badge">
         <span class="size-1.5 rounded-full transition" :class="isActive ? 'bg-emerald-500' : 'bg-amber-500'" />
         {{ isActive ? 'Observing' : 'Paused' }}
       </span>
@@ -39,40 +39,40 @@ const { isSupported, isActive, pause, resume } = useResizeObserver(
       <!-- Drag the bottom-right handle to resize; the observer reports new dimensions -->
       <div
         ref="target"
-        class="relative grid min-h-32 min-w-40 max-w-full resize overflow-auto rounded-xl border border-(--border) bg-(--bg-elevated) p-4 place-items-center"
+        class="demo-card relative grid min-h-32 min-w-40 max-w-full resize overflow-auto p-4 place-items-center"
         style="width: 16rem; height: 8rem;"
       >
         <div class="pointer-events-none select-none text-center">
-          <div class="font-mono text-3xl font-bold tabular-nums text-(--fg)">
-            {{ size.width }}<span class="text-(--fg-subtle)"> × </span>{{ size.height }}
+          <div class="demo-stat text-3xl">
+            {{ size.width }}<span class="text-fg-subtle"> × </span>{{ size.height }}
           </div>
-          <div class="mt-1 text-xs text-(--fg-subtle)">drag the bottom-right corner</div>
+          <div class="mt-1 text-xs text-fg-subtle">drag the bottom-right corner</div>
         </div>
       </div>
 
       <div class="grid grid-cols-3 gap-2">
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-2 text-center">
-          <div class="font-mono text-lg font-bold tabular-nums text-(--fg)">{{ size.width }}</div>
-          <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">width px</div>
+        <div class="rounded-lg border border-border bg-bg-inset p-2 text-center">
+          <div class="demo-stat text-lg">{{ size.width }}</div>
+          <div class="text-[10px] uppercase tracking-wide text-fg-subtle">width px</div>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-2 text-center">
-          <div class="font-mono text-lg font-bold tabular-nums text-(--fg)">{{ size.height }}</div>
-          <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">height px</div>
+        <div class="rounded-lg border border-border bg-bg-inset p-2 text-center">
+          <div class="demo-stat text-lg">{{ size.height }}</div>
+          <div class="text-[10px] uppercase tracking-wide text-fg-subtle">height px</div>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-2 text-center">
-          <div class="font-mono text-lg font-bold tabular-nums text-(--fg)">{{ callbacks }}</div>
-          <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">callbacks</div>
+        <div class="rounded-lg border border-border bg-bg-inset p-2 text-center">
+          <div class="demo-stat text-lg">{{ callbacks }}</div>
+          <div class="text-[10px] uppercase tracking-wide text-fg-subtle">callbacks</div>
         </div>
       </div>
 
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @click="isActive ? pause() : resume()"
       >
         {{ isActive ? 'Pause observer' : 'Resume observer' }}
       </button>
-      <p class="text-xs text-(--fg-subtle)">
+      <p class="text-xs text-fg-subtle">
         While paused, resizing won't update the readout until you resume.
       </p>
     </template>

@@ -42,23 +42,23 @@ function undo() {
 
 <template>
   <div class="w-full max-w-sm flex flex-col gap-3">
-    <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Inbox · undo with grace period</span>
+    <span class="demo-label">Inbox · undo with grace period</span>
 
     <ul v-if="inbox.length" class="flex flex-col gap-2">
       <li
         v-for="mail in inbox"
         :key="mail.id"
-        class="flex items-center justify-between gap-3 rounded-xl border border-(--border) bg-(--bg-elevated) p-3 transition"
+        class="demo-card flex items-center justify-between gap-3 p-3 transition"
         :class="{ 'opacity-40': pendingDelete?.id === mail.id }"
       >
         <div class="min-w-0">
-          <div class="truncate text-sm font-medium text-(--fg)">{{ mail.subject }}</div>
-          <div class="truncate text-xs text-(--fg-muted)">{{ mail.from }}</div>
+          <div class="truncate text-sm font-medium text-fg">{{ mail.subject }}</div>
+          <div class="truncate text-xs text-fg-muted">{{ mail.from }}</div>
         </div>
         <button
           type="button"
           :disabled="isPending"
-          class="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="demo-btn shrink-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           @click="archive(mail)"
         >
           Archive
@@ -66,7 +66,7 @@ function undo() {
       </li>
     </ul>
 
-    <div v-else class="rounded-xl border border-dashed border-(--border) bg-(--bg-inset) p-6 text-center text-sm text-(--fg-subtle)">
+    <div v-else class="rounded-xl border border-dashed border-border bg-bg-inset p-6 text-center text-sm text-fg-subtle">
       Inbox zero — everything archived.
     </div>
 

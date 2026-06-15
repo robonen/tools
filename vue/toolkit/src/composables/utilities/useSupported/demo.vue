@@ -19,11 +19,11 @@ const supportedCount = computed(() => checks.filter(c => c.supported.value).leng
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col gap-4">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Browser features</span>
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+        <span class="demo-label">Browser features</span>
+        <span class="demo-badge">
           {{ supportedCount }} / {{ checks.length }} available
         </span>
       </div>
@@ -32,9 +32,9 @@ const supportedCount = computed(() => checks.filter(c => c.supported.value).leng
         <li
           v-for="check in checks"
           :key="check.name"
-          class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2 text-sm"
+          class="flex items-center justify-between rounded-lg border border-border bg-bg-inset px-3 py-2 text-sm"
         >
-          <span class="font-mono text-(--fg)">{{ check.name }}</span>
+          <span class="font-mono text-fg">{{ check.name }}</span>
           <span
             v-if="check.supported.value"
             class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400"
@@ -44,17 +44,17 @@ const supportedCount = computed(() => checks.filter(c => c.supported.value).leng
           </span>
           <span
             v-else
-            class="inline-flex items-center gap-1.5 text-xs font-medium text-(--fg-subtle)"
+            class="inline-flex items-center gap-1.5 text-xs font-medium text-fg-subtle"
           >
-            <span class="size-1.5 rounded-full bg-(--border-strong)" />
+            <span class="size-1.5 rounded-full bg-border-strong" />
             Unavailable
           </span>
         </li>
       </ul>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
-      Each check is SSR-safe: the result is <span class="font-mono text-(--fg-muted)">false</span> during
+    <p class="text-xs text-fg-subtle">
+      Each check is SSR-safe: the result is <span class="font-mono text-fg-muted">false</span> during
       server render and resolves on the client after mount.
     </p>
   </div>

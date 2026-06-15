@@ -43,30 +43,30 @@ function silentBump() {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col gap-3">
       <div class="flex items-baseline justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Volume (tracked)</span>
-        <span class="font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ volume }}</span>
+        <span class="demo-label">Volume (tracked)</span>
+        <span class="demo-stat text-3xl">{{ volume }}</span>
       </div>
       <div class="flex gap-2">
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn flex-1"
           @click="volume.value--"
         >
           - 1
         </button>
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+          class="demo-btn-primary flex-1"
           @click="volume.value++"
         >
           + 1
         </button>
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn flex-1"
           @click="volume.value = 99"
         >
           Set 99
@@ -74,25 +74,25 @@ function silentBump() {
       </div>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 flex items-center justify-between">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 flex items-center justify-between">
       <div class="flex flex-col">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">peek() snapshot</span>
-        <span class="text-xs text-(--fg-subtle)">untracked read; lay() writes silently</span>
+        <span class="demo-label">peek() snapshot</span>
+        <span class="text-xs text-fg-subtle">untracked read; lay() writes silently</span>
       </div>
-      <span class="font-mono text-2xl font-bold tabular-nums text-(--fg)">{{ peeked }}</span>
+      <span class="demo-stat text-2xl">{{ peeked }}</span>
     </div>
 
     <div class="flex gap-2">
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn flex-1"
         @click="peek"
       >
         peek()
       </button>
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn flex-1"
         @click="silentBump"
       >
         lay() +1 silent
@@ -100,16 +100,16 @@ function silentBump() {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Hooks log</span>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 min-h-24 flex flex-col gap-1">
-        <p v-if="!log.length" class="text-xs text-(--fg-subtle)">
+      <span class="demo-label">Hooks log</span>
+      <div class="rounded-lg border border-border bg-bg-inset p-3 min-h-24 flex flex-col gap-1">
+        <p v-if="!log.length" class="text-xs text-fg-subtle">
           Try setting volume to 99 to see onBeforeChange veto.
         </p>
         <p
           v-for="entry in log"
           :key="entry.id"
           class="font-mono text-xs tabular-nums"
-          :class="entry.vetoed ? 'text-red-600 dark:text-red-400' : 'text-(--fg-muted)'"
+          :class="entry.vetoed ? 'text-red-600 dark:text-red-400' : 'text-fg-muted'"
         >
           {{ entry.vetoed ? '✗' : '✓' }} {{ entry.message }}
         </p>

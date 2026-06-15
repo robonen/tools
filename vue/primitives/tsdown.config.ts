@@ -5,7 +5,8 @@ import Vue from 'unplugin-vue/rolldown';
 export default defineConfig({
   ...sharedConfig,
   tsconfig: './tsconfig.src.json',
-  entry: ['src/index.ts', 'src/*/index.ts'],
+  // Components live one level deep now: src/<category>/<component>/index.ts.
+  entry: ['src/index.ts', 'src/*/*/index.ts'],
   plugins: [Vue({ isProduction: true })],
   dts: { vue: true },
   deps: {

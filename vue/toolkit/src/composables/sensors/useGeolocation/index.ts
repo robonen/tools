@@ -206,15 +206,16 @@ export function useGeolocation(options: UseGeolocationOptions = {}): UseGeolocat
   }
 
   // Restart the watcher when reactive position options change while active.
+  // Watch the three primitive option getters directly (no per-run options object
+  // allocation, no deep traversal) — fires on any value change, equality-checked.
   watch(
-    () => resolveOptions(),
+    [() => toValue(enableHighAccuracy), () => toValue(maximumAge), () => toValue(timeout)],
     () => {
       if (isActive.value) {
         pause();
         resume();
       }
     },
-    { deep: true },
   );
 
   if (immediate)

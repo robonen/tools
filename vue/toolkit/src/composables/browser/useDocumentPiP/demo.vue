@@ -51,7 +51,7 @@ watch(isOpen, (openNow) => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-400"
@@ -62,14 +62,14 @@ watch(isOpen, (openNow) => {
     <template v-else>
       <div
         ref="host"
-        class="min-h-[7rem] rounded-xl border border-(--border) bg-(--bg-inset) p-1"
+        class="min-h-[7rem] rounded-xl border border-border bg-bg-inset p-1"
       >
         <div
           ref="player"
-          class="flex h-full flex-col items-center justify-center gap-1 rounded-lg bg-(--bg-elevated) p-6"
+          class="flex h-full flex-col items-center justify-center gap-1 rounded-lg bg-bg-elevated p-6"
         >
-          <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Live timer</span>
-          <span class="font-mono text-3xl font-bold tabular-nums text-(--fg)">
+          <span class="demo-label">Live timer</span>
+          <span class="demo-stat text-3xl">
             {{ String(Math.floor(elapsed / 60)).padStart(2, '0') }}:{{ String(elapsed % 60).padStart(2, '0') }}
           </span>
         </div>
@@ -78,7 +78,7 @@ watch(isOpen, (openNow) => {
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="demo-btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           :disabled="isOpen"
           @click="popOut"
         >
@@ -86,7 +86,7 @@ watch(isOpen, (openNow) => {
         </button>
         <button
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="demo-btn flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           :disabled="!isOpen"
           @click="close"
         >
@@ -94,17 +94,17 @@ watch(isOpen, (openNow) => {
         </button>
       </div>
 
-      <div class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-sm">
-        <span class="text-(--fg-muted)">isOpen</span>
+      <div class="flex items-center justify-between rounded-lg border border-border bg-bg-inset p-3 text-sm">
+        <span class="text-fg-muted">isOpen</span>
         <span
           class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
           :class="isOpen
             ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-            : 'border-(--border) bg-(--bg) text-(--fg-muted)'"
+            : 'border-border bg-bg text-fg-muted'"
         >
           <span
             class="h-1.5 w-1.5 rounded-full"
-            :class="isOpen ? 'bg-emerald-500' : 'bg-(--fg-subtle)'"
+            :class="isOpen ? 'bg-emerald-500' : 'bg-fg-subtle'"
           />
           {{ isOpen ? 'floating' : 'docked' }}
         </span>
@@ -118,7 +118,7 @@ watch(isOpen, (openNow) => {
       </p>
       <p
         v-else
-        class="text-xs text-(--fg-subtle)"
+        class="text-xs text-fg-subtle"
       >
         "Pop out" moves the live timer into an always-on-top window. Closing it returns the element to the page.
       </p>

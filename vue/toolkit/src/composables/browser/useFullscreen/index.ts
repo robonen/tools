@@ -146,7 +146,7 @@ export function useFullscreen(
 
   const isCurrentElementFullScreen = (): boolean => {
     if (fullscreenElementMethod)
-      return (document as any)?.[fullscreenElementMethod] === targetRef.value;
+      return (document as Record<string, unknown> | undefined)?.[fullscreenElementMethod] === targetRef.value;
     return false;
   };
 
@@ -155,12 +155,12 @@ export function useFullscreen(
     if (!flag)
       return false;
 
-    const docFlag = document && (document as any)[flag];
+    const docFlag = document && (document as unknown as Record<string, unknown>)[flag];
     if (docFlag !== null && docFlag !== undefined)
       return Boolean(docFlag);
 
     // Fallback for WebKit / iOS Safari, where the flag lives on the element itself.
-    const elFlag = (targetRef.value as any)?.[flag];
+    const elFlag = (targetRef.value as unknown as Record<string, unknown> | null | undefined)?.[flag];
     if (elFlag !== null && elFlag !== undefined)
       return Boolean(elFlag);
 
@@ -173,13 +173,15 @@ export function useFullscreen(
 
     const method = exitMethod.value;
     if (method) {
-      if (typeof (document as any)?.[method] === 'function')
-        await (document as any)[method]();
+      const docMethod = (document as unknown as Record<string, unknown> | undefined)?.[method];
+      if (isFunction(docMethod))
+        await docMethod.call(document);
       else {
         // Fallback for Safari iOS, where exit lives on the element.
-        const el = targetRef.value as any;
-        if (isFunction(el?.[method]))
-          await el[method]();
+        const el = targetRef.value as unknown as Record<string, unknown> | null | undefined;
+        const elMethod = el?.[method];
+        if (isFunction(elMethod))
+          await elMethod.call(targetRef.value);
       }
     }
 
@@ -193,10 +195,11 @@ export function useFullscreen(
     if (isElementFullScreen())
       await exit();
 
-    const el = targetRef.value as any;
+    const el = targetRef.value as unknown as Record<string, unknown> | null | undefined;
     const method = requestMethod.value;
-    if (method && isFunction(el?.[method])) {
-      await el[method]();
+    const elMethod = method ? el?.[method] : undefined;
+    if (isFunction(elMethod)) {
+      await elMethod.call(targetRef.value);
       isFullscreen.value = true;
     }
   }

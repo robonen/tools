@@ -6,7 +6,7 @@ const online = useOnline();
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       class="flex flex-col items-center gap-3 rounded-xl border p-8 transition-colors duration-300"
       :class="online
@@ -29,14 +29,14 @@ const online = useOnline();
         >
           {{ online ? 'You are online' : 'You are offline' }}
         </p>
-        <p class="mt-0.5 text-xs text-(--fg-muted)">
+        <p class="mt-0.5 text-xs text-fg-muted">
           Reflects <code class="font-mono">navigator.onLine</code>
         </p>
       </div>
     </div>
 
-    <div class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2.5">
-      <span class="text-sm text-(--fg-muted)"><code class="font-mono">online.value</code></span>
+    <div class="flex items-center justify-between rounded-lg border border-border bg-bg-inset px-3 py-2.5">
+      <span class="text-sm text-fg-muted"><code class="font-mono">online.value</code></span>
       <span
         class="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium"
         :class="online
@@ -48,8 +48,8 @@ const online = useOnline();
       </span>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
-      Disable Wi-Fi or flip DevTools to <span class="font-medium text-(--fg-muted)">Offline</span> and the banner updates instantly.
+    <p class="text-xs text-fg-subtle">
+      Disable Wi-Fi or flip DevTools to <span class="font-medium text-fg-muted">Offline</span> and the banner updates instantly.
     </p>
   </div>
 </template>

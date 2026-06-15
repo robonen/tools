@@ -7,7 +7,10 @@ export type ExtractFromObject<O extends Record<PropertyKey, unknown>, K>
       ? NonNullable<O>[K]
       : never;
 
-export type ExtractFromArray<A extends readonly any[], K>
+export type ExtractFromArray<A extends readonly unknown[], K>
+  // `any[]` (not `unknown[]`) is load-bearing: `any[] extends number[]` is true while
+  // `unknown[] extends number[]` is false. This distinguishes a general array (widen the
+  // element with `undefined`) from a fixed tuple (resolve the exact element at index K).
   = any[] extends A
     ? A extends ReadonlyArray<infer T>
       ? T | undefined
@@ -22,7 +25,7 @@ export type ExtractFromCollection<O, K>
     : K extends [infer Key, ...infer Rest]
       ? O extends Record<PropertyKey, unknown>
         ? ExtractFromCollection<ExtractFromObject<O, Key>, Rest>
-        : O extends readonly any[]
+        : O extends readonly unknown[]
           ? ExtractFromCollection<ExtractFromArray<O, Key>, Rest>
           : never
       : never;
@@ -46,7 +49,7 @@ export type Get<O, K> = ExtractFromCollection<O, Path<K>>;
  * @since 0.0.4
  */
 export function get<O extends Collection, K extends string>(obj: O, path: K): Get<O, K> | undefined {
-  let value: any = obj;
+  let value: unknown = obj;
   let start = 0;
 
   // Walk the path without allocating an intermediate array of segments.
@@ -58,9 +61,9 @@ export function get<O extends Collection, K extends string>(obj: O, path: K): Ge
     if (value === null || value === undefined)
       return undefined;
 
-    value = value[path.slice(start, i)];
+    value = (value as Record<string, unknown>)[path.slice(start, i)];
     start = i + 1;
   }
 
-  return value;
+  return value as Get<O, K> | undefined;
 }

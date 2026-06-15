@@ -27,14 +27,14 @@ const cardBrand = computed(() => findCardBrand(card.unmasked.value)?.name ?? 'un
 // Luhn + length validation (separate from the mask, which only formats).
 const cardValid = computed(() => isValidCardNumber(card.unmasked.value));
 
-const inputClass = 'w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:outline-none focus:border-(--accent) focus:ring-2 focus:ring-(--ring)';
-const labelClass = 'text-xs font-medium uppercase tracking-wide text-(--fg-subtle)';
-const readoutClass = 'flex flex-wrap items-center gap-2 font-mono text-xs text-(--fg-muted)';
+const inputClass = 'w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-fg placeholder:text-fg-subtle transition focus:outline-none focus:border-accent focus:ring-2 focus:ring-ring';
+const labelClass = 'text-xs font-medium uppercase tracking-wide text-fg-subtle';
+const readoutClass = 'flex flex-wrap items-center gap-2 font-mono text-xs text-fg-muted';
 
 function badgeClass(on: boolean): string {
   return on
     ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-    : 'border-(--border) bg-(--bg-inset) text-(--fg-subtle)';
+    : 'border-border bg-bg-inset text-fg-subtle';
 }
 </script>
 

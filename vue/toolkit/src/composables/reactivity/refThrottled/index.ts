@@ -2,7 +2,7 @@ import { ref, toValue, watch } from 'vue';
 import type { MaybeRefOrGetter, Ref } from 'vue';
 import { createFilterWrapper, throttleFilter } from '@/utils/filters';
 
-export type RefThrottledReturn<T = any> = Ref<T>;
+export type RefThrottledReturn<T = unknown> = Ref<T>;
 
 /**
  * @name refThrottled
@@ -28,7 +28,7 @@ export type RefThrottledReturn<T = any> = Ref<T>;
  *
  * @since 0.0.15
  */
-export function refThrottled<T = any>(
+export function refThrottled<T = unknown>(
   source: MaybeRefOrGetter<T>,
   delay = 200,
   trailing = true,

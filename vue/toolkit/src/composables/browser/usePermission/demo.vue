@@ -32,13 +32,13 @@ const meta = computed(() => {
     case 'prompt':
       return { label: 'prompt', dot: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', ring: 'border-amber-500/30 bg-amber-500/10' };
     default:
-      return { label: 'unknown', dot: 'bg-(--border-strong)', text: 'text-(--fg-subtle)', ring: 'border-(--border) bg-(--bg-inset)' };
+      return { label: 'unknown', dot: 'bg-border-strong', text: 'text-fg-subtle', ring: 'border-border bg-bg-inset' };
   }
 });
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-300"
@@ -48,12 +48,12 @@ const meta = computed(() => {
 
     <template v-else>
       <div class="flex flex-col gap-1.5">
-        <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <label class="demo-label">
           Permission
         </label>
         <select
           v-model="selected"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-fg transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-ring"
         >
           <option v-for="name in names" :key="name" :value="name">
             {{ name }}
@@ -61,19 +61,19 @@ const meta = computed(() => {
         </select>
       </div>
 
-      <ul class="divide-y divide-(--border) rounded-xl border border-(--border) bg-(--bg-elevated)">
+      <ul class="demo-card divide-y divide-border">
         <li
           v-for="perm in permissions"
           :key="perm.name"
           class="flex items-center justify-between gap-3 px-3 py-2.5"
         >
-          <code class="font-mono text-sm text-(--fg)">{{ perm.name }}</code>
-          <span class="font-mono text-xs text-(--fg-muted)">{{ perm.state.value ?? 'unknown' }}</span>
+          <code class="font-mono text-sm text-fg">{{ perm.name }}</code>
+          <span class="font-mono text-xs text-fg-muted">{{ perm.state.value ?? 'unknown' }}</span>
         </li>
       </ul>
 
-      <div class="flex flex-col items-center gap-3 rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <div class="demo-card flex flex-col items-center gap-3 p-5">
+        <span class="demo-label">
           {{ selected }}
         </span>
         <span
@@ -87,13 +87,13 @@ const meta = computed(() => {
 
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @click="active.query()"
       >
         Re-check "{{ selected }}"
       </button>
 
-      <p class="text-center text-xs text-(--fg-subtle)">
+      <p class="text-center text-xs text-fg-subtle">
         Status updates live if you change a permission in your browser settings.
       </p>
     </template>

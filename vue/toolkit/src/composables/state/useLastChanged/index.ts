@@ -30,7 +30,7 @@ export interface UseLastChangedOptions<
  */
 export function useLastChanged(source: WatchSource, options?: UseLastChangedOptions<false>): Ref<number | null>;
 export function useLastChanged(source: WatchSource, options: UseLastChangedOptions<true> | UseLastChangedOptions<boolean, number>): Ref<number>;
-export function useLastChanged(source: WatchSource, options: UseLastChangedOptions<boolean, any> = {}): Ref<number | null> | Ref<number> {
+export function useLastChanged(source: WatchSource, options: UseLastChangedOptions<boolean, number | null | undefined> = {}): Ref<number | null> | Ref<number> {
   const lastChanged = ref<number | null>(options.initialValue ?? null);
 
   watch(source, () => {

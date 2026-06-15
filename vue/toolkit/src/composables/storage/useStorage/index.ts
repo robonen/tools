@@ -12,13 +12,13 @@ export interface StorageSerializer<T> {
   write: (value: T) => string;
 }
 
-export const StorageSerializers: Record<string, StorageSerializer<any>> & {
+export const StorageSerializers: Record<string, StorageSerializer<unknown>> & {
   boolean: StorageSerializer<boolean>;
   number: StorageSerializer<number>;
   string: StorageSerializer<string>;
-  object: StorageSerializer<any>;
-  map: StorageSerializer<Map<any, any>>;
-  set: StorageSerializer<Set<any>>;
+  object: StorageSerializer<unknown>;
+  map: StorageSerializer<Map<unknown, unknown>>;
+  set: StorageSerializer<Set<unknown>>;
   date: StorageSerializer<Date>;
 } = {
   boolean: {
@@ -35,15 +35,15 @@ export const StorageSerializers: Record<string, StorageSerializer<any>> & {
   },
   object: {
     read: (v: string) => JSON.parse(v),
-    write: (v: any) => JSON.stringify(v),
+    write: (v: unknown) => JSON.stringify(v),
   },
   map: {
     read: (v: string) => new Map(JSON.parse(v)),
-    write: (v: Map<any, any>) => JSON.stringify([...v.entries()]),
+    write: (v: Map<unknown, unknown>) => JSON.stringify([...v.entries()]),
   },
   set: {
     read: (v: string) => new Set(JSON.parse(v)),
-    write: (v: Set<any>) => JSON.stringify([...v]),
+    write: (v: Set<unknown>) => JSON.stringify([...v]),
   },
   date: {
     read: (v: string) => new Date(v),
@@ -112,15 +112,15 @@ export interface UseStorageOptions<T> extends ConfigurableFlush, ConfigurableWin
 export type UseStorageReturn<T> = RemovableRef<T>;
 
 export function guessSerializer<T>(value: T): StorageSerializer<T> {
-  if (isBoolean(value)) return StorageSerializers.boolean as any;
-  if (isNumber(value)) return StorageSerializers.number as any;
-  if (isString(value)) return StorageSerializers.string as any;
-  if (isMap(value)) return StorageSerializers.map as any;
-  if (isSet(value)) return StorageSerializers.set as any;
-  if (isDate(value)) return StorageSerializers.date as any;
-  if (isObject(value)) return StorageSerializers.object as any;
+  if (isBoolean(value)) return StorageSerializers.boolean as unknown as StorageSerializer<T>;
+  if (isNumber(value)) return StorageSerializers.number as unknown as StorageSerializer<T>;
+  if (isString(value)) return StorageSerializers.string as unknown as StorageSerializer<T>;
+  if (isMap(value)) return StorageSerializers.map as unknown as StorageSerializer<T>;
+  if (isSet(value)) return StorageSerializers.set as unknown as StorageSerializer<T>;
+  if (isDate(value)) return StorageSerializers.date as unknown as StorageSerializer<T>;
+  if (isObject(value)) return StorageSerializers.object as unknown as StorageSerializer<T>;
 
-  return StorageSerializers.object as any;
+  return StorageSerializers.object as unknown as StorageSerializer<T>;
 }
 
 export function shallowMerge<T>(stored: T, defaults: T): T {
@@ -175,7 +175,7 @@ export function useStorage<T>(
     window = defaultWindow,
     eventFilter,
     initOnMounted = false,
-    onError = console.error, // eslint-disable-line no-console
+    onError = console.error,
   } = options;
 
   const defaults = toValue(initialValue);
@@ -346,7 +346,7 @@ export function useStorage<T>(
     if (storage instanceof Storage)
       useEventListener(window, 'storage', onStorageEvent, { passive: true });
     else
-      useEventListener(window as any, customStorageEventName as any, onStorageCustomEvent as any);
+      useEventListener<CustomEvent<StorageEventLike>>(window, customStorageEventName, onStorageCustomEvent);
   }
 
   if (initOnMounted) {

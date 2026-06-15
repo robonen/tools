@@ -105,10 +105,10 @@ const sectionTitle = 'comment-label mb-3';
   <div v-if="entry" class="xl:grid xl:grid-cols-[minmax(0,1fr)_14rem] xl:gap-12">
     <article class="min-w-0 max-w-3xl">
       <!-- Breadcrumb -->
-      <nav class="flex items-center gap-1.5 font-mono text-[13px] text-(--fg-subtle) mb-6">
-        <NuxtLink :to="`/${pkg.slug}`" class="hover:text-(--fg) transition-colors">{{ pkg.name }}</NuxtLink>
+      <nav class="flex items-center gap-1.5 font-mono text-[13px] text-fg-subtle mb-6">
+        <NuxtLink :to="`/${pkg.slug}`" class="hover:text-fg transition-colors">{{ pkg.name }}</NuxtLink>
         <span>/</span>
-        <span class="text-(--fg)">{{ title }}</span>
+        <span class="text-fg">{{ title }}</span>
       </nav>
 
       <!-- ── API ITEM ───────────────────────────────────────────────────── -->
@@ -116,7 +116,7 @@ const sectionTitle = 'comment-label mb-3';
         <header class="mb-8">
           <div class="flex items-center gap-2.5 mb-2 flex-wrap">
             <DocsBadge :kind="entry.item.kind" size="md" />
-            <h1 class="min-w-0 break-words text-[1.6rem] font-semibold font-mono tracking-tight text-(--fg)">{{ entry.item.name }}</h1>
+            <h1 class="min-w-0 break-words text-[1.6rem] font-semibold font-mono tracking-tight text-fg">{{ entry.item.name }}</h1>
             <DocsTag v-if="entry.item.since" :label="`v${entry.item.since}`" variant="neutral" />
             <DocsTag
               v-if="entry.item.hasTests"
@@ -126,15 +126,15 @@ const sectionTitle = 'comment-label mb-3';
             />
             <DocsTag v-if="entry.item.hasDemo" label="demo" variant="demo" />
           </div>
-          <p v-if="entry.item.description" class="text-(--fg-muted) text-[15px] leading-relaxed">
+          <p v-if="entry.item.description" class="text-fg-muted text-[15px] leading-relaxed">
             <DocsText :text="entry.item.description" />
           </p>
           <div class="flex items-center gap-4 mt-4 text-sm">
-            <a :href="ghUrl(entry.item.sourcePath)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-(--fg-subtle) hover:text-(--fg) transition-colors">
+            <a :href="ghUrl(entry.item.sourcePath)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-fg-subtle hover:text-fg transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
               Source
             </a>
-            <a v-if="entry.item.hasTests" :href="ghUrl(entry.item.sourcePath).replace('index.ts', 'index.test.ts')" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-(--fg-subtle) hover:text-(--fg) transition-colors">
+            <a v-if="entry.item.hasTests" :href="ghUrl(entry.item.sourcePath).replace('index.ts', 'index.test.ts')" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-fg-subtle hover:text-fg transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><polyline points="14 2 14 8 20 8" /><path d="m9 15 2 2 4-4" /></svg>
               Tests
             </a>
@@ -164,9 +164,9 @@ const sectionTitle = 'comment-label mb-3';
           <h2 :class="sectionTitle">Type Parameters</h2>
           <div class="space-y-1.5">
             <div v-for="tp in entry.item.typeParams" :key="tp.name" class="flex items-baseline gap-2 text-sm flex-wrap">
-              <code class="font-mono font-medium text-(--accent-text)">{{ tp.name }}</code>
-              <span v-if="tp.constraint" class="text-(--fg-subtle)">extends <code class="font-mono text-xs">{{ tp.constraint }}</code></span>
-              <span v-if="tp.default" class="text-(--fg-subtle)">= <code class="font-mono text-xs">{{ tp.default }}</code></span>
+              <code class="font-mono font-medium text-accent-text">{{ tp.name }}</code>
+              <span v-if="tp.constraint" class="text-fg-subtle">extends <code class="font-mono text-xs">{{ tp.constraint }}</code></span>
+              <span v-if="tp.default" class="text-fg-subtle">= <code class="font-mono text-xs">{{ tp.default }}</code></span>
             </div>
           </div>
         </section>
@@ -179,8 +179,8 @@ const sectionTitle = 'comment-label mb-3';
         <section v-if="entry.item.returns" id="returns" class="mb-8 scroll-mt-20">
           <h2 :class="sectionTitle">Returns</h2>
           <div class="flex items-baseline gap-2 text-sm flex-wrap" :class="entry.item.returns.properties?.length ? 'mb-3' : ''">
-            <code class="font-mono bg-(--bg-inset) border border-(--border) px-2 py-1 rounded text-xs wrap-break-word">{{ entry.item.returns.type }}</code>
-            <DocsText v-if="entry.item.returns.description" :text="entry.item.returns.description" class="text-(--fg-muted)" />
+            <code class="font-mono bg-bg-inset border border-border px-2 py-1 rounded text-xs wrap-break-word">{{ entry.item.returns.type }}</code>
+            <DocsText v-if="entry.item.returns.description" :text="entry.item.returns.description" class="text-fg-muted" />
           </div>
           <DocsPropsTable v-if="entry.item.returns.properties?.length" :properties="entry.item.returns.properties" />
         </section>
@@ -198,12 +198,12 @@ const sectionTitle = 'comment-label mb-3';
         <section v-if="entry.item.relatedTypes?.length" id="related-types" class="mb-8 scroll-mt-20">
           <h2 :class="sectionTitle">Related Types</h2>
           <div class="space-y-4">
-            <div v-for="rt in entry.item.relatedTypes" :key="rt.name" class="rounded-xl border border-(--border) bg-(--bg-subtle) p-4">
+            <div v-for="rt in entry.item.relatedTypes" :key="rt.name" class="rounded-xl border border-border bg-bg-subtle p-4">
               <div class="flex items-center gap-2 mb-2">
                 <DocsBadge :kind="rt.kind" size="sm" />
-                <h3 class="font-mono font-semibold text-sm text-(--fg)">{{ rt.name }}</h3>
+                <h3 class="font-mono font-semibold text-sm text-fg">{{ rt.name }}</h3>
               </div>
-              <p v-if="rt.description" class="text-sm text-(--fg-muted) mb-3">
+              <p v-if="rt.description" class="text-sm text-fg-muted mb-3">
                 <DocsText :text="rt.description" />
               </p>
               <DocsCode v-if="rt.signatures.length" :code="rt.signatures[0]!" />
@@ -218,14 +218,14 @@ const sectionTitle = 'comment-label mb-3';
         <header class="mb-8">
           <div class="flex items-center gap-2.5 mb-2 flex-wrap">
             <DocsBadge kind="component" size="md" />
-            <h1 class="font-display text-[1.7rem] font-bold tracking-tight text-(--fg)">{{ entry.component.name }}</h1>
+            <h1 class="font-display text-[1.7rem] font-bold tracking-tight text-fg">{{ entry.component.name }}</h1>
             <DocsTag :label="`${entry.component.parts.length} parts`" variant="neutral" />
           </div>
-          <p v-if="entry.component.description" class="text-(--fg-muted) text-[15px] leading-relaxed">
+          <p v-if="entry.component.description" class="text-fg-muted text-[15px] leading-relaxed">
             <DocsText :text="entry.component.description" />
           </p>
           <div class="flex items-center gap-4 mt-4 text-sm">
-            <a :href="ghUrl(entry.component.sourcePath)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-(--fg-subtle) hover:text-(--fg) transition-colors">
+            <a :href="ghUrl(entry.component.sourcePath)" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-fg-subtle hover:text-fg transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
               Source
             </a>

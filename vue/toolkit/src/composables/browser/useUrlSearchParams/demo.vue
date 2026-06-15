@@ -44,21 +44,21 @@ const queryString = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Search query
       </label>
       <input
         v-model="params.q"
         type="text"
         placeholder="Search…"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </div>
 
     <div class="flex flex-col gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Sort by</span>
+      <span class="demo-label">Sort by</span>
       <div class="flex flex-wrap gap-2">
         <button
           v-for="s in sorts"
@@ -66,8 +66,8 @@ const queryString = computed(() => {
           type="button"
           class="inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
           :class="params.sort === s
-            ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="params.sort = s"
         >
           {{ s }}
@@ -76,7 +76,7 @@ const queryString = computed(() => {
     </div>
 
     <div class="flex flex-col gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Tags (repeated keys → array)
       </span>
       <div class="flex flex-wrap gap-2">
@@ -86,8 +86,8 @@ const queryString = computed(() => {
           type="button"
           class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium transition cursor-pointer"
           :class="activeTags.includes(tag)
-            ? 'border-(--accent) bg-(--accent-subtle) text-(--accent-text)'
-            : 'border-(--border) bg-(--bg-inset) text-(--fg-muted) hover:border-(--border-strong)'"
+            ? 'border-accent bg-accent-subtle text-accent-text'
+            : 'border-border bg-bg-inset text-fg-muted hover:border-border-strong'"
           @click="toggleTag(tag)"
         >
           #{{ tag }}
@@ -96,13 +96,13 @@ const queryString = computed(() => {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Live URL query
       </span>
-      <div class="overflow-x-auto rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums">
+      <div class="overflow-x-auto rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums">
         <span class="whitespace-nowrap">{{ queryString }}</span>
       </div>
-      <p class="text-xs text-(--fg-subtle)">
+      <p class="text-xs text-fg-subtle">
         The browser address bar updates as you edit. Falsy values are dropped.
       </p>
     </div>

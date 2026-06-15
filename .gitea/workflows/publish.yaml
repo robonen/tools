@@ -1,0 +1,81 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  NODE_VERSION: 24.x
+
+jobs:
+  check-and-publish:
+    name: Check version changes and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browser
+        run: pnpm --filter "@robonen/primitives" exec playwright install --with-deps chromium
+
+      - name: Build & Test
+        run: pnpm build && pnpm test
+
+      - name: Check for version changes and publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Find all package.json files (excluding node_modules)
+          PACKAGE_FILES=$(find . -path "*/package.json" -not -path "*/node_modules/*")
+
+          for file in $PACKAGE_FILES; do
+            PACKAGE_DIR=$(dirname $file)
+            echo "Checking $PACKAGE_DIR for version changes..."
+
+            # Get package details
+            PACKAGE_NAME=$(node -p "require('$file').name")
+            CURRENT_VERSION=$(node -p "require('$file').version")
+            IS_PRIVATE=$(node -p "require('$file').private || false")
+
+            # Skip private packages
+            if [ "$IS_PRIVATE" == "true" ]; then
+              echo "Skipping private package $PACKAGE_NAME"
+              continue
+            fi
+
+            # Skip root package
+            if [ "$PACKAGE_DIR" == "." ]; then
+              echo "Skipping root package"
+              continue
+            fi
+
+            # Check if package exists on npm
+            NPM_VERSION=$(npm view $PACKAGE_NAME version 2>/dev/null || echo "0.0.0")
+
+            # Compare versions
+            if [ "$CURRENT_VERSION" != "$NPM_VERSION" ]; then
+              echo "Version changed for $PACKAGE_NAME: $NPM_VERSION → $CURRENT_VERSION"
+              echo "Publishing $PACKAGE_NAME@$CURRENT_VERSION"
+              cd $PACKAGE_DIR
+              pnpm publish --access public --no-git-checks
+              cd -
+            else
+              echo "No version change detected for $PACKAGE_NAME"
+            fi
+          done

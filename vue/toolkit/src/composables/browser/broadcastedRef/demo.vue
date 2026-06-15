@@ -27,9 +27,9 @@ function setQuantity(delta: number): void {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Shared cart</span>
+      <span class="demo-label">Shared cart</span>
       <span
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
         :class="supported
@@ -41,15 +41,15 @@ function setQuantity(delta: number): void {
       </span>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card p-4">
       <div class="flex flex-wrap gap-2">
         <button
           v-for="product in products"
           :key="product"
           class="inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
           :class="cart.item === product
-            ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="pick(product)"
         >
           {{ product }}
@@ -57,18 +57,18 @@ function setQuantity(delta: number): void {
       </div>
 
       <div class="mt-4 flex items-center justify-between">
-        <span class="text-sm text-(--fg-muted)">Quantity</span>
+        <span class="text-sm text-fg-muted">Quantity</span>
         <div class="flex items-center gap-2">
           <button
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-(--border) bg-(--bg-elevated) text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-bg-elevated text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
             :disabled="cart.quantity <= 1"
             @click="setQuantity(-1)"
           >
             &minus;
           </button>
-          <span class="w-8 text-center font-mono text-lg font-bold tabular-nums text-(--fg)">{{ cart.quantity }}</span>
+          <span class="demo-stat w-8 text-center text-lg">{{ cart.quantity }}</span>
           <button
-            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-(--border) bg-(--bg-elevated) text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-bg-elevated text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.98] cursor-pointer"
             @click="setQuantity(1)"
           >
             +
@@ -77,21 +77,21 @@ function setQuantity(delta: number): void {
       </div>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums">
       <div class="flex justify-between">
-        <span class="text-(--fg-muted)">{{ cart.item }} &times; {{ cart.quantity }}</span>
+        <span class="text-fg-muted">{{ cart.item }} &times; {{ cart.quantity }}</span>
         <span class="font-bold">${{ subtotal }}</span>
       </div>
     </div>
 
     <button
-      class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+      class="demo-btn"
       @click="theme = theme === 'light' ? 'dark' : 'light'"
     >
       Toggle shared theme: <span class="font-mono">{{ theme }}</span>
     </button>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Open this page in a second tab. Every change you make here is broadcast and mirrored instantly in the other tab.
     </p>
   </div>

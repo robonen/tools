@@ -55,40 +55,40 @@ a.rga.toArray().join('') === b.rga.toArray().join(''); // true — converged`;
         offline, with messages that arrive out of order or twice. A CRDT solves this by construction:
         every primitive here is <strong>commutative, idempotent, and convergent</strong>, so applying
         the same set of operations in any order yields the same state — a property verified by
-        property tests. It's the convergence engine behind <code>@robonen/editor</code>, but stays
+        property tests. It's the convergence engine behind <code>@robonen/writekit</code>, but stays
         fully domain-agnostic, ships zero runtime dependencies, and runs in both Node and the browser.
       </p>
     </div>
 
     <!-- Feature cards -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Convergent by construction</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
-          One deterministic tie-break — <code class="text-(--accent-text)">compareOpId</code> (higher
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Convergent by construction</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
+          One deterministic tie-break — <code class="text-accent-text">compareOpId</code> (higher
           Lamport clock wins; site id breaks ties) — is shared by every primitive, so LWW and RGA agree
           on the same final state.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Causal buffering built in</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
-          <code class="text-(--accent-text)">Replica.receive</code> dedups, holds ops whose dependencies
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Causal buffering built in</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
+          <code class="text-accent-text">Replica.receive</code> dedups, holds ops whose dependencies
           haven't arrived yet (an insert before its origin), and retries them automatically as they land.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Delta sync, not full state</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Delta sync, not full state</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
           Version vectors let each side request exactly the ops it's missing via
-          <code class="text-(--accent-text)">delta(version)</code>, with a transport-agnostic wire format.
+          <code class="text-accent-text">delta(version)</code>, with a transport-agnostic wire format.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Zero dependencies, pure TS</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Zero dependencies, pure TS</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
           No runtime deps, no framework lock-in. Compose the primitives yourself, or lean on
-          <code class="text-(--accent-text)">Replica</code> to tie a clock, op log, and buffer together.
+          <code class="text-accent-text">Replica</code> to tie a clock, op log, and buffer together.
         </p>
       </div>
     </div>

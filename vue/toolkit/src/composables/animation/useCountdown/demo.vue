@@ -37,9 +37,9 @@ function toggle() {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5 text-center">
-      <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-5 text-center">
+      <div class="demo-label">
         Time remaining
       </div>
       <div
@@ -48,22 +48,22 @@ function toggle() {
           ? 'text-emerald-600 dark:text-emerald-400'
           : remaining <= 10 && remaining > 0
             ? 'text-amber-600 dark:text-amber-400'
-            : 'text-(--fg)'"
+            : 'text-fg'"
       >
         {{ minutes }}:{{ seconds }}
       </div>
 
-      <div class="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-(--bg-inset)">
+      <div class="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-bg-inset">
         <div
-          class="h-full rounded-full bg-(--accent) transition-[width] duration-300 ease-linear"
+          class="h-full rounded-full bg-accent transition-[width] duration-300 ease-linear"
           :style="{ width: `${progress * 100}%` }"
         />
       </div>
 
-      <div class="mt-3 flex items-center justify-center gap-2 text-xs text-(--fg-subtle)">
+      <div class="mt-3 flex items-center justify-center gap-2 text-xs text-fg-subtle">
         <span
           class="inline-block size-2 rounded-full transition"
-          :class="isActive ? 'bg-emerald-500' : justFinished ? 'bg-sky-500' : 'bg-(--border-strong)'"
+          :class="isActive ? 'bg-emerald-500' : justFinished ? 'bg-sky-500' : 'bg-border-strong'"
         />
         {{ justFinished ? 'Completed' : isActive ? 'Counting down' : 'Paused' }}
       </div>
@@ -73,7 +73,7 @@ function toggle() {
       <button
         v-for="preset in presets"
         :key="preset"
-        class="rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium tabular-nums text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="rounded-lg border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium tabular-nums text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.98] cursor-pointer"
         @click="setPreset(preset)"
       >
         {{ preset < 60 ? `${preset}s` : `${preset / 60}m` }}
@@ -82,20 +82,20 @@ function toggle() {
 
     <div class="flex items-center gap-2">
       <button
-        class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="remaining === 0 && isActive"
         @click="toggle"
       >
         {{ isActive ? 'Pause' : 'Resume' }}
       </button>
       <button
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="start()"
       >
         Restart
       </button>
       <button
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="stop"
       >
         Stop

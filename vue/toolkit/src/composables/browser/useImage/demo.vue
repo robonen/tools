@@ -18,7 +18,7 @@ const { isLoading, isReady, error, state, execute } = useImage(
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex flex-wrap gap-2">
       <button
         v-for="(sample, index) in samples"
@@ -26,15 +26,15 @@ const { isLoading, isReady, error, state, execute } = useImage(
         type="button"
         class="inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
         :class="current === index
-          ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-          : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+          ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+          : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
         @click="current = index"
       >
         {{ sample.label }}
       </button>
     </div>
 
-    <div class="relative aspect-[8/5] w-full overflow-hidden rounded-xl border border-(--border) bg-(--bg-inset)">
+    <div class="relative aspect-[8/5] w-full overflow-hidden rounded-xl border border-border bg-bg-inset">
       <Transition
         enter-active-class="transition duration-300"
         enter-from-class="opacity-0 scale-[1.02]"
@@ -61,8 +61,8 @@ const { isLoading, isReady, error, state, execute } = useImage(
           v-else
           class="absolute inset-0 flex flex-col items-center justify-center gap-3"
         >
-          <span class="h-7 w-7 animate-spin rounded-full border-2 border-(--border-strong) border-t-(--accent)" />
-          <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+          <span class="h-7 w-7 animate-spin rounded-full border-2 border-border-strong border-t-accent" />
+          <p class="demo-label">
             Loading…
           </p>
         </div>
@@ -83,7 +83,7 @@ const { isLoading, isReady, error, state, execute } = useImage(
         </span>
         <span
           v-if="isReady && state"
-          class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted) tabular-nums"
+          class="demo-badge tabular-nums"
         >
           {{ state.naturalWidth }}×{{ state.naturalHeight }}
         </span>
@@ -91,7 +91,7 @@ const { isLoading, isReady, error, state, execute } = useImage(
 
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="isLoading"
         @click="execute()"
       >

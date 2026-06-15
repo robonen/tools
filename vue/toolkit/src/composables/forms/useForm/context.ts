@@ -20,6 +20,6 @@ export const provideFormContext = formContextFactory.provide;
  * Inject the nearest provided form context, or `null` when there is none.
  * (The factory's own `inject` throws when absent; fields need an optional one.)
  */
-export function injectFormContext<TInput extends object = any, TOutput = TInput>(): FormContext<TInput, TOutput> | null {
+export function injectFormContext<TInput extends object = Record<string, unknown>, TOutput = TInput>(): FormContext<TInput, TOutput> | null {
   return inject(FORM_CONTEXT_KEY, null) as FormContext<TInput, TOutput> | null;
 }

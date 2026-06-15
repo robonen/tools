@@ -33,9 +33,9 @@ function clear(): void {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <div class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">useIsDefined(profile)</span>
+  <div class="demo-stack max-w-sm">
+    <div class="flex items-center justify-between rounded-lg border border-border bg-bg-inset p-3">
+      <span class="demo-label">useIsDefined(profile)</span>
       <span
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-semibold transition"
         :class="ready
@@ -47,16 +47,16 @@ function clear(): void {
       </span>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">narrowed read</p>
-      <p class="mt-1 text-base font-semibold text-(--fg)">{{ greeting }}</p>
+    <div class="demo-card p-4">
+      <p class="demo-label">narrowed read</p>
+      <p class="mt-1 text-base font-semibold text-fg">{{ greeting }}</p>
       <p
         v-if="isDefined(profile)"
-        class="mt-1 font-mono text-sm text-(--fg-muted)"
+        class="mt-1 font-mono text-sm text-fg-muted"
       >
         {{ profile.email }}
       </p>
-      <p v-else class="mt-1 text-sm italic text-(--fg-subtle)">
+      <p v-else class="mt-1 text-sm italic text-fg-subtle">
         Waiting for data…
       </p>
     </div>
@@ -64,7 +64,7 @@ function clear(): void {
     <div class="flex gap-2">
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="ready"
         @click="load"
       >
@@ -72,7 +72,7 @@ function clear(): void {
       </button>
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!ready"
         @click="clear"
       >

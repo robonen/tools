@@ -98,16 +98,16 @@ function createUntil<T>(r: WatchSource<T> | MaybeRefOrGetter<T>, isNot = false):
       );
     });
 
-    const promises = [watcher];
-    if (timeout !== null && timeout !== undefined) {
-      promises.push(
-        promiseTimeout(timeout, throwOnTimeout)
-          .then(() => toValue(r as MaybeRefOrGetter<T>))
-          .finally(() => stop?.()),
-      );
-    }
+    // No timeout → the watcher promise is the whole race; skip the array + Promise.race.
+    if (timeout === null || timeout === undefined)
+      return watcher;
 
-    return Promise.race(promises);
+    return Promise.race([
+      watcher,
+      promiseTimeout(timeout, throwOnTimeout)
+        .then(() => toValue(r as MaybeRefOrGetter<T>))
+        .finally(() => stop?.()),
+    ]);
   }
 
   function toBe<P>(value: MaybeRefOrGetter<P | T>, options?: UntilToMatchOptions): Promise<T> {
@@ -137,16 +137,16 @@ function createUntil<T>(r: WatchSource<T> | MaybeRefOrGetter<T>, isNot = false):
       );
     });
 
-    const promises = [watcher];
-    if (timeout !== null && timeout !== undefined) {
-      promises.push(
-        promiseTimeout(timeout, throwOnTimeout)
-          .then(() => toValue(r as MaybeRefOrGetter<T>))
-          .finally(() => stop?.()),
-      );
-    }
+    // No timeout → the watcher promise is the whole race; skip the array + Promise.race.
+    if (timeout === null || timeout === undefined)
+      return watcher;
 
-    return Promise.race(promises);
+    return Promise.race([
+      watcher,
+      promiseTimeout(timeout, throwOnTimeout)
+        .then(() => toValue(r as MaybeRefOrGetter<T>))
+        .finally(() => stop?.()),
+    ]);
   }
 
   function toBeTruthy(options?: UntilToMatchOptions): Promise<T> {

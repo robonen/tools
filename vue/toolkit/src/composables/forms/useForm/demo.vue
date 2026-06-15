@@ -45,23 +45,23 @@ const onSubmit = handleSubmit(async (values) => {
   submitted.value = { ...values };
 });
 
-const baseInput = 'w-full rounded-lg border bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:outline-none focus:ring-2 focus:ring-(--ring)';
+const baseInput = 'w-full rounded-lg border bg-bg px-3 py-2 text-sm text-fg placeholder:text-fg-subtle transition focus:outline-none focus:ring-2 focus:ring-ring';
 
 function cls(path: keyof SignUp): string {
   return errors[path]?.length
     ? `${baseInput} border-red-500/60 focus:border-red-500`
-    : `${baseInput} border-(--border) focus:border-(--accent)`;
+    : `${baseInput} border-border focus:border-accent`;
 }
 </script>
 
 <template>
   <form
-    class="flex w-full max-w-sm flex-col gap-4"
+    class="demo-stack max-w-sm"
     novalidate
     @submit.prevent="onSubmit"
   >
     <div class="flex flex-col gap-1.5">
-      <label for="uf-name" class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Name</label>
+      <label for="uf-name" class="demo-label">Name</label>
       <input
         id="uf-name"
         v-model="name"
@@ -75,7 +75,7 @@ function cls(path: keyof SignUp): string {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label for="uf-email" class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Email</label>
+      <label for="uf-email" class="demo-label">Email</label>
       <input
         id="uf-email"
         v-model="email"
@@ -90,7 +90,7 @@ function cls(path: keyof SignUp): string {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label for="uf-age" class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Age</label>
+      <label for="uf-age" class="demo-label">Age</label>
       <input
         id="uf-age"
         v-model.number="age"
@@ -108,14 +108,14 @@ function cls(path: keyof SignUp): string {
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
         :class="meta.valid
           ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-          : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+          : 'border-border bg-bg-inset text-fg-muted'"
       >
         {{ meta.valid ? 'valid' : 'invalid' }}
       </span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-badge">
         dirty: {{ meta.dirty }}
       </span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-badge">
         submits: {{ submitCount }}
       </span>
     </div>
@@ -124,13 +124,13 @@ function cls(path: keyof SignUp): string {
       <button
         type="submit"
         :disabled="isSubmitting"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
       >
         {{ isSubmitting ? 'Submitting…' : 'Create account' }}
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="resetForm(); submitted = null"
       >
         Reset
@@ -146,7 +146,7 @@ function cls(path: keyof SignUp): string {
       </p>
       <pre class="whitespace-pre-wrap">{{ JSON.stringify(submitted, null, 2) }}</pre>
     </div>
-    <p v-else class="text-center text-xs text-(--fg-subtle)">
+    <p v-else class="text-center text-xs text-fg-subtle">
       Validates on blur, then live on every change.
     </p>
   </form>

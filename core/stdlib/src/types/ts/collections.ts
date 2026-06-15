@@ -1,7 +1,10 @@
 /**
  * A collection definition
  */
-export type Collection = Record<PropertyKey, any> | any[];
+// `any[]` is kept (not `unknown[]`): as the `O extends Collection` constraint in `get`/`set`,
+// `unknown[]` would reject arrays whose elements sit in contravariant positions (e.g. the
+// `CircularBuffer<PoolEntry>` used by `async/pool`), breaking compilation outside this file.
+export type Collection = Record<PropertyKey, unknown> | any[];
 
 /**
  * Parse a collection path string into an array of keys

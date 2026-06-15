@@ -22,7 +22,7 @@ export function zip<A, B>(a: A[], b: B[]): Array<[A, B]>;
 export function zip<A, B, C>(a: A[], b: B[], c: C[]): Array<[A, B, C]>;
 export function zip<A, B, C, D>(a: A[], b: B[], c: C[], d: D[]): Array<[A, B, C, D]>;
 export function zip<A, B, C, D, E>(a: A[], b: B[], c: C[], d: D[], e: E[]): Array<[A, B, C, D, E]>;
-export function zip(...arrays: any[][]): any[][] {
+export function zip(...arrays: unknown[][]): unknown[][] {
   if (arrays.length === 0)
     return [];
 

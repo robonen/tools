@@ -31,7 +31,7 @@ function fmt(value: number | undefined, unit: string): string {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       class="flex items-center justify-between rounded-xl border p-4 transition-colors"
       :class="isOnline
@@ -52,46 +52,46 @@ function fmt(value: number | undefined, unit: string): string {
           <p class="text-sm font-semibold" :class="isOnline ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-700 dark:text-red-300'">
             {{ isOnline ? 'Online' : 'Offline' }}
           </p>
-          <p class="text-xs text-(--fg-muted)">
+          <p class="text-xs text-fg-muted">
             {{ isOnline ? 'since' : 'at' }} {{ lastTransition }}
           </p>
         </div>
       </div>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-badge">
         {{ type }}
       </span>
     </div>
 
-    <div v-if="isSupported" class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div v-if="isSupported" class="demo-card p-4">
       <div class="mb-3 flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Effective type</span>
-        <span class="font-mono text-sm font-semibold text-(--accent-text)">{{ effectiveType ?? 'unknown' }}</span>
+        <span class="demo-label">Effective type</span>
+        <span class="font-mono text-sm font-semibold text-accent-text">{{ effectiveType ?? 'unknown' }}</span>
       </div>
       <div class="flex gap-1">
         <span
           v-for="tier in 4"
           :key="tier"
           class="h-1.5 flex-1 rounded-full transition-colors"
-          :class="tier <= speedLevel ? 'bg-(--accent)' : 'bg-(--bg-inset)'"
+          :class="tier <= speedLevel ? 'bg-accent' : 'bg-bg-inset'"
         />
       </div>
 
       <dl class="mt-4 grid grid-cols-2 gap-3">
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-          <dt class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Downlink</dt>
-          <dd class="mt-1 font-mono text-sm font-semibold tabular-nums text-(--fg)">{{ fmt(downlink, ' Mbps') }}</dd>
+        <div class="rounded-lg border border-border bg-bg-inset p-3">
+          <dt class="demo-label">Downlink</dt>
+          <dd class="mt-1 font-mono text-sm font-semibold tabular-nums text-fg">{{ fmt(downlink, ' Mbps') }}</dd>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-          <dt class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">RTT</dt>
-          <dd class="mt-1 font-mono text-sm font-semibold tabular-nums text-(--fg)">{{ fmt(rtt, ' ms') }}</dd>
+        <div class="rounded-lg border border-border bg-bg-inset p-3">
+          <dt class="demo-label">RTT</dt>
+          <dd class="mt-1 font-mono text-sm font-semibold tabular-nums text-fg">{{ fmt(rtt, ' ms') }}</dd>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-          <dt class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Max downlink</dt>
-          <dd class="mt-1 font-mono text-sm font-semibold tabular-nums text-(--fg)">{{ fmt(downlinkMax, ' Mbps') }}</dd>
+        <div class="rounded-lg border border-border bg-bg-inset p-3">
+          <dt class="demo-label">Max downlink</dt>
+          <dd class="mt-1 font-mono text-sm font-semibold tabular-nums text-fg">{{ fmt(downlinkMax, ' Mbps') }}</dd>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-          <dt class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Save data</dt>
-          <dd class="mt-1 font-mono text-sm font-semibold text-(--fg)">{{ saveData === undefined ? '—' : (saveData ? 'on' : 'off') }}</dd>
+        <div class="rounded-lg border border-border bg-bg-inset p-3">
+          <dt class="demo-label">Save data</dt>
+          <dd class="mt-1 font-mono text-sm font-semibold text-fg">{{ saveData === undefined ? '—' : (saveData ? 'on' : 'off') }}</dd>
         </div>
       </dl>
     </div>
@@ -100,12 +100,12 @@ function fmt(value: number | undefined, unit: string): string {
       <p class="text-sm font-medium text-amber-700 dark:text-amber-400">
         Network Information API not supported
       </p>
-      <p class="mt-1 text-xs text-(--fg-muted)">
+      <p class="mt-1 text-xs text-fg-muted">
         Online status still works; connection details are unavailable in this browser.
       </p>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Toggle your device's connection (or DevTools network conditions) to watch the state react live.
     </p>
   </div>

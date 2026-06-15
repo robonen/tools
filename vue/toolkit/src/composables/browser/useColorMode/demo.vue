@@ -30,11 +30,11 @@ const options = [
 <template>
   <div
     ref="target"
-    class="flex w-full max-w-sm flex-col gap-4"
+    class="demo-stack max-w-sm"
   >
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Color mode</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">Color mode</span>
+      <span class="demo-badge">
         system: {{ mode.system.value }}
       </span>
     </div>
@@ -46,8 +46,8 @@ const options = [
         type="button"
         class="inline-flex flex-col items-center justify-center gap-1 rounded-lg border px-2 py-3 text-xs font-medium transition active:scale-[0.98] cursor-pointer"
         :class="mode === opt.value
-          ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-          : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+          ? 'border-transparent bg-accent text-accent-fg'
+          : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
         @click="mode = opt.value"
       >
         <span class="text-base leading-none">{{ opt.icon }}</span>
@@ -55,26 +55,26 @@ const options = [
       </button>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <p class="mb-3 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Reactive state</p>
+    <div class="demo-card p-4">
+      <p class="demo-label mb-3">Reactive state</p>
       <dl class="space-y-2 text-sm">
         <div class="flex items-center justify-between">
-          <dt class="text-(--fg-muted)">selected (emitAuto)</dt>
-          <dd class="font-mono tabular-nums text-(--fg)">{{ mode }}</dd>
+          <dt class="text-fg-muted">selected (emitAuto)</dt>
+          <dd class="font-mono tabular-nums text-fg">{{ mode }}</dd>
         </div>
         <div class="flex items-center justify-between">
-          <dt class="text-(--fg-muted)">resolved state</dt>
-          <dd class="font-mono tabular-nums text-(--fg)">{{ mode.state.value }}</dd>
+          <dt class="text-fg-muted">resolved state</dt>
+          <dd class="font-mono tabular-nums text-fg">{{ mode.state.value }}</dd>
         </div>
         <div class="flex items-center justify-between">
-          <dt class="text-(--fg-muted)">store</dt>
-          <dd class="font-mono tabular-nums text-(--fg)">{{ mode.store.value }}</dd>
+          <dt class="text-fg-muted">store</dt>
+          <dd class="font-mono tabular-nums text-fg">{{ mode.store.value }}</dd>
         </div>
       </dl>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
-      The chosen mode is applied as <code class="font-mono text-(--fg-muted)">data-demo-theme</code> on this card.
+    <p class="text-xs text-fg-subtle">
+      The chosen mode is applied as <code class="font-mono text-fg-muted">data-demo-theme</code> on this card.
       Pick "Auto" to follow your OS preference.
     </p>
   </div>

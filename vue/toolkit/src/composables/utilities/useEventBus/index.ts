@@ -6,7 +6,7 @@ import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
  * A listener invoked when its bus emits. Receives the emitted `event`
  * value and an optional `payload`.
  */
-export type EventBusListener<T = unknown, P = any>
+export type EventBusListener<T = unknown, P = unknown>
   = (event: T, payload?: P) => void;
 
 /**
@@ -77,7 +77,7 @@ const CHANNEL = '*';
  * lazily populated, side-effect-free at import time, and SSR-safe (no global
  * access — a `Map` works identically on server and client).
  */
-const registry = new Map<EventBusIdentifier<any>, PubSub<{ '*': EventBusListener }>>();
+const registry = new Map<EventBusIdentifier<unknown>, PubSub<{ '*': EventBusListener }>>();
 
 /**
  * @name useEventBus
@@ -112,7 +112,7 @@ const registry = new Map<EventBusIdentifier<any>, PubSub<{ '*': EventBusListener
  *
  * @since 0.0.15
  */
-export function useEventBus<T = unknown, P = any>(
+export function useEventBus<T = unknown, P = unknown>(
   key: EventBusIdentifier<T>,
 ): UseEventBusReturn<T, P> {
   function getBus(): PubSub<{ '*': EventBusListener }> {

@@ -1,23 +1,10 @@
 import { watch } from 'vue';
-import type { WatchCallback, WatchOptions, WatchSource, WatchStopHandle } from 'vue';
+import type { MultiWatchSources, WatchCallback, WatchOptions, WatchSource, WatchStopHandle } from 'vue';
 import { noop } from '@robonen/stdlib';
 import type { AnyFunction } from '@robonen/stdlib';
 import { bypassFilter, createFilterWrapper } from '@/utils';
 import type { ConfigurableEventFilter } from '@/utils';
-
-type MultiWatchSources = Array<WatchSource<unknown> | object>;
-
-type MapSources<T> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V> ? V : T[K] extends object ? T[K] : never;
-};
-
-type MapOldSources<T, Immediate> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V>
-    ? Immediate extends true ? V | undefined : V
-    : T[K] extends object
-      ? Immediate extends true ? T[K] | undefined : T[K]
-      : never;
-};
+import type { MapOldSources, MapSources } from '@/types/watch';
 
 export interface WatchWithFilterOptions<Immediate> extends WatchOptions<Immediate>, ConfigurableEventFilter {}
 
@@ -80,7 +67,7 @@ export function watchIgnorable<T extends object, Immediate extends Readonly<bool
 ): WatchIgnorableReturn;
 
 export function watchIgnorable<Immediate extends Readonly<boolean> = false>(
-  source: any,
+  source: WatchSource<unknown> | MultiWatchSources | object,
   cb: AnyFunction,
   options: WatchWithFilterOptions<Immediate> = {},
 ): WatchIgnorableReturn {
@@ -106,7 +93,7 @@ export function watchIgnorable<Immediate extends Readonly<boolean> = false>(
 
     stop = watch(
       source,
-      (...args: any[]) => {
+      (...args: unknown[]) => {
         if (!ignore)
           filteredCb(...args);
       },
@@ -147,7 +134,7 @@ export function watchIgnorable<Immediate extends Readonly<boolean> = false>(
     disposables.push(
       watch(
         source,
-        (...args: any[]) => {
+        (...args: unknown[]) => {
           const ignore = ignoreCounter > 0 && ignoreCounter === syncCounter;
           ignoreCounter = 0;
           syncCounter = 0;

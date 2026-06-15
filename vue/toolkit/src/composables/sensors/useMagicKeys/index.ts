@@ -5,6 +5,10 @@ import { computed, reactive, shallowRef, toValue } from 'vue';
 import { useEventListener } from '@/composables/browser/useEventListener';
 import { defaultWindow } from '@/types';
 
+// Combo separator (`ctrl+a`, `ctrl_a`, `ctrl-a`). Non-global so it is safe to
+// reuse for both `.test()` (no lastIndex state) and `.split()`.
+const COMBO_SEPARATOR_RE = /* #__PURE__ */ /[+_-]/;
+
 export type UseMagicKeysAliasMap = Readonly<Record<string, string>>;
 
 /**
@@ -105,7 +109,7 @@ type KeyRefs = Record<string, Ref<boolean> | ShallowRef<boolean> | ComputedRef<b
  */
 export function useMagicKeys(options?: UseMagicKeysOptions<false>): MagicKeys<false>;
 export function useMagicKeys(options: UseMagicKeysOptions<true>): MagicKeys<true>;
-export function useMagicKeys(options: UseMagicKeysOptions<boolean> = {}): any {
+export function useMagicKeys(options: UseMagicKeysOptions<boolean> = {}): MagicKeys<boolean> {
   const {
     reactive: useReactive = false,
     target = defaultWindow,
@@ -132,17 +136,22 @@ export function useMagicKeys(options: UseMagicKeysOptions<boolean> = {}): any {
     reset,
   };
 
-  const refs: KeyRefs = useReactive ? reactive(obj as any) : (obj as any);
+  // `obj` seeds the proxy with `current`/`reset`; key refs are added lazily, so
+  // the seed shape genuinely differs from `KeyRefs` until the proxy populates it.
+  const refs: KeyRefs = useReactive
+    ? (reactive(obj) as unknown as KeyRefs)
+    : (obj as unknown as KeyRefs);
 
   function setRefs(key: string, value: boolean): void {
     // Touch the proxy so the ref is materialized for keys we actually track,
     // even if the consumer hasn't accessed them yet.
     if (!(key in refs))
-      void (proxy as any)[key];
+      void proxy[key];
 
     if (key in refs) {
       if (useReactive)
-        (refs as any)[key] = value;
+        // `reactive` unwraps the stored ref, so the slot is written as a raw boolean.
+        (refs as unknown as Record<string, boolean>)[key] = value;
       else
         (refs[key] as Ref<boolean>).value = value;
     }
@@ -209,9 +218,9 @@ export function useMagicKeys(options: UseMagicKeysOptions<boolean> = {}): any {
 
       // lazily create tracking ref for combos and single keys
       if (!(prop in refs)) {
-        if (/[+_-]/.test(prop)) {
-          const keys = prop.split(/[+_-]/g).map((i: string) => i.trim());
-          refs[prop] = computed(() => keys.map(key => toValue((proxy as any)[key])).every(Boolean));
+        if (COMBO_SEPARATOR_RE.test(prop)) {
+          const keys = prop.split(COMBO_SEPARATOR_RE).map((i: string) => i.trim());
+          refs[prop] = computed(() => keys.map(key => toValue(proxy[key])).every(Boolean));
         }
         else {
           refs[prop] = shallowRef(false);
@@ -223,5 +232,7 @@ export function useMagicKeys(options: UseMagicKeysOptions<boolean> = {}): any {
     },
   });
 
-  return proxy as any;
+  // The proxy is backed by `KeyRefs`; the public type is the richer `MagicKeys`
+  // facade (combos resolved on access), which the type system can't infer here.
+  return proxy as unknown as MagicKeys<boolean>;
 }

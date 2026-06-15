@@ -1,0 +1,31 @@
+<script lang="ts">
+import type { PrimitiveProps } from '../../internal/primitive';
+
+/**
+ * A marker (typically a checkmark) rendered only while its `SelectItem` is the
+ * selected option. Decorative and `aria-hidden`; use inside a `SelectItem`.
+ */
+export interface SelectItemIndicatorProps extends PrimitiveProps {}
+</script>
+
+<script setup lang="ts">
+import { useForwardExpose } from '@robonen/vue';
+
+import { Primitive } from '../../internal/primitive';
+import { useSelectItemContext } from './context';
+
+const { as = 'span' } = defineProps<SelectItemIndicatorProps>();
+const { forwardRef } = useForwardExpose();
+const itemCtx = useSelectItemContext();
+</script>
+
+<template>
+  <Primitive
+    v-if="itemCtx.isSelected.value"
+    :ref="forwardRef"
+    :as="as"
+    aria-hidden="true"
+  >
+    <slot />
+  </Primitive>
+</template>

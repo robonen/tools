@@ -12,7 +12,7 @@ const label = computed(() => ({
     type="button"
     :title="`Theme: ${label} (click to change)`"
     :aria-label="`Theme: ${label}`"
-    class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset) transition-colors cursor-pointer"
+    class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-fg-muted hover:text-fg hover:bg-bg-inset transition-colors cursor-pointer"
     @click="cycle"
   >
     <ClientOnly>

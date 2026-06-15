@@ -1,19 +1,6 @@
 import { watch } from 'vue';
-import type { WatchCallback, WatchHandle, WatchOptions, WatchSource } from 'vue';
-
-type MultiWatchSources = Array<WatchSource<unknown> | object>;
-
-type MapSources<T> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V> ? V : T[K] extends object ? T[K] : never;
-};
-
-type MapOldSources<T, Immediate> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V>
-    ? Immediate extends true ? V | undefined : V
-    : T[K] extends object
-      ? Immediate extends true ? T[K] | undefined : T[K]
-      : never;
-};
+import type { MultiWatchSources, WatchCallback, WatchHandle, WatchOptions, WatchSource } from 'vue';
+import type { MapOldSources, MapSources } from '@/types/watch';
 
 export type WatchOnceOptions<Immediate = boolean> = Omit<WatchOptions<Immediate>, 'once'>;
 

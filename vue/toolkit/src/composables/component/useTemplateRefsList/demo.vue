@@ -50,62 +50,62 @@ const collected = computed(() => refs.value.length);
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Playlist</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">Playlist</span>
+      <span class="demo-badge">
         {{ collected }} refs collected
       </span>
     </div>
 
-    <ul class="flex flex-col gap-2 max-h-56 overflow-y-auto rounded-xl border border-(--border) bg-(--bg-elevated) p-2">
+    <ul class="demo-card flex flex-col gap-2 max-h-56 overflow-y-auto p-2">
       <li
         v-for="(track, index) in tracks"
         :key="track.id"
         :ref="set"
-        class="group flex items-center gap-3 rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2 transition"
-        :class="lastMeasured?.index === index ? 'border-(--accent) ring-2 ring-(--ring)' : 'hover:border-(--border-strong)'"
+        class="group flex items-center gap-3 rounded-lg border border-border bg-bg-inset px-3 py-2 transition"
+        :class="lastMeasured?.index === index ? 'border-accent ring-2 ring-ring' : 'hover:border-border-strong'"
       >
-        <span class="font-mono text-xs tabular-nums text-(--fg-subtle) w-5 text-right">{{ index + 1 }}</span>
+        <span class="font-mono text-xs tabular-nums text-fg-subtle w-5 text-right">{{ index + 1 }}</span>
         <span class="flex min-w-0 flex-1 flex-col">
-          <span class="truncate text-sm font-medium text-(--fg)">{{ track.title }}</span>
-          <span class="truncate text-xs text-(--fg-muted)">{{ track.artist }}</span>
+          <span class="truncate text-sm font-medium text-fg">{{ track.title }}</span>
+          <span class="truncate text-xs text-fg-muted">{{ track.artist }}</span>
         </span>
         <button
           type="button"
           aria-label="Remove track"
-          class="rounded-md px-1.5 py-0.5 text-xs text-(--fg-subtle) opacity-0 transition hover:text-(--fg) group-hover:opacity-100 cursor-pointer"
+          class="rounded-md px-1.5 py-0.5 text-xs text-fg-subtle opacity-0 transition hover:text-fg group-hover:opacity-100 cursor-pointer"
           @click="removeTrack(track.id)"
         >
           ✕
         </button>
       </li>
-      <li v-if="tracks.length === 0" class="px-3 py-6 text-center text-sm text-(--fg-subtle)">
+      <li v-if="tracks.length === 0" class="px-3 py-6 text-center text-sm text-fg-subtle">
         No tracks — add one to collect a ref.
       </li>
     </ul>
 
     <div
       v-if="lastMeasured"
-      class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums"
+      class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums"
     >
       refs[{{ lastMeasured.index }}].width = {{ lastMeasured.width }}px
     </div>
-    <p v-else class="text-xs text-(--fg-subtle)">
+    <p v-else class="text-xs text-fg-subtle">
       Add a track to measure the newest collected element directly from the DOM.
     </p>
 
     <div class="flex gap-2">
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary flex-1"
         @click="addTrack"
       >
         Add track
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="collected === 0"
         @click="measureLast"
       >

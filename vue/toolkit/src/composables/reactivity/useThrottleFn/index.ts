@@ -2,6 +2,7 @@ import { isRef, toValue } from 'vue';
 import type { MaybeRefOrGetter } from 'vue';
 import { isFunction, isObject, throttle } from '@robonen/stdlib';
 import type { AnyFunction } from '@robonen/stdlib';
+import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 
 export interface UseThrottleFnOptions {
   /**
@@ -180,6 +181,10 @@ export function useThrottleFn<T extends AnyFunction>(
   wrapper.flush = () => {
     throttled.flush();
   };
+
+  // Cancel any pending trailing invocation when the scope is disposed, so it
+  // can't fire after the component unmounts (mirrors useDebounceFn).
+  tryOnScopeDispose(wrapper.cancel);
 
   return wrapper;
 }

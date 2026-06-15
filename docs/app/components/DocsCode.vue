@@ -39,12 +39,12 @@ async function copy() {
 </script>
 
 <template>
-  <div class="group relative rounded-xl border border-(--border) bg-(--bg-subtle) overflow-hidden max-w-full">
-    <div v-if="!bare" class="flex items-center justify-between px-3 h-9 border-b border-(--border) bg-(--bg-subtle)">
-      <span class="text-[11px] font-mono uppercase tracking-wider text-(--fg-subtle)">{{ langLabel }}</span>
+  <div class="group relative rounded-xl border border-border bg-bg-subtle overflow-hidden max-w-full">
+    <div v-if="!bare" class="flex items-center justify-between px-3 h-9 border-b border-border bg-bg-subtle">
+      <span class="text-[11px] font-mono uppercase tracking-wider text-fg-subtle">{{ langLabel }}</span>
       <button
         type="button"
-        class="inline-flex items-center gap-1 text-[11px] font-medium text-(--fg-subtle) hover:text-(--fg) transition-colors cursor-pointer"
+        class="inline-flex items-center gap-1 text-[11px] font-medium text-fg-subtle hover:text-fg transition-colors cursor-pointer"
         @click="copy"
       >
         <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -59,7 +59,7 @@ async function copy() {
     <button
       v-else
       type="button"
-      class="absolute right-2 top-2 z-10 inline-flex items-center justify-center w-7 h-7 rounded-md bg-(--bg-elevated) border border-(--border) text-(--fg-subtle) opacity-0 group-hover:opacity-100 hover:text-(--fg) transition-all cursor-pointer"
+      class="absolute right-2 top-2 z-10 inline-flex items-center justify-center w-7 h-7 rounded-md bg-bg-elevated border border-border text-fg-subtle opacity-0 group-hover:opacity-100 hover:text-fg transition-all cursor-pointer"
       title="Copy"
       @click="copy"
     >

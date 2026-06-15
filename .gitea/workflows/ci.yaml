@@ -13,45 +13,38 @@ env:
   NODE_VERSION: 24.x
 
 jobs:
-  # Enumerate the workspace packages so the matrix below fans out one job per
-  # package (kept dynamic so new packages are picked up automatically).
-  discover:
-    name: Discover packages
-    runs-on: ubuntu-latest
-    outputs:
-      packages: ${{ steps.list.outputs.packages }}
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          run_install: false
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: List workspace packages
-        id: list
-        run: echo "packages=$(pnpm -r ls --depth -1 --json | jq -c '[.[] | select(.name != "tools") | .name]')" >> "$GITHUB_OUTPUT"
-
   # One job per package — build (with its workspace deps), lint and test run in
   # parallel across packages. fail-fast: false so every package is reported.
+  #
+  # The list is static: Gitea's act_runner does not expand a dynamic matrix
+  # built from a previous job's outputs (the strategy is evaluated before the
+  # producing job runs), so `matrix.package` came out empty. When you add a
+  # workspace package, add a line here.
   check:
     name: ${{ matrix.package }}
-    needs: discover
     runs-on: ubuntu-latest
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJSON(needs.discover.outputs.packages) }}
+        package:
+          - "@robonen/eslint"
+          - "@robonen/tsconfig"
+          - "@robonen/tsdown"
+          - "@robonen/crdt"
+          - "@robonen/encoding"
+          - "@robonen/fetch"
+          - "@robonen/platform"
+          - "@robonen/stdlib"
+          - "@robonen/docs"
+          - "@robonen/renovate"
+          - "@robonen/primitives"
+          - "@robonen/primitives-playground"
+          - "@robonen/stories"
+          - "@robonen/vue"
+          - "@robonen/writekit"
+          - "@robonen/writekit-playground"
     steps:
       - uses: actions/checkout@v6
 

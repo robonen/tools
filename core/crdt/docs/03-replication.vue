@@ -249,12 +249,12 @@ a.replica.receive(ops);`;
     </div>
 
     <!-- Why order does not matter -->
-    <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-      <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Why the order of the two deltas is irrelevant</h3>
-      <p class="text-sm leading-relaxed text-(--fg-muted)">
-        You could swap the two <code class="text-(--accent-text)">receive</code> lines, run them
+    <div class="rounded-lg border border-border bg-bg-subtle p-5">
+      <h3 class="mb-1.5 text-sm font-semibold text-fg">Why the order of the two deltas is irrelevant</h3>
+      <p class="text-sm leading-relaxed text-fg-muted">
+        You could swap the two <code class="text-accent-text">receive</code> lines, run them
         repeatedly, or interleave them with more edits — the result is the same. Each side only ever
-        adds ops it hasn't seen, and <code class="text-(--accent-text)">compareOpId</code> places
+        adds ops it hasn't seen, and <code class="text-accent-text">compareOpId</code> places
         each op in its deterministic position regardless of arrival order. That is convergence,
         and the property tests assert it across randomized schedules.
       </p>
@@ -346,11 +346,11 @@ a.replica.receive(ops);`;
     <!-- Caveat callout -->
     <div class="rounded-lg border border-amber-500/30 bg-amber-500/10 p-5">
       <h3 class="mb-1.5 text-sm font-semibold text-amber-700 dark:text-amber-400">Dense clocks are a precondition</h3>
-      <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <p class="text-sm leading-relaxed text-fg-muted">
         Version vectors assume each site's clocks are dense (1, 2, 3, …). That holds automatically
-        when ids come from <code class="text-(--accent-text)">Replica.nextId()</code>. If you mint
+        when ids come from <code class="text-accent-text">Replica.nextId()</code>. If you mint
         ids yourself, never skip a value for a site — a gap would make
-        <code class="text-(--accent-text)">delta</code> believe a missing op was already delivered.
+        <code class="text-accent-text">delta</code> believe a missing op was already delivered.
       </p>
     </div>
 

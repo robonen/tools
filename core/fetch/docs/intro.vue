@@ -59,35 +59,35 @@ const billing = api.extend({ baseURL: 'https://billing.example.com' });`;
     </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">Type-safe end to end</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">Type-safe end to end</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           Response data, request options, and plugin-contributed fields are all inferred —
           the parsed body comes back typed, no casting required.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">Smart bodies &amp; parsing</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">Smart bodies &amp; parsing</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           Plain objects are JSON-serialized; <code>FormData</code>/<code>Blob</code>/streams
           pass through untouched. Responses are decoded from <code>Content-Type</code> or
           forced via <code>responseType</code>.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">Retry, timeout &amp; errors</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">Retry, timeout &amp; errors</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           Built-in retry and per-attempt timeout with sensible defaults, and non-2xx
           responses reject with a rich <code>FetchError</code> carrying status, request,
           and parsed body.
         </p>
       </div>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-5">
-        <h3 class="text-sm font-semibold text-(--fg)">Hooks &amp; plugins</h3>
-        <p class="mt-1.5 text-sm text-(--fg-muted)">
+      <div class="rounded-xl border border-border bg-bg-elevated p-5">
+        <h3 class="text-sm font-semibold text-fg">Hooks &amp; plugins</h3>
+        <p class="mt-1.5 text-sm text-fg-muted">
           Lifecycle hooks plus a typed, composable plugin system with onion-style
           <code>execute</code> middleware — composed once, with zero per-request overhead
           beyond the hooks themselves.

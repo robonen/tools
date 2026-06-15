@@ -1,3 +1,3 @@
-import { base, compose, imports, stylistic, typescript } from '@robonen/eslint';
+import { base, compose, imports, stylistic, tests, typescript } from '@robonen/eslint';
 
-export default compose(base, typescript, imports, stylistic);
+export default compose(base, typescript, imports, stylistic, tests);

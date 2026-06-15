@@ -260,17 +260,17 @@ a.rga.toArray().join('') === b.rga.toArray().join(''); // true — CONVERGED`;
 
     <ClientOnly>
       <template #fallback>
-        <div class="rounded-xl border border-(--border) bg-(--bg-subtle) p-8 text-center text-sm text-(--fg-subtle)">
+        <div class="rounded-xl border border-border bg-bg-subtle p-8 text-center text-sm text-fg-subtle">
           Loading interactive demo…
         </div>
       </template>
 
-      <div class="rounded-xl border border-(--border) bg-(--bg-subtle) p-4 sm:p-5">
+      <div class="rounded-xl border border-border bg-bg-subtle p-4 sm:p-5">
         <div v-if="!ready" class="flex flex-col items-center gap-3 py-8 text-center">
-          <p class="text-sm text-(--fg-muted)">Spin up two fresh replicas to start editing.</p>
+          <p class="text-sm text-fg-muted">Spin up two fresh replicas to start editing.</p>
           <button
             type="button"
-            class="rounded-md bg-(--accent) px-4 py-2 text-sm font-medium text-(--accent-fg) hover:bg-(--accent-hover) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+            class="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-ring"
             @click="start()"
           >
             Start demo
@@ -281,82 +281,82 @@ a.rga.toArray().join('') === b.rga.toArray().join(''); // true — CONVERGED`;
           <!-- Two replica panes -->
           <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
             <!-- Replica A -->
-            <div class="flex flex-col gap-2 rounded-lg border border-(--border) bg-(--bg-elevated) p-3">
+            <div class="flex flex-col gap-2 rounded-lg border border-border bg-bg-elevated p-3">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-semibold uppercase tracking-wider text-(--fg-muted)">Replica A</span>
-                <span class="rounded bg-(--bg-inset) px-1.5 py-0.5 font-mono text-[11px] text-(--fg-subtle)">site: A</span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-fg-muted">Replica A</span>
+                <span class="rounded bg-bg-inset px-1.5 py-0.5 font-mono text-[11px] text-fg-subtle">site: A</span>
               </div>
               <textarea
                 v-model="drafts.a"
                 rows="3"
                 spellcheck="false"
-                class="resize-none rounded-md border border-(--border) bg-(--bg) px-3 py-2 font-mono text-sm text-(--fg) focus:border-(--border-strong) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+                class="resize-none rounded-md border border-border bg-bg px-3 py-2 font-mono text-sm text-fg focus:border-border-strong focus:outline-none focus:ring-2 focus:ring-ring"
                 placeholder="Type on A…"
               />
               <div class="flex items-center gap-2">
                 <button
                   type="button"
-                  class="rounded-md border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-xs font-medium text-(--fg) hover:bg-(--bg-inset) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+                  class="rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-xs font-medium text-fg hover:bg-bg-inset focus:outline-none focus:ring-2 focus:ring-ring"
                   @click="apply('a')"
                 >
                   Apply edits
                 </button>
-                <div class="ml-auto flex items-center gap-3 font-mono text-[11px] text-(--fg-subtle)">
+                <div class="ml-auto flex items-center gap-3 font-mono text-[11px] text-fg-subtle">
                   <span>ops {{ snapshot.a.ops }}</span>
                   <span>clock {{ snapshot.a.clock }}</span>
                 </div>
               </div>
-              <div class="rounded-md bg-(--bg-inset) px-3 py-2 font-mono text-sm text-(--fg) break-all min-h-9">
+              <div class="rounded-md bg-bg-inset px-3 py-2 font-mono text-sm text-fg break-all min-h-9">
                 <span v-if="snapshot.a.text">{{ snapshot.a.text }}</span>
-                <span v-else class="text-(--fg-subtle)">(empty)</span>
+                <span v-else class="text-fg-subtle">(empty)</span>
               </div>
             </div>
 
             <!-- Replica B -->
-            <div class="flex flex-col gap-2 rounded-lg border border-(--border) bg-(--bg-elevated) p-3">
+            <div class="flex flex-col gap-2 rounded-lg border border-border bg-bg-elevated p-3">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-semibold uppercase tracking-wider text-(--fg-muted)">Replica B</span>
-                <span class="rounded bg-(--bg-inset) px-1.5 py-0.5 font-mono text-[11px] text-(--fg-subtle)">site: B</span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-fg-muted">Replica B</span>
+                <span class="rounded bg-bg-inset px-1.5 py-0.5 font-mono text-[11px] text-fg-subtle">site: B</span>
               </div>
               <textarea
                 v-model="drafts.b"
                 rows="3"
                 spellcheck="false"
-                class="resize-none rounded-md border border-(--border) bg-(--bg) px-3 py-2 font-mono text-sm text-(--fg) focus:border-(--border-strong) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+                class="resize-none rounded-md border border-border bg-bg px-3 py-2 font-mono text-sm text-fg focus:border-border-strong focus:outline-none focus:ring-2 focus:ring-ring"
                 placeholder="Type on B…"
               />
               <div class="flex items-center gap-2">
                 <button
                   type="button"
-                  class="rounded-md border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-xs font-medium text-(--fg) hover:bg-(--bg-inset) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+                  class="rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-xs font-medium text-fg hover:bg-bg-inset focus:outline-none focus:ring-2 focus:ring-ring"
                   @click="apply('b')"
                 >
                   Apply edits
                 </button>
-                <div class="ml-auto flex items-center gap-3 font-mono text-[11px] text-(--fg-subtle)">
+                <div class="ml-auto flex items-center gap-3 font-mono text-[11px] text-fg-subtle">
                   <span>ops {{ snapshot.b.ops }}</span>
                   <span>clock {{ snapshot.b.clock }}</span>
                 </div>
               </div>
-              <div class="rounded-md bg-(--bg-inset) px-3 py-2 font-mono text-sm text-(--fg) break-all min-h-9">
+              <div class="rounded-md bg-bg-inset px-3 py-2 font-mono text-sm text-fg break-all min-h-9">
                 <span v-if="snapshot.b.text">{{ snapshot.b.text }}</span>
-                <span v-else class="text-(--fg-subtle)">(empty)</span>
+                <span v-else class="text-fg-subtle">(empty)</span>
               </div>
             </div>
           </div>
 
           <!-- Sync bar -->
-          <div class="flex flex-wrap items-center gap-3 border-t border-(--border) pt-3">
+          <div class="flex flex-wrap items-center gap-3 border-t border-border pt-3">
             <button
               type="button"
-              class="rounded-md bg-(--accent) px-4 py-2 text-sm font-medium text-(--accent-fg) hover:bg-(--accent-hover) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+              class="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-fg hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-ring"
               @click="sync()"
             >
               Sync ↔
             </button>
             <button
               type="button"
-              class="rounded-md px-3 py-2 text-sm text-(--fg-muted) hover:bg-(--bg-inset) hover:text-(--fg) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+              class="rounded-md px-3 py-2 text-sm text-fg-muted hover:bg-bg-inset hover:text-fg focus:outline-none focus:ring-2 focus:ring-ring"
               @click="init()"
             >
               Reset
@@ -436,27 +436,27 @@ a.rga.toArray().join('') === b.rga.toArray().join(''); // true — CONVERGED`;
     </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Commutative</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Commutative</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
           A-then-B and B-then-A produce the same sequence. Concurrent inserts at the same origin are
-          ordered by <code class="text-(--accent-text)">compareOpId</code>, so order of arrival
+          ordered by <code class="text-accent-text">compareOpId</code>, so order of arrival
           doesn't matter.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Idempotent</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Idempotent</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
           Receiving the same op twice is a no-op. The op log's version vector dedups on
-          <code class="text-(--accent-text)">id</code>, and <code class="text-(--accent-text)">integrateInsert</code>
+          <code class="text-accent-text">id</code>, and <code class="text-accent-text">integrateInsert</code>
           short-circuits if the id is already present.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Causal</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
-          An insert can't integrate before its <code class="text-(--accent-text)">originLeft</code>,
-          nor a delete before its target. <code class="text-(--accent-text)">receive</code> buffers
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Causal</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
+          An insert can't integrate before its <code class="text-accent-text">originLeft</code>,
+          nor a delete before its target. <code class="text-accent-text">receive</code> buffers
           such ops and retries them, so out-of-order delivery still converges.
         </p>
       </div>

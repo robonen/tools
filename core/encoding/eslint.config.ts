@@ -1,4 +1,4 @@
-import { base, compose, imports, stylistic, typescript } from '@robonen/eslint';
+import { base, compose, imports, stylistic, tests, typescript } from '@robonen/eslint';
 
 export default compose(base, typescript, imports, stylistic, {
   name: 'encoding/overrides',
@@ -10,4 +10,4 @@ export default compose(base, typescript, imports, stylistic, {
        oldest register's seed/last write is intentionally dead — keep symmetry. */
     'no-useless-assignment': 'off',
   },
-});
+}, tests);

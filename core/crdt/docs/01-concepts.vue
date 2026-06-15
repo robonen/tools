@@ -179,13 +179,13 @@ const propsSrc = `// Commutative — order of application doesn't matter:
         same survivor. That single shared decision is what lets a last-writer-wins register and a sequence
         CRDT, built by different code, nonetheless agree on the final document.
       </p>
-      <div class="my-4 rounded-lg border border-(--border) bg-(--bg-subtle) p-4">
-        <p class="m-0 text-sm leading-relaxed text-(--fg-muted)">
-          <strong class="text-(--fg)">Why one rule for everything?</strong>
-          <code class="text-(--accent-text)">LwwRegister</code> uses
-          <code class="text-(--accent-text)">compareOpId</code> to pick the surviving value;
-          <code class="text-(--accent-text)">Rga</code> uses it to break ties between concurrent inserts at
-          the same position; <code class="text-(--accent-text)">MarkStore</code> uses it to decide which
+      <div class="my-4 rounded-lg border border-border bg-bg-subtle p-4">
+        <p class="m-0 text-sm leading-relaxed text-fg-muted">
+          <strong class="text-fg">Why one rule for everything?</strong>
+          <code class="text-accent-text">LwwRegister</code> uses
+          <code class="text-accent-text">compareOpId</code> to pick the surviving value;
+          <code class="text-accent-text">Rga</code> uses it to break ties between concurrent inserts at
+          the same position; <code class="text-accent-text">MarkStore</code> uses it to decide which
           formatting wins per character. One total order, applied consistently, is what turns a pile of
           independent primitives into a coherent, converging system.
         </p>
@@ -223,11 +223,11 @@ const propsSrc = `// Commutative — order of application doesn't matter:
     <DocsCode :code="vvWireSrc" lang="ts" />
     <div class="prose-docs">
       <div class="my-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4">
-        <p class="m-0 text-sm leading-relaxed text-(--fg-muted)">
+        <p class="m-0 text-sm leading-relaxed text-fg-muted">
           <strong class="text-amber-700 dark:text-amber-400">Density matters.</strong>
-          <code class="text-(--accent-text)">VersionVector</code> only works because clocks arrive without
-          gaps. If you generate ids with a raw <code class="text-(--accent-text)">LamportClock</code>, deliver
-          them in order per site (the <code class="text-(--accent-text)">Replica</code>'s causal buffer does
+          <code class="text-accent-text">VersionVector</code> only works because clocks arrive without
+          gaps. If you generate ids with a raw <code class="text-accent-text">LamportClock</code>, deliver
+          them in order per site (the <code class="text-accent-text">Replica</code>'s causal buffer does
           this for you) so a single high-water mark per site can stand in for the full set of seen ops.
         </p>
       </div>
@@ -242,23 +242,23 @@ const propsSrc = `// Commutative — order of application doesn't matter:
     </div>
     <DocsCode :code="propsSrc" lang="ts" />
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Commutative</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Commutative</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
           Order of application doesn't change the result. A replica can integrate operations as they arrive,
           in whatever sequence the network delivers them.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Idempotent</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Idempotent</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
           Applying the same operation twice is the same as applying it once. Redelivery and retries are safe;
           version vectors make them free.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Convergent</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Convergent</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
           Same set of operations, same final state — full stop. Two replicas that have seen the same ops are
           byte-for-byte identical.
         </p>

@@ -1,6 +1,6 @@
 # @robonen/crdt
 
-Framework-agnostic CRDT primitives — the convergence engine behind `@robonen/editor`, usable on their own. Zero runtime dependencies; pure TypeScript; runs in Node and the browser.
+Framework-agnostic CRDT primitives — the convergence engine behind `@robonen/writekit`, usable on their own. Zero runtime dependencies; pure TypeScript; runs in Node and the browser.
 
 Every primitive is built so that **applying the same set of operations in any order, with duplicates, yields the same state** (commutative, idempotent, convergent), verified by property tests.
 
@@ -50,7 +50,7 @@ a.rga.toArray().join('') === b.rga.toArray().join(''); // true — converged
 - `compareOpId` is the single deterministic tie-break (higher clock wins; site id breaks ties) every primitive agrees on — that's what makes LWW and RGA converge.
 - `VersionVector` assumes **dense** per-site clocks (1, 2, 3, …).
 - The v1 wire format is JSON encoded to bytes — simple and debuggable; a compact varint format is a later optimization with no API change.
-- An editor-specific composition of these primitives (blocks + text + marks ↔ editor steps) lives in `@robonen/editor` under `crdt/native/`, not here — this package stays domain-agnostic.
+- A writekit-specific composition of these primitives (blocks + text + marks ↔ writekit steps) lives in `@robonen/writekit` under `crdt/native/`, not here — this package stays domain-agnostic.
 
 ## Development
 

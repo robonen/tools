@@ -198,33 +198,33 @@ store.resolve(order).map(m => m.get('strong')); // [true, true, true, true]`;
 
     <!-- Map of the package -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Registers</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
-          <code class="text-(--accent-text)">LwwRegister</code> and
-          <code class="text-(--accent-text)">LwwMap</code> — single values and keyed maps where the
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Registers</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
+          <code class="text-accent-text">LwwRegister</code> and
+          <code class="text-accent-text">LwwMap</code> — single values and keyed maps where the
           write with the highest op id wins.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Ordering</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
-          <code class="text-(--accent-text)">keyBetween</code> /
-          <code class="text-(--accent-text)">keysBetween</code> — fractional indexing to place or move
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Ordering</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
+          <code class="text-accent-text">keyBetween</code> /
+          <code class="text-accent-text">keysBetween</code> — fractional indexing to place or move
           an item with a single string key.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Sequence</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
-          <code class="text-(--accent-text)">Rga</code> — a replicated growable array: an ordered
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Sequence</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
+          <code class="text-accent-text">Rga</code> — a replicated growable array: an ordered
           sequence CRDT with tombstones and a deterministic insert tie-break.
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="mb-1.5 text-sm font-semibold text-(--fg)">Marks</h3>
-        <p class="text-sm leading-relaxed text-(--fg-muted)">
-          <code class="text-(--accent-text)">MarkStore</code> — lightweight Peritext formatting spans
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="mb-1.5 text-sm font-semibold text-fg">Marks</h3>
+        <p class="text-sm leading-relaxed text-fg-muted">
+          <code class="text-accent-text">MarkStore</code> — lightweight Peritext formatting spans
           anchored to character op ids, resolved per character by highest op id.
         </p>
       </div>
@@ -262,12 +262,12 @@ store.resolve(order).map(m => m.get('strong')); // [true, true, true, true]`;
     </div>
     <DocsCode :code="lwwMap" lang="ts" />
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-4">
-      <p class="text-sm leading-relaxed text-(--fg-muted)">
-        <strong class="text-(--fg)">Why keep tombstones?</strong> If a delete simply dropped the entry,
-        a concurrent <code class="text-(--accent-text)">set</code> arriving afterward would resurrect
+    <div class="rounded-lg border border-border bg-bg-subtle p-4">
+      <p class="text-sm leading-relaxed text-fg-muted">
+        <strong class="text-fg">Why keep tombstones?</strong> If a delete simply dropped the entry,
+        a concurrent <code class="text-accent-text">set</code> arriving afterward would resurrect
         the key — the two replicas would disagree on whether it exists. Retaining the delete as a
-        timestamped tombstone lets <code class="text-(--accent-text)">compareOpId</code> decide the
+        timestamped tombstone lets <code class="text-accent-text">compareOpId</code> decide the
         winner deterministically, the same way it does for live values.
       </p>
     </div>
@@ -308,9 +308,9 @@ store.resolve(order).map(m => m.get('strong')); // [true, true, true, true]`;
     <DocsCode :code="fractionalBatch" lang="ts" />
 
     <div class="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4">
-      <p class="text-sm leading-relaxed text-(--fg-muted)">
+      <p class="text-sm leading-relaxed text-fg-muted">
         <strong class="text-amber-700 dark:text-amber-400">Heads up:</strong>
-        <code class="text-(--accent-text)">keyBetween</code> requires <code>lower &lt; upper</code>
+        <code class="text-accent-text">keyBetween</code> requires <code>lower &lt; upper</code>
         and throws otherwise. Two replicas independently generating a key between the
         <em>same</em> neighbors can produce identical keys; pair the key with the item's op id as a
         secondary sort to keep ordering deterministic, or let
@@ -366,14 +366,14 @@ store.resolve(order).map(m => m.get('strong')); // [true, true, true, true]`;
     </div>
     <DocsCode :code="rgaBuffer" lang="ts" />
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-4">
-      <p class="text-sm leading-relaxed text-(--fg-muted)">
-        <strong class="text-(--fg)">Garbage collection.</strong> Tombstones accumulate. When every
-        replica has fully synced and nothing is in flight, <code class="text-(--accent-text)">gc(stable, keep?)</code>
+    <div class="rounded-lg border border-border bg-bg-subtle p-4">
+      <p class="text-sm leading-relaxed text-fg-muted">
+        <strong class="text-fg">Garbage collection.</strong> Tombstones accumulate. When every
+        replica has fully synced and nothing is in flight, <code class="text-accent-text">gc(stable, keep?)</code>
         drops deleted nodes whose insert is covered by a stable
         <NuxtLink to="/crdt/version-vector">VersionVector</NuxtLink>, returning how many it removed.
         Run it only at quiescence — a late op that uses a dropped node as its origin could no longer
-        integrate — and pass <code class="text-(--accent-text)">keep</code> to protect ids still
+        integrate — and pass <code class="text-accent-text">keep</code> to protect ids still
         referenced elsewhere, such as mark span endpoints.
       </p>
     </div>

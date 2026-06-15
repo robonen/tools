@@ -115,6 +115,8 @@ export interface ComponentMeta {
   name: string;
   /** URL-friendly slug, e.g. "accordion" */
   slug: string;
+  /** Functional category for grouping in the docs, e.g. "Forms", "Overlays". */
+  category: string;
   /** Short description (from README heading or first JSDoc) */
   description: string;
   /** Subpath export, e.g. "./accordion" */

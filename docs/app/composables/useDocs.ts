@@ -35,6 +35,28 @@ const GROUP_LABELS: Record<PackageGroup, string> = {
 
 const GROUP_ORDER: PackageGroup[] = ['core', 'vue', 'configs', 'infra'];
 
+/** Display order for component categories (unlisted categories sort last, A–Z). */
+const COMPONENT_CATEGORY_ORDER: string[] = [
+  'Forms',
+  'Selection',
+  'Color',
+  'Overlays',
+  'Menus',
+  'Disclosure',
+  'Navigation',
+  'Display',
+  'Feedback',
+  'Canvas & editors',
+  'Utilities',
+  'Other',
+];
+
+/** A category bucket of components, for grouped rendering. */
+export interface ComponentGroup {
+  name: string;
+  components: ComponentMeta[];
+}
+
 export function useDocs() {
   const data = metadata as unknown as DocsMetadata;
 
@@ -72,6 +94,29 @@ export function useDocs() {
   /** Non-intro doc sections (the "Guide" list shown in the sidebar). */
   function getDocSections(pkg: PackageMeta): DocSection[] {
     return pkg.docs.filter(s => !s.isIntro);
+  }
+
+  /**
+   * A `components`-kind package's components bucketed by `category`, ordered by
+   * {@link COMPONENT_CATEGORY_ORDER} (unlisted categories last, A–Z), with the
+   * components inside each bucket kept in their incoming (alphabetical) order.
+   */
+  function getComponentGroups(pkg: PackageMeta): ComponentGroup[] {
+    if (pkg.kind !== 'components') return [];
+    const buckets = new Map<string, ComponentMeta[]>();
+    for (const c of pkg.components) {
+      const cat = c.category || 'Other';
+      const list = buckets.get(cat);
+      if (list) list.push(c);
+      else buckets.set(cat, [c]);
+    }
+    const rank = (name: string) => {
+      const i = COMPONENT_CATEGORY_ORDER.indexOf(name);
+      return i === -1 ? COMPONENT_CATEGORY_ORDER.length : i;
+    };
+    return [...buckets.entries()]
+      .map(([name, components]) => ({ name, components }))
+      .sort((a, b) => rank(a.name) - rank(b.name) || a.name.localeCompare(b.name));
   }
 
   /** Resolve any `/:package/:slug` route to a normalised entry. */
@@ -157,6 +202,7 @@ export function useDocs() {
     firstEntrySlug,
     getIntro,
     getDocSections,
+    getComponentGroups,
     search,
     getTotalItems,
   };

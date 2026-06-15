@@ -44,7 +44,7 @@ export default defineNuxtModule({
       '@robonen/fetch': 'core/fetch/src',
       '@robonen/encoding': 'core/encoding/src',
       '@robonen/crdt': 'core/crdt/src',
-      '@robonen/editor': 'vue/editor/src',
+      '@robonen/writekit': 'vue/writekit/src',
       '@robonen/primitives': 'vue/primitives/src',
       '@robonen/vue': vueSrc,
     };
@@ -58,7 +58,13 @@ export default defineNuxtModule({
       // Primitive `as="template"` / Slot path), silently blanking every demo
       // that hits it. `import.meta.env.DEV` resolves correctly in dev & prod.
       config.define ??= {};
-      (config.define as Record<string, unknown>).__DEV__ ??= 'import.meta.env.DEV';
+      // Inline a STATIC boolean, not `import.meta.env.DEV`: a define value is
+      // inserted verbatim and is NOT re-scanned for Vite's `import.meta.env`
+      // replacement, so in a prod build it shipped a literal `import.meta.env.DEV`
+      // into chunks where `import.meta.env` is undefined at runtime →
+      // "Cannot read properties of undefined (reading 'DEV')". A literal
+      // true/false has no runtime dependency and tree-shakes the dev branches.
+      (config.define as Record<string, unknown>).__DEV__ ??= JSON.stringify(nuxt.options.dev);
 
       const existing = config.resolve?.alias;
       const sourceAliases = [

@@ -4,10 +4,10 @@
 }>();
 
 const variantClasses: Record<string, string> = {
-  since: 'bg-(--bg-inset) text-(--fg-muted) border border-(--border)',
-  neutral: 'bg-(--bg-inset) text-(--fg-muted) border border-(--border)',
+  since: 'bg-bg-inset text-fg-muted border border-border',
+  neutral: 'bg-bg-inset text-fg-muted border border-border',
   test: 'bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/20',
-  demo: 'bg-(--accent-subtle) text-(--accent-text) border border-(--accent-subtle)',
+  demo: 'bg-accent-subtle text-accent-text border border-accent-subtle',
   wip: 'bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20',
 };
 </script>

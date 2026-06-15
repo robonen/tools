@@ -88,7 +88,7 @@ const PACKAGES: PackageConfig[] = [
   { path: 'core/crdt', slug: 'crdt', kind: 'api', group: 'core' },
   // ── vue ──
   { path: 'vue/toolkit', slug: 'vue', kind: 'api', group: 'vue' },
-  { path: 'vue/editor', slug: 'editor', kind: 'api', group: 'vue' },
+  { path: 'vue/writekit', slug: 'writekit', kind: 'api', group: 'vue' },
   { path: 'vue/primitives', slug: 'primitives', kind: 'components', group: 'vue' },
   // ── configs ──
   { path: 'configs/eslint', slug: 'eslint', kind: 'guide', group: 'configs', guideSources: ['README.md', 'rules/*.md'] },
@@ -97,6 +97,27 @@ const PACKAGES: PackageConfig[] = [
   // ── infra ──
   { path: 'infra/renovate', slug: 'renovate', kind: 'guide', group: 'infra', guideSources: ['README.md'] },
 ];
+
+/**
+ * Display label for each category FOLDER under `src/`. Components now live at
+ * `src/<category>/<component>/`, so the folder is the source of truth for a
+ * component's category. Unlisted folders fall back to `toPascalCase(folder)`.
+ * The display order of categories lives in `useDocs` (`COMPONENT_CATEGORY_ORDER`).
+ */
+const CATEGORY_LABELS: Record<string, string> = {
+  forms: 'Forms',
+  selection: 'Selection',
+  color: 'Color',
+  overlays: 'Overlays',
+  menus: 'Menus',
+  disclosure: 'Disclosure',
+  navigation: 'Navigation',
+  display: 'Display',
+  feedback: 'Feedback',
+  canvas: 'Canvas & editors',
+  utilities: 'Utilities',
+  internal: 'Internal',
+};
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -716,14 +737,14 @@ function inferCategoryFromItem(item: ItemMeta): string {
 }
 
 /** Resolve a package's export subpaths to source entry files. */
-function resolveEntryPoints(pkgDir: string, exportsField: Record<string, any>): Array<{ subpath: string; filePath: string }> {
+function resolveEntryPoints(pkgDir: string, exportsField: Record<string, unknown>): Array<{ subpath: string; filePath: string }> {
   const entryPoints: Array<{ subpath: string; filePath: string }> = [];
 
   for (const [subpath, value] of Object.entries(exportsField)) {
     if (typeof value !== 'object' || value === null) continue;
 
-    let entry: any = (value as Record<string, any>).import ?? (value as Record<string, any>).types;
-    if (typeof entry === 'object' && entry !== null) entry = entry.types || entry.default;
+    let entry: unknown = (value as Record<string, unknown>).import ?? (value as Record<string, unknown>).types;
+    if (typeof entry === 'object' && entry !== null) entry = (entry as Record<string, unknown>).types || (entry as Record<string, unknown>).default;
     if (!entry || typeof entry !== 'string') continue;
     // Wildcard exports (e.g. "./*") can't be resolved to a single file here.
     if (entry.includes('*')) continue;
@@ -942,75 +963,100 @@ function roleFromName(componentName: string, base: string): string {
   return role || 'Root';
 }
 
+/**
+ * Build a single component group from its directory, or `null` when the dir is
+ * not a component group (no `.vue`). `category` is the display label; `entryPoint`
+ * is the package subpath (e.g. `./forms/checkbox`).
+ */
+function buildComponentAt(dir: string, slug: string, category: string, entryPoint: string): ComponentMeta | null {
+  // A component group is any dir that ships at least one .vue file.
+  const vueFiles = readdirSync(dir).filter(f => f.endsWith('.vue'));
+  if (vueFiles.length === 0) return null;
+
+  const base = toPascalCase(slug);
+
+  // Anatomy = the PUBLIC parts exported from index.ts, in declared order. This
+  // excludes demo.vue and internal parts (*Impl, *Modal/NonModal, *Position, …)
+  // that aren't part of the public API. Fall back to all .vue (minus demo) only
+  // when the barrel exposes no parseable `export { default as X }`.
+  const order = readPartOrder(resolve(dir, 'index.ts'));
+  const publicFiles = order.map(name => `${name}.vue`).filter(f => vueFiles.includes(f));
+  const candidates = publicFiles.length > 0
+    ? publicFiles
+    : vueFiles.filter(f => f !== 'demo.vue');
+  // Drop internal implementation/variant parts users never compose directly
+  // (the public part is e.g. `Content`, not `ContentImpl`/`ContentModal`).
+  const INTERNAL_PART = /(?:Impl|ContentModal|ContentNonModal|RootContentModal|RootContentNonModal|Position)\.vue$/;
+  const orderedFiles = candidates.filter(f => !INTERNAL_PART.test(f));
+
+  const parts: ComponentPartMeta[] = [];
+  let groupDescription = '';
+
+  for (const file of orderedFiles) {
+    const sfc = readFileSync(resolve(dir, file), 'utf-8');
+    const plain = extractScriptBlock(sfc, false);
+    const setup = extractScriptBlock(sfc, true);
+    const { props, description } = extractPartProps(plain);
+    const name = file.replace(/\.vue$/, '');
+    const role = roleFromName(name, base);
+    if (role === 'Root' && description && !groupDescription) groupDescription = description;
+
+    // Merge in `defineModel` v-model props/emits (invisible to the interface/
+    // defineEmits parsers), de-duping against any explicitly-declared ones.
+    const models = extractModels(setup);
+    const emits = extractEmits(setup);
+    for (const mp of models.props)
+      if (!props.some(p => p.name === mp.name)) props.push(mp);
+    for (const me of models.emits)
+      if (!emits.some(e => e.name === me.name)) emits.push(me);
+
+    parts.push({ name, role, description, props, emits });
+  }
+
+  return {
+    name: base,
+    slug,
+    category,
+    description: groupDescription,
+    entryPoint,
+    parts,
+    hasDemo: existsSync(resolve(dir, 'demo.vue')),
+    demoSource: '', // loaded lazily client-side via #docs/demo-sources
+    sourcePath: relative(ROOT, dir),
+  };
+}
+
 function buildComponents(pkgDir: string): ComponentMeta[] {
   const srcDir = resolve(pkgDir, 'src');
   if (!existsSync(srcDir)) return [];
 
   const components: ComponentMeta[] = [];
 
-  for (const entry of readdirSync(srcDir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const dir = resolve(srcDir, entry.name);
+  // Components live one level deep, in category folders: src/<category>/<component>/.
+  // The category folder IS the source of truth for the component's category.
+  for (const catEntry of readdirSync(srcDir, { withFileTypes: true })) {
+    if (!catEntry.isDirectory()) continue;
+    const catDir = resolve(srcDir, catEntry.name);
+    const label = CATEGORY_LABELS[catEntry.name];
 
-    // A component group is any dir that ships at least one .vue file.
-    const vueFiles = readdirSync(dir).filter(f => f.endsWith('.vue'));
-    if (vueFiles.length === 0) continue;
-
-    const slug = entry.name;
-    const base = toPascalCase(slug);
-
-    // Anatomy = the PUBLIC parts exported from index.ts, in declared order. This
-    // excludes demo.vue and internal parts (*Impl, *Modal/NonModal, *Position, …)
-    // that aren't part of the public API. Fall back to all .vue (minus demo) only
-    // when the barrel exposes no parseable `export { default as X }`.
-    const order = readPartOrder(resolve(dir, 'index.ts'));
-    const publicFiles = order.map(name => `${name}.vue`).filter(f => vueFiles.includes(f));
-    const candidates = publicFiles.length > 0
-      ? publicFiles
-      : vueFiles.filter(f => f !== 'demo.vue');
-    // Drop internal implementation/variant parts users never compose directly
-    // (the public part is e.g. `Content`, not `ContentImpl`/`ContentModal`).
-    const INTERNAL_PART = /(?:Impl|ContentModal|ContentNonModal|RootContentModal|RootContentNonModal|Position)\.vue$/;
-    const orderedFiles = candidates.filter(f => !INTERNAL_PART.test(f));
-
-    const parts: ComponentPartMeta[] = [];
-    let groupDescription = '';
-
-    for (const file of orderedFiles) {
-      const sfc = readFileSync(resolve(dir, file), 'utf-8');
-      const plain = extractScriptBlock(sfc, false);
-      const setup = extractScriptBlock(sfc, true);
-      const { props, description } = extractPartProps(plain);
-      const name = file.replace(/\.vue$/, '');
-      const role = roleFromName(name, base);
-      if (role === 'Root' && description && !groupDescription) groupDescription = description;
-
-      // Merge in `defineModel` v-model props/emits (invisible to the interface/
-      // defineEmits parsers), de-duping against any explicitly-declared ones.
-      const models = extractModels(setup);
-      const emits = extractEmits(setup);
-      for (const mp of models.props)
-        if (!props.some(p => p.name === mp.name)) props.push(mp);
-      for (const me of models.emits)
-        if (!emits.some(e => e.name === me.name)) emits.push(me);
-
-      parts.push({ name, role, description, props, emits });
+    if (label) {
+      // A known category folder — each child dir is a component group.
+      for (const compEntry of readdirSync(catDir, { withFileTypes: true })) {
+        if (!compEntry.isDirectory()) continue;
+        const c = buildComponentAt(
+          resolve(catDir, compEntry.name),
+          compEntry.name,
+          label,
+          `./${catEntry.name}/${compEntry.name}`,
+        );
+        if (c) components.push(c);
+      }
     }
-
-    const entryPoint = `./${slug}`;
-    const demoPath = resolve(dir, 'demo.vue');
-    const hasDemo = existsSync(demoPath);
-
-    components.push({
-      name: base,
-      slug,
-      description: groupDescription,
-      entryPoint,
-      parts,
-      hasDemo,
-      demoSource: '', // loaded lazily client-side via #docs/demo-sources
-      sourcePath: relative(ROOT, dir),
-    });
+    else {
+      // Backward-compat: a flat component dir directly under src.
+      const c = buildComponentAt(catDir, catEntry.name, 'Other', `./${catEntry.name}`);
+      if (c) components.push(c);
+    }
   }
 
   return components.sort((a, b) => a.name.localeCompare(b.name));

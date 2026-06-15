@@ -1,4 +1,4 @@
-<script setup lang="ts">const { getGroupedPackages, getPackage, getIntro, getDocSections } = useDocs();
+<script setup lang="ts">const { getGroupedPackages, getPackage, getIntro, getDocSections, getComponentGroups } = useDocs();
 const groups = getGroupedPackages();
 
 const route = useRoute();
@@ -79,11 +79,11 @@ watch(() => route.path, () => {
 <template>
   <div class="min-h-screen">
     <!-- Header -->
-    <header class="sticky top-0 z-50 border-b border-(--border) backdrop-blur-md" style="background-color: var(--header-bg)">
+    <header class="sticky top-0 z-50 border-b border-border backdrop-blur-md" style="background-color: var(--header-bg)">
       <div class="mx-auto max-w-352 flex items-center gap-3 px-4 h-14 sm:px-6">
         <button
           type="button"
-          class="lg:hidden inline-flex items-center justify-center w-9 h-9 -ml-1.5 rounded-lg text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)"
+          class="lg:hidden inline-flex items-center justify-center w-9 h-9 -ml-1.5 rounded-lg text-fg-muted hover:text-fg hover:bg-bg-inset"
           aria-label="Toggle navigation"
           @click="isSidebarOpen = !isSidebarOpen"
         >
@@ -93,12 +93,12 @@ watch(() => route.path, () => {
         </button>
 
         <NuxtLink to="/" class="group flex items-center gap-2.5 mr-auto">
-          <span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-(--accent) text-(--accent-fg) font-mono text-[13px] font-semibold leading-none select-none">
+          <span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-accent text-accent-fg font-mono text-[13px] font-semibold leading-none select-none">
             ❯
           </span>
           <span class="hidden sm:flex items-baseline font-mono text-[13.5px] tracking-tight">
-            <span class="text-(--fg-subtle)">~/</span><span class="text-(--fg) font-medium">robonen</span><span class="text-(--fg-subtle)">/</span><span class="text-(--accent-text) font-medium">tools</span>
-            <span class="ml-1 inline-block w-1.75 h-3.75 translate-y-0.5 bg-(--accent) opacity-0 group-hover:opacity-80 group-hover:animate-pulse" />
+            <span class="text-fg-subtle">~/</span><span class="text-fg font-medium">robonen</span><span class="text-fg-subtle">/</span><span class="text-accent-text font-medium">tools</span>
+            <span class="ml-1 inline-block w-1.75 h-3.75 translate-y-0.5 bg-accent opacity-0 group-hover:opacity-80 group-hover:animate-pulse" />
           </span>
         </NuxtLink>
 
@@ -108,7 +108,7 @@ watch(() => route.path, () => {
           href="https://github.com/robonen/tools"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset) transition-colors"
+          class="inline-flex items-center justify-center w-9 h-9 rounded-lg text-fg-muted hover:text-fg hover:bg-bg-inset transition-colors"
           aria-label="GitHub"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
@@ -122,7 +122,7 @@ watch(() => route.path, () => {
       <!-- Sidebar -->
       <aside
         :class="[
-          'fixed inset-y-0 left-0 z-40 w-72 bg-(--bg) border-r border-(--border) pt-14 transform transition-transform lg:sticky lg:top-14 lg:z-auto lg:h-[calc(100vh-3.5rem)] lg:w-64 lg:shrink-0 lg:translate-x-0 lg:pt-0 lg:border-r-0 lg:bg-transparent',
+          'fixed inset-y-0 left-0 z-40 w-72 bg-bg border-r border-border pt-14 transform transition-transform lg:sticky lg:top-14 lg:z-auto lg:h-[calc(100vh-3.5rem)] lg:w-64 lg:shrink-0 lg:translate-x-0 lg:pt-0 lg:border-r-0 lg:bg-transparent',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
         ]"
       >
@@ -136,24 +136,24 @@ watch(() => route.path, () => {
                   :class="[
                     'flex items-center justify-between py-1.5 px-2 rounded-md text-sm transition-colors',
                     currentPackageSlug === pkg.slug
-                      ? 'text-(--fg) font-medium bg-(--bg-inset)'
-                      : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
+                      ? 'text-fg font-medium bg-bg-inset'
+                      : 'text-fg-muted hover:text-fg hover:bg-bg-inset',
                   ]"
                 >
                   <span class="font-mono text-[13px]">{{ pkg.name.replace('@robonen/', '') }}</span>
-                  <span class="text-[10px] font-mono text-(--fg-subtle)">{{ pkg.kind === 'api' ? 'api' : pkg.kind === 'components' ? 'ui' : 'guide' }}</span>
+                  <span class="text-[10px] font-mono text-fg-subtle">{{ pkg.kind === 'api' ? 'api' : pkg.kind === 'components' ? 'ui' : 'guide' }}</span>
                 </NuxtLink>
 
                 <!-- Expanded tree for the current package -->
-                <div v-if="currentPackageSlug === pkg.slug && currentPackage" class="mt-1.5 mb-3 ml-2.5 pl-2.5 border-l border-(--border)">
+                <div v-if="currentPackageSlug === pkg.slug && currentPackage" class="mt-1.5 mb-3 ml-2.5 pl-2.5 border-l border-border">
                   <!-- Quick filter — the tree below collapses to matches -->
                   <div v-if="currentPackage.kind === 'api'" class="relative mb-2 mt-1">
-                    <span class="absolute left-2 top-1/2 -translate-y-1/2 font-mono text-[11px] text-(--accent-text) select-none">❯</span>
+                    <span class="absolute left-2 top-1/2 -translate-y-1/2 font-mono text-[11px] text-accent-text select-none">❯</span>
                     <input
                       v-model="navQuery"
                       type="text"
                       placeholder="filter…"
-                      class="w-full h-7 pl-6 pr-2 font-mono text-[12px] rounded-md bg-(--bg-subtle) border border-(--border) text-(--fg) placeholder:text-(--fg-subtle) focus:outline-none focus:border-(--border-strong) transition-colors"
+                      class="w-full h-7 pl-6 pr-2 font-mono text-[12px] rounded-md bg-bg-subtle border border-border text-fg placeholder:text-fg-subtle focus:outline-none focus:border-border-strong transition-colors"
                     >
                   </div>
 
@@ -167,8 +167,8 @@ watch(() => route.path, () => {
                           :class="[
                             'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
                             route.path === `/${pkg.slug}`
-                              ? 'text-(--accent-text) font-medium'
-                              : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
+                              ? 'text-accent-text font-medium'
+                              : 'text-fg-muted hover:text-fg hover:bg-bg-inset',
                           ]"
                         >
                           Introduction
@@ -180,8 +180,8 @@ watch(() => route.path, () => {
                           :class="[
                             'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
                             isActive(pkg.slug, s.slug)
-                              ? 'text-(--accent-text) font-medium'
-                              : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
+                              ? 'text-accent-text font-medium'
+                              : 'text-fg-muted hover:text-fg hover:bg-bg-inset',
                           ]"
                         >
                           {{ s.title }}
@@ -192,7 +192,7 @@ watch(() => route.path, () => {
 
                   <!-- api: collapsible categories -->
                   <template v-if="currentPackage.kind === 'api'">
-                    <div v-if="navQuery && visibleCategories.length === 0" class="py-2 px-1 font-mono text-[11px] text-(--fg-subtle)">
+                    <div v-if="navQuery && visibleCategories.length === 0" class="py-2 px-1 font-mono text-[11px] text-fg-subtle">
                       no matches
                     </div>
 
@@ -206,14 +206,14 @@ watch(() => route.path, () => {
                           xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24"
                           fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
                           :class="[
-                            'shrink-0 text-(--fg-subtle) transition-transform duration-150',
+                            'shrink-0 text-fg-subtle transition-transform duration-150',
                             isCategoryOpen(cat.slug) ? 'rotate-90' : '',
                           ]"
                         >
                           <polyline points="9 18 15 12 9 6" />
                         </svg>
-                        <span class="comment-label group-hover/cat:text-(--fg-muted) transition-colors">{{ cat.name.toLowerCase() }}</span>
-                        <span class="ml-auto font-mono text-[10px] text-(--fg-subtle) tabular-nums">{{ cat.items.length }}</span>
+                        <span class="comment-label group-hover/cat:text-fg-muted transition-colors">{{ cat.name.toLowerCase() }}</span>
+                        <span class="ml-auto font-mono text-[10px] text-fg-subtle tabular-nums">{{ cat.items.length }}</span>
                       </button>
 
                       <ul v-if="isCategoryOpen(cat.slug)" class="mb-1.5">
@@ -223,14 +223,14 @@ watch(() => route.path, () => {
                             :class="[
                               'flex items-center gap-1.5 py-0.75 px-2 text-[13px] rounded-md font-mono transition-colors',
                               isActive(pkg.slug, item.slug)
-                                ? 'text-(--accent-text) font-medium'
-                                : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
+                                ? 'text-accent-text font-medium'
+                                : 'text-fg-muted hover:text-fg hover:bg-bg-inset',
                             ]"
                           >
                             <span
                               :class="[
                                 'shrink-0 text-[10px] select-none transition-opacity',
-                                isActive(pkg.slug, item.slug) ? 'opacity-100 text-(--accent-text)' : 'opacity-0',
+                                isActive(pkg.slug, item.slug) ? 'opacity-100 text-accent-text' : 'opacity-0',
                               ]"
                             >❯</span>
                             <span class="truncate">{{ item.name }}</span>
@@ -240,22 +240,27 @@ watch(() => route.path, () => {
                     </div>
                   </template>
 
-                  <!-- components -->
-                  <ul v-else-if="currentPackage.kind === 'components'">
-                    <li v-for="c in currentPackage.components" :key="c.slug">
-                      <NuxtLink
-                        :to="`/${pkg.slug}/${c.slug}`"
-                        :class="[
-                          'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
-                          isActive(pkg.slug, c.slug)
-                            ? 'text-(--accent-text) font-medium'
-                            : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
-                        ]"
-                      >
-                        {{ c.name }}
-                      </NuxtLink>
-                    </li>
-                  </ul>
+                  <!-- components: grouped by functional category -->
+                  <template v-else-if="currentPackage.kind === 'components'">
+                    <div v-for="group in getComponentGroups(currentPackage)" :key="group.name" class="mb-2">
+                      <div class="comment-label py-1 px-1">{{ group.name.toLowerCase() }}</div>
+                      <ul>
+                        <li v-for="c in group.components" :key="c.slug">
+                          <NuxtLink
+                            :to="`/${pkg.slug}/${c.slug}`"
+                            :class="[
+                              'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
+                              isActive(pkg.slug, c.slug)
+                                ? 'text-accent-text font-medium'
+                                : 'text-fg-muted hover:text-fg hover:bg-bg-inset',
+                            ]"
+                          >
+                            {{ c.name }}
+                          </NuxtLink>
+                        </li>
+                      </ul>
+                    </div>
+                  </template>
 
                   <!-- guide -->
                   <ul v-else>
@@ -265,8 +270,8 @@ watch(() => route.path, () => {
                         :class="[
                           'block py-1 px-2 text-[13px] rounded-md transition-colors truncate',
                           isActive(pkg.slug, s.slug)
-                            ? 'text-(--accent-text) font-medium'
-                            : 'text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset)',
+                            ? 'text-accent-text font-medium'
+                            : 'text-fg-muted hover:text-fg hover:bg-bg-inset',
                         ]"
                       >
                         {{ s.title }}

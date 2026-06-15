@@ -49,7 +49,7 @@ function go(id: string) {
     <div class="comment-label mb-3">
       on this page
     </div>
-    <ul class="space-y-1 border-l border-(--border)">
+    <ul class="space-y-1 border-l border-border">
       <li v-for="item in items" :key="item.id">
         <a
           :href="`#${item.id}`"
@@ -57,8 +57,8 @@ function go(id: string) {
             'block py-1 -ml-px border-l-2 transition-colors',
             item.depth === 3 ? 'pl-6' : 'pl-4',
             activeId === item.id
-              ? 'border-(--accent) text-(--accent-text) font-medium'
-              : 'border-transparent text-(--fg-muted) hover:text-(--fg)',
+              ? 'border-accent text-accent-text font-medium'
+              : 'border-transparent text-fg-muted hover:text-fg',
           ]"
           @click.prevent="go(item.id)"
         >

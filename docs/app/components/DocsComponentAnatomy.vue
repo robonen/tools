@@ -43,10 +43,10 @@ const roleColor: Record<string, string> = {
   <div class="space-y-10">
     <!-- Anatomy snippet -->
     <section>
-      <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-3">
+      <h2 class="text-xs font-semibold uppercase tracking-wider text-fg-subtle mb-3">
         Anatomy
       </h2>
-      <p class="text-sm text-(--fg-muted) mb-3">
+      <p class="text-sm text-fg-muted mb-3">
         Import the parts and compose them. Each part forwards attributes to its underlying element.
       </p>
       <DocsCode :code="anatomyCode" lang="vue" />
@@ -54,7 +54,7 @@ const roleColor: Record<string, string> = {
 
     <!-- Parts -->
     <section>
-      <h2 class="text-xs font-semibold uppercase tracking-wider text-(--fg-subtle) mb-4">
+      <h2 class="text-xs font-semibold uppercase tracking-wider text-fg-subtle mb-4">
         API Reference
       </h2>
       <div class="space-y-8">
@@ -65,18 +65,18 @@ const roleColor: Record<string, string> = {
           class="scroll-mt-20"
         >
           <div class="flex items-center gap-2.5 mb-2">
-            <h3 class="font-mono text-base font-semibold text-(--fg)">{{ part.name }}</h3>
+            <h3 class="font-mono text-base font-semibold text-fg">{{ part.name }}</h3>
             <span
               :class="[
                 'text-[11px] px-2 py-0.5 rounded-full font-medium leading-none',
-                roleColor[part.role] ?? 'bg-(--bg-inset) text-(--fg-muted) border border-(--border)',
+                roleColor[part.role] ?? 'bg-bg-inset text-fg-muted border border-border',
               ]"
             >
               {{ part.role }}
             </span>
           </div>
 
-          <p v-if="part.description" class="text-sm text-(--fg-muted) mb-3 max-w-2xl">
+          <p v-if="part.description" class="text-sm text-fg-muted mb-3 max-w-2xl">
             {{ part.description }}
           </p>
 
@@ -85,11 +85,11 @@ const roleColor: Record<string, string> = {
           </div>
 
           <div v-if="part.emits.length > 0" class="mb-3">
-            <div class="text-[11px] font-semibold uppercase tracking-wider text-(--fg-subtle) mb-2">Emits</div>
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-fg-subtle mb-2">Emits</div>
             <DocsEmitsTable :emits="part.emits" />
           </div>
 
-          <p v-if="part.props.length === 0 && part.emits.length === 0" class="text-sm text-(--fg-subtle) italic">
+          <p v-if="part.props.length === 0 && part.emits.length === 0" class="text-sm text-fg-subtle italic">
             No props or events — renders its element and forwards attributes.
           </p>
         </div>

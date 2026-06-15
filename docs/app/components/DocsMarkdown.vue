@@ -28,7 +28,7 @@ async function highlightCodeBlocks() {
     try {
       const out = await highlight(text, resolved);
       const wrapper = document.createElement('div');
-      wrapper.className = 'not-prose rounded-xl border border-(--border) bg-(--bg-subtle) overflow-x-auto text-[13px] my-5 [&_pre]:p-4 [&_pre]:m-0 [&_pre]:bg-transparent!';
+      wrapper.className = 'not-prose rounded-xl border border-border bg-bg-subtle overflow-x-auto text-[13px] my-5 [&_pre]:p-4 [&_pre]:m-0 [&_pre]:bg-transparent!';
       wrapper.innerHTML = out;
       pre.replaceWith(wrapper);
     }

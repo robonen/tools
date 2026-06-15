@@ -20,6 +20,8 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [
+      // `as any`: @tailwindcss/vite and Nuxt resolve different `vite` versions, so
+      // their `Plugin` types are structurally identical but nominally incompatible.
       tailwindcss() as any,
     ],
   },

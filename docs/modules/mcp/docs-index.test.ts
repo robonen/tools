@@ -159,15 +159,15 @@ describe('getPackage / resolveEntry', () => {
 describe('slug uniqueness & collisions', () => {
   // A function and a co-located type/interface whose names differ only in case
   // both slugify to the same value — the real extractor produces these in
-  // @robonen/editor and @robonen/vue.
+  // @robonen/writekit and @robonen/vue.
   const colliding: DocsMetadata = {
     generatedAt: '2026-06-08T00:00:00.000Z',
     packages: [
       {
-        name: '@robonen/editor',
+        name: '@robonen/writekit',
         version: '1.0.0',
-        description: 'Editor',
-        slug: 'editor',
+        description: 'Writekit',
+        slug: 'writekit',
         kind: 'api',
         group: 'vue',
         entryPoints: ['.'],
@@ -197,12 +197,12 @@ describe('slug uniqueness & collisions', () => {
   it('reaches both colliding symbols — function and interface — independently', () => {
     const leaves = buildLeaves(colliding);
     // Exact case-sensitive name disambiguates the function from the interface.
-    const fn = resolveEntry(leaves, 'editor', 'position');
-    const iface = resolveEntry(leaves, 'editor', 'Position');
+    const fn = resolveEntry(leaves, 'writekit', 'position');
+    const iface = resolveEntry(leaves, 'writekit', 'Position');
     expect(fn?.kind === 'api' && fn.item.kind).toBe('function');
     expect(iface?.kind === 'api' && iface.item.kind).toBe('interface');
     // The disambiguated slug also resolves the interface directly.
-    const bySlug = resolveEntry(leaves, 'editor', 'position-interface');
+    const bySlug = resolveEntry(leaves, 'writekit', 'position-interface');
     expect(bySlug?.kind === 'api' && bySlug.item.kind).toBe('interface');
   });
 

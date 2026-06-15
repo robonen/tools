@@ -36,54 +36,54 @@ const visibleRange = computed(() => {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Virtual list</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">Virtual list</span>
+      <span class="demo-badge">
         {{ total.toLocaleString() }} rows
       </span>
     </div>
 
     <div
       v-bind="containerProps"
-      class="h-64 rounded-xl border border-(--border) bg-(--bg-elevated)"
+      class="demo-card h-64"
     >
       <div v-bind="wrapperProps">
         <div
           v-for="{ data, index } in list"
           :key="index"
-          class="flex items-center gap-3 border-b border-(--border) px-3"
+          class="flex items-center gap-3 border-b border-border px-3"
           :style="{ height: `${itemHeight}px` }"
         >
           <span
-            class="size-6 shrink-0 rounded-md border border-(--border)"
+            class="size-6 shrink-0 rounded-md border border-border"
             :style="{ backgroundColor: `hsl(${data.hue} 65% 55%)` }"
           />
-          <span class="flex-1 truncate font-mono text-sm text-(--fg) tabular-nums">{{ data.label }}</span>
-          <span class="text-xs text-(--fg-subtle)">idx {{ index }}</span>
+          <span class="flex-1 truncate font-mono text-sm text-fg tabular-nums">{{ data.label }}</span>
+          <span class="text-xs text-fg-subtle">idx {{ index }}</span>
         </div>
       </div>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums flex items-center justify-between">
-      <span class="text-(--fg-muted)">rendered</span>
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums flex items-center justify-between">
+      <span class="text-fg-muted">rendered</span>
       <span>{{ list.length }} nodes · idx {{ visibleRange }}</span>
     </div>
 
     <div class="flex items-end gap-2">
       <label class="flex flex-1 flex-col gap-1">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Scroll to index</span>
+        <span class="demo-label">Scroll to index</span>
         <input
           v-model.number="jumpTo"
           type="number"
           :min="0"
           :max="total - 1"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="demo-input"
         >
       </label>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-2 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-accent px-3 py-2 text-sm font-medium text-accent-fg transition hover:bg-accent-hover active:scale-[0.98] cursor-pointer"
         @click="go"
       >
         Jump

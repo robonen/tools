@@ -52,6 +52,7 @@ const REGEX_FORMAT
 // `20240101`); JS lacks possessive quantifiers to disambiguate it.
 // eslint-disable-next-line regexp/no-misleading-capturing-group
 const REGEX_PARSE = /* #__PURE__ */ /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[T\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/i;
+const REGEX_ISO_SUFFIX = /* #__PURE__ */ /z$/i;
 
 const ORDINAL_SUFFIXES = ['th', 'st', 'nd', 'rd'] as const;
 
@@ -82,7 +83,7 @@ function formatOrdinal(num: number): string {
 export function normalizeDate(date: DateLike): Date {
   if (date === null || date === undefined) return new Date();
   if (isDate(date)) return new Date(date.getTime());
-  if (isString(date) && !/z$/i.test(date)) {
+  if (isString(date) && !REGEX_ISO_SUFFIX.test(date)) {
     const d = REGEX_PARSE.exec(date);
     if (d) {
       const month = d[2] ? Number(d[2]) - 1 : 0;

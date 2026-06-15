@@ -491,7 +491,7 @@ export function useCookie<T, Shallow extends boolean = true>(
     eventFilter,
     initOnMounted = false,
     onReady,
-    onError = console.error, // eslint-disable-line no-console
+    onError = console.error,
     window = defaultWindow,
     document = defaultDocument,
   } = options;
@@ -804,7 +804,9 @@ export function useCookie<T, Shallow extends boolean = true>(
         return;
 
       writeWithFilter(newValue as T);
-    }, { flush, deep });
+      // No deep traversal for a shallowRef: nested mutations aren't reactive
+      // there anyway, so deep would only waste a walk of the stored value.
+    }, { flush, deep: shallow ? false : deep });
 
     // Watch for reactive name changes
     stopNameWatch = watch(rawName, () => {

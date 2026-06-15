@@ -42,15 +42,15 @@ const absolute = computed(() =>
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col items-center gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Relative time</span>
-      <span class="font-mono text-3xl font-bold tabular-nums text-(--fg) text-center">{{ timeAgo }}</span>
-      <span class="text-xs text-(--fg-muted)">{{ absolute }}</span>
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col items-center gap-2">
+      <span class="demo-label">Relative time</span>
+      <span class="demo-stat text-3xl text-center">{{ timeAgo }}</span>
+      <span class="text-xs text-fg-muted">{{ absolute }}</span>
     </div>
 
     <div class="flex flex-col gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Pick an instant</span>
+      <span class="demo-label">Pick an instant</span>
       <div class="grid grid-cols-2 gap-2">
         <button
           v-for="preset in presets"
@@ -58,8 +58,8 @@ const absolute = computed(() =>
           type="button"
           class="inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
           :class="offset === preset.offset
-            ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="offset = preset.offset"
         >
           {{ preset.label }}
@@ -69,14 +69,14 @@ const absolute = computed(() =>
 
     <div class="flex items-center justify-between gap-3">
       <span
-        class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)"
+        class="demo-badge"
       >
-        <span class="size-1.5 rounded-full transition" :class="isActive ? 'bg-emerald-500' : 'bg-(--fg-subtle)'" />
+        <span class="size-1.5 rounded-full transition" :class="isActive ? 'bg-emerald-500' : 'bg-fg-subtle'" />
         {{ isActive ? 'Updating every 1s' : 'Updates paused' }}
       </span>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
         @click="toggle"
       >
         {{ isActive ? 'Pause' : 'Resume' }}

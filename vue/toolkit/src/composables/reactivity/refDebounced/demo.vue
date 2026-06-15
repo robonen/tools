@@ -12,22 +12,22 @@ const pending = computed(() => search.value !== debounced.value);
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <label class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Type to search
       </span>
       <input
         v-model="search"
         placeholder="Start typing…"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </label>
 
-    <label class="flex flex-col gap-1.5 rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <span class="flex items-center justify-between text-sm text-(--fg)">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">debounce</span>
-        <span class="font-mono tabular-nums text-(--fg-muted)">{{ ms }}ms</span>
+    <label class="demo-card flex flex-col gap-1.5 p-4">
+      <span class="flex items-center justify-between text-sm text-fg">
+        <span class="demo-label">debounce</span>
+        <span class="font-mono tabular-nums text-fg-muted">{{ ms }}ms</span>
       </span>
       <input
         v-model.number="ms"
@@ -35,19 +35,19 @@ const pending = computed(() => search.value !== debounced.value);
         min="100"
         max="1500"
         step="50"
-        class="w-full accent-(--accent) cursor-pointer"
+        class="w-full accent-accent cursor-pointer"
       >
     </label>
 
     <div class="grid grid-cols-2 gap-3">
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-3">
-        <p class="mb-1 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <div class="demo-card p-3">
+        <p class="demo-label mb-1">
           Source
         </p>
-        <p class="truncate font-mono text-sm text-(--fg)">{{ search || '—' }}</p>
+        <p class="truncate font-mono text-sm text-fg">{{ search || '—' }}</p>
       </div>
-      <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-3">
-        <p class="mb-1 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <div class="demo-card p-3">
+        <p class="demo-label mb-1 flex items-center gap-1.5">
           Debounced
           <span
             v-if="pending"
@@ -55,7 +55,7 @@ const pending = computed(() => search.value !== debounced.value);
             aria-label="pending"
           />
         </p>
-        <p class="truncate font-mono text-sm text-(--accent-text)">{{ debounced || '—' }}</p>
+        <p class="truncate font-mono text-sm text-accent-text">{{ debounced || '—' }}</p>
       </div>
     </div>
 

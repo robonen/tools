@@ -34,38 +34,38 @@ const exactTime = computed(() =>
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <label class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Document title</span>
+      <span class="demo-label">Document title</span>
       <input
         v-model="title"
         type="text"
         placeholder="Edit to update the timestamp"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </label>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3">
+    <div class="demo-card p-4 flex flex-col gap-3">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Last edited</span>
+        <span class="demo-label">Last edited</span>
         <span
           class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
           :class="lastChanged === null
-            ? 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'
+            ? 'border-border bg-bg-inset text-fg-muted'
             : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'"
         >
-          <span class="h-1.5 w-1.5 rounded-full" :class="lastChanged === null ? 'bg-(--fg-subtle)' : 'bg-emerald-500'" />
+          <span class="h-1.5 w-1.5 rounded-full" :class="lastChanged === null ? 'bg-fg-subtle' : 'bg-emerald-500'" />
           {{ lastChanged === null ? 'untouched' : 'edited' }}
         </span>
       </div>
 
-      <span class="font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ relative }}</span>
+      <span class="demo-stat text-3xl">{{ relative }}</span>
 
-      <div class="h-px bg-(--border)" />
+      <div class="h-px bg-border" />
 
       <div class="flex items-center justify-between">
-        <span class="text-xs text-(--fg-subtle)">Timestamp</span>
-        <span class="font-mono text-sm tabular-nums text-(--fg-muted)">{{ exactTime }}</span>
+        <span class="text-xs text-fg-subtle">Timestamp</span>
+        <span class="font-mono text-sm tabular-nums text-fg-muted">{{ exactTime }}</span>
       </div>
     </div>
   </div>

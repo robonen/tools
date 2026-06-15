@@ -18,8 +18,8 @@ const isVisible = computed(() => visibility.value === 'visible');
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col items-center gap-3 text-center">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col items-center gap-3 text-center">
       <span
         class="flex size-14 items-center justify-center rounded-full text-2xl transition"
         :class="isVisible
@@ -29,33 +29,33 @@ const isVisible = computed(() => visibility.value === 'visible');
         {{ isVisible ? '👁️' : '💤' }}
       </span>
       <div>
-        <p class="font-mono text-2xl font-bold tabular-nums text-(--fg)">
+        <p class="demo-stat text-2xl">
           {{ visibility }}
         </p>
-        <p class="text-xs text-(--fg-subtle)">
+        <p class="text-xs text-fg-subtle">
           {{ isVisible ? 'This tab is in the foreground' : 'This tab is hidden' }}
         </p>
       </div>
     </div>
 
-    <p class="text-center text-xs text-(--fg-subtle)">
+    <p class="text-center text-xs text-fg-subtle">
       Switch to another tab or minimize the window to watch this update.
     </p>
 
     <div class="grid grid-cols-2 gap-3">
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-center">
-        <p class="font-mono text-3xl font-bold tabular-nums text-(--fg)">
+      <div class="rounded-lg border border-border bg-bg-inset p-3 text-center">
+        <p class="demo-stat text-3xl">
           {{ switches }}
         </p>
-        <p class="mt-0.5 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <p class="demo-label mt-0.5">
           Times hidden
         </p>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-center">
-        <p class="font-mono text-sm font-medium tabular-nums text-(--fg) truncate">
+      <div class="rounded-lg border border-border bg-bg-inset p-3 text-center">
+        <p class="font-mono text-sm font-medium tabular-nums text-fg truncate">
           {{ lastHidden ?? '—' }}
         </p>
-        <p class="mt-0.5 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <p class="demo-label mt-0.5">
           Last hidden at
         </p>
       </div>

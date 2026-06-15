@@ -27,13 +27,13 @@ const ContextField = defineComponent({
 
     const tag = props.multiline ? 'textarea' : 'input';
     const inputClass
-      = 'w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)';
+      = 'w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-fg placeholder:text-fg-subtle transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-ring';
 
     return () =>
       h('div', { class: 'flex flex-col gap-1.5' }, [
         h(
           'label',
-          { class: 'text-xs font-medium uppercase tracking-wide text-(--fg-subtle)' },
+          { class: 'text-xs font-medium uppercase tracking-wide text-fg-subtle' },
           props.label,
         ),
         h(tag, {
@@ -59,9 +59,9 @@ const { values, meta, isDirty } = form;
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <div class="flex flex-col gap-3 rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card flex flex-col gap-3 p-4">
+      <p class="demo-label">
         Profile (fields read context, not props)
       </p>
       <ContextField path="username" label="Username" />
@@ -69,22 +69,22 @@ const { values, meta, isDirty } = form;
     </div>
 
     <div class="flex flex-wrap gap-2">
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-badge">
         dirty: {{ isDirty }}
       </span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-badge">
         touched: {{ meta.touched }}
       </span>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-xs text-(--fg)">
-      <p class="mb-1 text-(--fg-subtle)">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-xs text-fg">
+      <p class="mb-1 text-fg-subtle">
         Shared form values:
       </p>
       <pre class="whitespace-pre-wrap">{{ JSON.stringify(values, null, 2) }}</pre>
     </div>
 
-    <p class="text-center text-xs text-(--fg-subtle)">
+    <p class="text-center text-xs text-fg-subtle">
       Both inputs are nested children that locate the form via useFormContext().
     </p>
   </div>

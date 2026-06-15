@@ -9,16 +9,7 @@ import type {
 } from 'vue';
 import { bypassFilter, createFilterWrapper } from '@/utils/filters';
 import type { ConfigurableEventFilter, EventFilter } from '@/utils/filters';
-
-type MapSources<T> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V> ? V : never;
-};
-
-type MapOldSources<T, Immediate> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V>
-    ? Immediate extends true ? V | undefined : V
-    : never;
-};
+import type { MapOldSources, MapSources } from '@/types/watch';
 
 export interface UseWatchPausableOptions<Immediate>
   extends WatchOptions<Immediate>, ConfigurableEventFilter {
@@ -89,8 +80,8 @@ export function watchPausable<T extends object, Immediate extends Readonly<boole
   options?: UseWatchPausableOptions<Immediate>,
 ): UseWatchPausableReturn;
 export function watchPausable<Immediate extends Readonly<boolean> = false>(
-  source: any,
-  cb: any,
+  source: WatchSource<unknown> | MultiWatchSources | object,
+  cb: AnyFunction,
   options: UseWatchPausableOptions<Immediate> = {},
 ): UseWatchPausableReturn {
   const {

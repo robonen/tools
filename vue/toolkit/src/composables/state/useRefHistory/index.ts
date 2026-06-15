@@ -1,9 +1,11 @@
 import { computed, markRaw, ref, toRaw } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
-import { isFunction } from '@robonen/stdlib';
+import { isFunction, timestamp } from '@robonen/stdlib';
 import { watchIgnorable } from '@/composables/watch/watchIgnorable';
+import { cloneFnDefault } from '@/composables/reactivity/useCloned';
 import type { UseRefHistoryRecord } from '@/composables/state/useManualRefHistory';
 import type { ConfigurableFlush } from '@/types';
+import { bypassFilter } from '@/utils';
 import type { ConfigurableEventFilter, EventFilter } from '@/utils';
 
 export interface UseRefHistoryOptions<Raw, Serialized = Raw> extends ConfigurableEventFilter, ConfigurableFlush {
@@ -121,23 +123,15 @@ export interface UseRefHistoryReturn<_Raw, Serialized> {
 
 const fnBypass = <T>(value: T): T => value;
 
-const bypassEventFilter: EventFilter = (invoke) => {
-  invoke();
-};
-
 function defaultDump<Raw, Serialized>(clone?: boolean | ((value: Raw) => Raw)): (value: Raw) => Serialized {
   if (!clone)
     return fnBypass as (value: Raw) => Serialized;
 
   const cloneFn = isFunction(clone)
     ? clone
-    : (value: Raw): Raw => {
-        // Unwrap reactive proxies before cloning — `structuredClone` chokes on them.
-        const raw = toRaw(value);
-        return typeof structuredClone === 'function'
-          ? structuredClone(raw)
-          : JSON.parse(JSON.stringify(raw));
-      };
+    // Unwrap reactive proxies before delegating to the shared structured/JSON
+    // clone — `structuredClone` chokes on a live reactive proxy.
+    : (value: Raw): Raw => cloneFnDefault(toRaw(value));
 
   return cloneFn as unknown as (value: Raw) => Serialized;
 }
@@ -183,7 +177,7 @@ export function useRefHistory<Raw, Serialized = Raw>(
   const parse = options.parse ?? (fnBypass as (value: Serialized) => Raw);
 
   const createRecord = (value: Raw): UseRefHistoryRecord<Serialized> =>
-    markRaw({ snapshot: dump(value), timestamp: Date.now() });
+    markRaw({ snapshot: dump(value), timestamp: timestamp() });
 
   const last = ref(createRecord(source.value)) as Ref<UseRefHistoryRecord<Serialized>>;
 
@@ -195,7 +189,7 @@ export function useRefHistory<Raw, Serialized = Raw>(
   // Compose the user filter with a pause gate. When paused, tracked changes are
   // dropped entirely (rather than queued), matching VueUse's `pause` semantics.
   const isTracking = ref(true);
-  const userFilter: EventFilter = eventFilter ?? bypassEventFilter;
+  const userFilter: EventFilter = eventFilter ?? bypassFilter;
   const composedFilter: EventFilter = (invoke) => {
     if (isTracking.value)
       userFilter(invoke);

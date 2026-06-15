@@ -2,13 +2,13 @@ import { computed, isRef, toValue, watchEffect } from 'vue';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
 import { isFunction } from '@robonen/stdlib';
 
-export type UseSortedCompareFn<T = any>
+export type UseSortedCompareFn<T = unknown>
   = (a: T, b: T) => number;
 
-export type UseSortedFn<T = any>
+export type UseSortedFn<T = unknown>
   = (arr: T[], compareFn: UseSortedCompareFn<T>) => T[];
 
-export interface UseSortedOptions<T = any> {
+export interface UseSortedOptions<T = unknown> {
   /**
    * The sort algorithm to apply. Receives a copy of the array (or the source
    * itself in `dirty` mode) and the resolved compare function.
@@ -101,13 +101,13 @@ const defaultSortFn: UseSortedFn = <T>(source: T[], compareFn: UseSortedCompareF
  *
  * @since 0.0.15
  */
-export function useSorted<T = any>(source: Ref<T[]>, compareFn?: UseSortedCompareFn<T>): Ref<T[]>;
-export function useSorted<T = any>(source: MaybeRefOrGetter<T[]>, compareFn?: UseSortedCompareFn<T>): ComputedRef<T[]>;
-export function useSorted<T = any>(source: Ref<T[]>, options?: UseSortedOptions<T>): Ref<T[]>;
-export function useSorted<T = any>(source: MaybeRefOrGetter<T[]>, options?: UseSortedOptions<T>): ComputedRef<T[]>;
-export function useSorted<T = any>(source: Ref<T[]>, compareFn?: UseSortedCompareFn<T>, options?: Omit<UseSortedOptions<T>, 'compareFn'>): Ref<T[]>;
-export function useSorted<T = any>(source: MaybeRefOrGetter<T[]>, compareFn?: UseSortedCompareFn<T>, options?: Omit<UseSortedOptions<T>, 'compareFn'>): ComputedRef<T[]>;
-export function useSorted<T = any>(
+export function useSorted<T = unknown>(source: Ref<T[]>, compareFn?: UseSortedCompareFn<T>): Ref<T[]>;
+export function useSorted<T = unknown>(source: MaybeRefOrGetter<T[]>, compareFn?: UseSortedCompareFn<T>): ComputedRef<T[]>;
+export function useSorted<T = unknown>(source: Ref<T[]>, options?: UseSortedOptions<T>): Ref<T[]>;
+export function useSorted<T = unknown>(source: MaybeRefOrGetter<T[]>, options?: UseSortedOptions<T>): ComputedRef<T[]>;
+export function useSorted<T = unknown>(source: Ref<T[]>, compareFn?: UseSortedCompareFn<T>, options?: Omit<UseSortedOptions<T>, 'compareFn'>): Ref<T[]>;
+export function useSorted<T = unknown>(source: MaybeRefOrGetter<T[]>, compareFn?: UseSortedCompareFn<T>, options?: Omit<UseSortedOptions<T>, 'compareFn'>): ComputedRef<T[]>;
+export function useSorted<T = unknown>(
   source: MaybeRefOrGetter<T[]>,
   compareFnOrOptions?: UseSortedCompareFn<T> | UseSortedOptions<T>,
   maybeOptions?: Omit<UseSortedOptions<T>, 'compareFn'>,

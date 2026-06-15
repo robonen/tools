@@ -123,7 +123,7 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
     eventFilter,
     initOnMounted = false,
     onReady,
-    onError = console.error, // eslint-disable-line no-console
+    onError = console.error,
   } = options;
 
   const defaults = toValue(initialValue);
@@ -369,12 +369,12 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
       }, { passive: true });
     }
     else {
-      useEventListener(window as any, customStorageEventName as any, ((ev: CustomEvent<StorageEventLike>) => {
+      useEventListener<CustomEvent<StorageEventLike>>(window, customStorageEventName, (ev) => {
         if (initOnMounted && !firstMounted)
           return;
 
         update(ev.detail);
-      }) as any);
+      });
     }
   }
 
@@ -402,7 +402,9 @@ export function useStorageAsync<T, Shallow extends boolean = true>(
           return;
 
         writeWithFilter(newValue as T);
-      }, { flush, deep });
+        // No deep traversal for a shallowRef: nested mutations aren't reactive
+        // there anyway, so deep would only waste a walk of the stored value.
+      }, { flush, deep: shallow ? false : deep });
 
       stopWatch = stop;
 

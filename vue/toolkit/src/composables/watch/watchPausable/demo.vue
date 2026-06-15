@@ -25,9 +25,9 @@ function handleStop() {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Watched source
       </label>
       <input
@@ -35,7 +35,7 @@ function handleStop() {
         :disabled="stopped"
         type="text"
         placeholder="Type to trigger the watcher"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring) disabled:opacity-40"
+        class="demo-input disabled:opacity-40"
       >
     </div>
 
@@ -43,14 +43,14 @@ function handleStop() {
       <span
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium transition"
         :class="stopped
-          ? 'border-(--border) bg-(--bg-inset) text-(--fg-subtle)'
+          ? 'border-border bg-bg-inset text-fg-subtle'
           : isActive
             ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
             : 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400'"
       >
         <span
           class="size-1.5 rounded-full"
-          :class="stopped ? 'bg-(--fg-subtle)' : isActive ? 'bg-emerald-500' : 'bg-amber-500'"
+          :class="stopped ? 'bg-fg-subtle' : isActive ? 'bg-emerald-500' : 'bg-amber-500'"
         />
         {{ stopped ? 'Stopped' : isActive ? 'Watching' : 'Paused' }}
       </span>
@@ -59,7 +59,7 @@ function handleStop() {
         <button
           v-if="isActive"
           :disabled="stopped"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           @click="pause"
         >
           Pause
@@ -67,14 +67,14 @@ function handleStop() {
         <button
           v-else
           :disabled="stopped"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="demo-btn-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           @click="resume"
         >
           Resume
         </button>
         <button
           :disabled="stopped"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           @click="handleStop"
         >
           Stop
@@ -82,26 +82,26 @@ function handleStop() {
       </div>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <div class="mb-2 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+    <div class="demo-card p-4">
+      <div class="demo-label mb-2">
         Sync log
       </div>
       <ul v-if="syncs.length" class="flex flex-col gap-1.5">
         <li
           v-for="entry in syncs"
           :key="entry.id"
-          class="flex items-center gap-2 rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2"
+          class="flex items-center gap-2 rounded-lg border border-border bg-bg-inset px-3 py-2"
         >
-          <span class="font-mono text-xs text-(--fg-subtle) tabular-nums">{{ entry.at }}</span>
-          <span class="truncate font-mono text-sm text-(--fg)">{{ entry.value || '—' }}</span>
+          <span class="font-mono text-xs text-fg-subtle tabular-nums">{{ entry.at }}</span>
+          <span class="truncate font-mono text-sm text-fg">{{ entry.value || '—' }}</span>
         </li>
       </ul>
-      <p v-else class="py-2 text-sm text-(--fg-subtle)">
+      <p v-else class="py-2 text-sm text-fg-subtle">
         Edit the field above to record a sync.
       </p>
     </div>
 
-    <p class="text-xs text-(--fg-muted)">
+    <p class="text-xs text-fg-muted">
       While paused, source changes are ignored — no entry is logged until you resume.
     </p>
   </div>

@@ -19,10 +19,10 @@ const options = ['Rename', 'Duplicate', 'Move to…', 'Archive'];
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Click outside to dismiss</span>
-      <p class="text-sm text-(--fg-muted)">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col gap-3">
+      <span class="demo-label">Click outside to dismiss</span>
+      <p class="text-sm text-fg-muted">
         Open the menu, then click anywhere outside it to close. Clicks inside keep it open.
       </p>
     </div>
@@ -31,11 +31,11 @@ const options = ['Rename', 'Duplicate', 'Move to…', 'Archive'];
       <button
         ref="menu"
         type="button"
-        class="inline-flex w-full items-center justify-between gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-2 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.99] cursor-pointer"
+        class="inline-flex w-full items-center justify-between gap-1.5 rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm font-medium text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.99] cursor-pointer"
         @click="open = !open"
       >
         Document actions
-        <span class="text-(--fg-subtle) transition" :class="{ 'rotate-180': open }">▾</span>
+        <span class="text-fg-subtle transition" :class="{ 'rotate-180': open }">▾</span>
 
         <!-- The menu lives inside `target`, so clicks on its items count as inside -->
         <Transition
@@ -46,12 +46,12 @@ const options = ['Rename', 'Duplicate', 'Move to…', 'Archive'];
         >
           <div
             v-if="open"
-            class="absolute left-0 right-0 top-full z-10 mt-1 overflow-hidden rounded-lg border border-(--border) bg-(--bg-elevated) shadow-lg"
+            class="absolute left-0 right-0 top-full z-10 mt-1 overflow-hidden rounded-lg border border-border bg-bg-elevated shadow-lg"
           >
             <div
               v-for="option in options"
               :key="option"
-              class="px-3 py-2 text-left text-sm text-(--fg) transition hover:bg-(--bg-inset)"
+              class="px-3 py-2 text-left text-sm text-fg transition hover:bg-bg-inset"
             >
               {{ option }}
             </div>
@@ -60,8 +60,8 @@ const options = ['Rename', 'Duplicate', 'Move to…', 'Archive'];
       </button>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 flex items-center justify-between font-mono text-sm text-(--fg) tabular-nums">
-      <span class="text-(--fg-subtle)">outside dismissals</span>
+    <div class="rounded-lg border border-border bg-bg-inset p-3 flex items-center justify-between font-mono text-sm text-fg tabular-nums">
+      <span class="text-fg-subtle">outside dismissals</span>
       <span class="font-bold">{{ dismissals }}</span>
     </div>
   </div>

@@ -35,51 +35,51 @@ const cardStyle = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       ref="surface"
-      class="relative grid h-44 touch-none place-items-center overflow-hidden rounded-xl border border-(--border) bg-(--bg-inset) select-none"
+      class="relative grid h-44 touch-none place-items-center overflow-hidden rounded-xl border border-border bg-bg-inset select-none"
     >
       <div
-        class="grid size-24 place-items-center rounded-xl border border-(--border-strong) bg-(--bg-elevated) shadow-lg"
+        class="grid size-24 place-items-center rounded-xl border border-border-strong bg-bg-elevated shadow-lg"
         :class="isSwiping ? 'transition-none' : 'transition-transform duration-300 ease-out'"
         :style="cardStyle"
       >
-        <span class="font-mono text-3xl text-(--fg)">{{ arrows[direction] }}</span>
+        <span class="font-mono text-3xl text-fg">{{ arrows[direction] }}</span>
       </div>
-      <span class="pointer-events-none absolute bottom-2 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label pointer-events-none absolute bottom-2">
         Drag in any direction
       </span>
     </div>
 
     <div class="grid grid-cols-2 gap-2">
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Direction</div>
-        <div class="mt-1 font-mono text-sm capitalize text-(--fg)">{{ direction }}</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Direction</div>
+        <div class="mt-1 font-mono text-sm capitalize text-fg">{{ direction }}</div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Swiping</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Swiping</div>
         <div
           class="mt-1 font-mono text-sm"
-          :class="isSwiping ? 'text-emerald-600 dark:text-emerald-400' : 'text-(--fg-muted)'"
+          :class="isSwiping ? 'text-emerald-600 dark:text-emerald-400' : 'text-fg-muted'"
         >
           {{ isSwiping ? 'active' : 'idle' }}
         </div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm tabular-nums text-(--fg)">
-        <div class="font-sans text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Distance X / Y</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm tabular-nums text-fg">
+        <div class="demo-label font-sans">Distance X / Y</div>
         <div class="mt-1">{{ Math.round(distanceX) }} / {{ Math.round(distanceY) }}</div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Last swipe</div>
-        <div class="mt-1 font-mono text-sm capitalize text-(--fg)">
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Last swipe</div>
+        <div class="mt-1 font-mono text-sm capitalize text-fg">
           {{ lastDirection }}
-          <span v-if="swipeCount" class="text-(--fg-subtle)">&times;{{ swipeCount }}</span>
+          <span v-if="swipeCount" class="text-fg-subtle">&times;{{ swipeCount }}</span>
         </div>
       </div>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Threshold is <code class="font-mono">40px</code> &mdash; shorter drags resolve to
       <code class="font-mono">none</code>.
     </p>

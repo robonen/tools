@@ -1,16 +1,26 @@
 import type { ComponentObjectPropsOptions, DefineComponent, Slot } from 'vue';
 import { camelize, defineComponent, shallowRef } from 'vue';
 
-/** Map of slot name -> slot props object (or `undefined` for prop-less slots) */
+/**
+ * Map of slot name -> slot props object (or `undefined` for prop-less slots).
+ * The inner `Record<string, any>` is the idiomatic "any slot-props shape" bound:
+ * interface-typed slot props (which lack an implicit index signature) must satisfy
+ * it, so `Record<string, unknown>` would wrongly reject legitimate callers.
+ */
 type SlotPropsMap = Record<string, Record<string, any> | undefined>;
 
 /** Turn a {@link SlotPropsMap} into a record of typed `Slot`s */
 type GenerateSlotsFromSlotMap<T extends SlotPropsMap>
   = { [K in keyof T]: Slot<T[K]> };
 
+// `Bindings extends Record<string, any>` is the idiomatic "any object shape" bound,
+// matching Vue/Reka's own component-binding generics: an interface-typed `Bindings`
+// must satisfy it, which `Record<string, unknown>` would reject. Applies to every
+// `extends Record<string, any>` constraint in this file.
 export type DefineTemplateComponent<Bindings extends Record<string, any>, Slots extends SlotPropsMap>
   = DefineComponent & (new () => {
     $slots: {
+      // Slot render fn: returns `any` to match Vue's own `Slot` return type.
       default: (_: Bindings & { $slots: GenerateSlotsFromSlotMap<Slots> }) => any;
     };
   });
@@ -49,8 +59,8 @@ export interface CreateReusableTemplateOptions<Props extends Record<string, any>
 }
 
 /** Re-key an attrs object so every key is camelCased */
-function keysToCamelCase(obj: Record<string, any>): Record<string, any> {
-  const result: Record<string, any> = {};
+function keysToCamelCase(obj: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
 
   for (const key in obj)
     result[camelize(key)] = obj[key];

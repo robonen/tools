@@ -24,21 +24,21 @@ function cancel() {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col items-center gap-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Status</span>
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col items-center gap-3">
+      <span class="demo-label">Status</span>
 
       <div
         class="flex size-20 items-center justify-center rounded-full border-2 transition"
         :class="ready
           ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-          : 'border-(--accent) bg-(--accent-subtle) text-(--accent-text)'"
+          : 'border-accent bg-accent-subtle text-accent-text'"
       >
         <span class="text-sm font-semibold">{{ ready ? 'Ready' : 'Pending' }}</span>
       </div>
 
-      <p class="text-center text-sm text-(--fg-muted)">
-        <template v-if="ready && firedAt">Fired at <span class="font-mono tabular-nums text-(--fg)">{{ firedAt }}</span></template>
+      <p class="text-center text-sm text-fg-muted">
+        <template v-if="ready && firedAt">Fired at <span class="font-mono tabular-nums text-fg">{{ firedAt }}</span></template>
         <template v-else-if="ready">Idle — start the timer below</template>
         <template v-else>Counting down… stays pending until the delay elapses</template>
       </p>
@@ -46,8 +46,8 @@ function cancel() {
 
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between">
-        <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)" for="delay">Delay</label>
-        <span class="font-mono text-xs tabular-nums text-(--fg-muted)">{{ (delay / 1000).toFixed(1) }}s</span>
+        <label class="demo-label" for="delay">Delay</label>
+        <span class="font-mono text-xs tabular-nums text-fg-muted">{{ (delay / 1000).toFixed(1) }}s</span>
       </div>
       <input
         id="delay"
@@ -56,14 +56,14 @@ function cancel() {
         min="500"
         max="5000"
         step="500"
-        class="w-full accent-(--accent) cursor-pointer"
+        class="w-full accent-accent cursor-pointer"
       >
     </div>
 
     <div class="flex items-center gap-2">
       <button
         type="button"
-        class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary flex-1"
         @click="restart"
       >
         {{ ready ? 'Start' : 'Restart' }}
@@ -71,7 +71,7 @@ function cancel() {
       <button
         type="button"
         :disabled="ready"
-        class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         @click="cancel"
       >
         Cancel

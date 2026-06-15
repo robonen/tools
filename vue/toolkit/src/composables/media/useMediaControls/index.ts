@@ -7,6 +7,8 @@ import { useEventListener } from '@/composables/browser/useEventListener';
 import { unrefElement } from '@/composables/component/unrefElement';
 import type { MaybeComputedElementRef } from '@/composables/component/unrefElement';
 import { watchIgnorable } from '@/composables/watch/watchIgnorable';
+import { createEventHook } from '@/composables/utilities/createEventHook';
+import type { EventHookOn } from '@/composables/utilities/createEventHook';
 
 /**
  * A media `<source>` descriptor injected as a child `<source>` element.
@@ -106,9 +108,11 @@ export interface UseMediaTextTrack {
 }
 
 /**
- * Subscribe to a media event hook; returns an unsubscribe handle.
+ * Subscribe to a media event hook; returns an unsubscribe handle. Backed by the
+ * shared {@link createEventHook}, so the off handle is callable (and exposes an
+ * `.off` method) and listeners are auto-removed on scope dispose.
  */
-export type MediaEventHookOn<T = void> = (callback: (param: T) => void) => { off: () => void };
+export type MediaEventHookOn<T = void> = EventHookOn<T>;
 
 export interface UseMediaControlsOptions extends ConfigurableDocument {
   /**
@@ -241,30 +245,6 @@ export interface UseMediaControlsReturn {
    * Register a callback fired when playback errors (e.g. `play()` rejects)
    */
   onPlaybackError: MediaEventHookOn<unknown>;
-}
-
-interface MediaEventHook<T> {
-  on: MediaEventHookOn<T>;
-  trigger: (param: T) => void;
-}
-
-function createEventHook<T = void>(): MediaEventHook<T> {
-  const callbacks = new Set<(param: T) => void>();
-
-  const on: MediaEventHookOn<T> = (callback) => {
-    callbacks.add(callback);
-    return {
-      off: () => {
-        callbacks.delete(callback);
-      },
-    };
-  };
-
-  const trigger = (param: T): void => {
-    callbacks.forEach(cb => cb(param));
-  };
-
-  return { on, trigger };
 }
 
 /**

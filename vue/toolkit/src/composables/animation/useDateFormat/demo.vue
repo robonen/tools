@@ -27,46 +27,46 @@ const isValid = computed(() => formatted.value !== 'Invalid Date');
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+  <div class="demo-stack max-w-md">
+    <div class="demo-card p-4">
+      <div class="demo-label">
         Formatted output
       </div>
       <div
         class="mt-2 font-mono text-lg font-semibold tabular-nums"
-        :class="isValid ? 'text-(--fg)' : 'text-red-600 dark:text-red-400'"
+        :class="isValid ? 'text-fg' : 'text-red-600 dark:text-red-400'"
       >
         {{ formatted }}
       </div>
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Date input
       </label>
       <input
         v-model="date"
         type="datetime-local"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Format token string
       </label>
       <input
         v-model="format"
         type="text"
         spellcheck="false"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 font-mono text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input font-mono"
       >
       <div class="flex flex-wrap gap-1.5 pt-1">
         <button
           v-for="f in formats"
           :key="f"
-          class="rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 font-mono text-xs text-(--fg-muted) transition hover:bg-(--bg-elevated) hover:text-(--fg) active:scale-[0.98] cursor-pointer"
-          :class="{ 'border-(--accent) text-(--accent-text)': format === f }"
+          class="rounded-md border border-border bg-bg-inset px-2 py-0.5 font-mono text-xs text-fg-muted transition hover:bg-bg-elevated hover:text-fg active:scale-[0.98] cursor-pointer"
+          :class="{ 'border-accent text-accent-text': format === f }"
           @click="format = f"
         >
           {{ f }}
@@ -75,7 +75,7 @@ const isValid = computed(() => formatted.value !== 'Invalid Date');
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Locale
       </label>
       <div class="flex flex-wrap gap-2">
@@ -84,8 +84,8 @@ const isValid = computed(() => formatted.value !== 'Invalid Date');
           :key="loc.value"
           class="rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
           :class="locale === loc.value
-            ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="locale = loc.value"
         >
           {{ loc.label }}

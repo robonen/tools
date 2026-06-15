@@ -44,13 +44,13 @@ onKeyStroke(
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       ref="capture"
       tabindex="0"
-      class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col items-center gap-3 outline-none transition focus:border-(--accent) focus:ring-2 focus:ring-(--ring)"
+      class="demo-card p-4 flex flex-col items-center gap-3 outline-none transition focus:border-accent focus:ring-2 focus:ring-ring"
     >
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Click here, then press keys / arrows
       </span>
 
@@ -60,37 +60,37 @@ onKeyStroke(
           :key="i"
           class="size-7 rounded-md border transition-colors"
           :class="(i - 1) % GRID === pos.x && Math.floor((i - 1) / GRID) === pos.y
-            ? 'bg-(--accent) border-transparent'
-            : 'bg-(--bg-inset) border-(--border)'"
+            ? 'bg-accent border-transparent'
+            : 'bg-bg-inset border-border'"
         />
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-inset) px-2.5 py-1 font-mono text-sm font-semibold text-(--fg)">
+        <span class="inline-flex items-center rounded-md border border-border bg-bg-inset px-2.5 py-1 font-mono text-sm font-semibold text-fg">
           {{ lastKey === ' ' ? 'Space' : (lastKey || '—') }}
         </span>
-        <span class="font-mono text-xs text-(--fg-subtle)">{{ lastCode || 'event.code' }}</span>
+        <span class="font-mono text-xs text-fg-subtle">{{ lastCode || 'event.code' }}</span>
       </div>
     </div>
 
-    <div class="flex items-center justify-between gap-3 rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2">
-      <label class="flex items-center gap-2 text-sm text-(--fg) cursor-pointer">
-        <input v-model="dedupe" type="checkbox" class="size-4 accent-(--accent) cursor-pointer">
+    <div class="flex items-center justify-between gap-3 rounded-lg border border-border bg-bg-inset px-3 py-2">
+      <label class="flex items-center gap-2 text-sm text-fg cursor-pointer">
+        <input v-model="dedupe" type="checkbox" class="size-4 accent-accent cursor-pointer">
         dedupe held keys
       </label>
-      <span class="font-mono text-xs tabular-nums text-(--fg-muted)">{{ pressCount }} strokes</span>
+      <span class="font-mono text-xs tabular-nums text-fg-muted">{{ pressCount }} strokes</span>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 min-h-12">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Recent</span>
+    <div class="rounded-lg border border-border bg-bg-inset p-3 min-h-12">
+      <span class="demo-label">Recent</span>
       <div v-if="log.length" class="mt-2 flex flex-wrap gap-1.5">
         <span
           v-for="(k, i) in log"
           :key="i"
-          class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-elevated) px-2 py-0.5 font-mono text-xs text-(--fg-muted)"
+          class="inline-flex items-center rounded-md border border-border bg-bg-elevated px-2 py-0.5 font-mono text-xs text-fg-muted"
         >{{ k }}</span>
       </div>
-      <p v-else class="mt-1 text-sm text-(--fg-subtle)">No keys yet — focus the area above.</p>
+      <p v-else class="mt-1 text-sm text-fg-subtle">No keys yet — focus the area above.</p>
     </div>
   </div>
 </template>

@@ -24,22 +24,22 @@ const heldKeys = computed(() => [
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <p class="text-sm text-(--fg-muted)">
-      Toggle <span class="font-medium text-(--fg)">Caps Lock</span> / <span class="font-medium text-(--fg)">Num Lock</span>,
+  <div class="demo-stack max-w-sm">
+    <p class="text-sm text-fg-muted">
+      Toggle <span class="font-medium text-fg">Caps Lock</span> / <span class="font-medium text-fg">Num Lock</span>,
       or hold a modifier key, then press any key (or click here) to refresh state.
     </p>
 
     <div class="flex flex-col gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Lock keys</span>
+      <span class="demo-label">Lock keys</span>
       <div class="grid grid-cols-2 gap-2">
         <div
           v-for="key in lockKeys"
           :key="key.label"
           class="flex items-center justify-between gap-2 rounded-lg border px-3 py-2 transition"
           :class="key.state
-            ? 'border-(--accent) bg-(--accent-subtle) text-(--accent-text)'
-            : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+            ? 'border-accent bg-accent-subtle text-accent-text'
+            : 'border-border bg-bg-inset text-fg-muted'"
         >
           <span class="text-sm font-medium">{{ key.label }}</span>
           <span class="font-mono text-xs tabular-nums">
@@ -50,7 +50,7 @@ const heldKeys = computed(() => [
     </div>
 
     <div class="flex flex-col gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Held modifiers</span>
+      <span class="demo-label">Held modifiers</span>
       <div class="grid grid-cols-4 gap-2">
         <div
           v-for="key in heldKeys"
@@ -58,20 +58,20 @@ const heldKeys = computed(() => [
           class="flex flex-col items-center gap-1 rounded-lg border px-2 py-2.5 text-center transition"
           :class="key.state
             ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-            : 'border-(--border) bg-(--bg-inset) text-(--fg-subtle)'"
+            : 'border-border bg-bg-inset text-fg-subtle'"
         >
           <span class="text-xs font-medium">{{ key.label }}</span>
           <span
             class="size-2 rounded-full transition"
-            :class="key.state ? 'bg-emerald-500' : 'bg-(--border-strong)'"
+            :class="key.state ? 'bg-emerald-500' : 'bg-border-strong'"
           />
         </div>
       </div>
     </div>
 
-    <p class="rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2 text-xs text-(--fg-subtle)">
-      Modifier state is read from <span class="font-mono text-(--fg-muted)">getModifierState</span>, so it stays
-      <span class="font-mono text-(--fg-muted)">null</span> until the first matching event arrives.
+    <p class="rounded-lg border border-border bg-bg-inset px-3 py-2 text-xs text-fg-subtle">
+      Modifier state is read from <span class="font-mono text-fg-muted">getModifierState</span>, so it stays
+      <span class="font-mono text-fg-muted">null</span> until the first matching event arrives.
     </p>
   </div>
 </template>

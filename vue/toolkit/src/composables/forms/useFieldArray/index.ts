@@ -31,7 +31,7 @@ import type {
  *
  * @since 0.0.16
  */
-export function useFieldArray<T = any>(
+export function useFieldArray<T = unknown>(
   path: MaybeRefOrGetter<string>,
   options: UseFieldArrayOptions = {},
 ): UseFieldArrayReturn<T> {

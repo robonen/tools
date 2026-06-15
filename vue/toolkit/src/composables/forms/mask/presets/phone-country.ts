@@ -1,14 +1,13 @@
 import { PHONE_COUNTRIES, findPhoneCountry } from '@robonen/platform/multi';
 import type { PhoneCountry } from '@robonen/platform/multi';
-import type { ElementState, MaskExpression, MaskOptions } from '../types';
-import { maskFromTemplate } from './template';
+import type { MaskOptions } from '../types';
+import { createDynamicMask } from './dynamic';
 
 // Re-export the platform reference data + resolver so mask consumers get them
 // from one place (the source of truth lives in `@robonen/platform`).
 export { PHONE_COUNTRIES, findPhoneCountry } from '@robonen/platform/multi';
 export type { PhoneCountry } from '@robonen/platform/multi';
 
-const NON_DIGIT = /\D/g;
 const DEFAULT_PHONE_FALLBACK = '+###############';
 
 /**
@@ -63,22 +62,9 @@ export function maskPhoneCountryOptions(params: MaskPhoneCountryParams = {}): Ma
   const countries = params.countries ?? PHONE_COUNTRIES;
   const fallback = params.fallback ?? DEFAULT_PHONE_FALLBACK;
 
-  // 1-entry memo: resolveMask fires several times per keystroke with the same
-  // digits, and the expression is a pure function of those digits.
-  let lastDigits = '';
-  let lastExpression: MaskExpression = maskFromTemplate(fallback, params.tokens);
-
-  return {
-    mask: (state: ElementState): MaskExpression => {
-      const digits = state.value.replaceAll(NON_DIGIT, '');
-      if (digits === lastDigits)
-        return lastExpression;
-
-      const country = findPhoneCountry(digits, countries);
-      lastDigits = digits;
-      lastExpression = maskFromTemplate(country?.template ?? fallback, params.tokens);
-
-      return lastExpression;
-    },
-  };
+  return createDynamicMask(
+    digits => findPhoneCountry(digits, countries)?.template ?? fallback,
+    fallback,
+    params.tokens,
+  );
 }

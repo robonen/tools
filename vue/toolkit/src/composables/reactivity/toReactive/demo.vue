@@ -26,26 +26,26 @@ function loadPreset(p: Profile) {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col gap-3">
       <label class="flex flex-col gap-1.5">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Name</span>
+        <span class="demo-label">Name</span>
         <input
           v-model="profile.name"
           type="text"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="demo-input"
         >
       </label>
       <label class="flex flex-col gap-1.5">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Role</span>
+        <span class="demo-label">Role</span>
         <input
           v-model="profile.role"
           type="text"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="demo-input"
         >
       </label>
       <label class="flex flex-col gap-1.5">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           Level: {{ profile.level }}
         </span>
         <input
@@ -54,30 +54,30 @@ function loadPreset(p: Profile) {
           min="1"
           max="10"
           step="1"
-          class="w-full accent-(--accent) cursor-pointer"
+          class="w-full accent-accent cursor-pointer"
         >
       </label>
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">source.value (the backing ref)</span>
-      <pre class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-xs text-(--fg) overflow-x-auto">{{ JSON.stringify(source, null, 2) }}</pre>
+      <span class="demo-label">source.value (the backing ref)</span>
+      <pre class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-xs text-fg overflow-x-auto">{{ JSON.stringify(source, null, 2) }}</pre>
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Reassign the whole ref</span>
+      <span class="demo-label">Reassign the whole ref</span>
       <div class="flex flex-wrap gap-2">
         <button
           v-for="preset in presets"
           :key="preset.name"
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="loadPreset(preset)"
         >
           {{ preset.name.split(' ')[0] }}
         </button>
       </div>
-      <p class="text-xs text-(--fg-subtle)">
+      <p class="text-xs text-fg-subtle">
         The proxy survives reassignment — fields above update without re-binding.
       </p>
     </div>

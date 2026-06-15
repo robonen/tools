@@ -1,6 +1,6 @@
 import { computed, toValue } from 'vue';
 import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import { isObject, isString } from '@robonen/stdlib';
+import { isFunction, isNumber, isObject, isString, isSymbol } from '@robonen/stdlib';
 
 /**
  * Comparator deciding whether an array element equals the searched value.
@@ -83,11 +83,11 @@ export function useArrayIncludes<T, V = T>(
   // Resolve the comparator once instead of on every recompute.
   let compare: UseArrayIncludesComparatorFn<T, V>;
 
-  if (isString(resolved) || typeof resolved === 'symbol' || typeof resolved === 'number') {
+  if (isString(resolved) || isSymbol(resolved) || isNumber(resolved)) {
     const key = resolved as keyof T;
     compare = (element, searched) => element[key] === (searched as unknown);
   }
-  else if (typeof resolved === 'function') {
+  else if (isFunction(resolved)) {
     compare = resolved;
   }
   else {

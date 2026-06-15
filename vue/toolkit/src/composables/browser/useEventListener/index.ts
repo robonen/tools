@@ -6,8 +6,8 @@ import type { MaybeRefOrGetter } from 'vue';
 import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 
 interface InferEventTarget<Events> {
-  addEventListener: (event: Events, listener?: any, options?: any) => any;
-  removeEventListener: (event: Events, listener?: any, options?: any) => any;
+  addEventListener: (event: Events, listener?: GeneralEventListener, options?: boolean | AddEventListenerOptions) => void;
+  removeEventListener: (event: Events, listener?: GeneralEventListener, options?: boolean | EventListenerOptions) => void;
 }
 
 export type GeneralEventListener<E = Event> = (evt: E) => void;
@@ -27,7 +27,7 @@ type ListenerOptions = boolean | AddEventListenerOptions;
  */
 export function useEventListener<E extends WindowEventName>(
   event: Arrayable<E>,
-  listener: Arrayable<(this: Window, ev: WindowEventMap[E]) => any>,
+  listener: Arrayable<(this: Window, ev: WindowEventMap[E]) => void>,
   options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>,
 ): VoidFunction;
 
@@ -41,7 +41,7 @@ export function useEventListener<E extends WindowEventName>(
 export function useEventListener<E extends WindowEventName>(
   target: Window,
   event: Arrayable<E>,
-  listener: Arrayable<(this: Window, ev: WindowEventMap[E]) => any>,
+  listener: Arrayable<(this: Window, ev: WindowEventMap[E]) => void>,
   options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>,
 ): VoidFunction;
 
@@ -55,7 +55,7 @@ export function useEventListener<E extends WindowEventName>(
 export function useEventListener<E extends DocumentEventName>(
   target: Document,
   event: Arrayable<E>,
-  listener: Arrayable<(this: Document, ev: DocumentEventMap[E]) => any>,
+  listener: Arrayable<(this: Document, ev: DocumentEventMap[E]) => void>,
   options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>,
 ): VoidFunction;
 
@@ -69,7 +69,7 @@ export function useEventListener<E extends DocumentEventName>(
 export function useEventListener<E extends ElementEventName>(
   target: MaybeRefOrGetter<HTMLElement | null | undefined>,
   event: Arrayable<E>,
-  listener: Arrayable<(this: HTMLElement, ev: HTMLElementEventMap[E]) => any>,
+  listener: Arrayable<(this: HTMLElement, ev: HTMLElementEventMap[E]) => void>,
   options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>,
 ): VoidFunction;
 
@@ -101,6 +101,7 @@ export function useEventListener<EventType = Event>(
   options?: MaybeRefOrGetter<boolean | AddEventListenerOptions>,
 ): VoidFunction;
 
+// Variadic implementation signature behind the typed overloads above; args are narrowed at runtime.
 export function useEventListener(...args: any[]) {
   let target: MaybeRefOrGetter<EventTarget> | undefined = defaultWindow;
   let _events: Arrayable<string>;

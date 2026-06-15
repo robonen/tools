@@ -23,24 +23,24 @@ function pick(n: number) {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4">
       <div class="flex items-baseline justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">precision result</span>
-        <span class="font-mono text-xs text-(--fg-subtle)">{{ digits }} digit{{ digits === 1 ? '' : 's' }}</span>
+        <span class="demo-label">precision result</span>
+        <span class="font-mono text-xs text-fg-subtle">{{ digits }} digit{{ digits === 1 ? '' : 's' }}</span>
       </div>
-      <div class="mt-1 font-mono text-3xl font-bold tabular-nums text-(--fg)">
+      <div class="demo-stat mt-1 text-3xl">
         {{ result }}
       </div>
-      <div class="mt-1 font-mono text-xs text-(--fg-subtle)">
+      <div class="mt-1 font-mono text-xs text-fg-subtle">
         from {{ value }}
       </div>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <label class="flex items-center justify-between text-sm font-medium text-(--fg)">
+    <div class="demo-card p-4">
+      <label class="flex items-center justify-between text-sm font-medium text-fg">
         <span>Value</span>
-        <span class="font-mono text-(--fg-muted)">{{ value }}</span>
+        <span class="font-mono text-fg-muted">{{ value }}</span>
       </label>
       <input
         v-model.number="value"
@@ -48,12 +48,12 @@ function pick(n: number) {
         min="0"
         max="10"
         step="0.00001"
-        class="mt-2 w-full accent-(--accent)"
+        class="mt-2 w-full accent-accent"
       >
 
-      <label class="mt-4 flex items-center justify-between text-sm font-medium text-(--fg)">
+      <label class="mt-4 flex items-center justify-between text-sm font-medium text-fg">
         <span>Digits</span>
-        <span class="font-mono text-(--fg-muted)">{{ digits }}</span>
+        <span class="font-mono text-fg-muted">{{ digits }}</span>
       </label>
       <input
         v-model.number="digits"
@@ -61,12 +61,12 @@ function pick(n: number) {
         min="0"
         max="5"
         step="1"
-        class="mt-2 w-full accent-(--accent)"
+        class="mt-2 w-full accent-accent"
       >
     </div>
 
     <div>
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Rounding method</span>
+      <span class="demo-label">Rounding method</span>
       <div class="mt-2 grid grid-cols-3 gap-2">
         <button
           v-for="m in methods"
@@ -74,8 +74,8 @@ function pick(n: number) {
           type="button"
           class="inline-flex items-center justify-center rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
           :class="math === m.key
-            ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="math = m.key"
         >
           {{ m.label }}
@@ -84,13 +84,13 @@ function pick(n: number) {
     </div>
 
     <div>
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Samples</span>
+      <span class="demo-label">Samples</span>
       <div class="mt-2 flex flex-wrap gap-2">
         <button
           v-for="(s, i) in samples"
           :key="i"
           type="button"
-          class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted) transition hover:border-(--border-strong) hover:text-(--fg) cursor-pointer"
+          class="demo-badge transition hover:border-border-strong hover:text-fg cursor-pointer"
           @click="pick(s)"
         >
           {{ s }}

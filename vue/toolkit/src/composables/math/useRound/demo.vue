@@ -17,35 +17,35 @@ const hint = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4">
       <div class="flex items-baseline justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">rounded</span>
-        <span class="font-mono text-xs text-(--fg-subtle)">{{ hint }}</span>
+        <span class="demo-label">rounded</span>
+        <span class="font-mono text-xs text-fg-subtle">{{ hint }}</span>
       </div>
-      <div class="mt-1 font-mono text-3xl font-bold tabular-nums text-(--fg)">
+      <div class="demo-stat mt-1 text-3xl">
         {{ rounded }}
       </div>
-      <div class="mt-1 font-mono text-xs text-(--fg-subtle)">
+      <div class="mt-1 font-mono text-xs text-fg-subtle">
         input {{ value }}
       </div>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <label class="block text-sm font-medium text-(--fg)" for="round-value">Value</label>
+    <div class="demo-card p-4">
+      <label class="block text-sm font-medium text-fg" for="round-value">Value</label>
       <input
         id="round-value"
         v-model.number="value"
         type="number"
         step="0.0001"
-        class="mt-2 w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input mt-2"
       >
 
-      <label class="mt-4 flex items-center justify-between text-sm font-medium text-(--fg)">
+      <label class="mt-4 flex items-center justify-between text-sm font-medium text-fg">
         <span>Digits</span>
         <span
           class="font-mono tabular-nums"
-          :class="digits === 0 ? 'text-(--fg-muted)' : 'text-(--accent-text)'"
+          :class="digits === 0 ? 'text-fg-muted' : 'text-accent-text'"
         >{{ digits > 0 ? '+' : '' }}{{ digits }}</span>
       </label>
       <input
@@ -54,9 +54,9 @@ const hint = computed(() => {
         min="-3"
         max="4"
         step="1"
-        class="mt-2 w-full accent-(--accent)"
+        class="mt-2 w-full accent-accent"
       >
-      <div class="mt-1 flex justify-between font-mono text-xs text-(--fg-subtle)">
+      <div class="mt-1 flex justify-between font-mono text-xs text-fg-subtle">
         <span>tens</span>
         <span>integer</span>
         <span>decimals</span>

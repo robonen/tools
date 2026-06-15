@@ -15,10 +15,10 @@ const typeLabel = computed(() => pointerType.value ?? 'none');
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       ref="area"
-      class="relative h-44 touch-none overflow-hidden rounded-xl border border-(--border) bg-(--bg-inset) [background-image:radial-gradient(var(--border)_1px,transparent_1px)] [background-size:16px_16px]"
+      class="relative h-44 touch-none overflow-hidden rounded-xl border border-border bg-bg-inset [background-image:radial-gradient(var(--border)_1px,transparent_1px)] [background-size:16px_16px]"
     >
       <div
         v-if="isInside"
@@ -26,50 +26,50 @@ const typeLabel = computed(() => pointerType.value ?? 'none');
         :style="dotStyle"
       >
         <div
-          class="rounded-full bg-(--accent) opacity-80"
+          class="rounded-full bg-accent opacity-80"
           :style="{ width: `${12 + pressure * 40}px`, height: `${12 + pressure * 40}px` }"
         />
       </div>
       <div class="pointer-events-none absolute inset-0 grid place-items-center">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           {{ isInside ? 'Tracking' : 'Move your pointer here' }}
         </span>
       </div>
     </div>
 
     <div class="grid grid-cols-2 gap-2">
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm tabular-nums text-(--fg)">
-        <div class="font-sans text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Position</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm tabular-nums text-fg">
+        <div class="demo-label font-sans">Position</div>
         <div class="mt-1">{{ Math.round(x) }}, {{ Math.round(y) }}</div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm tabular-nums text-(--fg)">
-        <div class="font-sans text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Pressure</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm tabular-nums text-fg">
+        <div class="demo-label font-sans">Pressure</div>
         <div class="mt-1">{{ pressure.toFixed(2) }}</div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm tabular-nums text-(--fg)">
-        <div class="font-sans text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Tilt X / Y</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm tabular-nums text-fg">
+        <div class="demo-label font-sans">Tilt X / Y</div>
         <div class="mt-1">{{ tiltX }} / {{ tiltY }}</div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="font-sans text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Type</div>
-        <div class="mt-1 font-mono text-sm capitalize text-(--fg)">{{ typeLabel }}</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label font-sans">Type</div>
+        <div class="mt-1 font-mono text-sm capitalize text-fg">{{ typeLabel }}</div>
       </div>
     </div>
 
-    <div class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2.5">
-      <span class="text-sm text-(--fg-muted)">Pointer inside</span>
+    <div class="flex items-center justify-between rounded-lg border border-border bg-bg-inset px-3 py-2.5">
+      <span class="text-sm text-fg-muted">Pointer inside</span>
       <span
         class="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium transition"
         :class="isInside
           ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-          : 'border border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+          : 'border border-border bg-bg-inset text-fg-muted'"
       >
-        <span class="size-1.5 rounded-full transition" :class="isInside ? 'bg-emerald-500' : 'bg-(--fg-subtle)'" />
+        <span class="size-1.5 rounded-full transition" :class="isInside ? 'bg-emerald-500' : 'bg-fg-subtle'" />
         {{ isInside ? 'Yes' : 'No' }}
       </span>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Pressure scales the dot. Pen tilt &amp; pressure show real values on supporting hardware.
     </p>
   </div>

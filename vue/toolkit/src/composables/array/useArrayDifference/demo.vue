@@ -40,16 +40,16 @@ function toggle(track: Track) {
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Library — tap to add / remove from playlist
       </span>
-      <label class="inline-flex cursor-pointer items-center gap-2 text-sm text-(--fg-muted)">
+      <label class="inline-flex cursor-pointer items-center gap-2 text-sm text-fg-muted">
         <input
           v-model="symmetric"
           type="checkbox"
-          class="size-4 cursor-pointer accent-(--accent)"
+          class="size-4 cursor-pointer accent-accent"
         >
         Symmetric
       </label>
@@ -61,8 +61,8 @@ function toggle(track: Track) {
         :key="track.id"
         class="inline-flex items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
         :class="inPlaylist(track)
-          ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-          : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+          ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+          : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
         @click="toggle(track)"
       >
         <span class="truncate">{{ track.title }}</span>
@@ -70,12 +70,12 @@ function toggle(track: Track) {
       </button>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card p-4">
       <div class="flex items-baseline justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           {{ symmetric ? 'In exactly one (XOR)' : 'Not in playlist' }}
         </span>
-        <span class="font-mono text-sm tabular-nums text-(--fg-muted)">
+        <span class="font-mono text-sm tabular-nums text-fg-muted">
           {{ diff.length }}
         </span>
       </div>
@@ -84,12 +84,12 @@ function toggle(track: Track) {
         <li
           v-for="track in diff"
           :key="track.id"
-          class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)"
+          class="demo-badge"
         >
           {{ track.title }}
         </li>
       </ul>
-      <p v-else class="mt-3 text-sm text-(--fg-subtle)">
+      <p v-else class="mt-3 text-sm text-fg-subtle">
         No difference — every track matches.
       </p>
     </div>

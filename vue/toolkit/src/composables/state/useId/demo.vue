@@ -17,9 +17,9 @@ const email = ref('');
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-2.5">
-      <label :for="fieldId" class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col gap-2.5">
+      <label :for="fieldId" class="demo-label">
         Email
       </label>
       <input
@@ -28,38 +28,38 @@ const email = ref('');
         type="email"
         :aria-describedby="helpId"
         placeholder="ada@example.com"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
-      <p :id="helpId" class="text-xs text-(--fg-subtle)">
+      <p :id="helpId" class="text-xs text-fg-subtle">
         The <span class="font-mono">label</span>, <span class="font-mono">input</span> and this hint are
         linked by generated ids — no hard-coded strings, no collisions.
       </p>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums flex flex-col gap-1.5">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums flex flex-col gap-1.5">
       <div class="flex items-center justify-between gap-3">
-        <span class="text-(--fg-subtle)">field</span>
+        <span class="text-fg-subtle">field</span>
         <span class="truncate">{{ fieldId }}</span>
       </div>
       <div class="flex items-center justify-between gap-3">
-        <span class="text-(--fg-subtle)">help</span>
+        <span class="text-fg-subtle">help</span>
         <span class="truncate">{{ helpId }}</span>
       </div>
     </div>
 
     <label class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Deterministic override</span>
+      <span class="demo-label">Deterministic override</span>
       <input
         v-model="userProvided"
         type="text"
         placeholder="Leave blank to auto-generate"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
     </label>
 
-    <div class="flex items-center justify-between gap-3 rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Resolved</span>
-      <span class="truncate font-mono text-sm text-(--accent-text) tabular-nums">{{ resolvedId }}</span>
+    <div class="flex items-center justify-between gap-3 rounded-lg border border-border bg-bg-inset px-3 py-2.5">
+      <span class="demo-label">Resolved</span>
+      <span class="truncate font-mono text-sm text-accent-text tabular-nums">{{ resolvedId }}</span>
     </div>
   </div>
 </template>

@@ -45,7 +45,7 @@ export interface useInjectionStoreOptions<Return> {
  *
  * @since 0.0.5
  */
-export function useInjectionStore<Args extends any[], Return>(
+export function useInjectionStore<Args extends unknown[], Return>(
   stateFactory: (...args: Args) => Return,
   options?: useInjectionStoreOptions<Return>,
 ) {

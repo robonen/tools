@@ -53,7 +53,7 @@ export function useForwardExpose<T extends ComponentPublicInstance>(): UseForwar
 
   // localExpose should only be assigned once else will create infinite loop
   const localExpose = instance.exposed;
-  const ret: Record<string, any> = {};
+  const ret: Record<string, unknown> = {};
 
   // Collect all property descriptors in a single pass
   const descriptors: PropertyDescriptorMap = {};

@@ -31,9 +31,9 @@ tryOnMounted(() => push('async callback (nextTick)'), { sync: false });
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex items-center justify-between gap-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">tryOnMounted</span>
+      <span class="demo-label">tryOnMounted</span>
       <span
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
         :class="mounted
@@ -48,8 +48,8 @@ tryOnMounted(() => push('async callback (nextTick)'), { sync: false });
       </span>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Mount timeline</span>
+    <div class="demo-card p-4">
+      <span class="demo-label">Mount timeline</span>
 
       <ol class="mt-3 flex flex-col gap-2">
         <li
@@ -58,17 +58,17 @@ tryOnMounted(() => push('async callback (nextTick)'), { sync: false });
           class="flex items-center gap-3"
         >
           <span
-            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-(--border) bg-(--bg-inset) font-mono text-xs font-medium text-(--fg-muted) tabular-nums"
+            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-border bg-bg-inset font-mono text-xs font-medium text-fg-muted tabular-nums"
           >
             {{ index + 1 }}
           </span>
-          <span class="text-sm text-(--fg)">{{ entry.label }}</span>
-          <span class="ml-auto font-mono text-xs text-(--fg-subtle) tabular-nums">+{{ entry.at }}ms</span>
+          <span class="text-sm text-fg">{{ entry.label }}</span>
+          <span class="ml-auto font-mono text-xs text-fg-subtle tabular-nums">+{{ entry.at }}ms</span>
         </li>
       </ol>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Both callbacks are safely deferred until the component is mounted. The async variant is queued one extra tick,
       so it consistently runs after the synchronous one.
     </p>

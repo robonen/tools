@@ -47,7 +47,7 @@ export interface StandardSchemaRun<Output> {
  * the result into our `{ valid, output?, errors }` shape.
  */
 export async function runStandardSchema<Output>(
-  schema: StandardSchemaV1<any, Output>,
+  schema: StandardSchemaV1<unknown, Output>,
   value: unknown,
 ): Promise<StandardSchemaRun<Output>> {
   const result = await schema['~standard'].validate(value);

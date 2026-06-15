@@ -47,34 +47,34 @@ function removeTag(tag: string) {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Custom storage backend</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">Custom storage backend</span>
+      <span class="demo-badge">
         in-memory
       </span>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Tags (Set)</span>
+    <div class="demo-card p-4 flex flex-col gap-3">
+      <span class="demo-label">Tags (Set)</span>
 
       <div class="flex flex-wrap gap-1.5 min-h-7">
         <span
           v-for="tag in tagList"
           :key="tag"
-          class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)"
+          class="demo-badge"
         >
           {{ tag }}
           <button
             type="button"
-            class="text-(--fg-subtle) transition hover:text-(--fg) cursor-pointer"
+            class="text-fg-subtle transition hover:text-fg cursor-pointer"
             :aria-label="`Remove ${tag}`"
             @click="removeTag(tag)"
           >
             &times;
           </button>
         </span>
-        <span v-if="tagList.length === 0" class="text-xs text-(--fg-subtle)">No tags yet</span>
+        <span v-if="tagList.length === 0" class="text-xs text-fg-subtle">No tags yet</span>
       </div>
 
       <form class="flex items-center gap-2" @submit.prevent="addTag">
@@ -82,34 +82,34 @@ function removeTag(tag: string) {
           v-model="newTag.value"
           type="text"
           placeholder="add a tag…"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="demo-input"
         >
         <button
           type="submit"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+          class="demo-btn-primary"
         >
           Add
         </button>
       </form>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex items-center justify-between">
+    <div class="demo-card p-4 flex items-center justify-between">
       <div class="flex flex-col gap-0.5">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Ticket #</span>
-        <span class="text-xs text-(--fg-subtle)">zero-padded serializer</span>
+        <span class="demo-label">Ticket #</span>
+        <span class="text-xs text-fg-subtle">zero-padded serializer</span>
       </div>
       <div class="flex items-center gap-3">
         <button
           type="button"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-(--border) bg-(--bg-inset) text-(--fg) transition hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-bg-inset text-fg transition hover:border-border-strong active:scale-[0.98] cursor-pointer"
           @click="ticket = Math.max(0, ticket - 1)"
         >
           &minus;
         </button>
-        <span class="font-mono text-2xl font-bold tabular-nums text-(--fg)">{{ ticket }}</span>
+        <span class="demo-stat text-2xl">{{ ticket }}</span>
         <button
           type="button"
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-(--border) bg-(--bg-inset) text-(--fg) transition hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-bg-inset text-fg transition hover:border-border-strong active:scale-[0.98] cursor-pointer"
           @click="ticket = ticket + 1"
         >
           +
@@ -118,10 +118,10 @@ function removeTag(tag: string) {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Raw store contents</span>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-xs text-(--fg) flex flex-col gap-1">
+      <span class="demo-label">Raw store contents</span>
+      <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-xs text-fg flex flex-col gap-1">
         <div v-for="[key, value] in storeEntries" :key="key" class="flex gap-2">
-          <span class="text-(--fg-subtle) shrink-0">{{ key }}</span>
+          <span class="text-fg-subtle shrink-0">{{ key }}</span>
           <span class="truncate">{{ value }}</span>
         </div>
       </div>

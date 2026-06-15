@@ -9,12 +9,12 @@ import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
  *
  * Listeners may be sync or async; async listeners are awaited by `trigger`.
  */
-export type EventHookListener<T = any>
+export type EventHookListener<T = unknown>
   = [T] extends [void]
-    ? () => any
-    : [T] extends [any[]]
-        ? (...args: T) => any
-        : (arg: T) => any;
+    ? () => unknown
+    : [T] extends [unknown[]]
+        ? (...args: T) => unknown
+        : (arg: T) => unknown;
 
 /**
  * Handle returned from {@link EventHook.on}. It is both a callable that removes
@@ -30,14 +30,14 @@ export interface EventHookOffHandle {
   off: () => void;
 }
 
-export type EventHookOn<T = any> = (listener: EventHookListener<T>) => EventHookOffHandle;
-export type EventHookOff<T = any> = (listener: EventHookListener<T>) => void;
-export type EventHookTrigger<T = any>
+export type EventHookOn<T = unknown> = (listener: EventHookListener<T>) => EventHookOffHandle;
+export type EventHookOff<T = unknown> = (listener: EventHookListener<T>) => void;
+export type EventHookTrigger<T = unknown>
   = [T] extends [void]
-    ? () => Promise<any[]>
-    : [T] extends [any[]]
-        ? (...args: T) => Promise<any[]>
-        : (arg: T) => Promise<any[]>;
+    ? () => Promise<unknown[]>
+    : [T] extends [unknown[]]
+        ? (...args: T) => Promise<unknown[]>
+        : (arg: T) => Promise<unknown[]>;
 
 export interface CreateEventHookOptions {
   /**
@@ -50,7 +50,7 @@ export interface CreateEventHookOptions {
   onError?: (error: unknown) => void;
 }
 
-export interface CreateEventHookReturn<T = any> {
+export interface CreateEventHookReturn<T = unknown> {
   /**
    * Register a listener. Returns a handle that removes the listener when
    * called (or via its `.off` method). The listener is also removed
@@ -107,7 +107,7 @@ export interface CreateEventHookReturn<T = any> {
  *
  * @since 0.0.15
  */
-export function createEventHook<T = any>(
+export function createEventHook<T = unknown>(
   options: CreateEventHookOptions = {},
 ): CreateEventHookReturn<T> {
   const { onError = noop } = options;
@@ -133,7 +133,7 @@ export function createEventHook<T = any>(
     return offHandle;
   };
 
-  const trigger = ((...args: any[]) => {
+  const trigger = ((...args: unknown[]) => {
     // Snapshot first: a listener that mutates the set during the trigger (e.g.
     // self-removal or registering a new one) must not affect the current pass.
     const snapshot = [...listeners];

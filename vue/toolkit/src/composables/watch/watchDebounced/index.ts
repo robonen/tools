@@ -1,6 +1,7 @@
 import { watch } from 'vue';
 import type {
   MaybeRefOrGetter,
+  MultiWatchSources,
   WatchCallback,
   WatchHandle,
   WatchOptions,
@@ -8,20 +9,7 @@ import type {
 } from 'vue';
 import { createFilterWrapper, debounceFilter } from '@/utils/filters';
 import type { ConfigurableEventFilter, EventFilter } from '@/utils/filters';
-
-type MultiWatchSources = Array<WatchSource<unknown> | object>;
-
-type MapSources<T> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V> ? V : T[K] extends object ? T[K] : never;
-};
-
-type MapOldSources<T, Immediate> = {
-  [K in keyof T]: T[K] extends WatchSource<infer V>
-    ? Immediate extends true ? V | undefined : V
-    : T[K] extends object
-      ? Immediate extends true ? T[K] | undefined : T[K]
-      : never;
-};
+import type { MapOldSources, MapSources } from '@/types/watch';
 
 export interface WatchDebouncedOptions<Immediate> extends WatchOptions<Immediate>, ConfigurableEventFilter {
   /**

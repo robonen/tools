@@ -2,6 +2,11 @@ import { computed, ref } from 'vue';
 import type { ComputedRef, MaybeRef, Ref } from 'vue';
 import { isArray } from '@robonen/stdlib';
 
+/** Internal name of a step: an array element or a record key. */
+type StepName = string | number;
+/** Internal value of a step: the array element itself or a record value. */
+type StepValue = unknown;
+
 export interface UseStepperReturn<StepName, Steps, Step> {
   /** List of steps. */
   steps: Readonly<Ref<Steps>>;
@@ -67,24 +72,40 @@ export function useStepper<T extends string | number>(
   steps: MaybeRef<T[]>,
   initialStep?: T,
 ): UseStepperReturn<T, T[], T>;
-export function useStepper<T extends Record<string, any>>(
+export function useStepper<T extends Record<string, unknown>>(
   steps: MaybeRef<T>,
   initialStep?: keyof T,
 ): UseStepperReturn<Exclude<keyof T, symbol>, T, T[keyof T]>;
-export function useStepper(steps: any, initialStep?: any): UseStepperReturn<any, any, any> {
-  const stepsRef = ref<any>(steps);
+export function useStepper(
+  steps: MaybeRef<StepName[] | Record<string, StepValue>>,
+  initialStep?: StepName,
+): UseStepperReturn<StepName, StepName[] | Record<string, StepValue>, StepValue> {
+  const stepsRef = ref(steps) as Ref<StepName[] | Record<string, StepValue>>;
 
-  const stepNames = computed<any[]>(() =>
+  const stepNames = computed<StepName[]>(() =>
     isArray(stepsRef.value) ? stepsRef.value : Object.keys(stepsRef.value),
   );
 
-  const index = ref(stepNames.value.indexOf(initialStep ?? stepNames.value[0]));
+  // O(1) name -> index lookup, rebuilt only when the step list changes. Replaces
+  // repeated O(n) `stepNames.value.indexOf(step)` scans in the predicate helpers
+  // below (which are called per-render in templates). `?? -1` reproduces the
+  // exact `indexOf` sentinel for unknown steps.
+  const stepIndex = computed<Map<StepName, number>>(() => {
+    const map = new Map<StepName, number>();
+    const names = stepNames.value;
+    for (let i = 0; i < names.length; i++)
+      map.set(names[i]!, i);
+    return map;
+  });
+  const indexOfStep = (step: StepName): number => stepIndex.value.get(step) ?? -1;
 
-  const at = (at: number): any => {
+  const index = ref(stepNames.value.indexOf(initialStep ?? stepNames.value[0]!));
+
+  const at = (at: number): StepValue => {
     if (isArray(stepsRef.value))
       return stepsRef.value[at];
 
-    return stepsRef.value[stepNames.value[at]];
+    return stepsRef.value[stepNames.value[at]!];
   };
 
   const current = computed(() => at(index.value));
@@ -93,16 +114,18 @@ export function useStepper(steps: any, initialStep?: any): UseStepperReturn<any,
   const next = computed(() => stepNames.value[index.value + 1]);
   const previous = computed(() => stepNames.value[index.value - 1]);
 
-  const get = (step: any): any => {
-    if (!stepNames.value.includes(step))
+  const get = (step: StepName): StepValue | undefined => {
+    const i = indexOfStep(step);
+    if (i === -1)
       return;
 
-    return at(stepNames.value.indexOf(step));
+    return at(i);
   };
 
-  const goTo = (step: any): void => {
-    if (stepNames.value.includes(step))
-      index.value = stepNames.value.indexOf(step);
+  const goTo = (step: StepName): void => {
+    const i = indexOfStep(step);
+    if (i !== -1)
+      index.value = i;
   };
 
   const goToNext = (): void => {
@@ -119,13 +142,13 @@ export function useStepper(steps: any, initialStep?: any): UseStepperReturn<any,
     index.value--;
   };
 
-  const isNext = (step: any): boolean => stepNames.value.indexOf(step) === index.value + 1;
-  const isPrevious = (step: any): boolean => stepNames.value.indexOf(step) === index.value - 1;
-  const isCurrent = (step: any): boolean => stepNames.value.indexOf(step) === index.value;
-  const isBefore = (step: any): boolean => index.value < stepNames.value.indexOf(step);
-  const isAfter = (step: any): boolean => index.value > stepNames.value.indexOf(step);
+  const isNext = (step: StepName): boolean => indexOfStep(step) === index.value + 1;
+  const isPrevious = (step: StepName): boolean => indexOfStep(step) === index.value - 1;
+  const isCurrent = (step: StepName): boolean => indexOfStep(step) === index.value;
+  const isBefore = (step: StepName): boolean => index.value < indexOfStep(step);
+  const isAfter = (step: StepName): boolean => index.value > indexOfStep(step);
 
-  const goBackTo = (step: any): void => {
+  const goBackTo = (step: StepName): void => {
     if (isAfter(step))
       goTo(step);
   };

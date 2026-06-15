@@ -5,6 +5,7 @@ import { defaultWindow } from '@/types';
 import type { ConfigurableWindow } from '@/types';
 import { useSupported } from '@/composables/utilities/useSupported';
 import { useEventListener } from '@/composables/browser/useEventListener';
+import { pxValue } from '@robonen/platform/browsers';
 
 export interface UseMediaQueryOptions extends ConfigurableWindow {
   /**
@@ -18,22 +19,6 @@ export interface UseMediaQueryOptions extends ConfigurableWindow {
    * @default undefined
    */
   ssrWidth?: number;
-}
-
-/**
- * Convert a CSS length token (e.g. `"1024px"`, `"48em"`, `"30rem"`) to pixels.
- * Falls back to treating `em`/`rem` as the conventional 16px root size.
- */
-function pxValue(value: string): number {
-  const number = Number.parseFloat(value);
-
-  if (Number.isNaN(number))
-    return Number.NaN;
-
-  if (/(?:em|rem)\s*$/i.test(value))
-    return number * 16;
-
-  return number;
 }
 
 /**

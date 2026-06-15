@@ -27,7 +27,7 @@ const faceButtons = computed(() => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-center text-sm text-amber-700 dark:text-amber-300"
@@ -37,18 +37,18 @@ const faceButtons = computed(() => {
 
     <template v-else>
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           Gamepad
         </span>
         <span
           class="inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium transition"
           :class="hasPad
             ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-            : 'border border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+            : 'border border-border bg-bg-inset text-fg-muted'"
         >
           <span
             class="size-1.5 rounded-full"
-            :class="hasPad ? 'bg-emerald-500 animate-pulse' : 'bg-(--fg-subtle)'"
+            :class="hasPad ? 'bg-emerald-500 animate-pulse' : 'bg-fg-subtle'"
           />
           {{ hasPad ? 'Connected' : 'Waiting' }}
         </span>
@@ -56,23 +56,23 @@ const faceButtons = computed(() => {
 
       <div
         v-if="!hasPad"
-        class="rounded-xl border border-dashed border-(--border) bg-(--bg-inset) p-6 text-center"
+        class="rounded-xl border border-dashed border-border bg-bg-inset p-6 text-center"
       >
-        <p class="text-sm font-medium text-(--fg)">No controller detected</p>
-        <p class="mt-1 text-xs text-(--fg-subtle)">
+        <p class="text-sm font-medium text-fg">No controller detected</p>
+        <p class="mt-1 text-xs text-fg-subtle">
           Connect a gamepad and press any button to wake it.
         </p>
       </div>
 
       <template v-else-if="controller">
-        <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-          <div class="truncate text-xs text-(--fg-subtle)" :title="gamepad?.id">
+        <div class="demo-card p-4">
+          <div class="truncate text-xs text-fg-subtle" :title="gamepad?.id">
             {{ gamepad?.id }}
           </div>
 
           <div class="mt-3 grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+              <div class="demo-label">
                 Buttons
               </div>
               <div class="flex flex-wrap gap-1.5">
@@ -81,8 +81,8 @@ const faceButtons = computed(() => {
                   :key="b.key"
                   class="inline-flex size-7 items-center justify-center rounded-md border text-xs font-bold tabular-nums transition"
                   :class="b.pressed
-                    ? `border-(--accent) bg-(--accent-subtle) ${b.color}`
-                    : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+                    ? `border-accent bg-accent-subtle ${b.color}`
+                    : 'border-border bg-bg-inset text-fg-muted'"
                 >
                   {{ b.key }}
                 </span>
@@ -90,7 +90,7 @@ const faceButtons = computed(() => {
             </div>
 
             <div class="space-y-2">
-              <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+              <div class="demo-label">
                 Triggers
               </div>
               <div class="space-y-1.5">
@@ -99,10 +99,10 @@ const faceButtons = computed(() => {
                   :key="side"
                   class="flex items-center gap-2"
                 >
-                  <span class="w-6 font-mono text-xs text-(--fg-muted)">{{ side }}</span>
-                  <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-(--bg-inset)">
+                  <span class="w-6 font-mono text-xs text-fg-muted">{{ side }}</span>
+                  <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-bg-inset">
                     <div
-                      class="h-full rounded-full bg-(--accent) transition-[width]"
+                      class="h-full rounded-full bg-accent transition-[width]"
                       :style="{ width: `${t.value * 100}%` }"
                     />
                   </div>
@@ -117,13 +117,13 @@ const faceButtons = computed(() => {
               :key="side"
               class="space-y-2"
             >
-              <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+              <div class="demo-label">
                 {{ side }} stick
               </div>
-              <div class="relative aspect-square w-full rounded-lg border border-(--border) bg-(--bg-inset)">
+              <div class="relative aspect-square w-full rounded-lg border border-border bg-bg-inset">
                 <div
                   class="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all"
-                  :class="stick.button.pressed ? 'bg-(--accent)' : 'bg-(--fg-muted)'"
+                  :class="stick.button.pressed ? 'bg-accent' : 'bg-fg-muted'"
                   :style="{ left: pct(stick.horizontal), top: pct(stick.vertical) }"
                 />
               </div>
@@ -133,7 +133,7 @@ const faceButtons = computed(() => {
       </template>
     </template>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       State polls every animation frame and stays paused while no pad is connected.
     </p>
   </div>

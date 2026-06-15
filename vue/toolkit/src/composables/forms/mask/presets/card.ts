@@ -1,14 +1,13 @@
 import { CARD_BRANDS, findCardBrand } from '@robonen/platform/multi';
 import type { CardBrand } from '@robonen/platform/multi';
-import type { ElementState, MaskExpression, MaskOptions } from '../types';
-import { maskFromTemplate } from './template';
+import type { MaskOptions } from '../types';
+import { createDynamicMask } from './dynamic';
 
 // Re-export the platform reference data + resolver + validator (source of truth
 // lives in `@robonen/platform`; the Luhn primitive lives in `@robonen/encoding`).
 export { CARD_BRANDS, findCardBrand, isValidCardNumber } from '@robonen/platform/multi';
 export type { CardBrand } from '@robonen/platform/multi';
 
-const NON_DIGIT = /\D/g;
 const DEFAULT_CARD_FALLBACK = '#### #### #### ####';
 
 /**
@@ -55,22 +54,9 @@ export function maskCardOptions(params: MaskCardParams = {}): MaskOptions {
   const brands = params.brands ?? CARD_BRANDS;
   const fallback = params.fallback ?? DEFAULT_CARD_FALLBACK;
 
-  // 1-entry memo: resolveMask fires several times per keystroke with the same
-  // digits, and the expression is a pure function of those digits.
-  let lastDigits = '';
-  let lastExpression: MaskExpression = maskFromTemplate(fallback, params.tokens);
-
-  return {
-    mask: (state: ElementState): MaskExpression => {
-      const digits = state.value.replaceAll(NON_DIGIT, '');
-      if (digits === lastDigits)
-        return lastExpression;
-
-      const brand = findCardBrand(digits, brands);
-      lastDigits = digits;
-      lastExpression = maskFromTemplate(brand?.template ?? fallback, params.tokens);
-
-      return lastExpression;
-    },
-  };
+  return createDynamicMask(
+    digits => findCardBrand(digits, brands)?.template ?? fallback,
+    fallback,
+    params.tokens,
+  );
 }

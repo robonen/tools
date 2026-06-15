@@ -1,6 +1,6 @@
-import { nextTick, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import type { ComponentInternalInstance } from 'vue';
-import { getLifeCycleTarger } from '@/utils';
+import { runTryOnLifecycle } from '@/utils/lifecycle';
 import type { VoidFunction } from '@robonen/stdlib';
 
 export interface TryOnMountedOptions {
@@ -28,17 +28,5 @@ export interface TryOnMountedOptions {
  * @since 0.0.1
  */
 export function tryOnMounted(fn: VoidFunction, options: TryOnMountedOptions = {}) {
-  const {
-    sync = true,
-    target,
-  } = options;
-
-  const instance = getLifeCycleTarger(target);
-
-  if (instance)
-    onMounted(fn, instance);
-  else if (sync)
-    fn();
-  else
-    nextTick(fn);
+  runTryOnLifecycle(onMounted, fn, options);
 }

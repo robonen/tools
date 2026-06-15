@@ -1,6 +1,6 @@
 import { computed, shallowRef, toValue } from 'vue';
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue';
-import { noop } from '@robonen/stdlib';
+import { clamp, noop } from '@robonen/stdlib';
 import { defaultWindow } from '@/types';
 import { useEventListener } from '@/composables/browser/useEventListener';
 import { unrefElement } from '@/composables/component/unrefElement';
@@ -259,13 +259,13 @@ export function useDraggable(
     if (axis === 'x' || axis === 'both') {
       x = event.clientX - pressedDelta.value.x;
       if (container && targetRect)
-        x = Math.min(Math.max(0, x), container.scrollWidth - targetRect.width);
+        x = clamp(x, 0, container.scrollWidth - targetRect.width);
     }
 
     if (axis === 'y' || axis === 'both') {
       y = event.clientY - pressedDelta.value.y;
       if (container && targetRect)
-        y = Math.min(Math.max(0, y), container.scrollHeight - targetRect.height);
+        y = clamp(y, 0, container.scrollHeight - targetRect.height);
     }
 
     position.value = { x, y };

@@ -27,14 +27,14 @@ const ThemedCard = defineComponent({
       h(
         'div',
         {
-          class: 'rounded-lg border border-(--border) bg-(--bg-inset)',
+          class: 'rounded-lg border border-border bg-bg-inset',
           style: { padding: pad.value, borderLeft: `3px solid ${ctx.accent}` },
         },
         [
-          h('div', { class: 'text-sm font-medium text-(--fg)' }, 'Injected child'),
+          h('div', { class: 'text-sm font-medium text-fg' }, 'Injected child'),
           h(
             'div',
-            { class: 'font-mono text-xs tabular-nums text-(--fg-muted)' },
+            { class: 'font-mono text-xs tabular-nums text-fg-muted' },
             `accent ${ctx.accent} · ${ctx.density}`,
           ),
         ],
@@ -44,12 +44,12 @@ const ThemedCard = defineComponent({
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-4">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Provider (parent)</span>
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4 flex flex-col gap-4">
+      <span class="demo-label">Provider (parent)</span>
 
       <div class="flex flex-col gap-2">
-        <span class="text-xs text-(--fg-muted)">Accent</span>
+        <span class="text-xs text-fg-muted">Accent</span>
         <div class="flex gap-2">
           <button
             v-for="color in accents"
@@ -57,7 +57,7 @@ const ThemedCard = defineComponent({
             type="button"
             :aria-pressed="theme.accent === color"
             class="size-8 rounded-lg border-2 transition active:scale-[0.95] cursor-pointer"
-            :class="theme.accent === color ? 'border-(--accent) scale-110' : 'border-(--border) hover:border-(--border-strong)'"
+            :class="theme.accent === color ? 'border-accent scale-110' : 'border-border hover:border-border-strong'"
             :style="{ backgroundColor: color }"
             @click="theme.accent = color"
           />
@@ -65,14 +65,14 @@ const ThemedCard = defineComponent({
       </div>
 
       <div class="flex flex-col gap-2">
-        <span class="text-xs text-(--fg-muted)">Density</span>
+        <span class="text-xs text-fg-muted">Density</span>
         <div class="grid grid-cols-2 gap-2">
           <button
             type="button"
             class="inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
             :class="theme.density === 'cozy'
-              ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-              : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+              ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+              : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
             @click="theme.density = 'cozy'"
           >
             Cozy
@@ -81,8 +81,8 @@ const ThemedCard = defineComponent({
             type="button"
             class="inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
             :class="theme.density === 'compact'
-              ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-              : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+              ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+              : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
             @click="theme.density = 'compact'"
           >
             Compact
@@ -94,8 +94,8 @@ const ThemedCard = defineComponent({
     <!-- Descendant resolves the value through inject(), no props passed in -->
     <ThemedCard />
 
-    <p class="text-xs text-(--fg-subtle)">
-      The card reads context with <span class="font-mono text-(--fg-muted)">inject()</span> — change the controls above
+    <p class="text-xs text-fg-subtle">
+      The card reads context with <span class="font-mono text-fg-muted">inject()</span> — change the controls above
       and it updates without a single prop.
     </p>
   </div>

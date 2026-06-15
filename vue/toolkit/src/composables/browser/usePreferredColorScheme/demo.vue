@@ -22,12 +22,12 @@ const previewClass = computed(() =>
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Preferred color scheme
       </span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-badge">
         <span class="size-1.5 rounded-full bg-emerald-500" />
         live
       </span>
@@ -39,22 +39,22 @@ const previewClass = computed(() =>
         :key="option.value"
         class="flex items-center gap-3 rounded-lg border px-3 py-2.5 transition"
         :class="scheme === option.value
-          ? 'border-(--accent) bg-(--accent-subtle)'
-          : 'border-(--border) bg-(--bg-elevated)'"
+          ? 'border-accent bg-accent-subtle'
+          : 'border-border bg-bg-elevated'"
       >
         <span class="text-lg leading-none">{{ option.icon }}</span>
         <span class="flex flex-1 flex-col">
           <span
             class="text-sm font-medium"
-            :class="scheme === option.value ? 'text-(--accent-text)' : 'text-(--fg)'"
+            :class="scheme === option.value ? 'text-accent-text' : 'text-fg'"
           >
             {{ option.label }}
           </span>
-          <span class="font-mono text-xs text-(--fg-subtle)">{{ option.hint }}</span>
+          <span class="font-mono text-xs text-fg-subtle">{{ option.hint }}</span>
         </span>
         <span
           v-if="scheme === option.value"
-          class="text-(--accent-text)"
+          class="text-accent-text"
           aria-hidden="true"
         >✓</span>
       </li>
@@ -73,7 +73,7 @@ const previewClass = computed(() =>
       </div>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Read-only: change your OS appearance setting to see this update instantly.
     </p>
   </div>

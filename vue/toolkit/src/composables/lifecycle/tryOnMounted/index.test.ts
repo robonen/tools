@@ -48,7 +48,7 @@ describe(tryOnMounted, () => {
     expect(callback).toHaveBeenCalled();
   });
 
-  it.skip('run the callback with a specific target', () => {
+  it.todo('run the callback with a specific target', () => {
     const callback = vi.fn();
 
     const component = mount(ComponentStub);

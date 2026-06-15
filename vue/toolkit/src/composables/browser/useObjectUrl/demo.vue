@@ -44,19 +44,19 @@ function generateSample() {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <label
       class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-6 text-center transition"
       :class="dragging
-        ? 'border-(--accent) bg-(--accent-subtle)'
-        : 'border-(--border) bg-(--bg-inset) hover:border-(--border-strong)'"
+        ? 'border-accent bg-accent-subtle'
+        : 'border-border bg-bg-inset hover:border-border-strong'"
       @dragover.prevent="dragging = true"
       @dragleave.prevent="dragging = false"
       @drop.prevent="onDrop"
     >
       <span class="text-2xl">📎</span>
-      <span class="text-sm font-medium text-(--fg)">Drop a file or click to choose</span>
-      <span class="text-xs text-(--fg-subtle)">An object URL is created instantly</span>
+      <span class="text-sm font-medium text-fg">Drop a file or click to choose</span>
+      <span class="text-xs text-fg-subtle">An object URL is created instantly</span>
       <input
         type="file"
         class="hidden"
@@ -67,14 +67,14 @@ function generateSample() {
     <div class="flex gap-2">
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn flex-1"
         @click="generateSample"
       >
         Use sample image
       </button>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!file"
         @click="clear"
       >
@@ -84,26 +84,26 @@ function generateSample() {
 
     <div
       v-if="file"
-      class="flex flex-col gap-3 rounded-xl border border-(--border) bg-(--bg-elevated) p-4"
+      class="demo-card flex flex-col gap-3 p-4"
     >
       <img
         v-if="isImage && url"
         :src="url"
         alt="Selected file preview"
-        class="mx-auto max-h-40 rounded-lg border border-(--border) object-contain"
+        class="mx-auto max-h-40 rounded-lg border border-border object-contain"
       >
       <div class="flex items-center justify-between gap-3 text-sm">
-        <span class="truncate font-medium text-(--fg)">{{ file.name }}</span>
-        <span class="shrink-0 font-mono text-xs text-(--fg-muted) tabular-nums">{{ sizeLabel }}</span>
+        <span class="truncate font-medium text-fg">{{ file.name }}</span>
+        <span class="shrink-0 font-mono text-xs text-fg-muted tabular-nums">{{ sizeLabel }}</span>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-xs text-(--fg) break-all">
+      <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-xs text-fg break-all">
         {{ url }}
       </div>
     </div>
 
     <p
       v-else
-      class="rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-6 text-center text-sm text-(--fg-subtle)"
+      class="rounded-lg border border-border bg-bg-inset px-3 py-6 text-center text-sm text-fg-subtle"
     >
       No source — the URL ref is <code class="font-mono">undefined</code>
     </p>

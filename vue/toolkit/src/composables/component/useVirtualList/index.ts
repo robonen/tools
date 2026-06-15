@@ -200,7 +200,7 @@ function createMetrics(length: number, itemSize: UseVirtualListItemSize): UseVir
  *
  * @since 0.0.15
  */
-export function useVirtualList<T = any>(
+export function useVirtualList<T = unknown>(
   list: MaybeRefOrGetter<readonly T[]>,
   options: UseVirtualListOptions,
 ): UseVirtualListReturn<T> {

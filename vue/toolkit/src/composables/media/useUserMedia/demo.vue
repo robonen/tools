@@ -37,7 +37,7 @@ function swapCamera(): void {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-600 dark:text-amber-400"
@@ -46,7 +46,7 @@ function swapCamera(): void {
     </div>
 
     <template v-else>
-      <div class="relative aspect-video w-full overflow-hidden rounded-xl border border-(--border) bg-(--bg-inset)">
+      <div class="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-bg-inset">
         <video
           ref="video"
           autoplay
@@ -57,7 +57,7 @@ function swapCamera(): void {
         />
         <div
           v-if="!stream"
-          class="absolute inset-0 flex flex-col items-center justify-center gap-1 text-(--fg-subtle)"
+          class="absolute inset-0 flex flex-col items-center justify-center gap-1 text-fg-subtle"
         >
           <span class="text-sm font-medium">Camera off</span>
           <span class="text-xs">Press start to enable your webcam.</span>
@@ -75,7 +75,7 @@ function swapCamera(): void {
         <button
           v-if="!enabled"
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+          class="demo-btn-primary flex-1"
           @click="handleStart"
         >
           Start camera
@@ -83,23 +83,23 @@ function swapCamera(): void {
         <button
           v-else
           type="button"
-          class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn flex-1"
           @click="stop()"
         >
           Stop camera
         </button>
         <button
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="swapCamera"
         >
           Flip
         </button>
       </div>
 
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Facing</span>
-        <span class="font-mono text-sm tabular-nums text-(--fg)">
+      <div class="rounded-lg border border-border bg-bg-inset p-3 flex items-center justify-between">
+        <span class="demo-label">Facing</span>
+        <span class="font-mono text-sm tabular-nums text-fg">
           {{ facingMode === 'user' ? 'Front (user)' : 'Back (environment)' }}
         </span>
       </div>

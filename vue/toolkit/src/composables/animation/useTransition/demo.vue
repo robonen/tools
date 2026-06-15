@@ -40,19 +40,19 @@ function randomize() {
 
 <template>
   <div class="flex w-full max-w-md flex-col gap-5">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card p-4">
       <div class="flex items-baseline justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           Eased value
         </span>
-        <span class="font-mono text-3xl font-bold tabular-nums text-(--fg)">
+        <span class="demo-stat text-3xl">
           {{ value.toFixed(1) }}
         </span>
       </div>
 
-      <div class="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-(--bg-inset)">
+      <div class="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-bg-inset">
         <div
-          class="h-full rounded-full bg-(--accent)"
+          class="h-full rounded-full bg-accent"
           :style="{ width: `${Math.max(0, Math.min(100, value))}%` }"
         />
       </div>
@@ -63,10 +63,10 @@ function randomize() {
           type="range"
           min="0"
           max="100"
-          class="h-1.5 flex-1 cursor-pointer accent-(--accent)"
+          class="h-1.5 flex-1 cursor-pointer accent-accent"
         >
         <button
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="randomize"
         >
           Random
@@ -75,21 +75,21 @@ function randomize() {
     </div>
 
     <div class="flex flex-col gap-2">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Easing preset
       </label>
       <select
         v-model="preset"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-fg transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-ring"
       >
         <option v-for="name in presetNames" :key="name" :value="name">
           {{ name }}
         </option>
       </select>
 
-      <label class="mt-1 flex items-center justify-between text-sm text-(--fg-muted)">
+      <label class="mt-1 flex items-center justify-between text-sm text-fg-muted">
         <span>Duration</span>
-        <span class="font-mono text-(--fg) tabular-nums">{{ duration }}ms</span>
+        <span class="font-mono text-fg tabular-nums">{{ duration }}ms</span>
       </label>
       <input
         v-model.number="duration"
@@ -97,21 +97,21 @@ function randomize() {
         min="100"
         max="2000"
         step="100"
-        class="h-1.5 w-full cursor-pointer accent-(--accent)"
+        class="h-1.5 w-full cursor-pointer accent-accent"
       >
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card p-4">
       <div class="flex items-center gap-3">
         <div
-          class="size-12 shrink-0 rounded-lg border border-(--border)"
+          class="size-12 shrink-0 rounded-lg border border-border"
           :style="{ backgroundColor: colorCss }"
         />
         <div class="min-w-0">
-          <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+          <div class="demo-label">
             Animated tuple
           </div>
-          <div class="font-mono text-sm text-(--fg) tabular-nums">
+          <div class="font-mono text-sm text-fg tabular-nums">
             {{ colorCss }}
           </div>
         </div>
@@ -121,7 +121,7 @@ function randomize() {
         <button
           v-for="[label, rgb] in swatches"
           :key="label"
-          class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted) transition hover:border-(--border-strong) cursor-pointer"
+          class="demo-badge transition hover:border-border-strong cursor-pointer"
           @click="colorTarget = [...rgb]"
         >
           <span class="size-2.5 rounded-full" :style="{ backgroundColor: `rgb(${rgb.join(',')})` }" />

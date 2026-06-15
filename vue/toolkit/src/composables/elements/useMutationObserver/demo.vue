@@ -45,10 +45,10 @@ function removeLabel() {
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">MutationObserver</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">MutationObserver</span>
+      <span class="demo-badge">
         <span class="size-1.5 rounded-full transition" :class="isActive ? 'bg-emerald-500' : 'bg-amber-500'" />
         {{ isActive ? 'Observing' : 'Paused' }}
       </span>
@@ -63,46 +63,46 @@ function removeLabel() {
       <div
         ref="target"
         class="rounded-xl border p-4 transition"
-        :class="accent ? 'border-(--accent) bg-(--accent-subtle)' : 'border-(--border) bg-(--bg-elevated)'"
+        :class="accent ? 'border-accent bg-accent-subtle' : 'border-border bg-bg-elevated'"
         :style="{ fontSize: `${fontSize}px` }"
       >
-        <div class="mb-2 text-xs font-medium uppercase tracking-wide" :class="accent ? 'text-(--accent-text)' : 'text-(--fg-subtle)'">
+        <div class="mb-2 text-xs font-medium uppercase tracking-wide" :class="accent ? 'text-accent-text' : 'text-fg-subtle'">
           Observed element
         </div>
         <div class="flex flex-wrap gap-1.5">
           <span
             v-for="(label, i) in labels"
             :key="`${label}-${i}`"
-            class="inline-flex items-center rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)"
+            class="inline-flex items-center rounded-md border border-border bg-bg-inset px-2 py-0.5 text-xs font-medium text-fg-muted"
           >
             {{ label }}
           </span>
-          <span v-if="!labels.length" class="text-xs text-(--fg-subtle)">No labels</span>
+          <span v-if="!labels.length" class="text-xs text-fg-subtle">No labels</span>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2">
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-center">
-          <div class="font-mono text-3xl font-bold tabular-nums text-(--fg)">{{ mutationCount }}</div>
-          <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">mutations</div>
+        <div class="rounded-lg border border-border bg-bg-inset p-3 text-center">
+          <div class="demo-stat text-3xl">{{ mutationCount }}</div>
+          <div class="text-[10px] uppercase tracking-wide text-fg-subtle">mutations</div>
         </div>
-        <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 text-center">
-          <div class="truncate font-mono text-sm font-bold text-(--fg)">{{ lastType }}</div>
-          <div class="text-[10px] uppercase tracking-wide text-(--fg-subtle)">last record type</div>
+        <div class="rounded-lg border border-border bg-bg-inset p-3 text-center">
+          <div class="truncate font-mono text-sm font-bold text-fg">{{ lastType }}</div>
+          <div class="text-[10px] uppercase tracking-wide text-fg-subtle">last record type</div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2">
         <button
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="addLabel"
         >
           Add child
         </button>
         <button
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           :disabled="!labels.length"
           @click="removeLabel"
         >
@@ -110,31 +110,31 @@ function removeLabel() {
         </button>
         <button
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="accent = !accent"
         >
           Toggle class
         </button>
         <button
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+          class="demo-btn"
           @click="fontSize = fontSize === 14 ? 18 : 14"
         >
           Toggle style
         </button>
       </div>
 
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="mb-1.5 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Recent records</div>
-        <ul v-if="log.length" class="flex flex-col gap-1 font-mono text-xs text-(--fg)">
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label mb-1.5">Recent records</div>
+        <ul v-if="log.length" class="flex flex-col gap-1 font-mono text-xs text-fg">
           <li v-for="(entry, i) in log" :key="i" class="truncate">{{ entry }}</li>
         </ul>
-        <p v-else class="font-mono text-xs text-(--fg-subtle)">Mutate the element above to record changes.</p>
+        <p v-else class="font-mono text-xs text-fg-subtle">Mutate the element above to record changes.</p>
       </div>
 
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @click="isActive ? pause() : resume()"
       >
         {{ isActive ? 'Pause observer' : 'Resume observer' }}

@@ -41,9 +41,9 @@ function simulate() {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">WebOTP</span>
+      <span class="demo-label">WebOTP</span>
       <span
         class="rounded-full px-2 py-0.5 text-xs font-medium"
         :class="isSupported
@@ -61,27 +61,27 @@ function simulate() {
       autocomplete="one-time-code"
       maxlength="6"
       placeholder="••••••"
-      class="w-full rounded-xl border border-(--border) bg-(--bg-inset) px-4 py-3 text-center font-mono text-2xl tracking-[0.4em] tabular-nums text-(--fg) outline-none transition focus:border-(--accent)"
+      class="w-full rounded-xl border border-border bg-bg-inset px-4 py-3 text-center font-mono text-2xl tracking-[0.4em] tabular-nums text-fg outline-none transition focus:border-accent"
       @input="onInput"
     >
 
     <div class="flex gap-2">
       <button
         v-if="!isReceiving"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition hover:bg-accent-hover active:scale-[0.98] cursor-pointer"
         @click="listen"
       >
         Listen for code
       </button>
       <button
         v-else
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) px-3 py-1.5 text-sm font-medium text-(--fg-muted) transition hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-border-strong active:scale-[0.98] cursor-pointer"
         @click="abort()"
       >
         Cancel
       </button>
       <button
-        class="inline-flex items-center justify-center rounded-lg border border-(--border) px-3 py-1.5 text-sm font-medium text-(--fg-muted) transition hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="inline-flex items-center justify-center rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-border-strong active:scale-[0.98] cursor-pointer"
         @click="simulate"
       >
         Simulate
@@ -92,13 +92,13 @@ function simulate() {
       <span
         class="size-2 rounded-full"
         :class="{
-          'bg-(--fg-subtle)': status.tone === 'idle',
+          'bg-fg-subtle': status.tone === 'idle',
           'animate-pulse bg-amber-500': status.tone === 'pending',
           'bg-emerald-500': status.tone === 'ok',
           'bg-red-500': status.tone === 'error',
         }"
       />
-      <span class="text-(--fg-muted)">{{ status.label }}</span>
+      <span class="text-fg-muted">{{ status.label }}</span>
     </div>
   </div>
 </template>

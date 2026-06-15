@@ -28,10 +28,10 @@ const lastActiveLabel = computed(() =>
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+  <div class="demo-stack max-w-sm">
+    <div class="demo-card p-4">
       <div class="flex items-center justify-between gap-3">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Status</span>
+        <span class="demo-label">Status</span>
         <span
           class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium transition"
           :class="idle
@@ -46,23 +46,23 @@ const lastActiveLabel = computed(() =>
         </span>
       </div>
 
-      <p class="mt-3 text-sm text-(--fg-muted)">
+      <p class="mt-3 text-sm text-fg-muted">
         Move your mouse, type, or scroll to stay active. After
-        <span class="font-medium text-(--fg)">{{ (timeout / 1000).toFixed(0) }}s</span>
+        <span class="font-medium text-fg">{{ (timeout / 1000).toFixed(0) }}s</span>
         without activity you go idle.
       </p>
     </div>
 
     <div class="grid grid-cols-2 gap-3">
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Inactive for</div>
-        <div class="mt-1 font-mono text-2xl font-bold tabular-nums text-(--fg)">
-          {{ secondsSinceActive }}<span class="text-base text-(--fg-subtle)">s</span>
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Inactive for</div>
+        <div class="demo-stat mt-1 text-2xl">
+          {{ secondsSinceActive }}<span class="text-base text-fg-subtle">s</span>
         </div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Last active</div>
-        <div class="mt-1 font-mono text-2xl font-bold tabular-nums text-(--fg)">
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Last active</div>
+        <div class="demo-stat mt-1 text-2xl">
           {{ lastActiveLabel }}
         </div>
       </div>
@@ -70,27 +70,27 @@ const lastActiveLabel = computed(() =>
 
     <div class="flex flex-wrap items-center gap-2">
       <button
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer"
+        class="demo-btn-primary"
         @click="reset()"
       >
         Reset timer
       </button>
       <button
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!isPending"
         @click="stop()"
       >
         Stop
       </button>
       <button
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="isPending"
         @click="start()"
       >
         Start
       </button>
 
-      <span class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-badge ml-auto">
         tracking: {{ isPending ? 'on' : 'off' }}
       </span>
     </div>

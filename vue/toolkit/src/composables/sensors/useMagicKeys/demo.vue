@@ -37,18 +37,18 @@ const combos = computed(() => [
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <p class="text-sm text-(--fg-muted)">
-      Press keys or try a combo — <span class="font-medium text-(--fg)">Ctrl + S</span>,
-      <span class="font-medium text-(--fg)">Cmd + K</span>, or
-      <span class="font-medium text-(--fg)">Ctrl + A</span>.
+  <div class="demo-stack max-w-sm">
+    <p class="text-sm text-fg-muted">
+      Press keys or try a combo — <span class="font-medium text-fg">Ctrl + S</span>,
+      <span class="font-medium text-fg">Cmd + K</span>, or
+      <span class="font-medium text-fg">Ctrl + A</span>.
     </p>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card p-4">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Currently pressed</span>
+        <span class="demo-label">Currently pressed</span>
         <button
-          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-2.5 py-1 text-xs font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-border bg-bg-elevated px-2.5 py-1 text-xs font-medium text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           :disabled="!pressed.length"
           @click="reset()"
         >
@@ -60,11 +60,11 @@ const combos = computed(() => [
         <kbd
           v-for="key in pressed"
           :key="key"
-          class="inline-flex min-w-7 items-center justify-center rounded-md border border-(--border-strong) bg-(--bg-inset) px-2 py-1 font-mono text-xs font-semibold text-(--fg) shadow-sm"
+          class="inline-flex min-w-7 items-center justify-center rounded-md border border-border-strong bg-bg-inset px-2 py-1 font-mono text-xs font-semibold text-fg shadow-sm"
         >
           {{ key === ' ' ? 'Space' : key }}
         </kbd>
-        <span v-if="!pressed.length" class="text-sm text-(--fg-subtle)">No keys held</span>
+        <span v-if="!pressed.length" class="text-sm text-fg-subtle">No keys held</span>
       </div>
     </div>
 
@@ -74,19 +74,19 @@ const combos = computed(() => [
         :key="combo.label"
         class="flex flex-col items-center gap-1 rounded-lg border px-2 py-2.5 text-center text-xs font-medium transition"
         :class="combo.active
-          ? 'border-(--accent) bg-(--accent-subtle) text-(--accent-text)'
-          : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+          ? 'border-accent bg-accent-subtle text-accent-text'
+          : 'border-border bg-bg-inset text-fg-muted'"
       >
         {{ combo.label }}
       </div>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-xs text-(--fg) tabular-nums">
-      <div class="mb-1.5 text-(--fg-subtle)">Triggered actions</div>
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-xs text-fg tabular-nums">
+      <div class="mb-1.5 text-fg-subtle">Triggered actions</div>
       <ul v-if="log.length" class="flex flex-col gap-0.5">
-        <li v-for="entry in log" :key="entry" class="text-(--fg-muted)">{{ entry }}</li>
+        <li v-for="entry in log" :key="entry" class="text-fg-muted">{{ entry }}</li>
       </ul>
-      <span v-else class="text-(--fg-subtle)">Waiting for a chord…</span>
+      <span v-else class="text-fg-subtle">Waiting for a chord…</span>
     </div>
   </div>
 </template>

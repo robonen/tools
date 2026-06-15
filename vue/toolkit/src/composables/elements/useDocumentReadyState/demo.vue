@@ -14,9 +14,9 @@ const activeIndex = computed(() => stages.findIndex(s => s.state === readyState.
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         document.readyState
       </span>
       <span class="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
@@ -31,24 +31,24 @@ const activeIndex = computed(() => stages.findIndex(s => s.state === readyState.
         :key="stage.state"
         class="flex items-center gap-3 rounded-lg border p-3 transition"
         :class="i <= activeIndex
-          ? 'border-(--accent) bg-(--accent-subtle)'
-          : 'border-(--border) bg-(--bg-elevated)'"
+          ? 'border-accent bg-accent-subtle'
+          : 'border-border bg-bg-elevated'"
       >
         <span
           class="flex size-6 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold tabular-nums transition"
           :class="i < activeIndex
-            ? 'bg-(--accent) text-(--accent-fg)'
+            ? 'bg-accent text-accent-fg'
             : i === activeIndex
-              ? 'bg-(--accent) text-(--accent-fg) ring-4 ring-(--ring)'
-              : 'bg-(--bg-inset) text-(--fg-subtle)'"
+              ? 'bg-accent text-accent-fg ring-4 ring-ring'
+              : 'bg-bg-inset text-fg-subtle'"
         >
           {{ i + 1 }}
         </span>
         <div class="min-w-0">
-          <p class="font-mono text-sm font-medium text-(--fg)">
+          <p class="font-mono text-sm font-medium text-fg">
             {{ stage.label }}
           </p>
-          <p class="text-xs text-(--fg-subtle)">
+          <p class="text-xs text-fg-subtle">
             {{ stage.hint }}
           </p>
         </div>

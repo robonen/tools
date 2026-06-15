@@ -165,10 +165,12 @@ const DEFAULT_UNITS: Array<UseTimeAgoUnit<UseTimeAgoUnitName>> = [
   { max: Number.POSITIVE_INFINITY, value: 31536000000, name: 'year' },
 ];
 
+const REGEX_DIGIT = /* #__PURE__ */ /\d/;
+
 const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitName> = {
   justNow: 'just now',
-  past: n => /\d/.test(n) ? `${n} ago` : n,
-  future: n => /\d/.test(n) ? `in ${n}` : n,
+  past: n => REGEX_DIGIT.test(n) ? `${n} ago` : n,
+  future: n => REGEX_DIGIT.test(n) ? `in ${n}` : n,
   month: (n, past) => n === 1 ? (past ? 'last month' : 'next month') : `${n} month${n > 1 ? 's' : ''}`,
   year: (n, past) => n === 1 ? (past ? 'last year' : 'next year') : `${n} year${n > 1 ? 's' : ''}`,
   day: (n, past) => n === 1 ? (past ? 'yesterday' : 'tomorrow') : `${n} day${n > 1 ? 's' : ''}`,

@@ -34,17 +34,17 @@ function bump(index: number, delta: number) {
 </script>
 
 <template>
-  <div class="w-full max-w-md flex flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Cart</span>
-      <label class="flex items-center gap-2 text-sm text-(--fg-muted)">
+      <span class="demo-label">Cart</span>
+      <label class="flex items-center gap-2 text-sm text-fg-muted">
         Tax {{ taxRate }}%
         <input
           v-model.number="taxRate"
           type="range"
           min="0"
           max="25"
-          class="accent-(--accent)"
+          class="accent-accent"
         >
       </label>
     </div>
@@ -53,41 +53,41 @@ function bump(index: number, delta: number) {
       <li
         v-for="(item, index) in priced"
         :key="item.name"
-        class="flex items-center justify-between gap-3 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-2"
+        class="flex items-center justify-between gap-3 rounded-lg border border-border bg-bg-elevated px-3 py-2"
       >
         <div class="min-w-0 flex-1">
-          <p class="truncate text-sm font-medium text-(--fg)">
+          <p class="truncate text-sm font-medium text-fg">
             {{ item.name }}
           </p>
-          <p class="text-xs text-(--fg-subtle)">
+          <p class="text-xs text-fg-subtle">
             base {{ formatter.format(item.price) }}
           </p>
         </div>
         <div class="flex items-center gap-1.5">
           <button
-            class="inline-flex size-7 items-center justify-center rounded-md border border-(--border) bg-(--bg-elevated) text-(--fg) transition hover:bg-(--bg-inset) active:scale-[0.98] cursor-pointer"
+            class="inline-flex size-7 items-center justify-center rounded-md border border-border bg-bg-elevated text-fg transition hover:bg-bg-inset active:scale-[0.98] cursor-pointer"
             aria-label="Decrease price"
             @click="bump(index, -10)"
           >
             &minus;
           </button>
           <button
-            class="inline-flex size-7 items-center justify-center rounded-md border border-(--border) bg-(--bg-elevated) text-(--fg) transition hover:bg-(--bg-inset) active:scale-[0.98] cursor-pointer"
+            class="inline-flex size-7 items-center justify-center rounded-md border border-border bg-bg-elevated text-fg transition hover:bg-bg-inset active:scale-[0.98] cursor-pointer"
             aria-label="Increase price"
             @click="bump(index, 10)"
           >
             +
           </button>
         </div>
-        <span class="w-20 text-right font-mono text-sm tabular-nums text-(--fg)">
+        <span class="w-20 text-right font-mono text-sm tabular-nums text-fg">
           {{ formatter.format(item.gross) }}
         </span>
       </li>
     </ul>
 
-    <div class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Total with tax</span>
-      <span class="font-mono text-xl font-bold tabular-nums text-(--fg)">
+    <div class="flex items-center justify-between rounded-lg border border-border bg-bg-inset p-3">
+      <span class="demo-label">Total with tax</span>
+      <span class="demo-stat text-xl">
         {{ formatter.format(total) }}
       </span>
     </div>

@@ -8,6 +8,7 @@ import { unrefElement } from '@/composables/component/unrefElement';
 import type { MaybeComputedElementRef } from '@/composables/component/unrefElement';
 import { bypassFilter, createFilterWrapper } from '@/utils/filters';
 import type { ConfigurableEventFilter } from '@/utils/filters';
+import { isEventTarget } from '@robonen/platform/browsers';
 
 export type UseMouseCoordType = 'page' | 'client' | 'screen' | 'movement';
 export type UseMouseSourceType = 'mouse' | 'touch' | null;
@@ -172,7 +173,7 @@ export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
   // A raw window/document/EventTarget is used directly (fast, non-reactive path
   // in useEventListener). Refs/getters/element instances are resolved lazily via
   // a getter so the listeners re-bind when the underlying element changes.
-  const listenTarget = isTarget(target)
+  const listenTarget = isEventTarget(target)
     ? target
     : (): EventTarget | null | undefined => unrefElement(target as MaybeComputedElementRef) as EventTarget | null | undefined;
 
@@ -193,12 +194,4 @@ export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
   }
 
   return { x, y, sourceType };
-}
-
-/**
- * `true` for an object that is itself an event target (window/document/element)
- * and should be attached to directly, rather than unwrapped from a ref/getter.
- */
-function isTarget(value: unknown): value is EventTarget {
-  return typeof value === 'object' && value !== null && 'addEventListener' in value;
 }

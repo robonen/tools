@@ -14,6 +14,9 @@ type FieldPrimitive
     | undefined
     | Date
     | RegExp
+    // Idiomatic "any function" constraint: a path leaf can be any callable, and
+    // its params/return are intentionally unconstrained — `unknown` would break
+    // structural assignability of concrete function types here.
     | ((...args: any[]) => any);
 
 /**
@@ -77,7 +80,7 @@ export type FieldValidationResult = string | string[] | true | void | null | und
 /**
  * A field-level function validator.
  */
-export type FieldValidator<T = any, TInput extends object = any>
+export type FieldValidator<T = unknown, TInput extends object = Record<string, unknown>>
   = (value: T, values: TInput) => FieldValidationResult | Promise<FieldValidationResult>;
 
 /**
@@ -272,7 +275,7 @@ export interface UseFormOptions<TInput extends object, TOutput = TInput> {
  * The form instance returned by {@link useForm} (and injected by
  * {@link useFormContext}). Also serves as the context shared with fields.
  */
-export interface FormContext<TInput extends object = any, TOutput = TInput> {
+export interface FormContext<TInput extends object = Record<string, unknown>, TOutput = TInput> {
   /**
    * Reactive form values. Bind directly with `v-model="values.path"`.
    */
@@ -432,12 +435,12 @@ export interface FormContext<TInput extends object = any, TOutput = TInput> {
 /**
  * Alias: the public return of {@link useForm} is the form context itself.
  */
-export type UseFormReturn<TInput extends object = any, TOutput = TInput> = FormContext<TInput, TOutput>;
+export type UseFormReturn<TInput extends object = Record<string, unknown>, TOutput = TInput> = FormContext<TInput, TOutput>;
 
 /**
  * Options for `defineField`.
  */
-export interface DefineFieldOptions<T = any, TInput extends object = any> {
+export interface DefineFieldOptions<T = unknown, TInput extends object = Record<string, unknown>> {
   /**
    * A field-level function validator.
    */
@@ -451,7 +454,7 @@ export interface DefineFieldOptions<T = any, TInput extends object = any> {
 /**
  * Options for {@link useField}.
  */
-export interface UseFieldOptions<T, TInput extends object = any> {
+export interface UseFieldOptions<T, TInput extends object = Record<string, unknown>> {
   /**
    * The form to bind to. Defaults to the injected form context; if there is
    * none and `initialValue` is given, the field runs standalone.
@@ -600,7 +603,7 @@ export interface UseFieldArrayReturn<T> {
 /**
  * Options for {@link useFieldArray}.
  */
-export interface UseFieldArrayOptions<TInput extends object = any> {
+export interface UseFieldArrayOptions<TInput extends object = Record<string, unknown>> {
   /**
    * The form to bind to. Defaults to the injected form context.
    */

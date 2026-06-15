@@ -4,6 +4,7 @@ import { clamp, isFunction, isNumber, lerp, noop } from '@robonen/stdlib';
 import { defaultWindow } from '@/types';
 import type { ConfigurableWindow } from '@/types';
 import { useRafFn } from '@/composables/animation/useRafFn';
+import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 
 /**
  * Cubic bezier control points `[x1, y1, x2, y2]` (the implied endpoints are
@@ -355,6 +356,11 @@ export function useTransition<T extends TransitionValue>(
       }
     },
   );
+
+  // The RAF loop is torn down by useRafFn on scope dispose, but a pending start
+  // delay (window.setTimeout) is not — clear it so the timer can't fire into a
+  // disposed scope.
+  tryOnScopeDispose(clearDelay);
 
   return computed(() => outputRef.value);
 }

@@ -30,19 +30,19 @@ function remove(index: number) {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-      <p class="mb-1 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+  <div class="demo-stack max-w-sm">
+    <div class="rounded-lg border border-border bg-bg-inset p-3">
+      <p class="demo-label mb-1">
         Joined result
       </p>
-      <p class="break-all font-mono text-sm text-(--fg) tabular-nums">
+      <p class="break-all font-mono text-sm text-fg tabular-nums">
         <span v-if="joined">{{ joined }}</span>
-        <span v-else class="text-(--fg-subtle)">empty</span>
+        <span v-else class="text-fg-subtle">empty</span>
       </p>
     </div>
 
     <div class="flex flex-col gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Separator</span>
+      <span class="demo-label">Separator</span>
       <div class="flex gap-1.5">
         <button
           v-for="sep in separators"
@@ -50,8 +50,8 @@ function remove(index: number) {
           type="button"
           class="flex-1 rounded-lg border px-2 py-1.5 text-xs font-medium transition active:scale-[0.98] cursor-pointer"
           :class="separator === sep.value
-            ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset)'"
+            ? 'border-transparent bg-accent text-accent-fg'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset'"
           @click="separator = sep.value"
         >
           {{ sep.label }}
@@ -63,16 +63,16 @@ function remove(index: number) {
       <li
         v-for="(segment, index) in segments"
         :key="index"
-        class="flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm text-(--fg)"
+        class="flex items-center justify-between rounded-lg border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg"
       >
         <span class="flex items-center gap-2">
-          <span class="font-mono text-xs text-(--fg-subtle)">{{ index }}</span>
+          <span class="font-mono text-xs text-fg-subtle">{{ index }}</span>
           {{ segment }}
         </span>
         <button
           type="button"
           aria-label="Remove segment"
-          class="rounded-md px-2 py-0.5 text-xs font-medium text-(--fg-subtle) transition hover:bg-(--bg-inset) hover:text-(--fg) cursor-pointer"
+          class="rounded-md px-2 py-0.5 text-xs font-medium text-fg-subtle transition hover:bg-bg-inset hover:text-fg cursor-pointer"
           @click="remove(index)"
         >
           ✕
@@ -85,11 +85,11 @@ function remove(index: number) {
         v-model="draft"
         type="text"
         placeholder="add a segment…"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
       <button
         type="submit"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+        class="demo-btn-primary disabled:cursor-not-allowed disabled:opacity-40"
         :disabled="!draft.trim()"
       >
         Add

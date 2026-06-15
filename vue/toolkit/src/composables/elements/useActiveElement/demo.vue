@@ -15,9 +15,9 @@ const activeTag = computed(() => activeElement.value?.tagName.toLowerCase() ?? n
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="space-y-3">
-      <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <p class="demo-label">
         Focus a field
       </p>
       <div
@@ -27,39 +27,39 @@ const activeTag = computed(() => activeElement.value?.tagName.toLowerCase() ?? n
       >
         <label
           :for="field.id"
-          class="text-sm font-medium text-(--fg-muted)"
+          class="text-sm font-medium text-fg-muted"
         >{{ field.label }}</label>
         <input
           :id="field.id"
           :type="field.type"
           :placeholder="field.placeholder"
-          class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="demo-input"
         >
       </div>
       <button
         type="button"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+        class="demo-btn"
       >
         A focusable button
       </button>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums">
       <div class="flex items-center justify-between gap-3">
-        <span class="text-(--fg-subtle)">activeElement</span>
+        <span class="text-fg-subtle">activeElement</span>
         <span
           v-if="activeTag"
-          class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-elevated) px-2 py-0.5 text-xs font-medium text-(--accent-text)"
+          class="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-2 py-0.5 text-xs font-medium text-accent-text"
         >
           &lt;{{ activeTag }}&gt;
         </span>
         <span
           v-else
-          class="text-xs text-(--fg-subtle)"
+          class="text-xs text-fg-subtle"
         >none</span>
       </div>
       <div class="mt-2 flex items-center justify-between gap-3">
-        <span class="text-(--fg-subtle)">id</span>
+        <span class="text-fg-subtle">id</span>
         <span class="truncate">{{ activeId ?? '—' }}</span>
       </div>
     </div>

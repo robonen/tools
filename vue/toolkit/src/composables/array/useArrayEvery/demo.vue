@@ -30,22 +30,22 @@ function reset() {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       class="rounded-xl border p-4 transition"
       :class="allDone
         ? 'border-emerald-500/30 bg-emerald-500/10'
-        : 'border-(--border) bg-(--bg-elevated)'"
+        : 'border-border bg-bg-elevated'"
     >
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           Release readiness
         </span>
         <span
           class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
           :class="allDone
             ? 'border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
-            : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+            : 'border-border bg-bg-inset text-fg-muted'"
         >
           <span
             class="size-2 rounded-full"
@@ -54,7 +54,7 @@ function reset() {
           {{ allDone ? 'Ready to ship' : 'Blocked' }}
         </span>
       </div>
-      <div class="mt-2 font-mono text-sm tabular-nums text-(--fg-muted)">
+      <div class="mt-2 font-mono text-sm tabular-nums text-fg-muted">
         {{ completed }} / {{ checklist.length }} complete
       </div>
     </div>
@@ -62,18 +62,18 @@ function reset() {
     <ul class="flex flex-col gap-2">
       <li v-for="item in checklist" :key="item.id">
         <button
-          class="flex w-full items-center gap-3 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-2 text-left text-sm text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.99] cursor-pointer"
+          class="flex w-full items-center gap-3 rounded-lg border border-border bg-bg-elevated px-3 py-2 text-left text-sm text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.99] cursor-pointer"
           @click="toggle(item)"
         >
           <span
             class="flex size-5 shrink-0 items-center justify-center rounded-md border text-xs transition"
             :class="item.done
-              ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-              : 'border-(--border-strong) text-transparent'"
+              ? 'border-transparent bg-accent text-accent-fg'
+              : 'border-border-strong text-transparent'"
           >
             ✓
           </span>
-          <span :class="item.done ? 'line-through text-(--fg-subtle)' : ''">
+          <span :class="item.done ? 'line-through text-fg-subtle' : ''">
             {{ item.label }}
           </span>
         </button>
@@ -81,7 +81,7 @@ function reset() {
     </ul>
 
     <button
-      class="inline-flex items-center justify-center gap-1.5 self-start rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer"
+      class="demo-btn self-start"
       @click="reset"
     >
       Reset

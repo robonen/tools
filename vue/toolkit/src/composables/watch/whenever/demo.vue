@@ -25,22 +25,22 @@ whenever(() => code.value.length >= 12, () => {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex flex-col gap-1.5">
-      <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <label class="demo-label">
         Access code
       </label>
       <input
         v-model="code"
         type="text"
         placeholder="Enter at least 6 characters"
-        class="w-full rounded-lg border border-(--border) bg-(--bg) px-3 py-2 text-sm text-(--fg) placeholder:text-(--fg-subtle) transition focus:border-(--accent) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+        class="demo-input"
       >
       <div class="flex items-center justify-between text-xs">
-        <span class="text-(--fg-subtle)">{{ code.length }} / 6 chars</span>
+        <span class="text-fg-subtle">{{ code.length }} / 6 chars</span>
         <span
           class="font-medium"
-          :class="isValid ? 'text-emerald-600 dark:text-emerald-400' : 'text-(--fg-subtle)'"
+          :class="isValid ? 'text-emerald-600 dark:text-emerald-400' : 'text-fg-subtle'"
         >
           {{ isValid ? 'valid' : 'too short' }}
         </span>
@@ -54,27 +54,27 @@ whenever(() => code.value.length >= 12, () => {
       Reached 12+ characters — this fired exactly once.
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <div class="mb-2 text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+    <div class="demo-card p-4">
+      <div class="demo-label mb-2">
         Became valid at
       </div>
       <ul v-if="events.length" class="flex flex-col gap-1.5">
         <li
           v-for="event in events"
           :key="event.id"
-          class="flex items-center gap-2 rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2"
+          class="flex items-center gap-2 rounded-lg border border-border bg-bg-inset px-3 py-2"
         >
           <span class="size-1.5 rounded-full bg-emerald-500" />
-          <span class="font-mono text-sm text-(--fg) tabular-nums">{{ event.at }}</span>
+          <span class="font-mono text-sm text-fg tabular-nums">{{ event.at }}</span>
         </li>
       </ul>
-      <p v-else class="py-2 text-sm text-(--fg-subtle)">
+      <p v-else class="py-2 text-sm text-fg-subtle">
         The callback only runs when the source turns truthy — type a valid code to log an event, then clear it and try again.
       </p>
     </div>
 
-    <p class="text-xs text-(--fg-muted)">
-      Unlike a plain <code class="rounded bg-(--bg-inset) px-1 py-0.5 font-mono">watch</code>, the callback skips every falsy transition.
+    <p class="text-xs text-fg-muted">
+      Unlike a plain <code class="rounded bg-bg-inset px-1 py-0.5 font-mono">watch</code>, the callback skips every falsy transition.
     </p>
   </div>
 </template>

@@ -44,10 +44,10 @@ const rangeEnd = computed(() => Math.min(currentPage.value * currentPageSize.val
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
+  <div class="demo-stack max-w-md">
     <!-- Page size control -->
     <div class="flex items-center justify-between gap-3">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         Per page
       </span>
       <div class="flex gap-1.5">
@@ -57,8 +57,8 @@ const rangeEnd = computed(() => Math.min(currentPage.value * currentPageSize.val
           type="button"
           class="inline-flex items-center justify-center rounded-lg border px-2.5 py-1 text-sm font-medium transition active:scale-[0.98] cursor-pointer"
           :class="currentPageSize === size
-            ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="currentPageSize = size"
         >
           {{ size }}
@@ -67,17 +67,17 @@ const rangeEnd = computed(() => Math.min(currentPage.value * currentPageSize.val
     </div>
 
     <!-- Records -->
-    <ul class="overflow-hidden rounded-xl border border-(--border) bg-(--bg-elevated)">
+    <ul class="demo-card overflow-hidden">
       <li
         v-for="user in pageItems"
         :key="user.id"
-        class="flex items-center gap-3 border-b border-(--border) px-4 py-2.5 last:border-b-0"
+        class="flex items-center gap-3 border-b border-border px-4 py-2.5 last:border-b-0"
       >
-        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-(--accent-subtle) text-xs font-semibold text-(--accent-text)">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-subtle text-xs font-semibold text-accent-text">
           {{ user.id }}
         </span>
-        <span class="flex-1 truncate text-sm font-medium text-(--fg)">{{ user.name }}</span>
-        <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+        <span class="flex-1 truncate text-sm font-medium text-fg">{{ user.name }}</span>
+        <span class="demo-badge">
           {{ user.role }}
         </span>
       </li>
@@ -85,14 +85,14 @@ const rangeEnd = computed(() => Math.min(currentPage.value * currentPageSize.val
 
     <!-- Footer + pager -->
     <div class="flex flex-wrap items-center justify-between gap-3">
-      <p class="text-sm text-(--fg-muted) tabular-nums">
+      <p class="text-sm text-fg-muted tabular-nums">
         {{ rangeStart }}–{{ rangeEnd }} of {{ total }}
       </p>
 
       <div class="flex flex-wrap items-center justify-center gap-1.5">
         <button
           type="button"
-          class="inline-flex items-center justify-center rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="inline-flex items-center justify-center rounded-lg border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           :disabled="isFirstPage"
           @click="previous"
         >
@@ -105,8 +105,8 @@ const rangeEnd = computed(() => Math.min(currentPage.value * currentPageSize.val
           type="button"
           class="inline-flex h-8 w-8 items-center justify-center rounded-lg border text-sm font-medium tabular-nums transition active:scale-[0.98] cursor-pointer"
           :class="page === currentPage
-            ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           :aria-current="page === currentPage ? 'page' : undefined"
           @click="select(page)"
         >
@@ -115,7 +115,7 @@ const rangeEnd = computed(() => Math.min(currentPage.value * currentPageSize.val
 
         <button
           type="button"
-          class="inline-flex items-center justify-center rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+          class="inline-flex items-center justify-center rounded-lg border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg transition hover:bg-bg-inset hover:border-border-strong active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           :disabled="isLastPage"
           @click="next"
         >

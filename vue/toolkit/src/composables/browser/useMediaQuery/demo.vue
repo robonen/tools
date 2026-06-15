@@ -22,35 +22,35 @@ const queries = [
 </script>
 
 <template>
-  <div class="flex w-full max-w-md flex-col gap-4">
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 text-center">
-      <p class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+  <div class="demo-stack max-w-md">
+    <div class="demo-card p-4 text-center">
+      <p class="demo-label">
         Current layout
       </p>
-      <p class="mt-1 font-mono text-3xl font-bold tabular-nums text-(--fg)">
+      <p class="demo-stat mt-1 text-3xl">
         {{ breakpoint ? 'desktop' : isMedium ? 'tablet' : 'mobile' }}
       </p>
-      <p class="mt-1 text-sm text-(--fg-muted)">
+      <p class="mt-1 text-sm text-fg-muted">
         Resize the window to watch these queries flip live.
       </p>
     </div>
 
-    <ul class="divide-y divide-(--border) rounded-xl border border-(--border) bg-(--bg-elevated)">
+    <ul class="demo-card divide-y divide-border">
       <li
         v-for="query in queries"
         :key="query.label"
         class="flex items-center justify-between gap-3 px-3 py-2.5"
       >
-        <code class="font-mono text-sm text-(--fg)">{{ query.label }}</code>
+        <code class="font-mono text-sm text-fg">{{ query.label }}</code>
         <span
           class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium transition"
           :class="query.match.value
             ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-            : 'border-(--border) bg-(--bg-inset) text-(--fg-subtle)'"
+            : 'border-border bg-bg-inset text-fg-subtle'"
         >
           <span
             class="h-1.5 w-1.5 rounded-full"
-            :class="query.match.value ? 'bg-emerald-500' : 'bg-(--border-strong)'"
+            :class="query.match.value ? 'bg-emerald-500' : 'bg-border-strong'"
           />
           {{ query.match.value ? 'matches' : 'no match' }}
         </span>

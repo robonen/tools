@@ -34,7 +34,7 @@ async function pick() {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-center text-sm text-amber-600 dark:text-amber-400"
@@ -44,33 +44,33 @@ async function pick() {
 
     <template v-else>
       <div
-        class="flex h-32 items-center justify-center rounded-xl border border-(--border) transition-colors duration-300"
+        class="flex h-32 items-center justify-center rounded-xl border border-border transition-colors duration-300"
         :style="{ backgroundColor: hex, color: readableText }"
       >
         <span class="font-mono text-2xl font-bold tabular-nums">{{ hex }}</span>
       </div>
 
-      <button class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer" @click="pick">
+      <button class="demo-btn-primary" @click="pick">
         <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m2 22 1-1h3l9-9" /><path d="M3 21v-3l9-9" /><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L21 6l3 3-3 3-3-3-9 9" />
         </svg>
         Pick a color from screen
       </button>
 
-      <p v-if="error" class="text-center text-xs text-(--fg-subtle)">
+      <p v-if="error" class="text-center text-xs text-fg-subtle">
         {{ error }}
       </p>
 
       <div v-if="history.length" class="flex flex-col gap-2">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Recent</span>
+        <span class="demo-label">Recent</span>
         <div class="flex flex-wrap gap-2">
           <button
             v-for="color in history"
             :key="color"
-            class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted) transition hover:border-(--border-strong) cursor-pointer"
+            class="demo-badge transition hover:border-border-strong cursor-pointer"
             @click="sRGBHex = color"
           >
-            <span class="size-3 rounded-full border border-(--border)" :style="{ backgroundColor: color }" />
+            <span class="size-3 rounded-full border border-border" :style="{ backgroundColor: color }" />
             {{ color }}
           </button>
         </div>

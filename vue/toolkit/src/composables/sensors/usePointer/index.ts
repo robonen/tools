@@ -6,6 +6,7 @@ import type { ConfigurableWindow } from '@/types';
 import { useEventListener } from '@/composables/browser/useEventListener';
 import { unrefElement } from '@/composables/component/unrefElement';
 import type { MaybeComputedElementRef } from '@/composables/component/unrefElement';
+import { isEventTarget } from '@robonen/platform/browsers';
 
 export type UsePointerType = 'mouse' | 'touch' | 'pen';
 
@@ -119,7 +120,7 @@ export function usePointer(options: UsePointerOptions = {}): UsePointerReturn {
   // A raw window/document/EventTarget is used directly (fast, non-reactive path
   // in useEventListener). Refs/getters/element instances are resolved lazily via
   // a getter so the listeners re-bind when the underlying element changes.
-  const listenTarget = isTarget(target)
+  const listenTarget = isEventTarget(target)
     ? target
     : (): EventTarget | null | undefined => unrefElement(target as MaybeComputedElementRef) as EventTarget | null | undefined;
 
@@ -151,12 +152,4 @@ export function usePointer(options: UsePointerOptions = {}): UsePointerReturn {
     pointerType: toField('pointerType'),
     isInside,
   };
-}
-
-/**
- * `true` for an object that is itself an event target (window/document/element)
- * and should be attached to directly, rather than unwrapped from a ref/getter.
- */
-function isTarget(value: unknown): value is EventTarget {
-  return typeof value === 'object' && value !== null && 'addEventListener' in value;
 }

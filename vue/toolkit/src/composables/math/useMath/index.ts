@@ -6,6 +6,8 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
  * such as `Math.PI` or `Math.E`).
  */
 export type UseMathKey
+  // `(...args: any[]) => any` is the idiomatic "any callable" matcher; `unknown`/`never`
+  // here would fail to match `Math`'s contravariant method params and select nothing.
   = keyof { [K in keyof Math as Math[K] extends (...args: any[]) => any ? K : never]: unknown };
 
 /**
@@ -13,7 +15,7 @@ export type UseMathKey
  * (`MaybeRefOrGetter`), so callers may pass plain values, refs or getters.
  */
 export type UseMathArgs<K extends UseMathKey>
-  = Math[K] extends (...args: infer A) => any
+  = Math[K] extends (...args: infer A) => unknown
     ? { [I in keyof A]: MaybeRefOrGetter<A[I]> }
     : never;
 
@@ -21,7 +23,7 @@ export type UseMathArgs<K extends UseMathKey>
  * Reactive result of the wrapped `Math` method.
  */
 export type UseMathReturn<K extends UseMathKey>
-  = Math[K] extends (...args: any[]) => infer R ? ComputedRef<R> : never;
+  = Math[K] extends (...args: never[]) => infer R ? ComputedRef<R> : never;
 
 /**
  * @name useMath
@@ -57,6 +59,6 @@ export function useMath<K extends UseMathKey>(
   ...args: UseMathArgs<K>
 ): UseMathReturn<K> {
   return computed(
-    () => (Math[key] as (...a: any[]) => any)(...args.map(arg => toValue(arg))),
+    () => (Math[key] as unknown as (...a: unknown[]) => unknown)(...args.map(arg => toValue(arg))),
   ) as UseMathReturn<K>;
 }

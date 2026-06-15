@@ -42,18 +42,18 @@ async function update<K extends keyof typeof prefs.value>(key: K, value: (typeof
 </script>
 
 <template>
-  <div class="w-full max-w-sm flex flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Async preferences</span>
+      <span class="demo-label">Async preferences</span>
       <span
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium transition"
         :class="isReady
           ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-          : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+          : 'border-border bg-bg-inset text-fg-muted'"
       >
         <span
           class="h-1.5 w-1.5 rounded-full"
-          :class="isReady ? 'bg-emerald-500' : 'bg-(--fg-subtle) animate-pulse'"
+          :class="isReady ? 'bg-emerald-500' : 'bg-fg-subtle animate-pulse'"
         />
         {{ isReady ? 'ready' : 'loading…' }}
       </span>
@@ -61,17 +61,17 @@ async function update<K extends keyof typeof prefs.value>(key: K, value: (typeof
 
     <div
       v-if="!isReady"
-      class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-3"
+      class="demo-card p-4 flex flex-col gap-3"
     >
-      <div class="h-3 w-1/3 animate-pulse rounded bg-(--bg-inset)" />
-      <div class="h-9 w-full animate-pulse rounded-lg bg-(--bg-inset)" />
-      <div class="h-3 w-1/3 animate-pulse rounded bg-(--bg-inset)" />
-      <div class="h-9 w-full animate-pulse rounded-lg bg-(--bg-inset)" />
+      <div class="h-3 w-1/3 animate-pulse rounded bg-bg-inset" />
+      <div class="h-9 w-full animate-pulse rounded-lg bg-bg-inset" />
+      <div class="h-3 w-1/3 animate-pulse rounded bg-bg-inset" />
+      <div class="h-9 w-full animate-pulse rounded-lg bg-bg-inset" />
     </div>
 
-    <div v-else class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4 flex flex-col gap-4">
+    <div v-else class="demo-card p-4 flex flex-col gap-4">
       <div class="flex flex-col gap-2">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Theme</span>
+        <span class="demo-label">Theme</span>
         <div class="grid grid-cols-3 gap-1.5">
           <button
             v-for="t in themes"
@@ -79,8 +79,8 @@ async function update<K extends keyof typeof prefs.value>(key: K, value: (typeof
             type="button"
             class="rounded-lg border px-2 py-1.5 text-sm font-medium capitalize transition active:scale-[0.98] cursor-pointer"
             :class="prefs.theme === t
-              ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-              : 'border-(--border) bg-(--bg-inset) text-(--fg) hover:border-(--border-strong)'"
+              ? 'border-transparent bg-accent text-accent-fg'
+              : 'border-border bg-bg-inset text-fg hover:border-border-strong'"
             @click="update('theme', t)"
           >
             {{ t }}
@@ -89,7 +89,7 @@ async function update<K extends keyof typeof prefs.value>(key: K, value: (typeof
       </div>
 
       <div class="flex flex-col gap-2">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Density</span>
+        <span class="demo-label">Density</span>
         <div class="grid grid-cols-2 gap-1.5">
           <button
             v-for="d in densities"
@@ -97,8 +97,8 @@ async function update<K extends keyof typeof prefs.value>(key: K, value: (typeof
             type="button"
             class="rounded-lg border px-2 py-1.5 text-sm font-medium capitalize transition active:scale-[0.98] cursor-pointer"
             :class="prefs.density === d
-              ? 'border-transparent bg-(--accent) text-(--accent-fg)'
-              : 'border-(--border) bg-(--bg-inset) text-(--fg) hover:border-(--border-strong)'"
+              ? 'border-transparent bg-accent text-accent-fg'
+              : 'border-border bg-bg-inset text-fg hover:border-border-strong'"
             @click="update('density', d)"
           >
             {{ d }}
@@ -107,17 +107,17 @@ async function update<K extends keyof typeof prefs.value>(key: K, value: (typeof
       </div>
     </div>
 
-    <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) flex items-center justify-between">
+    <div class="rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg flex items-center justify-between">
       <span class="truncate">{{ JSON.stringify(prefs) }}</span>
       <span
         class="ml-2 shrink-0 text-xs transition"
-        :class="saving ? 'text-sky-600 dark:text-sky-400' : 'text-(--fg-subtle)'"
+        :class="saving ? 'text-sky-600 dark:text-sky-400' : 'text-fg-subtle'"
       >
         {{ saving ? 'saving…' : 'saved' }}
       </span>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Every change is written through the async backend with simulated latency.
     </p>
   </div>

@@ -30,9 +30,9 @@ const Subscriber = defineComponent({
   setup(props) {
     const { count, setupId } = useSharedCounter();
     return () =>
-      h('div', { class: 'flex items-center justify-between rounded-lg border border-(--border) bg-(--bg-inset) px-3 py-2' }, [
-        h('span', { class: 'text-sm font-medium text-(--fg)' }, props.label),
-        h('span', { class: 'font-mono text-sm tabular-nums text-(--accent-text)' }, `count ${count.value} · #${setupId}`),
+      h('div', { class: 'flex items-center justify-between rounded-lg border border-border bg-bg-inset px-3 py-2' }, [
+        h('span', { class: 'text-sm font-medium text-fg' }, props.label),
+        h('span', { class: 'font-mono text-sm tabular-nums text-accent-text' }, `count ${count.value} · #${setupId}`),
       ]);
   },
 });
@@ -52,15 +52,15 @@ function removeSubscriber() {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Shared composable</span>
-      <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+      <span class="demo-label">Shared composable</span>
+      <span class="demo-badge">
         {{ subscribers.length }} active
       </span>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-3">
+    <div class="demo-card p-3">
       <div v-if="subscribers.length" class="flex flex-col gap-2">
         <Subscriber
           v-for="name in subscribers"
@@ -68,12 +68,12 @@ function removeSubscriber() {
           :label="name"
         />
       </div>
-      <p v-else class="px-3 py-6 text-center text-sm text-(--fg-subtle)">
+      <p v-else class="px-3 py-6 text-center text-sm text-fg-subtle">
         No consumers — the shared scope is disposed and its interval cleared.
       </p>
     </div>
 
-    <p class="text-xs leading-relaxed text-(--fg-subtle)">
+    <p class="text-xs leading-relaxed text-fg-subtle">
       Every consumer reads the same count and the same setup id (<span class="font-mono">#</span>),
       proving a single instance and one interval back all of them. Remove every
       consumer to dispose the scope; adding one again creates a fresh instance.
@@ -82,7 +82,7 @@ function removeSubscriber() {
     <div class="flex gap-2">
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn-primary flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="subscribers.length >= names.length"
         @click="addSubscriber"
       >
@@ -90,7 +90,7 @@ function removeSubscriber() {
       </button>
       <button
         type="button"
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!subscribers.length"
         @click="removeSubscriber"
       >

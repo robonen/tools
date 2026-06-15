@@ -20,43 +20,43 @@ const fmt = (n: number) => (n >= 0 ? '+' : '') + n.toFixed(3);
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       ref="container"
-      class="relative grid place-items-center overflow-hidden rounded-xl border border-(--border) bg-(--bg-inset) p-8"
+      class="relative grid place-items-center overflow-hidden rounded-xl border border-border bg-bg-inset p-8"
     >
       <div
-        class="relative aspect-[4/3] w-full max-w-[16rem] rounded-xl border border-(--border-strong) bg-(--bg-elevated) shadow-xl transition-transform duration-75 ease-out will-change-transform"
+        class="relative aspect-[4/3] w-full max-w-[16rem] rounded-xl border border-border-strong bg-bg-elevated shadow-xl transition-transform duration-75 ease-out will-change-transform"
         :style="cardStyle"
       >
         <div class="absolute inset-0 grid place-items-center" :style="layer(8)">
-          <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+          <span class="demo-label">
             depth 8
           </span>
         </div>
         <div class="absolute inset-0 grid place-items-center" :style="layer(24)">
-          <span class="font-mono text-2xl font-bold tabular-nums text-(--fg)">
+          <span class="demo-stat text-2xl">
             Parallax
           </span>
         </div>
         <div class="absolute bottom-3 right-3" :style="layer(40)">
-          <span class="inline-flex items-center gap-1.5 rounded-md border border-(--border) bg-(--bg-inset) px-2 py-0.5 text-xs font-medium text-(--fg-muted)">
+          <span class="demo-badge">
             depth 40
           </span>
         </div>
       </div>
     </div>
 
-    <p class="text-center text-xs text-(--fg-subtle)">
+    <p class="text-center text-xs text-fg-subtle">
       Move your pointer over the panel &mdash; layers shift by depth.
     </p>
 
     <div class="space-y-2">
       <div class="flex items-center justify-between">
-        <label class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <label class="demo-label">
           Intensity
         </label>
-        <span class="font-mono text-xs tabular-nums text-(--fg-muted)">{{ intensity }}&deg;</span>
+        <span class="font-mono text-xs tabular-nums text-fg-muted">{{ intensity }}&deg;</span>
       </div>
       <input
         v-model.number="intensity"
@@ -64,22 +64,22 @@ const fmt = (n: number) => (n >= 0 ? '+' : '') + n.toFixed(3);
         min="0"
         max="45"
         step="1"
-        class="w-full accent-(--accent)"
+        class="w-full accent-accent"
       >
     </div>
 
     <div class="grid grid-cols-3 gap-2">
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Roll</div>
-        <div class="mt-1 font-mono text-sm tabular-nums text-(--fg)">{{ fmt(roll) }}</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Roll</div>
+        <div class="mt-1 font-mono text-sm tabular-nums text-fg">{{ fmt(roll) }}</div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Tilt</div>
-        <div class="mt-1 font-mono text-sm tabular-nums text-(--fg)">{{ fmt(tilt) }}</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Tilt</div>
+        <div class="mt-1 font-mono text-sm tabular-nums text-fg">{{ fmt(tilt) }}</div>
       </div>
-      <div class="rounded-lg border border-(--border) bg-(--bg-inset) p-3">
-        <div class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Source</div>
-        <div class="mt-1 font-mono text-sm capitalize text-(--fg)">{{ source }}</div>
+      <div class="rounded-lg border border-border bg-bg-inset p-3">
+        <div class="demo-label">Source</div>
+        <div class="mt-1 font-mono text-sm capitalize text-fg">{{ source }}</div>
       </div>
     </div>
   </div>

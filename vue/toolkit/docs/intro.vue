@@ -29,33 +29,33 @@ const { count, increment, decrement, reset } = useCounter(0, { min: 0, max: 10 }
 
     <!-- Feature highlights -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">Tree-shakeable by design</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">Tree-shakeable by design</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           Import only what you use. Each composable lives on its own and pulls in nothing it
           doesn't need — your bundle stays exactly as small as your usage.
         </p>
       </div>
 
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">SSR-safe out of the box</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">SSR-safe out of the box</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           Browser-only access is guarded behind lifecycle hooks and configurable
           <code>window</code>/<code>document</code> targets, so Nuxt and SSR setups just work.
         </p>
       </div>
 
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">Fully typed</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">Fully typed</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           Written in TypeScript with precise return types and generics. <code>MaybeRefOrGetter</code>
           arguments mean you can pass plain values, refs or getters interchangeably.
         </p>
       </div>
 
-      <div class="rounded-lg border border-(--border) bg-(--bg-subtle) p-5">
-        <h3 class="text-sm font-semibold text-(--fg) mb-1.5">Broad coverage</h3>
-        <p class="text-sm text-(--fg-muted) leading-relaxed">
+      <div class="rounded-lg border border-border bg-bg-subtle p-5">
+        <h3 class="text-sm font-semibold text-fg mb-1.5">Broad coverage</h3>
+        <p class="text-sm text-fg-muted leading-relaxed">
           From state and reactivity to sensors, elements, storage, math and form handling —
           one cohesive toolkit spanning the whole surface of a Vue app.
         </p>
@@ -101,19 +101,19 @@ useEventListener('keydown', (e) => {
       <p>The same <code>useCounter</code> running live:</p>
     </div>
     <ClientOnly>
-      <div class="flex items-center gap-3 rounded-lg border border-(--border) bg-(--bg-subtle) p-4">
+      <div class="flex items-center gap-3 rounded-lg border border-border bg-bg-subtle p-4">
         <button
           type="button"
-          class="size-9 rounded-md border border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) focus:outline-none focus:ring-2 focus:ring-(--ring) disabled:opacity-40"
+          class="size-9 rounded-md border border-border bg-bg-elevated text-fg hover:bg-bg-inset focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-40"
           :disabled="count <= 0"
           @click="decrement()"
         >
           −
         </button>
-        <span class="min-w-12 text-center text-lg font-medium tabular-nums text-(--fg)">{{ count }}</span>
+        <span class="min-w-12 text-center text-lg font-medium tabular-nums text-fg">{{ count }}</span>
         <button
           type="button"
-          class="size-9 rounded-md border border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) focus:outline-none focus:ring-2 focus:ring-(--ring) disabled:opacity-40"
+          class="size-9 rounded-md border border-border bg-bg-elevated text-fg hover:bg-bg-inset focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-40"
           :disabled="count >= 10"
           @click="increment()"
         >
@@ -121,7 +121,7 @@ useEventListener('keydown', (e) => {
         </button>
         <button
           type="button"
-          class="ml-auto rounded-md px-3 py-1.5 text-sm text-(--fg-muted) hover:text-(--fg) hover:bg-(--bg-inset) focus:outline-none focus:ring-2 focus:ring-(--ring)"
+          class="ml-auto rounded-md px-3 py-1.5 text-sm text-fg-muted hover:text-fg hover:bg-bg-inset focus:outline-none focus:ring-2 focus:ring-ring"
           @click="reset()"
         >
           Reset

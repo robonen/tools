@@ -12,9 +12,9 @@ const duration = computed(() => (reduced.value ? 0 : 1.2));
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div class="flex items-center justify-between">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+      <span class="demo-label">
         prefers-reduced-motion
       </span>
       <span
@@ -28,14 +28,14 @@ const duration = computed(() => (reduced.value ? 0 : 1.2));
     </div>
 
     <!-- Animated demo box: the orbiting dot pauses when motion is reduced. -->
-    <div class="flex h-40 items-center justify-center rounded-xl border border-(--border) bg-(--bg-inset)">
+    <div class="flex h-40 items-center justify-center rounded-xl border border-border bg-bg-inset">
       <div class="relative size-24">
-        <div class="absolute inset-0 rounded-full border-2 border-dashed border-(--border-strong)" />
+        <div class="absolute inset-0 rounded-full border-2 border-dashed border-border-strong" />
         <div
           class="orbit absolute left-1/2 top-1/2 size-24"
           :style="{ animationDuration: `${duration}s`, animationPlayState: reduced ? 'paused' : 'running' }"
         >
-          <span class="absolute -left-2 -top-2 size-4 rounded-full bg-(--accent) shadow-lg" />
+          <span class="absolute -left-2 -top-2 size-4 rounded-full bg-accent shadow-lg" />
         </div>
         <div class="absolute inset-0 flex items-center justify-center">
           <span class="text-2xl">{{ reduced ? '⏸' : '🎞️' }}</span>
@@ -43,24 +43,24 @@ const duration = computed(() => (reduced.value ? 0 : 1.2));
       </div>
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+    <div class="demo-card p-4">
+      <span class="demo-label">
         Derived setting
       </span>
       <div class="mt-1 flex items-baseline gap-2">
-        <span class="font-mono text-3xl font-bold tabular-nums text-(--fg)">
+        <span class="demo-stat text-3xl">
           {{ reduced ? 0 : 1200 }}
         </span>
-        <span class="text-sm text-(--fg-muted)">ms transition</span>
+        <span class="text-sm text-fg-muted">ms transition</span>
       </div>
-      <p class="mt-2 text-sm text-(--fg-muted)">
+      <p class="mt-2 text-sm text-fg-muted">
         {{ reduced
           ? 'Reduced motion requested — animations are disabled.'
           : 'Full motion — animations run at normal speed.' }}
       </p>
     </div>
 
-    <p class="text-xs text-(--fg-subtle)">
+    <p class="text-xs text-fg-subtle">
       Read-only: enable "Reduce motion" in your OS accessibility settings to pause the orbit.
     </p>
   </div>

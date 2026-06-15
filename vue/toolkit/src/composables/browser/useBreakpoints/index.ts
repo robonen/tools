@@ -5,6 +5,7 @@ import { defaultWindow } from '@/types';
 import type { ConfigurableWindow } from '@/types';
 import { useMediaQuery } from '@/composables/browser/useMediaQuery';
 import type { UseMediaQueryOptions } from '@/composables/browser/useMediaQuery';
+import { pxValue } from '@robonen/platform/browsers';
 
 /**
  * A breakpoints map: name → viewport width. Numbers are treated as pixels;
@@ -60,22 +61,6 @@ export type UseBreakpointsReturn<K extends string = string>
     /** Reactive: the single active breakpoint per `strategy` (largest for `min-width`, smallest for `max-width`), or `''` when none. */
     active: () => ComputedRef<K | ''>;
   };
-
-/**
- * Parse a CSS length token (`"1024px"`, `"48em"`, `"30rem"`, `"50%"`) into a
- * pixel number. `em`/`rem` use the conventional 16px root size.
- */
-function pxValue(value: string): number {
-  const number = Number.parseFloat(value);
-
-  if (Number.isNaN(number))
-    return Number.NaN;
-
-  if (/(?:em|rem)\s*$/i.test(value))
-    return number * 16;
-
-  return number;
-}
 
 /**
  * Add `delta` to the numeric portion of a CSS length, preserving its unit.

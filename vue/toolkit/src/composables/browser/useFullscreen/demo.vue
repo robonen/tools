@@ -7,7 +7,7 @@ const { isSupported, isFullscreen, enter, exit, toggle } = useFullscreen(target)
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-center text-sm text-amber-600 dark:text-amber-400"
@@ -17,27 +17,27 @@ const { isSupported, isFullscreen, enter, exit, toggle } = useFullscreen(target)
 
     <div
       ref="target"
-      class="relative flex h-44 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl border border-(--border) bg-(--bg-elevated) transition-colors"
-      :class="isFullscreen && 'bg-(--bg-inset)'"
+      class="demo-card relative flex h-44 flex-col items-center justify-center gap-3 overflow-hidden transition-colors"
+      :class="isFullscreen && 'bg-bg-inset'"
     >
       <span
         class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
         :class="isFullscreen
           ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-          : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+          : 'border-border bg-bg-inset text-fg-muted'"
       >
-        <span class="size-1.5 rounded-full" :class="isFullscreen ? 'bg-emerald-500' : 'bg-(--fg-subtle)'" />
+        <span class="size-1.5 rounded-full" :class="isFullscreen ? 'bg-emerald-500' : 'bg-fg-subtle'" />
         {{ isFullscreen ? 'Fullscreen' : 'Windowed' }}
       </span>
 
-      <p class="px-6 text-center text-sm text-(--fg-muted)">
+      <p class="px-6 text-center text-sm text-fg-muted">
         This panel becomes the fullscreen target. Press
-        <kbd class="rounded border border-(--border) bg-(--bg) px-1.5 py-0.5 font-mono text-xs text-(--fg)">Esc</kbd>
+        <kbd class="rounded border border-border bg-bg px-1.5 py-0.5 font-mono text-xs text-fg">Esc</kbd>
         to leave.
       </p>
 
       <button
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!isSupported"
         @click="toggle"
       >
@@ -55,14 +55,14 @@ const { isSupported, isFullscreen, enter, exit, toggle } = useFullscreen(target)
 
     <div class="flex gap-2">
       <button
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!isSupported || isFullscreen"
         @click="enter"
       >
         Enter
       </button>
       <button
-        class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn flex-1 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         :disabled="!isSupported || !isFullscreen"
         @click="exit"
       >

@@ -32,7 +32,7 @@ function toggleLoop(): void {
 </script>
 
 <template>
-  <div class="flex w-full max-w-sm flex-col gap-4">
+  <div class="demo-stack max-w-sm">
     <div
       v-if="!isSupported"
       class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-300"
@@ -40,27 +40,27 @@ function toggleLoop(): void {
       The Vibration API is not supported in this browser. Try a mobile device.
     </div>
 
-    <div class="rounded-xl border border-(--border) bg-(--bg-elevated) p-4">
+    <div class="demo-card p-4">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">
+        <span class="demo-label">
           Current pattern (ms)
         </span>
         <span
           class="inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium"
           :class="isSupported
             ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-            : 'border-(--border) bg-(--bg-inset) text-(--fg-muted)'"
+            : 'border-border bg-bg-inset text-fg-muted'"
         >
           {{ isSupported ? 'supported' : 'unsupported' }}
         </span>
       </div>
-      <div class="mt-2 overflow-x-auto rounded-lg border border-(--border) bg-(--bg-inset) p-3 font-mono text-sm text-(--fg) tabular-nums">
+      <div class="mt-2 overflow-x-auto rounded-lg border border-border bg-bg-inset p-3 font-mono text-sm text-fg tabular-nums">
         [{{ Array.isArray(pattern) ? pattern.join(', ') : pattern }}]
       </div>
     </div>
 
     <div class="flex flex-col gap-2">
-      <span class="text-xs font-medium uppercase tracking-wide text-(--fg-subtle)">Presets</span>
+      <span class="demo-label">Presets</span>
       <div class="grid grid-cols-2 gap-2">
         <button
           v-for="(_, name) in presets"
@@ -69,8 +69,8 @@ function toggleLoop(): void {
           :disabled="!isSupported"
           class="inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
           :class="activePreset === name
-            ? 'border-transparent bg-(--accent) text-(--accent-fg) hover:bg-(--accent-hover)'
-            : 'border-(--border) bg-(--bg-elevated) text-(--fg) hover:bg-(--bg-inset) hover:border-(--border-strong)'"
+            ? 'border-transparent bg-accent text-accent-fg hover:bg-accent-hover'
+            : 'border-border bg-bg-elevated text-fg hover:bg-bg-inset hover:border-border-strong'"
           @click="applyPreset(name)"
         >
           {{ name }}
@@ -82,7 +82,7 @@ function toggleLoop(): void {
       <button
         type="button"
         :disabled="!isSupported"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-transparent bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--accent-fg) transition hover:bg-(--accent-hover) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         @click="vibrate()"
       >
         Vibrate now
@@ -90,7 +90,7 @@ function toggleLoop(): void {
       <button
         type="button"
         :disabled="!isSupported"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         @click="toggleLoop"
       >
         {{ looping ? 'Stop loop' : 'Loop every 1.5s' }}
@@ -98,7 +98,7 @@ function toggleLoop(): void {
       <button
         type="button"
         :disabled="!isSupported"
-        class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-(--border) bg-(--bg-elevated) px-3 py-1.5 text-sm font-medium text-(--fg) transition hover:bg-(--bg-inset) hover:border-(--border-strong) active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
+        class="demo-btn disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
         @click="stop"
       >
         Stop

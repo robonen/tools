@@ -90,6 +90,8 @@ export function onKeyStroke(key: KeyFilter, handler: (event: KeyboardEvent) => v
  */
 export function onKeyStroke(handler: (event: KeyboardEvent) => void, options?: OnKeyStrokeOptions): VoidFunction;
 
+// Overload implementation signature: positional args are dispatched manually
+// below; the public overloads above carry the real, type-safe signatures.
 export function onKeyStroke(...args: any[]): VoidFunction {
   let key: KeyFilter;
   let handler: (event: KeyboardEvent) => void;

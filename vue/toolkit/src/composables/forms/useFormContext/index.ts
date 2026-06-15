@@ -18,6 +18,6 @@ import type { UseFormReturn } from '../useForm';
  *
  * @since 0.0.16
  */
-export function useFormContext<TInput extends object = any, TOutput = TInput>(): UseFormReturn<TInput, TOutput> | null {
+export function useFormContext<TInput extends object = Record<string, unknown>, TOutput = TInput>(): UseFormReturn<TInput, TOutput> | null {
   return injectFormContext<TInput, TOutput>();
 }

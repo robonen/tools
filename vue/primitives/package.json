@@ -69,7 +69,7 @@
     "vue-tsc": "^3.3.4"
   },
   "dependencies": {
-    "@floating-ui/vue": "^1.1.11",
+    "@floating-ui/vue": "^2.0.0",
     "@robonen/encoding": "workspace:*",
     "@robonen/platform": "workspace:*",
     "@robonen/stdlib": "workspace:*",

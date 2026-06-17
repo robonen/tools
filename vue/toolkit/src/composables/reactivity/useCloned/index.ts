@@ -75,7 +75,7 @@ export function cloneFnDefault<T>(source: T): T {
  * const { cloned, sync } = useCloned(source, { manual: true });
  * // cloned only updates when sync() is called
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useCloned<T>(
   source: MaybeRefOrGetter<T>,

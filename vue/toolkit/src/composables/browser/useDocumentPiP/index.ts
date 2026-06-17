@@ -109,7 +109,7 @@ export interface UseDocumentPiPReturn {
  *     pipWindow.value.document.body.append(playerEl);
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDocumentPiP(options: UseDocumentPiPOptions = {}): UseDocumentPiPReturn {
   const {

@@ -66,7 +66,7 @@ export interface UseStepperReturn<StepName, Steps, Step> {
  *   billing: { title: 'Billing' },
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useStepper<T extends string | number>(
   steps: MaybeRef<T[]>,

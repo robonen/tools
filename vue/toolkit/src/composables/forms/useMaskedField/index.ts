@@ -24,7 +24,7 @@ export type { UseMaskedFieldOptions, UseMaskedFieldReturn } from './types';
  * const { bind, errorMessage } = useMaskedField('phone', { mask: '+1 (###) ###-####' });
  * // <input v-bind="bind">  — the form stores the raw digits
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function useMaskedField<T = string>(
   path: MaybeRefOrGetter<string>,

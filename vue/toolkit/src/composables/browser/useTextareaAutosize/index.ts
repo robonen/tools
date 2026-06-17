@@ -85,7 +85,7 @@ export interface UseTextareaAutosizeReturn {
  * @example
  * const { textarea, input, triggerResize } = useTextareaAutosize({ maxHeight: 320 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTextareaAutosize(options: UseTextareaAutosizeOptions = {}): UseTextareaAutosizeReturn {
   const {

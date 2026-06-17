@@ -18,7 +18,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
  * const truncated = useTrunc(() => -3.7);
  * // truncated.value === -3
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTrunc(value: MaybeRefOrGetter<number>): ComputedRef<number> {
   return computed<number>(() => Math.trunc(toValue(value)));

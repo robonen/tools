@@ -76,7 +76,7 @@ export interface UseCloseWatcherReturn {
  * // Programmatically request a close
  * close();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useCloseWatcher(options: UseCloseWatcherOptions = {}): UseCloseWatcherReturn {
   const { window = defaultWindow } = options;

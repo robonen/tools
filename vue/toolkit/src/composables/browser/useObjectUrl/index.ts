@@ -21,7 +21,7 @@ export type UseObjectUrlReturn = Readonly<ShallowRef<string | undefined>>;
  * const file = shallowRef<File>();
  * const url = useObjectUrl(file);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useObjectUrl(
   object: MaybeRefOrGetter<Blob | MediaSource | null | undefined>,

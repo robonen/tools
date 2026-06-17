@@ -28,7 +28,7 @@ export type IsDefinedReturn = boolean;
  * @example
  * const value = isDefined(maybeNumber) ? maybeNumber.value : 0;
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function isDefined<T>(value: ComputedRef<T>): value is ComputedRef<NonNullable<T>>;
 export function isDefined<T>(value: Ref<T>): value is Ref<NonNullable<T>>;
@@ -63,7 +63,7 @@ export type UseIsDefinedReturn = ComputedRef<boolean>;
  * @example
  * const hasResult = useIsDefined(() => store.result);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useIsDefined<T>(value: MaybeRefOrGetter<T>): UseIsDefinedReturn {
   return computed(() => {

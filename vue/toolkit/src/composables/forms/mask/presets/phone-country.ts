@@ -56,7 +56,7 @@ export interface MaskPhoneCountryParams {
  *   fallback: '+#############',
  * });
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function maskPhoneCountryOptions(params: MaskPhoneCountryParams = {}): MaskOptions {
   const countries = params.countries ?? PHONE_COUNTRIES;

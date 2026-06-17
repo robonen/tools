@@ -32,7 +32,7 @@ export interface UsePreferredContrastOptions extends UseMediaQueryOptions {
  * // Provide an SSR fallback to avoid hydration flicker
  * const contrast = usePreferredContrast({ ssrContrast: 'more' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePreferredContrast(
   options: UsePreferredContrastOptions = {},

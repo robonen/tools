@@ -98,7 +98,7 @@ function normalizeOptions(
  * const save = useThrottleFn(persist, { delay: 1000, trailing: true });
  * save.cancel();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useThrottleFn<T extends AnyFunction>(
   fn: T,

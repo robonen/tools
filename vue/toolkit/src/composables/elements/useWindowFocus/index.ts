@@ -19,7 +19,7 @@ export type UseWindowFocusReturn = ShallowRef<boolean>;
  * @example
  * const focused = useWindowFocus();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useWindowFocus(options: UseWindowFocusOptions = {}): UseWindowFocusReturn {
   const { window = defaultWindow } = options;

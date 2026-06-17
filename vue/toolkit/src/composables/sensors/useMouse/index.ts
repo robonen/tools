@@ -93,7 +93,7 @@ const builtinExtractors: Record<UseMouseCoordType, UseMouseEventExtractor> = {
  * // Track relative to an element, throttled
  * const { x, y } = useMouse({ target: el, eventFilter: throttleFilter(50) });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMouse(options: UseMouseOptions = {}): UseMouseReturn {
   const {

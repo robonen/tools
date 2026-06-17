@@ -167,7 +167,7 @@ const RESERVED_KEYS = [
  * // Shorthand: third argument is the duration in milliseconds
  * useAnimate(el, { opacity: [0, 1] }, 500);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useAnimate(
   target: MaybeComputedElementRef,

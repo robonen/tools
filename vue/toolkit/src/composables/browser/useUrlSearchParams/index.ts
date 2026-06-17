@@ -88,7 +88,7 @@ export type UseUrlSearchParamsReturn<T extends Record<string, any> = UrlParams>
  * const params = useUrlSearchParams<{ ids: string[] }>('history');
  * params.ids = ['1', '2']; // -> ?ids=1&ids=2
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 // `Record<string, any>` constraint mirrors `UseUrlSearchParamsReturn`: caller-supplied
 // `T` flows back out, so interface types must satisfy the bound (see note above).

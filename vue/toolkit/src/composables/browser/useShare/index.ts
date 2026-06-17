@@ -67,7 +67,7 @@ export interface UseShareReturn {
  * const { share } = useShare({ title: 'Default' });
  * share({ text: 'One-off message' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useShare(
   shareOptions: MaybeRefOrGetter<UseShareOptions> = {},

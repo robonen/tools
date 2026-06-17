@@ -26,7 +26,7 @@ import type { MaybeRefOrGetter } from 'vue';
  * get(() => 42); // 42
  * get(42); // 42
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function get<T>(source: MaybeRefOrGetter<T>): T;
 export function get<T, K extends keyof T>(source: MaybeRefOrGetter<T>, key: K): T[K];

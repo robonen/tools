@@ -19,7 +19,7 @@ export type ReducedTransparencyType
  * const transparency = usePreferredReducedTransparency();
  * // transparency.value === 'reduce' | 'no-preference'
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePreferredReducedTransparency(
   options: ConfigurableWindow = {},

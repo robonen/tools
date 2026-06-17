@@ -59,7 +59,7 @@ export type UseIntervalReturn = Readonly<ShallowRef<number>> | UseIntervalContro
  * @example
  * const { counter, isActive, pause, resume, reset } = useInterval(1000, { controls: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useInterval(interval?: MaybeRefOrGetter<number>, options?: UseIntervalOptions<false>): Readonly<ShallowRef<number>>;
 export function useInterval(interval: MaybeRefOrGetter<number>, options: UseIntervalOptions<true>): UseIntervalControls;

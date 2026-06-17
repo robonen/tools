@@ -125,7 +125,7 @@ const DEFAULT_COORDS: Omit<GeolocationPosition['coords'], 'toJSON'> = {
  * const { getCurrentPosition } = useGeolocation({ immediate: false });
  * const position = await getCurrentPosition();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useGeolocation(options: UseGeolocationOptions = {}): UseGeolocationReturn {
   const {

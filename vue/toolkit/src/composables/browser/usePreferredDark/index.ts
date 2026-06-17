@@ -13,7 +13,7 @@ import { useMediaQuery } from '@/composables/browser/useMediaQuery';
  * @example
  * const isDark = usePreferredDark();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePreferredDark(options: ConfigurableWindow = {}): Ref<boolean> {
   return useMediaQuery('(prefers-color-scheme: dark)', options);

@@ -42,7 +42,7 @@ export type UseElementHoverReturn = ShallowRef<boolean>;
  * @example
  * const isHovered = useElementHover(el, { delayEnter: 100, delayLeave: 200 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useElementHover(
   target: MaybeComputedElementRef,

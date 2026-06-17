@@ -207,7 +207,7 @@ export function formatDate(
  *   customMeridiem: (h) => (h < 12 ? 'morning' : 'evening'),
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDateFormat(
   date: MaybeRefOrGetter<DateLike>,

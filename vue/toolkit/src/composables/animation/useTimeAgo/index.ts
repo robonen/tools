@@ -197,7 +197,7 @@ function defaultFullDateFormatter(date: Date): string {
  * @example
  * formatTimeAgo(new Date(Date.now() - 3 * 60_000)); // '3 minutes ago'
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function formatTimeAgo<UnitNames extends string = UseTimeAgoUnitName>(
   from: Date,
@@ -303,7 +303,7 @@ export function formatTimeAgo<UnitNames extends string = UseTimeAgoUnitName>(
  *   fullDateFormatter: d => d.toLocaleDateString('fr-FR'),
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTimeAgo<UnitNames extends string = UseTimeAgoUnitName>(
   time: MaybeRefOrGetter<Date | number | string>,

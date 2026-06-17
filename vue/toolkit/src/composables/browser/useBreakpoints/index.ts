@@ -104,7 +104,7 @@ function increaseWithUnit(target: number | string, delta: number): number | stri
  * const bp = useBreakpoints({ mobile: 0, tablet: 640, desktop: 1024 });
  * const active = bp.active(); // ComputedRef<'mobile' | 'tablet' | 'desktop' | ''>
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useBreakpoints<K extends string>(
   breakpoints: Breakpoints<K>,

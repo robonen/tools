@@ -105,7 +105,7 @@ export interface UseMouseInElementReturn extends UseMouseReturn {
  *   eventFilter: throttleFilter(50),
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMouseInElement(
   target?: MaybeComputedElementRef,

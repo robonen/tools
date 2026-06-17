@@ -55,7 +55,7 @@ export interface UseFocusReturn {
  * // only treat keyboard focus as focused
  * const { focused } = useFocus(el, { focusVisible: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useFocus(
   target: MaybeComputedElementRef,

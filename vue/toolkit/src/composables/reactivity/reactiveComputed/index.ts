@@ -34,7 +34,7 @@ export type ReactiveComputedReturn<T extends object>
  * obj.name; // 'a'
  * obj.name = 'b'; // writes through to name.value
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function reactiveComputed<T extends object>(
   getter: ComputedGetter<T>,

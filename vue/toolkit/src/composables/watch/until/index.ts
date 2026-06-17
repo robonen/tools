@@ -238,7 +238,7 @@ function createUntil<T>(r: WatchSource<T> | MaybeRefOrGetter<T>, isNot = false):
  * // resolve once the source changes n times
  * await until(count).changedTimes(3);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function until<T extends unknown[]>(r: WatchSource<T> | MaybeRefOrGetter<T>): UntilArrayInstance<T>;
 export function until<T>(r: WatchSource<T> | MaybeRefOrGetter<T>): UntilValueInstance<T>;

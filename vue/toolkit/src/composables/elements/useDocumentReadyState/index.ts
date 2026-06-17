@@ -41,7 +41,7 @@ export type UseDocumentReadyStateReturn = ShallowRef<DocumentReadyState>;
  *   },
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDocumentReadyState(
   options: UseDocumentReadyStateOptions = {},

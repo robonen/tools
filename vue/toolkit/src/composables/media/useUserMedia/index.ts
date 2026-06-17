@@ -106,7 +106,7 @@ export interface UseUserMediaReturn {
  * await start();
  * constraints.value = { video: { deviceId: nextCameraId } };
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useUserMedia(options: UseUserMediaOptions = {}): UseUserMediaReturn {
   const {

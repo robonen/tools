@@ -115,7 +115,7 @@ export interface MappedXbox360Controller {
  *   if (controller.value?.buttons.a.pressed) console.log('A pressed');
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function mapGamepadToXbox360Controller(
   gamepad: Ref<Gamepad | undefined>,
@@ -228,7 +228,7 @@ function snapshotGamepad(gamepad: Gamepad): Gamepad {
  * const gamepad = computed(() => gamepads.value[0]);
  * const controller = mapGamepadToXbox360Controller(gamepad);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useGamepad(options: UseGamepadOptions = {}): UseGamepadReturn {
   const {

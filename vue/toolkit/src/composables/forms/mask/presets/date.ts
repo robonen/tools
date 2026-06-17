@@ -63,7 +63,7 @@ function clampDateSegments(segments: readonly DateSegment[], separator: string):
  * @example
  * maskDateOptions({ mode: 'dd/mm/yyyy' });
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function maskDateOptions(params: MaskDateParams = {}): MaskOptions {
   const mode = params.mode ?? 'dd/mm/yyyy';

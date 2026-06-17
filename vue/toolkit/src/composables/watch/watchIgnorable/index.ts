@@ -46,7 +46,7 @@ export interface WatchIgnorableReturn {
  * });
  * count.value = 3;            // logs: changed 3
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function watchIgnorable<T, Immediate extends Readonly<boolean> = false>(
   source: WatchSource<T>,

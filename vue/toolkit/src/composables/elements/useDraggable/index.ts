@@ -167,7 +167,7 @@ export interface UseDraggableReturn {
  * // Lock to the horizontal axis and only drag from a handle.
  * const { position } = useDraggable(el, { axis: 'x', handle: handleEl });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDraggable(
   target: MaybeComputedElementRef,

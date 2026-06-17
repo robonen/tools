@@ -18,7 +18,7 @@ export type UseArrayJoinReturn = ComputedRef<string>;
  * const sep = ref('-');
  * const joined = useArrayJoin(list, sep); // 'a-b-c'
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayJoin(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<unknown>>>,

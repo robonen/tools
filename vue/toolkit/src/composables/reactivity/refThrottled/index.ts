@@ -26,7 +26,7 @@ export type RefThrottledReturn<T = unknown> = Ref<T>;
  * const scrollY = ref(0);
  * const throttledY = refThrottled(scrollY, 100, true, false);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function refThrottled<T = unknown>(
   source: MaybeRefOrGetter<T>,

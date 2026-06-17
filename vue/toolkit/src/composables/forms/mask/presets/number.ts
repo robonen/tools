@@ -210,7 +210,7 @@ function numberPostprocessor(params: ResolvedNumberParams): MaskPostprocessor {
  * maskNumberOptions({ thousandSeparator: ',', precision: 2, prefix: '$' });
  * // typing 1234.5 → '$1,234.5'
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function maskNumberOptions(params: MaskNumberParams = {}): MaskOptions {
   const resolved: ResolvedNumberParams = {

@@ -85,7 +85,7 @@ export interface UseDisplayMediaReturn {
  * const { start, stop } = useDisplayMedia({ audio: true });
  * await start();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDisplayMedia(options: UseDisplayMediaOptions = {}): UseDisplayMediaReturn {
   const {

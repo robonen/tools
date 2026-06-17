@@ -58,7 +58,7 @@ export type UseDarkReturn = WritableComputedRef<boolean>;
  * const isDark = useDark();
  * const toggleDark = useToggle(isDark);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDark(options: UseDarkOptions = {}): UseDarkReturn {
   const {

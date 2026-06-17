@@ -20,7 +20,7 @@ export type UseArraySomeReturn = ComputedRef<boolean>;
  * const items = [ref(1), ref(3), ref(5)];
  * const hasEven = useArraySome(items, n => n % 2 === 0); // false
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArraySome<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

@@ -101,7 +101,7 @@ const _refCount = new WeakMap<HTMLStyleElement, number>();
  * load();
  * unload();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useStyleTag(
   css: MaybeRefOrGetter<string>,

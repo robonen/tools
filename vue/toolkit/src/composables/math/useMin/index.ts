@@ -22,7 +22,7 @@ import type { MaybeComputedRefArgs } from '@/types';
  * const list = ref([2, ref(5), () => 10]);
  * const min = useMin(list); // 2
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMin(array: MaybeRefOrGetter<Array<MaybeRefOrGetter<number>>>): ComputedRef<number>;
 export function useMin(...args: Array<MaybeRefOrGetter<number>>): ComputedRef<number>;

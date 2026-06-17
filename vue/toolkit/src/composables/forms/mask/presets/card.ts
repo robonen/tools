@@ -48,7 +48,7 @@ export interface MaskCardParams {
  * const card = useMaskedInput({ mask: maskCardOptions() });
  * // <input v-bind="card.bind">  — 4111… → '4111 1111 1111 1111', 3714… → Amex 4-6-5
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function maskCardOptions(params: MaskCardParams = {}): MaskOptions {
   const brands = params.brands ?? CARD_BRANDS;

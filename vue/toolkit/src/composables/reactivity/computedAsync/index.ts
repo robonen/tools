@@ -79,7 +79,7 @@ export type UseComputedAsyncReturn<T>
  *   return res.json();
  * }, undefined, { lazy: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function computedAsync<T>(
   evaluationCallback: (onCancel: AsyncComputedOnCancel) => T | Promise<T>,
@@ -178,6 +178,6 @@ export function computedAsync<T>(
  * @category Reactivity
  * @description Alias for {@link computedAsync}.
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export const asyncComputed = computedAsync;

@@ -60,7 +60,7 @@ export function reactiveOmit<T extends object>(
  * // predicate: drop every boolean field
  * const noFlags = reactiveOmit(state, (value) => typeof value === 'boolean');
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function reactiveOmit<T extends object, K extends keyof T>(
   obj: T,

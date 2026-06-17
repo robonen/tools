@@ -32,7 +32,7 @@ export type OnElementRemovalReturn = VoidFunction;
  * @example
  * const stop = onElementRemoval(el, (records) => report(records), { flush: 'post' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function onElementRemoval(
   target: MaybeComputedElementRef,

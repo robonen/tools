@@ -20,7 +20,7 @@ const baseSignals = new WeakMap<object, AbortSignal | undefined>();
  *
  * Auto-registered by `createFetch`; no-op when `timeout` is unset.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 export function timeoutPlugin() {
   return definePlugin({

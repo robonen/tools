@@ -76,7 +76,7 @@ export interface UseClipboardReturn<Optional extends boolean> {
  * // Copy a lazily/asynchronously resolved value
  * copy(async () => (await fetch('/token').then(r => r.text())));
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useClipboard(options?: UseClipboardOptions<undefined>): UseClipboardReturn<false>;
 export function useClipboard(options: UseClipboardOptions<MaybeRefOrGetter<string>>): UseClipboardReturn<true>;

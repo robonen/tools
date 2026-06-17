@@ -72,7 +72,7 @@ export interface UseWakeLockReturn {
  * const { forceRequest } = useWakeLock();
  * await forceRequest('screen');
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useWakeLock(options: UseWakeLockOptions = {}): UseWakeLockReturn {
   const {

@@ -84,7 +84,7 @@ export interface UseElementBoundingReturn {
  * // Batch rapid scroll/resize reads into one measurement per frame
  * const bounds = useElementBounding(el, { updateTiming: 'next-frame' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useElementBounding(
   target: MaybeComputedElementRef,

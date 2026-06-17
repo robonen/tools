@@ -42,7 +42,7 @@ export interface UseCssVarReturn extends WritableComputedRef<string | null | und
  * @example
  * const theme = useCssVar('--theme', null, { initialValue: 'light', observe: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useCssVar(
   prop: MaybeRefOrGetter<string | null | undefined>,

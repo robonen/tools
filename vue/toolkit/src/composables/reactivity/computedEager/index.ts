@@ -27,7 +27,7 @@ export type ComputedEagerReturn<T>
  * // Defer recomputation until after the component update flush
  * const total = computedEager(() => a.value + b.value, { flush: 'post' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function computedEager<T>(getter: () => T, options: ComputedEagerOptions = {}): ComputedEagerReturn<T> {
   const result = shallowRef<T>();
@@ -47,6 +47,6 @@ export function computedEager<T>(getter: () => T, options: ComputedEagerOptions 
  * @category Reactivity
  * @description Alias for {@link computedEager}.
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export const eagerComputed = computedEager;

@@ -109,7 +109,7 @@ export type OnLongPressReturn = VoidFunction;
  *   },
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function onLongPress(
   target: MaybeComputedElementRef,

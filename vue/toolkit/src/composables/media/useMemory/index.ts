@@ -80,7 +80,7 @@ export interface UseMemoryReturn {
  * // Poll every 500ms
  * const { memory } = useMemory({ interval: 500 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMemory(options: UseMemoryOptions = {}): UseMemoryReturn {
   const {

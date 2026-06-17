@@ -33,7 +33,7 @@ export type RefDefaultReturn<T> = WritableComputedRef<T>;
  * fallback.value = 'visitor';
  * user.value; // 'visitor'
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function refDefault<T>(
   source: Ref<T | null | undefined>,

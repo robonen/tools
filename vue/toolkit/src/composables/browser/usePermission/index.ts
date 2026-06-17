@@ -79,7 +79,7 @@ export interface UsePermissionReturnWithControls {
  * @example
  * const { state, isSupported, query } = usePermission('camera', { controls: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePermission(
   permissionDesc: GeneralPermissionDescriptor | GeneralPermissionDescriptor['name'],

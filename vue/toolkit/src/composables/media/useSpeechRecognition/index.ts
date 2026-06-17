@@ -128,7 +128,7 @@ export interface UseSpeechRecognitionReturn {
  * const { result, isFinal, toggle } = useSpeechRecognition({ continuous: true });
  * watch(result, transcript => console.log(transcript));
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}): UseSpeechRecognitionReturn {
   const {

@@ -53,7 +53,7 @@ export type UseThrottledRefHistoryReturn<Raw, Serialized = Raw>
  * const state = ref({ items: [] });
  * const { history } = useThrottledRefHistory(state, { throttle: ms, deep: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useThrottledRefHistory<Raw, Serialized = Raw>(
   source: Ref<Raw>,

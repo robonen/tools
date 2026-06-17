@@ -62,7 +62,7 @@ export interface UseWatchPausableReturn {
  * resume();
  * count.value++; // callback called
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function watchPausable<T extends Readonly<MultiWatchSources>, Immediate extends Readonly<boolean> = false>(
   sources: [...T],

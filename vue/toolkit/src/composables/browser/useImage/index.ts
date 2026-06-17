@@ -113,7 +113,7 @@ function loadImage(options: UseImageOptions, ctx: LoadImageContext): Promise<HTM
  * const src = ref('/a.png');
  * const { state } = useImage(() => ({ src: src.value, alt: 'photo' }));
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useImage(
   options: MaybeRefOrGetter<UseImageOptions>,

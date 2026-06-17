@@ -72,7 +72,7 @@ export interface UseDebounceFnReturn<T extends AnyFunction> {
  * save.flush();
  * if (save.isPending.value) {}
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDebounceFn<T extends AnyFunction>(
   fn: T,

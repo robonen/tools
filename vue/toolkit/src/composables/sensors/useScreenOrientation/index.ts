@@ -74,7 +74,7 @@ export interface UseScreenOrientationReturn {
  * const { lockOrientation } = useScreenOrientation();
  * await lockOrientation('landscape');
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useScreenOrientation(options: UseScreenOrientationOptions = {}): UseScreenOrientationReturn {
   const { window = defaultWindow } = options;

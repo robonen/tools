@@ -79,7 +79,7 @@ export interface UseResizeObserverReturn {
  *   // react to multiple targets
  * }, { box: 'border-box' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useResizeObserver(
   target: MaybeComputedElementRef | MaybeComputedElementRef[],

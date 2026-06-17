@@ -26,7 +26,7 @@ import type { MaybeComputedRefArgs } from '@/types';
  * const list = ref([ref(1), () => 5, 2]);
  * const max = useMax(list); // 5
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMax(array: MaybeRefOrGetter<Array<MaybeRefOrGetter<number>>>): ComputedRef<number>;
 export function useMax(...args: Array<MaybeRefOrGetter<number>>): ComputedRef<number>;

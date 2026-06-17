@@ -34,7 +34,7 @@ export type UsePageLeaveReturn = ShallowRef<boolean>;
  *   },
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePageLeave(options: UsePageLeaveOptions = {}): UsePageLeaveReturn {
   const { window = defaultWindow, onChange } = options;

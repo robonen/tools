@@ -61,7 +61,7 @@ export type UseTitleReturn = Ref<string | null | undefined> | ComputedRef<string
  * // Restore the previous title when the component unmounts
  * useTitle('Checkout', { restoreOnUnmount: (original) => original });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTitle(
   newTitle: () => string | null | undefined,

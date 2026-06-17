@@ -16,7 +16,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
  * @example
  * const floored = useFloor(() => 5.05); // 5
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useFloor(value: MaybeRefOrGetter<number>): ComputedRef<number> {
   return computed<number>(() => Math.floor(toValue(value)));

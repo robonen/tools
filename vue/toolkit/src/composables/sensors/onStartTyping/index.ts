@@ -81,7 +81,7 @@ export type OnStartTypingReturn = VoidFunction;
  * const stop = onStartTyping(() => openSearch());
  * stop();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function onStartTyping(
   callback: (event: KeyboardEvent) => void,

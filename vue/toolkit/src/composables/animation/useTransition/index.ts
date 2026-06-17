@@ -218,7 +218,7 @@ function valuesEqual(a: TransitionValue, b: TransitionValue): boolean {
  * const color = ref([0, 0, 0]);
  * const animated = useTransition(color, { duration: 1000 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTransition<T extends TransitionValue>(
   source: MaybeRefOrGetter<T>,

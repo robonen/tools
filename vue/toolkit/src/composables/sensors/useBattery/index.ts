@@ -87,7 +87,7 @@ const BATTERY_EVENTS: string[] = [
  * // React to acquisition failures
  * const { isSupported } = useBattery({ onError: (e) => report(e) });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useBattery(options: UseBatteryOptions = {}): UseBatteryReturn {
   const { navigator = defaultNavigator, onError = noop } = options;

@@ -50,7 +50,7 @@ export type UseDebouncedRefHistoryReturn<Raw, Serialized = Raw>
  * const text = ref('');
  * const { history } = useDebouncedRefHistory(text, { debounce: 300, maxWait: 1000 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDebouncedRefHistory<Raw, Serialized = Raw>(
   source: Ref<Raw>,

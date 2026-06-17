@@ -20,7 +20,7 @@ export type UseAbsReturn = ComputedRef<number>;
  * const abs = useAbs(() => -10);
  * // abs.value === 10
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useAbs(value: MaybeRefOrGetter<number>): UseAbsReturn {
   return computed(() => Math.abs(toValue(value)));

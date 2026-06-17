@@ -26,7 +26,7 @@ export type UsePreviousOptions = Pick<WatchOptions, 'deep' | 'flush'>;
  * const state = reactive({ n: 1 });
  * const prev = usePrevious(() => ({ ...state }), undefined, { deep: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePrevious<T>(value: MaybeRefOrGetter<T>, initialValue: T, options?: UsePreviousOptions): Readonly<ShallowRef<T>>;
 export function usePrevious<T>(value: MaybeRefOrGetter<T>, initialValue?: undefined, options?: UsePreviousOptions): Readonly<ShallowRef<T | undefined>>;

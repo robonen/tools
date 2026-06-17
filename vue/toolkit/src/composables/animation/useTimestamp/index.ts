@@ -82,7 +82,7 @@ export type UseTimestampReturn<Controls extends boolean> = Controls extends true
  * const offset = ref(0);
  * const now = useTimestamp({ offset });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTimestamp(options?: UseTimestampOptions<false>): Ref<number>;
 export function useTimestamp(options: UseTimestampOptions<true>): UseTimestampControls;

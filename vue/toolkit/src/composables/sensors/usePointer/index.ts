@@ -91,7 +91,7 @@ const keys = Object.keys(defaultState) as Array<keyof UsePointerState>;
  * // Track a specific element, pen only
  * const { x, y, tiltX, tiltY } = usePointer({ target: el, pointerTypes: ['pen'] });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePointer(options: UsePointerOptions = {}): UsePointerReturn {
   const {

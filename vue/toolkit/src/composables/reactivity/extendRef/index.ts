@@ -47,7 +47,7 @@ export type ExtendRefReturn<R extends Ref<unknown>, Extend extends object, Unwra
  * const extended = extendRef(ref(0), { inner: ref(1) }, { unwrap: false });
  * extended.inner.value; // 1
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function extendRef<R extends Ref<unknown>, Extend extends object, Options extends ExtendRefOptions<false>>(ref: R, extend: Extend, options: Options): R & ShallowUnwrapRef<Extend>;
 export function extendRef<R extends Ref<unknown>, Extend extends object, Options extends ExtendRefOptions>(ref: R, extend: Extend, options?: Options): R & Extend;

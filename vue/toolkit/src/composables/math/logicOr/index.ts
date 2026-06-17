@@ -24,7 +24,7 @@ export type LogicOrSource = MaybeRefOrGetter<unknown>;
  * const valid = ref(false);
  * const result = logicOr(valid, () => Date.now() > 0); // true
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function logicOr(...args: LogicOrSource[]): ComputedRef<boolean> {
   return computed<boolean>(() => {
@@ -49,6 +49,6 @@ export function logicOr(...args: LogicOrSource[]): ComputedRef<boolean> {
  * @example
  * const result = or(a, b);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export const or: typeof logicOr = logicOr;

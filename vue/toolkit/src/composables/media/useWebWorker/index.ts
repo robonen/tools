@@ -77,7 +77,7 @@ export interface UseWebWorkerReturn<Data = unknown> {
  * @example
  * const { data } = useWebWorker(() => new Worker(new URL('./worker.ts', import.meta.url)));
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useWebWorker<Data = unknown>(
   source: WebWorkerSource,

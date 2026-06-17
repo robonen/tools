@@ -119,7 +119,7 @@ export interface UseSpeechSynthesisReturn {
  * text.value = 'Updated';
  * speak();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useSpeechSynthesis(
   text: MaybeRefOrGetter<string>,

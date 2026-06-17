@@ -304,7 +304,7 @@ const LISTENER_OPTIONS = { passive: true } as const;
  *   tracks: [{ default: true, src: 'en.vtt', srcLang: 'en', label: 'English', kind: 'subtitles' }],
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMediaControls(
   target: MaybeComputedElementRef<HTMLMediaElement | null | undefined>,

@@ -99,7 +99,7 @@ const defaultSortFn: UseSortedFn = <T>(source: T[], compareFn: UseSortedCompareF
  * useSorted(list, { dirty: true });
  * // list.value is now [1, 2, 3]
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useSorted<T = unknown>(source: Ref<T[]>, compareFn?: UseSortedCompareFn<T>): Ref<T[]>;
 export function useSorted<T = unknown>(source: MaybeRefOrGetter<T[]>, compareFn?: UseSortedCompareFn<T>): ComputedRef<T[]>;

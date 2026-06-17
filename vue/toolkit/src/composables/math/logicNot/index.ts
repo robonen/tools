@@ -21,7 +21,7 @@ export type LogicNotReturn = ComputedRef<boolean>;
  * const isReady = logicNot(isLoading);
  * // isReady.value === true
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function logicNot(v: MaybeRefOrGetter<unknown>): LogicNotReturn {
   return computed(() => !toValue(v));
@@ -30,6 +30,6 @@ export function logicNot(v: MaybeRefOrGetter<unknown>): LogicNotReturn {
 /**
  * Alias for {@link logicNot}.
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export const not: typeof logicNot = logicNot;

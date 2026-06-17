@@ -47,7 +47,7 @@ function getRangesFromSelection(selection: Selection): Range[] {
  * const { text, rects, ranges, selection } = useTextSelection();
  * watch(text, (value) => console.log('selected:', value));
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTextSelection(
   options: UseTextSelectionOptions = {},

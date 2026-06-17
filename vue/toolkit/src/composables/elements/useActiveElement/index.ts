@@ -38,7 +38,7 @@ export type UseActiveElementReturn<T extends HTMLElement = HTMLElement> = Shallo
  * // keep tracking even if the focused node is detached from the DOM
  * const active = useActiveElement({ triggerOnRemoval: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useActiveElement<T extends HTMLElement>(
   options: UseActiveElementOptions = {},

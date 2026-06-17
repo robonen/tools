@@ -128,7 +128,7 @@ import type { FetchExecuteMiddleware, FetchHook, FetchHooks, FetchOptions, Fetch
  * });
  * await billing('/invoices', { method: 'POST', body: { amount: 100 } });
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 export function definePlugin<
   const Name extends string,
@@ -228,7 +228,7 @@ function applyDefaults(
  * Ordering: plugin defaults (in declaration order) → user defaults (user wins).
  * Headers are merged independently through a single Headers instance.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 export function composePlugins(
   plugins: readonly FetchPlugin[] | undefined,
@@ -331,7 +331,7 @@ function composeExecute(middlewares: readonly FetchExecuteMiddleware[]): FetchEx
  * @description Runs all instance-level (plugin) hooks for a single phase, then the
  * optional user per-request hook(s). Avoids allocating an intermediate array per call.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 export async function runHookPhase<C>(
   instance: ReadonlyArray<FetchHook<C>> | undefined,

@@ -76,7 +76,7 @@ export interface UseVibrateReturn {
  * const { vibrate, stop, intervalControls } = useVibrate({ pattern: [300, 100], interval: 2000 });
  * intervalControls?.resume();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useVibrate(options: UseVibrateOptions = {}): UseVibrateReturn {
   const {

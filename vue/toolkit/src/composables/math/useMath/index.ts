@@ -52,7 +52,7 @@ export type UseMathReturn<K extends UseMathKey>
  * const sides = ref([3, 4]);
  * const dist = useMath('hypot', () => sides.value[0], () => sides.value[1]); // 5
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMath<K extends UseMathKey>(
   key: K,

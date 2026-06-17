@@ -67,7 +67,7 @@ export interface UseEyeDropperReturn {
  * if (isSupported.value)
  *   await open();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useEyeDropper(options: UseEyeDropperOptions = {}): UseEyeDropperReturn {
   const {

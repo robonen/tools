@@ -92,7 +92,7 @@ interface DeviceMotionEventIos {
  * const { ensurePermissions, acceleration } = useDeviceMotion({ eventFilter: throttleFilter(100) });
  * button.addEventListener('click', ensurePermissions);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDeviceMotion(options: UseDeviceMotionOptions = {}): UseDeviceMotionReturn {
   const {

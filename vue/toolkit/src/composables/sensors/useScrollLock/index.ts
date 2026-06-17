@@ -91,7 +91,7 @@ function preventDefault(event: TouchEvent, window: Window): void {
  * isLocked.value = true; // lock
  * isLocked.value = false; // unlock
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useScrollLock(
   element: MaybeComputedElementRef,

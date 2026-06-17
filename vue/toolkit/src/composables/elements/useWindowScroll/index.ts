@@ -124,7 +124,7 @@ export interface UseWindowScrollReturn {
  * @example
  * const { x, y, isScrolling, arrivedState, directions } = useWindowScroll();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useWindowScroll(options: UseWindowScrollOptions = {}): UseWindowScrollReturn {
   const {

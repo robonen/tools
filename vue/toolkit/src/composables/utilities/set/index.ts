@@ -22,7 +22,7 @@ import type { Ref } from 'vue';
  * const user = reactive({ name: 'Ada' });
  * set(user, 'name', 'Grace'); // user.name === 'Grace'
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function set<T>(ref: Ref<T>, value: T): void;
 export function set<O extends object, K extends keyof O>(target: O, key: K, value: O[K]): void;

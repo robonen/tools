@@ -37,7 +37,7 @@ function compileTemplate(template: string, tokens: Readonly<Record<string, RegEx
  * @example
  * maskFromTemplate('##/##/####'); // [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function maskFromTemplate(
   template: string,

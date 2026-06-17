@@ -198,7 +198,7 @@ function createMetrics(length: number, itemSize: UseVirtualListItemSize): UseVir
  * // Variable heights and a wider overscan buffer.
  * const { list } = useVirtualList(items, { itemHeight: i => (i % 2 ? 40 : 80), overscan: 10 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useVirtualList<T = unknown>(
   list: MaybeRefOrGetter<readonly T[]>,

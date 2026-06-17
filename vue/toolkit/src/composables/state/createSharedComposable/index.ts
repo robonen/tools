@@ -20,7 +20,7 @@ export type CreateSharedComposableReturn<Fn extends AnyFunction>
  * // Both components share a single set of listeners and reactive state.
  * const { x, y } = useSharedMouse();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function createSharedComposable<Fn extends AnyFunction>(
   composable: Fn,

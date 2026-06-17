@@ -19,7 +19,7 @@ export interface UseOnlineOptions extends ConfigurableWindow {}
  * @example
  * const online = useOnline();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useOnline(options: UseOnlineOptions = {}): Readonly<ShallowRef<boolean>> {
   const { window = defaultWindow } = options;

@@ -50,7 +50,7 @@ export interface UseDeviceOrientationReturn {
  * @example
  * const { isSupported, isAbsolute, alpha, beta, gamma } = useDeviceOrientation();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDeviceOrientation(options: UseDeviceOrientationOptions = {}): UseDeviceOrientationReturn {
   const { window = defaultWindow } = options;

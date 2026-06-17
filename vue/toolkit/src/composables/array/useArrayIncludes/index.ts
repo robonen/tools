@@ -50,7 +50,7 @@ function isArrayIncludesOptions<T, V>(value: unknown): value is UseArrayIncludes
  * const list = ref(['a', 'b', 'a']);
  * const fromSecond = useArrayIncludes(list, 'a', { fromIndex: 1 }); // true
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayIncludes<T, V = T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

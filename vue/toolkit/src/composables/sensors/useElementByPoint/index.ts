@@ -64,7 +64,7 @@ export interface UseElementByPointReturn<Multiple extends boolean = false>
  * @example
  * const { element } = useElementByPoint({ x, y, multiple: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useElementByPoint<Multiple extends boolean = false>(
   options: UseElementByPointOptions<Multiple>,

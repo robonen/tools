@@ -68,7 +68,7 @@ export interface UsePointerLockReturn {
  * const { lock } = usePointerLock();
  * function onDblClick(e: MouseEvent) { lock(e); }
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePointerLock(
   target?: MaybeComputedElementRef,

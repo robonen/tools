@@ -105,7 +105,7 @@ type KeyRefs = Record<string, Ref<boolean> | ShallowRef<boolean> | ComputedRef<b
  * @example
  * const { ctrl, a, current } = useMagicKeys({ reactive: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMagicKeys(options?: UseMagicKeysOptions<false>): MagicKeys<false>;
 export function useMagicKeys(options: UseMagicKeysOptions<true>): MagicKeys<true>;

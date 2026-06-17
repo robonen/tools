@@ -23,7 +23,7 @@ export type LogicAndReturn = ComputedRef<boolean>;
  * const canProceed = logicAnd(isReady, hasAccess, () => true);
  * // canProceed.value === true
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function logicAnd(...args: Array<MaybeRefOrGetter<unknown>>): LogicAndReturn {
   return computed(() => args.every(arg => Boolean(toValue(arg))));
@@ -32,6 +32,6 @@ export function logicAnd(...args: Array<MaybeRefOrGetter<unknown>>): LogicAndRet
 /**
  * Alias for {@link logicAnd}.
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export const and: typeof logicAnd = logicAnd;

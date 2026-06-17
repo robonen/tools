@@ -31,7 +31,7 @@ export interface UseDevicePixelRatioReturn {
  * @example
  * const { pixelRatio } = useDevicePixelRatio();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDevicePixelRatio(options: UseDevicePixelRatioOptions = {}): UseDevicePixelRatioReturn {
   const { window = defaultWindow } = options;

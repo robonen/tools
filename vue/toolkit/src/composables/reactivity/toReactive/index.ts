@@ -33,7 +33,7 @@ const OWN_PROPERTY_DESCRIPTOR: PropertyDescriptor = {
  * obj.value = { name: 'b' };
  * r.name; // 'b'
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function toReactive<T extends object>(
   objectRef: MaybeRef<T>,

@@ -186,7 +186,7 @@ export interface UseFileSystemAccessReturn<T = string | ArrayBuffer | Blob> {
  * // Read raw bytes
  * const { data } = useFileSystemAccess({ dataType: 'ArrayBuffer' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useFileSystemAccess(): UseFileSystemAccessReturn<string | ArrayBuffer | Blob>;
 export function useFileSystemAccess(options: UseFileSystemAccessOptions & { dataType: 'Text' }): UseFileSystemAccessReturn<string>;

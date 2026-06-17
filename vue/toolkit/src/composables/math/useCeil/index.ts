@@ -18,7 +18,7 @@ export type UseCeilReturn = ComputedRef<number>;
  * @example
  * const ceiled = useCeil(() => 7.004); // 8
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useCeil(value: MaybeRefOrGetter<number>): UseCeilReturn {
   return computed<number>(() => Math.ceil(toValue(value)));

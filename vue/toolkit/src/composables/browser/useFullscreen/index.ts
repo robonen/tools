@@ -106,7 +106,7 @@ const listenerOptions = { capture: false, passive: true } as const;
  * // Fullscreen the whole page
  * const { toggle } = useFullscreen();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useFullscreen(
   target?: MaybeComputedElementRef,

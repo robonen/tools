@@ -129,7 +129,7 @@ function createWorkerBlobUrl(
  *   timeout: 5000,
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useWebWorkerFn<T extends AnyFunction>(
   fn: T,

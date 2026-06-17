@@ -89,7 +89,7 @@ const runDirect: IgnoredUpdater = updater => updater();
  *   transform: { ltr: value => String(value) },
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function syncRef<L, R = L>(
   left: Ref<L>,

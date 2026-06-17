@@ -89,7 +89,7 @@ export interface UseDevicesListReturn {
  * const { devices, ensurePermissions, permissionGranted } = useDevicesList();
  * await ensurePermissions();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDevicesList(options: UseDevicesListOptions = {}): UseDevicesListReturn {
   const {

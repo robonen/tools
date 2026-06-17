@@ -61,7 +61,7 @@ export type UseTimeoutReturn
  * // Run a callback when the timeout elapses
  * useTimeout(5000, { callback: refresh });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTimeout(interval?: MaybeRefOrGetter<number>, options?: UseTimeoutOptions<false>): ComputedRef<boolean>;
 export function useTimeout(interval: MaybeRefOrGetter<number>, options: UseTimeoutOptions<true>): UseTimeoutControls;

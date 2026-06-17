@@ -20,7 +20,7 @@ export type UseArrayEveryReturn = ComputedRef<boolean>;
  * const items = [ref(2), ref(4), ref(6)];
  * const allEven = useArrayEvery(items, n => n % 2 === 0); // true
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayEvery<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

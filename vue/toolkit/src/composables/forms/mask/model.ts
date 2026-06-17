@@ -177,7 +177,7 @@ export class MaskModel implements ElementState {
  * maskTransform('1234567890', maskPhoneOptions({ template: '+1 (###) ###-####' }));
  * // '+1 (123) 456-7890'
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function maskTransform(value: string, options: MaskOptions): string;
 export function maskTransform(state: ElementState, options: MaskOptions): ElementState;
@@ -210,7 +210,7 @@ export function maskTransform(valueOrState: string | ElementState, options: Mask
  * unmask('+1 (123) 456-7890', maskPhoneOptions({ template: '+1 (###) ###-####' }));
  * // '1234567890'
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function unmask(maskedValue: string, options: MaskOptions): string {
   const resolved = resolveMaskOptions(options);

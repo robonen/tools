@@ -67,7 +67,7 @@ function clampedNumericProjector(input: number, from: readonly [number, number],
  *   (n, from, to) => to[0] + Math.round((n - from[0]) / (from[1] - from[0]) * (to[1].charCodeAt(0) - to[0].charCodeAt(0))),
  * );
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 /* @__NO_SIDE_EFFECTS__ */
 export function createGenericProjection<F = number, T = number>(
@@ -101,7 +101,7 @@ export function createGenericProjection<F = number, T = number>(
  * const project = createProjection([0, 10], [0, 100], { clamp: true });
  * const out = project(20); // 100 (clamped)
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 /* @__NO_SIDE_EFFECTS__ */
 export function createProjection(
@@ -143,7 +143,7 @@ export function createProjection(
  * const input = ref(150);
  * const projected = useProjection(input, [0, 100], [0, 10], { clamp: true }); // 10
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 /* @__NO_SIDE_EFFECTS__ */
 export function useProjection(

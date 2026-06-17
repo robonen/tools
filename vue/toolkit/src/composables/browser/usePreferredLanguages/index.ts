@@ -24,7 +24,7 @@ import { useEventListener } from '@/composables/browser/useEventListener';
  * // Pass a custom window (e.g. an iframe)
  * const languages = usePreferredLanguages({ window: iframe.contentWindow });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePreferredLanguages(options: ConfigurableWindow = {}): ShallowRef<readonly string[]> {
   const { window = defaultWindow } = options;

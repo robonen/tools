@@ -31,7 +31,7 @@ function isInClosedPopover(el: Element): boolean {
  *
  * @param {MaybeComputedElementRef} target Element whose siblings should be aria-hidden
  *
- * @since 0.0.14
+ * @since 0.0.1
  */
 export function useHideOthers(target: MaybeComputedElementRef): void {
   if (!defaultWindow) return;

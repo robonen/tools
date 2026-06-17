@@ -87,7 +87,7 @@ export type RefWithControlReturn<T>
  * });
  * positive.value = -1; // rejected, stays 1
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function refWithControl<T>(
   initial: T,
@@ -154,6 +154,6 @@ export function refWithControl<T>(
  * @category Reactivity
  * @description Alias of {@link refWithControl}.
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export const controlledRef = refWithControl;

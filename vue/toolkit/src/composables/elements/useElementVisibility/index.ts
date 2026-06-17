@@ -56,7 +56,7 @@ export type UseElementVisibilityReturn<Controls extends boolean = false>
  * @example
  * const { isVisible, stop } = useElementVisibility(el, { controls: true, once: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useElementVisibility(
   target: MaybeComputedElementRef,

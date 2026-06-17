@@ -28,7 +28,7 @@ export interface MaskPhoneParams {
  * @example
  * maskPhoneOptions({ template: '+1 (###) ###-####' });
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function maskPhoneOptions(params: MaskPhoneParams): MaskOptions {
   return { mask: maskFromTemplate(params.template, params.tokens) };

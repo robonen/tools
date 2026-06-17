@@ -120,7 +120,7 @@ const CSS_DISABLE_TRANS = '*,*::before,*::after{-webkit-transition:none!importan
  * // Read the resolved system + effective state
  * const { system, state } = useColorMode();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useColorMode<T extends string = BasicColorMode>(
   options: UseColorModeOptions<T> = {},

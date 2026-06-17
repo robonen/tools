@@ -77,7 +77,7 @@ export interface UseMousePressedReturn {
  * // Track presses only on a specific element, ignore touch
  * const { pressed } = useMousePressed({ target: el, touch: false });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMousePressed(options: UseMousePressedOptions = {}): UseMousePressedReturn {
   const {

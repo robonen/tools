@@ -83,7 +83,7 @@ interface NetworkInformation extends EventTarget {
  * @example
  * const { isOnline, offlineAt, downlink, effectiveType, saveData, type } = useNetwork();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useNetwork(options: UseNetworkOptions = {}): UseNetworkReturn {
   const { window = defaultWindow } = options;

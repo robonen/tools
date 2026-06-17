@@ -40,7 +40,7 @@ export type ReactivePickPredicate<T extends object>
  * // predicate form — keep only numeric values
  * const filtered = reactivePick(state, (value) => typeof value === 'number');
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function reactivePick<T extends object, K extends keyof T>(
   obj: T,

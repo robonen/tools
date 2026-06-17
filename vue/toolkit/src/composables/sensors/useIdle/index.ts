@@ -81,7 +81,7 @@ export interface UseIdleReturn {
  * @example
  * const { idle } = useIdle(10_000, { events: ['keydown'] });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useIdle(
   timeout: number = ONE_MINUTE,

@@ -86,7 +86,7 @@ export function onKeyStroke(key: KeyFilter, handler: (event: KeyboardEvent) => v
  * onKeyStroke(['a', 'b', 'c'], (e) => console.log(e.key));
  * onKeyStroke((e) => e.metaKey && e.key === 's', save, { eventName: 'keydown' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function onKeyStroke(handler: (event: KeyboardEvent) => void, options?: OnKeyStrokeOptions): VoidFunction;
 
@@ -154,7 +154,7 @@ export function onKeyStroke(...args: any[]): VoidFunction {
  * @example
  * onKeyDown('Enter', submit);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function onKeyDown(key: KeyFilter, handler: (event: KeyboardEvent) => void, options: Omit<OnKeyStrokeOptions, 'eventName'> = {}): VoidFunction {
   return onKeyStroke(key, handler, { ...options, eventName: 'keydown' });
@@ -173,7 +173,7 @@ export function onKeyDown(key: KeyFilter, handler: (event: KeyboardEvent) => voi
  * @example
  * onKeyUp('Escape', close);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function onKeyUp(key: KeyFilter, handler: (event: KeyboardEvent) => void, options: Omit<OnKeyStrokeOptions, 'eventName'> = {}): VoidFunction {
   return onKeyStroke(key, handler, { ...options, eventName: 'keyup' });
@@ -192,7 +192,7 @@ export function onKeyUp(key: KeyFilter, handler: (event: KeyboardEvent) => void,
  * @example
  * onKeyPressed('a', type);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function onKeyPressed(key: KeyFilter, handler: (event: KeyboardEvent) => void, options: Omit<OnKeyStrokeOptions, 'eventName'> = {}): VoidFunction {
   return onKeyStroke(key, handler, { ...options, eventName: 'keypress' });

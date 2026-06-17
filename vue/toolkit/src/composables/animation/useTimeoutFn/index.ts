@@ -58,7 +58,7 @@ export interface UseTimeoutFnReturn<Args extends unknown[]> {
  * // Fire once now and again after the delay
  * useTimeoutFn(refresh, 5000, { immediateCallback: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useTimeoutFn<T extends AnyFunction>(
   cb: T,

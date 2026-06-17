@@ -29,7 +29,7 @@ export interface UseFocusWithinReturn {
  * const el = useTemplateRef<HTMLElement>('el');
  * const { focused } = useFocusWithin(el);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useFocusWithin(
   target: MaybeComputedElementRef,

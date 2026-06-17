@@ -35,7 +35,7 @@ const hasNativeFindLast = typeof Array.prototype.findLast === 'function';
  * const list = ref([1, 2, 3, 4]);
  * const found = useArrayFindLast(list, n => n % 2 === 0); // 4
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayFindLast<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

@@ -24,7 +24,7 @@ export type RefAutoResetReturn<T> = Ref<T>;
  * const fallback = ref('idle');
  * const status = refAutoReset(fallback, delay);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function refAutoReset<T>(
   defaultValue: MaybeRefOrGetter<T>,

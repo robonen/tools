@@ -163,7 +163,7 @@ export interface UseWebNotificationReturn {
  * const { show } = useWebNotification();
  * show({ title: 'Override', body: 'Per-call body' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useWebNotification(
   options: UseWebNotificationOptions = {},

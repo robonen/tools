@@ -15,7 +15,7 @@ const ASCII_ZERO = 0x30;
  * luhn('4111 1111 1111 1111'); // true
  * luhn('4111 1111 1111 1112'); // false
  *
- * @since 0.0.2
+ * @since 0.0.1
  */
 export function luhn(value: string): boolean {
   const digits = value.replaceAll(NON_DIGIT, '');

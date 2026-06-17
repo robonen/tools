@@ -29,7 +29,7 @@ import type {
  * // </div>
  * // <button @click="push({ name: '' })">add</button>
  *
- * @since 0.0.16
+ * @since 0.0.14
  */
 export function useFieldArray<T = unknown>(
   path: MaybeRefOrGetter<string>,

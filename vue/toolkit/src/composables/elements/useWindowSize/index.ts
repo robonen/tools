@@ -76,7 +76,7 @@ export interface UseWindowSizeReturn {
  * // Track the pinch-zoom aware visual viewport on mobile
  * const { width, height } = useWindowSize({ type: 'visual' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useWindowSize(options: UseWindowSizeOptions = {}): UseWindowSizeReturn {
   const {

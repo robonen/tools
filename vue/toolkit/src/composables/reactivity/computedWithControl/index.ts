@@ -78,7 +78,7 @@ export type ComputedWithControlRef<T>
  *   set: (v) => { base.value = v / 2; },
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function computedWithControl<T>(
   source: WatchSource | MultiWatchSources,
@@ -157,6 +157,6 @@ function noopTrigger(): void {}
  * @category Reactivity
  * @description Alias of {@link computedWithControl}.
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export const controlledComputed = computedWithControl;

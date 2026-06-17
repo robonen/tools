@@ -52,7 +52,7 @@ export interface UseToNumberOptions {
  * // custom converter and clamping
  * const n = useToNumber(input, { method: v => Math.round(+v), min: 0, max: 100 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useToNumber(
   value: MaybeRefOrGetter<number | string>,

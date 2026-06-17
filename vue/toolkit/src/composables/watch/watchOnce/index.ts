@@ -21,7 +21,7 @@ export type WatchOnceOptions<Immediate = boolean> = Omit<WatchOptions<Immediate>
  * @example
  * watchOnce([a, b], ([a, b]) => console.log(a, b));
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function watchOnce<T>(
   source: WatchSource<T>,

@@ -14,7 +14,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
  * const list = ref([1, 2, 3]);
  * const doubled = useArrayMap(list, n => n * 2); // [2, 4, 6]
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayMap<T, U = T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

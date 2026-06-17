@@ -14,7 +14,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
  * const list = ref([1, 2, 3]);
  * const found = useArrayFind(list, n => n > 1); // 2
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayFind<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

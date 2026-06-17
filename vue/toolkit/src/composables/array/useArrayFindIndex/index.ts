@@ -16,7 +16,7 @@ export type UseArrayFindIndexReturn = ComputedRef<number>;
  * const list = ref([1, 2, 3]);
  * const index = useArrayFindIndex(list, n => n > 1); // 1
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayFindIndex<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

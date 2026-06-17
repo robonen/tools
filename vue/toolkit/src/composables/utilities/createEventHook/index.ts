@@ -105,7 +105,7 @@ export interface CreateEventHookReturn<T = unknown> {
  * hook.on(async () => { await save(); });
  * await hook.trigger(); // resolves after save() completes
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function createEventHook<T = unknown>(
   options: CreateEventHookOptions = {},

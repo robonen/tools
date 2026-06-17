@@ -89,7 +89,7 @@ const DEFAULT_INTERVAL_MILLISECONDS = 100;
  *   items.push(...await fetchNextPage());
  * }, { distance: 10 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useInfiniteScroll<T extends InfiniteScrollElement = InfiniteScrollElement>(
   target: MaybeRefOrGetter<T>,

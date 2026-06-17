@@ -30,7 +30,7 @@ export type UseParentElementReturn
  * const el = useTemplateRef<HTMLElement>('el');
  * const parent = useParentElement(el);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useParentElement(
   element: MaybeComputedElementRef | MaybeRefOrGetter<HTMLElement | SVGElement | null | undefined> = useCurrentElement<HTMLElement | SVGAElement>(),

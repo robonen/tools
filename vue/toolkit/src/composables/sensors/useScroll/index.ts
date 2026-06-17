@@ -181,7 +181,7 @@ function getDirectionMultiplier(node: Element, window: Window): number {
  * @example
  * const { x, y, isScrolling, arrivedState, measure } = useScroll(el);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useScroll(
   target: UseScrollTarget,

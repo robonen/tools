@@ -61,7 +61,7 @@ function accurateMultiply(value: number, power: number): number {
  * const digits = ref(2);
  * const result = usePrecision(value, digits); // reacts to value and digits
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePrecision(
   value: MaybeRefOrGetter<number>,

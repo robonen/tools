@@ -95,7 +95,7 @@ function deepAssign(target: Record<string, unknown>, source: Record<string, unkn
  * const [name, nameProps] = form.defineField('name');
  * // <input v-model="name" v-bind="nameProps">
  *
- * @since 0.0.16
+ * @since 0.0.14
  */
 export function useForm<TInput extends object, TOutput = TInput>(
   options: UseFormOptions<TInput, TOutput> = {},

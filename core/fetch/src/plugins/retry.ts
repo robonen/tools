@@ -44,7 +44,7 @@ function shouldRetryStatus(options: ResolvedFetchOptions, status: number): boole
  *
  * Auto-registered by `createFetch`; disable per-request via `retry: false`.
  *
- * @since 0.1.0
+ * @since 0.0.1
  */
 export function retryPlugin() {
   return definePlugin({

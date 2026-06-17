@@ -110,7 +110,7 @@ const registry = new Map<EventBusIdentifier<unknown>, PubSub<{ '*': EventBusList
  * bus.once((event, payload) => console.log(event, payload?.id));
  * bus.emit('open', { id: 1 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useEventBus<T = unknown, P = unknown>(
   key: EventBusIdentifier<T>,

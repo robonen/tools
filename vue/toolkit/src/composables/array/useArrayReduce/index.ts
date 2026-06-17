@@ -19,7 +19,7 @@ export type UseArrayReduceReturn<T> = ComputedRef<T>;
  * const list = ref([1, 2, 3, 4]);
  * const sum = useArrayReduce(list, (acc, n) => acc + n); // 10
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayReduce<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,
@@ -40,7 +40,7 @@ export function useArrayReduce<T>(
  * const list = ref([1, 2, 3, 4]);
  * const sum = useArrayReduce(list, (acc, n) => acc + n, 100); // 110
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayReduce<T, U>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

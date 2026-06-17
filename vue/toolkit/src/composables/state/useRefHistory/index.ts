@@ -159,7 +159,7 @@ function defaultDump<Raw, Serialized>(clone?: boolean | ((value: Raw) => Raw)): 
  * const state = ref({ items: [] });
  * const { history } = useRefHistory(state, { deep: true, capacity: 10 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useRefHistory<Raw, Serialized = Raw>(
   source: Ref<Raw>,

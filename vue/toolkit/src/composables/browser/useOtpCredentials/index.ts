@@ -151,7 +151,7 @@ const DEFAULT_TRANSPORT: OTPTransportType[] = ['sms'];
  * const { receive } = useOtpCredentials();
  * receive({ signal: AbortSignal.timeout(30_000) });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useOtpCredentials(options: UseOtpCredentialsOptions = {}): UseOtpCredentialsReturn {
   const {

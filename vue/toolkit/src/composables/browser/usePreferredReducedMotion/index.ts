@@ -30,7 +30,7 @@ export type UsePreferredReducedMotionReturn = ComputedRef<ReducedMotionType>;
  *   transitionDuration.value = motion.value === 'reduce' ? 0 : 200;
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePreferredReducedMotion(
   options: UsePreferredReducedMotionOptions = {},

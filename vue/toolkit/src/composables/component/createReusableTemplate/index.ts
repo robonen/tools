@@ -117,7 +117,7 @@ function makePair<
  * // <DefineItem v-slot="{ label }">{{ label }}</DefineItem>
  * // <ReuseItem label="A" /> <ReuseItem label="B" />
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function createReusableTemplate<
   Bindings extends Record<string, any>,

@@ -42,7 +42,7 @@ export interface WatchThrottledOptions<Immediate> extends WatchOptions<Immediate
  * @example
  * watchThrottled([a, b], ([a, b]) => save(a, b), { throttle: 1000, leading: false });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function watchThrottled<T, Immediate extends Readonly<boolean> = false>(
   source: WatchSource<T>,

@@ -40,7 +40,7 @@ export type { MaskInputBindings, UseMaskedInputOptions, UseMaskedInputReturn } f
  *   onAccept: ({ unmasked }) => save(unmasked),
  * });
  *
- * @since 0.0.17
+ * @since 0.0.14
  */
 export function useMaskedInput(options: UseMaskedInputOptions): UseMaskedInputReturn {
   const masked = shallowRef('');

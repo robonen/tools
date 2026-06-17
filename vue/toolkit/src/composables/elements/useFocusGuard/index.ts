@@ -18,7 +18,7 @@ let counter = 0;
  * @example
  * useFocusGuard('my-namespace');
  *
- * @since 0.0.2
+ * @since 0.0.3
  */
 export function useFocusGuard(namespace?: string) {
   const manager = focusGuard(namespace);

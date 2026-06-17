@@ -71,7 +71,7 @@ export interface UseCycleListReturn<T> {
  * const { index } = useCycleList(['a', 'b', 'c']);
  * index.value = 2; // jump directly to 'c'
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useCycleList<T>(
   list: MaybeRefOrGetter<T[]>,

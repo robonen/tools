@@ -50,7 +50,7 @@ export type UseCurrentElementReturn<
  * const child = useTemplateRef('child');
  * const el = useCurrentElement(child);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useCurrentElement<
   T extends MaybeElement = MaybeElement,

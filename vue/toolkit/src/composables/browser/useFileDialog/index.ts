@@ -159,7 +159,7 @@ function toFileList(files: File[] | FileList | undefined): FileList | null {
  * const { open } = useFileDialog();
  * open({ multiple: false, accept: '.pdf' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useFileDialog(options: UseFileDialogOptions = {}): UseFileDialogReturn {
   const {

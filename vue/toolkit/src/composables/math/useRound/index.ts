@@ -35,7 +35,7 @@ export interface UseRoundOptions {
  * const value = ref(0.5);
  * const rounded = useRound(() => value.value); // 1
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useRound(value: MaybeRefOrGetter<number>, options: UseRoundOptions = {}): ComputedRef<number> {
   const { digits = 0 } = options;

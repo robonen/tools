@@ -71,7 +71,7 @@ export interface UsePerformanceObserverReturn {
  *   buffered: true,
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePerformanceObserver(
   callback: PerformanceObserverCallback,

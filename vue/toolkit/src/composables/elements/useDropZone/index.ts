@@ -79,7 +79,7 @@ type DropZoneEventType = 'enter' | 'over' | 'leave' | 'drop';
  *   onDrop: (files) => console.log(files),
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useDropZone(
   target: MaybeComputedElementRef | MaybeRefOrGetter<Document | null | undefined>,

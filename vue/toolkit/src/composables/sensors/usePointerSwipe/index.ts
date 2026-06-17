@@ -110,7 +110,7 @@ export interface UsePointerSwipeReturn {
  *   onSwipeEnd(e, dir) { console.log(dir); },
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePointerSwipe(
   target: MaybeComputedElementRef,

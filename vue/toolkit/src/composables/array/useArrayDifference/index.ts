@@ -58,7 +58,7 @@ function isArrayDifferenceOptions<T>(value: unknown): value is UseArrayDifferenc
  * const b = ref([2, 3, 4]);
  * const symmetric = useArrayDifference(a, b, { symmetric: true }); // [1, 4]
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayDifference<T>(
   list: MaybeRefOrGetter<T[]>,

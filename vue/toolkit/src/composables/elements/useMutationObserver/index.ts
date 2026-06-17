@@ -61,7 +61,7 @@ export interface UseMutationObserverReturn {
  * @example
  * const { pause, resume } = useMutationObserver([elA, elB], onMutate, { childList: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMutationObserver(
   target: MaybeComputedElementRef | MaybeComputedElementRef[] | MaybeRefOrGetter<MaybeElement[]>,

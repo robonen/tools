@@ -70,7 +70,7 @@ export type UseNowReturn<Controls extends boolean>
  * // Run a callback on every update
  * useNow({ interval: 1000, callback: date => console.log(date.toISOString()) });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useNow(options?: UseNowOptions<false>): Ref<Date>;
 export function useNow(options: UseNowOptions<true>): UseNowControls;

@@ -44,7 +44,7 @@ const FILE_EXTENSION_RE = /\.([a-z0-9]+)$/i;
  * const isDark = useDark();
  * const favicon = useFavicon(() => isDark.value ? '/dark.png' : '/light.png');
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useFavicon(
   newIcon: MaybeRefOrGetter<string | null | undefined>,

@@ -88,7 +88,7 @@ const identity: ParallaxAdjust = i => i;
  * // Viewport-relative, with custom sensitivity on the mouse fallback
  * const { roll, tilt } = useParallax(null, { mouseTiltAdjust: i => i * 2 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useParallax(
   target?: MaybeComputedElementRef | null,

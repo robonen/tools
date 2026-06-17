@@ -14,7 +14,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
  * const list = ref([1, 2, 3, 4]);
  * const even = useArrayFilter(list, n => n % 2 === 0); // [2, 4]
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayFilter<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

@@ -113,7 +113,7 @@ export interface UseLocalFontsReturn {
  * const { fonts, query } = useLocalFonts();
  * await query({ postscriptNames: ['Arial-BoldMT'] });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useLocalFonts(options: UseLocalFontsOptions = {}): UseLocalFontsReturn {
   const {

@@ -123,7 +123,7 @@ const defaultKey = (...args: unknown[]): MemoizeCacheKey => JSON.stringify(args)
  * const square = useMemoize((n: number) => n * n, { getKey: n => n });
  * const size = computed(() => (square.cache as Map<number, number>).size);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMemoize<Result, Args extends unknown[]>(
   resolver: (...args: Args) => Result,

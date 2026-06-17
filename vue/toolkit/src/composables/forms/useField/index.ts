@@ -38,7 +38,7 @@ import type {
  * // Standalone (no form ancestor)
  * const { value, errors } = useField('search', { initialValue: '', schema });
  *
- * @since 0.0.16
+ * @since 0.0.14
  */
 export function useField<T = unknown>(
   path: MaybeRefOrGetter<string>,

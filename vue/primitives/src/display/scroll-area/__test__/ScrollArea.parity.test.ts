@@ -149,19 +149,22 @@ describe('scroll-area — ref forwarding', () => {
 
 describe('scroll-area — glimpse type', () => {
   it('accepts type="glimpse" and reveals scrollbars on pointer enter', async () => {
-    track(mount(makeApp({ type: 'glimpse', scrollHideDelay: 5000 }), { attachTo: document.body }));
+    const w = track(mount(makeApp({ type: 'glimpse', scrollHideDelay: 5000 }), { attachTo: document.body }));
     await waitFrames();
-    const root = document.querySelector('[dir]') as HTMLElement;
+    const root = w.element as HTMLElement;
     root.dispatchEvent(new PointerEvent('pointerenter'));
     await waitFrames();
-    expect(document.querySelectorAll('[data-state="visible"]').length).toBeGreaterThan(0);
+    // Scope to this component's root: browser-mode suites share one document,
+    // so a global query can also count scrollbars mounted by other suites.
+    expect(root.querySelectorAll('[data-state="visible"]').length).toBeGreaterThan(0);
   });
 
   it('glimpse stays hidden before any interaction', async () => {
-    track(mount(makeApp({ type: 'glimpse', scrollHideDelay: 5000 }), { attachTo: document.body }));
+    const w = track(mount(makeApp({ type: 'glimpse', scrollHideDelay: 5000 }), { attachTo: document.body }));
     await waitFrames();
-    // No pointer enter / scroll => no visible scrollbar yet.
-    expect(document.querySelectorAll('[data-state="visible"]').length).toBe(0);
+    // No pointer enter / scroll => no visible scrollbar yet. Scoped to this
+    // component's root (a global query can pick up other suites' scrollbars).
+    expect((w.element as HTMLElement).querySelectorAll('[data-state="visible"]').length).toBe(0);
   });
 });
 

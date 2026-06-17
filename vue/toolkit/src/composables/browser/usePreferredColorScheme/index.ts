@@ -16,7 +16,7 @@ export type ColorSchemePreference = 'dark' | 'light' | 'no-preference';
  * @example
  * const scheme = usePreferredColorScheme();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function usePreferredColorScheme(
   options: ConfigurableWindow = {},

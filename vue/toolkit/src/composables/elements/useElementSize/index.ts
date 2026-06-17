@@ -41,7 +41,7 @@ export interface UseElementSizeReturn {
  * @example
  * const { width, height, stop } = useElementSize(el, { width: 100, height: 100 }, { box: 'border-box' });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useElementSize(
   target: MaybeComputedElementRef,

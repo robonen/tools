@@ -58,7 +58,7 @@ export type UseKeyModifierReturn<Initial> = ShallowRef<Initial extends boolean ?
  * @example
  * const shift = useKeyModifier('Shift', { initial: false, events: ['keydown', 'keyup'] });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useKeyModifier<Initial extends boolean | null = null>(
   modifier: KeyModifier,

@@ -42,7 +42,7 @@ export type UseArrayUniqueReturn<T = unknown> = ComputedRef<T[]>;
  * const list = ref([1.1, 1.4, 2.2]);
  * const byFloor = useArrayUnique(list, (a, b) => Math.floor(a) === Math.floor(b)); // [1.1, 2.2]
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useArrayUnique<T>(
   list: MaybeRefOrGetter<Array<MaybeRefOrGetter<T>>>,

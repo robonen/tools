@@ -17,7 +17,7 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
  * // works with getters
  * const label = useToString(() => `item-${id.value}`);
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useToString(
   value: MaybeRefOrGetter<unknown>,

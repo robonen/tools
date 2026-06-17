@@ -112,7 +112,7 @@ export interface UseBluetoothReturn {
  *   optionalServices: ['battery_service'],
  * });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useBluetooth(options: UseBluetoothOptions = {}): UseBluetoothReturn {
   const {

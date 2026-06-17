@@ -140,7 +140,7 @@ export interface UseScriptTagReturn {
  * await load();
  * unload();
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useScriptTag(
   src: MaybeRefOrGetter<string>,

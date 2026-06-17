@@ -27,7 +27,7 @@ import type { MaybeComputedRefArgs } from '@/types';
  * const list = ref([ref(2), () => 4, 6]);
  * const avg = useAverage(list); // 4
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useAverage(array: MaybeRefOrGetter<Array<MaybeRefOrGetter<number>>>): ComputedRef<number>;
 export function useAverage(...args: Array<MaybeRefOrGetter<number>>): ComputedRef<number>;

@@ -30,7 +30,7 @@ export type RefDebouncedReturn<T> = Readonly<Ref<T>>;
  * // Guarantee the debounced value advances at least every 1000ms
  * const debounced = refDebounced(input, 300, { maxWait: 1000 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function refDebounced<T>(
   source: MaybeRefOrGetter<T>,

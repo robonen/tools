@@ -61,7 +61,7 @@ function matchSsrWidth(query: string, width: number): boolean {
  * // Resolve width queries during SSR to avoid hydration flicker
  * const isWide = useMediaQuery('(min-width: 1024px)', { ssrWidth: 1280 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useMediaQuery(
   query: MaybeRefOrGetter<string>,

@@ -149,7 +149,7 @@ function resolveTransform<R, S>(clone?: boolean | CloneFn<R>): FnCloneOrBypass<R
  * const state = ref({ items: [] });
  * const { commit, undo } = useManualRefHistory(state, { clone: true, capacity: 10 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useManualRefHistory<Raw, Serialized = Raw>(
   source: Ref<Raw>,

@@ -52,7 +52,7 @@ export interface WatchDebouncedOptions<Immediate> extends WatchOptions<Immediate
  * // Guarantee the callback runs at least every 1000ms while typing continuously
  * watchDebounced(input, save, { debounce: 300, maxWait: 1000 });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function watchDebounced<T, Immediate extends Readonly<boolean> = false>(
   source: WatchSource<T>,

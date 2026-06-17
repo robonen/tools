@@ -31,7 +31,7 @@ export interface WheneverOptions<Immediate = boolean> extends WatchOptions<Immed
  * @example
  * whenever(() => count.value > 5, () => console.log('over five'), { once: true });
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function whenever<T>(source: WatchSource<T>, cb: WatchCallback<Truthy<T>, T | undefined>, options?: WheneverOptions<true>): WatchHandle;
 export function whenever<T>(source: WatchSource<T>, cb: WatchCallback<Truthy<T>, T>, options?: WheneverOptions<false>): WatchHandle;

@@ -96,7 +96,7 @@ export interface UseClipboardItemsReturn<Optional extends boolean> {
  * const { content } = useClipboardItems({ read: true });
  * copy(async () => buildClipboardItems());
  *
- * @since 0.0.15
+ * @since 0.0.14
  */
 export function useClipboardItems(options?: UseClipboardItemsOptions<undefined>): UseClipboardItemsReturn<false>;
 export function useClipboardItems(options: UseClipboardItemsOptions<MaybeRefOrGetter<ClipboardItems>>): UseClipboardItemsReturn<true>;

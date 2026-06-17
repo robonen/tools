@@ -159,12 +159,17 @@ describe('scroll-area — glimpse type', () => {
     expect(root.querySelectorAll('[data-state="visible"]').length).toBeGreaterThan(0);
   });
 
-  it('glimpse stays hidden before any interaction', async () => {
+  it('glimpse stays hidden when the pointer is away', async () => {
     const w = track(mount(makeApp({ type: 'glimpse', scrollHideDelay: 5000 }), { attachTo: document.body }));
+    const root = w.element as HTMLElement;
+    // Browser mode uses a real cursor: the area mounts at the top-left, so a
+    // leftover pointer from a previous suite can land on it and fire a stray
+    // `pointerenter` (revealing the glimpse). Let that settle, then assert the
+    // deterministic "pointer not over the area" state via `pointerleave`.
     await waitFrames();
-    // No pointer enter / scroll => no visible scrollbar yet. Scoped to this
-    // component's root (a global query can pick up other suites' scrollbars).
-    expect((w.element as HTMLElement).querySelectorAll('[data-state="visible"]').length).toBe(0);
+    root.dispatchEvent(new PointerEvent('pointerleave'));
+    await waitFrames();
+    expect(root.querySelectorAll('[data-state="visible"]').length).toBe(0);
   });
 });
 

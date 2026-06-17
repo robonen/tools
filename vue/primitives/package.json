@@ -15,11 +15,12 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "vue/primitives"
   },
-  "packageManager": "pnpm@10.34.1",
+  "packageManager": "pnpm@11.7.0",
   "engines": {
     "node": ">=24.16.0"
   },
   "type": "module",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
@@ -58,23 +59,26 @@
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
     "@vitest/browser": "catalog:",
-    "@vitest/browser-playwright": "^4.1.8",
+    "@vitest/browser-playwright": "^4.1.9",
     "@vue/test-utils": "catalog:",
-    "axe-core": "^4.12.0",
+    "axe-core": "^4.12.1",
     "eslint": "catalog:",
-    "playwright": "^1.60.0",
+    "playwright": "^1.61.0",
     "tsdown": "catalog:",
     "unplugin-vue": "^7.2.0",
     "vitest-browser-vue": "^2.1.0",
-    "vue-tsc": "^3.3.4"
+    "vue": "catalog:",
+    "vue-tsc": "^3.3.5"
   },
   "dependencies": {
-    "@floating-ui/vue": "^1.1.11",
+    "@floating-ui/vue": "^2.0.0",
     "@robonen/encoding": "workspace:*",
     "@robonen/platform": "workspace:*",
     "@robonen/stdlib": "workspace:*",
     "@robonen/vue": "workspace:*",
-    "@vue/shared": "catalog:",
-    "vue": "catalog:"
+    "@vue/shared": "catalog:"
+  },
+  "peerDependencies": {
+    "vue": "^3.5"
   }
 }

@@ -10,7 +10,10 @@ export default defineConfig({
   dts: { vue: true },
   deps: {
     neverBundle: ['vue'],
-    alwaysBundle: [/^@robonen\//, '@vue/shared'],
+    // `@robonen/*` (incl. `@robonen/primitives`) stay external — no more
+    // inlining the whole component lib (and its transitive `@floating-ui/*`)
+    // into writekit's bundle. Only stateless `@vue/shared` is inlined.
+    alwaysBundle: ['@vue/shared'],
   },
   inputOptions: {
     resolve: {

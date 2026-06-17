@@ -6,5 +6,4 @@ export default defineConfig({
   tsconfig: './tsconfig.src.json',
   entry: ['src/index.ts'],
   external: ['vue'],
-  noExternal: [/^@robonen\//],
 });

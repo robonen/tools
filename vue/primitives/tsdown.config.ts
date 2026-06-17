@@ -11,7 +11,10 @@ export default defineConfig({
   dts: { vue: true },
   deps: {
     neverBundle: ['vue'],
-    alwaysBundle: [/^@robonen\//, '@vue/shared'],
+    // `@robonen/*` stay external (deduped by the package manager); only the
+    // stateless `@vue/shared` helpers are inlined (a Vue internal consumers
+    // don't install directly, so it can't be externalized reliably).
+    alwaysBundle: ['@vue/shared'],
   },
   inputOptions: {
     resolve: {

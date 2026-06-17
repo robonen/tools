@@ -1,8 +1,8 @@
 import { isClient } from '@robonen/platform/multi';
 
-export const defaultWindow = /* #__PURE__ */ isClient ? globalThis as Window & typeof globalThis : undefined;
-export const defaultDocument = /* #__PURE__ */ isClient ? globalThis.document : undefined;
-export const defaultNavigator = /* #__PURE__ */ isClient ? globalThis.navigator : undefined;
+export const defaultWindow = isClient ? globalThis as Window & typeof globalThis : undefined;
+export const defaultDocument = isClient ? globalThis.document : undefined;
+export const defaultNavigator = isClient ? globalThis.navigator : undefined;
 
 export interface ConfigurableWindow {
   /**

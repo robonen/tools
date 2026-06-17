@@ -7,7 +7,7 @@ import { defaultWindow } from '@/types';
 
 // Combo separator (`ctrl+a`, `ctrl_a`, `ctrl-a`). Non-global so it is safe to
 // reuse for both `.test()` (no lastIndex state) and `.split()`.
-const COMBO_SEPARATOR_RE = /* #__PURE__ */ /[+_-]/;
+const COMBO_SEPARATOR_RE = /[+_-]/;
 
 export type UseMagicKeysAliasMap = Readonly<Record<string, string>>;
 
@@ -15,7 +15,7 @@ export type UseMagicKeysAliasMap = Readonly<Record<string, string>>;
  * Default lowercase alias map: maps common shorthand key names to their
  * canonical `KeyboardEvent.key` (lowercased) equivalents.
  */
-export const DefaultMagicKeysAliasMap: UseMagicKeysAliasMap = /* #__PURE__ */ {
+export const DefaultMagicKeysAliasMap: UseMagicKeysAliasMap = {
   ctrl: 'control',
   command: 'meta',
   cmd: 'meta',

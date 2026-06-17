@@ -44,15 +44,15 @@ export type UseDateFormatReturn = ComputedRef<string>;
 
 // Matches a token, or a `[literal]` escape that is emitted verbatim.
 const REGEX_FORMAT
-  = /* #__PURE__ */ /[YMDHhms]o|\[([^\]]+)\]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|z{1,4}|SSS/g;
+  = /[YMDHhms]o|\[([^\]]+)\]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a{1,2}|A{1,2}|m{1,2}|s{1,2}|z{1,4}|SSS/g;
 
 // Loose ISO-ish parser used for date strings without a trailing `Z`. The optional
 // separators make adjacent digit groups technically "misleading" to the linter,
 // but this is the deliberate lenient dayjs parser (accepts `2024-01-01` and
 // `20240101`); JS lacks possessive quantifiers to disambiguate it.
 // eslint-disable-next-line regexp/no-misleading-capturing-group
-const REGEX_PARSE = /* #__PURE__ */ /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[T\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/i;
-const REGEX_ISO_SUFFIX = /* #__PURE__ */ /z$/i;
+const REGEX_PARSE = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[T\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/i;
+const REGEX_ISO_SUFFIX = /z$/i;
 
 const ORDINAL_SUFFIXES = ['th', 'st', 'nd', 'rd'] as const;
 

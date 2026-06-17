@@ -12,7 +12,13 @@ import {
   CalendarHeadCell,
   CalendarRoot,
 } from '../index';
+import { nativeDateAdapter } from '../../../utilities/config-provider';
 import { findFirstFocusableDate, getLocaleWeekStartsOn, toIsoDate } from '../utils';
+
+// A date adapter whose "today" sits far outside any month exercised below, so
+// the roving-tabindex fallback never anchors on the real system date (which
+// would otherwise make date-sensitive expectations flaky).
+const fixedTodayAdapter = { ...nativeDateAdapter, now: () => new Date(2020, 0, 1) };
 
 function mountCalendar(
   props: Record<string, unknown> = {},
@@ -203,6 +209,7 @@ describe('Calendar — roving fallback tabindex', () => {
     const w = mountCalendar({
       defaultPlaceholder: new Date(2026, 5, 1),
       isDateDisabled: (d: Date) => d.getMonth() === 5 && d.getDate() < 16,
+      dateAdapter: fixedTodayAdapter,
     });
     const focusable = w.findAll('[data-primitives-calendar-cell-trigger][tabindex="0"]');
     expect(focusable).toHaveLength(1);

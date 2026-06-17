@@ -165,7 +165,7 @@ const DEFAULT_UNITS: Array<UseTimeAgoUnit<UseTimeAgoUnitName>> = [
   { max: Number.POSITIVE_INFINITY, value: 31536000000, name: 'year' },
 ];
 
-const REGEX_DIGIT = /* #__PURE__ */ /\d/;
+const REGEX_DIGIT = /\d/;
 
 const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitName> = {
   justNow: 'just now',

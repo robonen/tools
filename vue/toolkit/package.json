@@ -16,11 +16,12 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "vue/toolkit"
   },
-  "packageManager": "pnpm@10.34.1",
+  "packageManager": "pnpm@11.7.0",
   "engines": {
     "node": ">=24.16.0"
   },
   "type": "module",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
@@ -49,11 +50,14 @@
     "@robonen/tsdown": "workspace:*",
     "@vue/test-utils": "catalog:",
     "eslint": "catalog:",
-    "tsdown": "catalog:"
+    "tsdown": "catalog:",
+    "vue": "catalog:"
   },
   "dependencies": {
     "@robonen/platform": "workspace:*",
-    "@robonen/stdlib": "workspace:*",
-    "vue": "catalog:"
+    "@robonen/stdlib": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.5"
   }
 }

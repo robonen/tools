@@ -13,6 +13,9 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
+  optimizeDeps: {
+    include: ['@robonen/vue'],
+  },
   test: {
     browser: {
       enabled: true,

@@ -79,8 +79,14 @@ export interface FetchOptions<R extends ResponseType = 'json', T = unknown>
   FetchHooks<T, R> {
   /** Base URL prepended to all relative request URLs */
   baseURL?: string;
-  /** Request body — plain objects are automatically JSON-serialized */
-  body?: RequestInit['body'] | Record<string, unknown> | unknown[] | null;
+  /**
+   * Request body. `BodyInit` values (string, Blob, FormData, streams, …) are
+   * sent as-is; any other object or array is JSON-serialized. Typed as `object`
+   * rather than `Record<string, unknown>` so a named `interface` assigns
+   * directly — interfaces carry no implicit index signature and would otherwise
+   * force every caller to cast the body.
+   */
+  body?: RequestInit['body'] | object | null;
   /** Suppress throwing on 4xx/5xx responses */
   ignoreResponseError?: boolean;
   /** URL query parameters serialized and appended to the request URL */

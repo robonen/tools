@@ -1,6 +1,7 @@
 export * from './BinaryHeap';
 export * from './CircularBuffer';
 export * from './Deque';
+export * from './FenwickTree';
 export * from './LinkedList';
 export * from './PriorityQueue';
 export * from './Queue';

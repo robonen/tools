@@ -19,7 +19,7 @@
     "url": "git+https://github.com/robonen/tools.git",
     "directory": "vue/writekit"
   },
-  "packageManager": "pnpm@11.7.0",
+  "packageManager": "pnpm@11.18.0",
   "engines": {
     "node": ">=24.16.0"
   },
@@ -63,16 +63,16 @@
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
     "@vitest/browser": "catalog:",
-    "@vitest/browser-playwright": "^4.1.9",
+    "@vitest/browser-playwright": "^4.1.10",
     "@vue/test-utils": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",
-    "playwright": "^1.61.0",
+    "playwright": "^1.62.0",
     "tsdown": "catalog:",
     "unplugin-vue": "^7.2.0",
     "vitest-browser-vue": "^2.1.0",
     "vue": "catalog:",
-    "vue-tsc": "^3.3.5"
+    "vue-tsc": "^3.3.8"
   },
   "dependencies": {
     "@robonen/crdt": "workspace:*",

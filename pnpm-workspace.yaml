@@ -16,17 +16,30 @@ allowBuilds:
 
 catalog:
   '@stylistic/eslint-plugin': ^5.10.0
-  '@vitest/browser': ^4.1.9
-  '@vitest/coverage-v8': ^4.1.9
-  '@vitest/ui': ^4.1.9
-  '@vue/shared': ^3.5.38
+  '@vitest/browser': ^4.1.10
+  '@vitest/coverage-v8': ^4.1.10
+  '@vitest/ui': ^4.1.10
+  '@vue/shared': ^3.5.40
   '@vue/test-utils': ^2.4.11
-  eslint: ^10.5.0
-  jsdom: ^29.1.1
-  nuxt: ^4.4.8
-  tsdown: ^0.22.3
-  vitest: ^4.1.9
-  vue: ^3.5.38
+  eslint: ^10.8.0
+  jsdom: ^30.0.1
+  nuxt: ^4.5.1
+  tsdown: ^0.22.14
+  typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
+  vitest: ^4.1.10
+  vue: ^3.5.40
+
+# TypeScript 7.0 dropped the classic JS compiler API (`require('typescript')`
+# exports only `version`/`versionMajorMinor`), which breaks every Volar/tsc-API
+# consumer we depend on: `@vue/compiler-sfc` type resolution (needs `ts.sys`),
+# `rolldown-plugin-dts`'s Vue language (needs `ts.ScriptKind`) and `vue-tsc`.
+# `typescript-native-bridge` keeps that API surface while type-checking on the
+# native tsgo 7.0.2 engine, so we get the new compiler without the breakage.
+# Overridden (not just cataloged) because the consumers above resolve
+# `typescript` as a transitive peer, not as one of our direct dependencies.
+# The version must be pinned exactly — caret ranges never match prereleases.
+overrides:
+  typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
 
 ignoredBuiltDependencies:
   - '@parcel/watcher'

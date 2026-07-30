@@ -28,7 +28,8 @@ function toggle(key: (typeof categories)[number]['key']) {
   consent.value = { ...consent.value, [key]: !consent.value[key] };
 }
 
-const supportsCookieStore = typeof window !== 'undefined' && 'cookieStore' in window;
+// Probing `globalThis` keeps this SSR-safe without a browser-only guard.
+const supportsCookieStore = 'cookieStore' in globalThis;
 
 // Show the raw cookie as the browser stores it.
 const rawCookie = ref('');

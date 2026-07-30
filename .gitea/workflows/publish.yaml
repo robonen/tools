@@ -5,6 +5,12 @@ on:
     branches:
       - master
 
+# The registry is append-only — a half-finished release cannot be rolled back.
+# One publish at a time, and never cancel one that is already writing.
+concurrency:
+  group: publish-npm
+  cancel-in-progress: false
+
 env:
   NODE_VERSION: 24.x
 
@@ -26,7 +32,37 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-          registry-url: 'https://registry.npmjs.org'
+          # No `registry-url:` on purpose. It writes an npmrc holding the literal
+          # string `${NODE_AUTH_TOKEN}` and points NPM_CONFIG_USERCONFIG at it,
+          # which would shadow the file the next step writes. We supply the token
+          # verbatim instead, so no variable-expansion rules can apply.
+
+      # npm masks an unauthorized write as `404 Not Found` rather than 401, so a
+      # dead token surfaces as "package does not exist" three steps later, after
+      # a full build+test. Verify the credential up front and say so plainly.
+      - name: Authenticate to npm
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${NPM_TOKEN:-}" ]; then
+            echo "::error::secrets.NPM_TOKEN is empty or not set for this repo."
+            echo "::error::Add it under Gitea > Settings > Actions > Secrets."
+            exit 1
+          fi
+
+          printf '//registry.npmjs.org/:_authToken=%s\n' "$NPM_TOKEN" > "$HOME/.npmrc"
+          chmod 600 "$HOME/.npmrc"
+
+          if ! WHO=$(npm whoami --registry=https://registry.npmjs.org 2>&1); then
+            echo "::error::npm rejected the token — expired, revoked, or wrong account."
+            echo "::error::npm said: ${WHO}"
+            echo "::error::Mint a granular token with read+write on the @robonen scope"
+            echo "::error::at npmjs.com and update the Gitea secret."
+            exit 1
+          fi
+          echo "Authenticated to npm as: ${WHO}"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -38,8 +74,6 @@ jobs:
         run: pnpm build && pnpm test
 
       - name: Check for version changes and publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           # Find all package.json files (excluding node_modules)
           PACKAGE_FILES=$(find . -path "*/package.json" -not -path "*/node_modules/*")
@@ -79,3 +113,7 @@ jobs:
               echo "No version change detected for $PACKAGE_NAME"
             fi
           done
+
+      - name: Scrub credentials
+        if: always()
+        run: rm -f "$HOME/.npmrc"

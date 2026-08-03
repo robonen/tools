@@ -17,7 +17,7 @@ import { injectDrawerRootContext } from './context';
 
 defineProps<DrawerOverlayProps>();
 
-const { overlayRef, hasSnapPoints, isOpen, shouldFade } = injectDrawerRootContext();
+const { overlayRef, hasSnapPoints, isOpen, shouldFade, isAllowedToDrag } = injectDrawerRootContext();
 const { forwardRef, currentElement } = useForwardExpose();
 
 watch(currentElement, (el) => {
@@ -31,6 +31,7 @@ watch(currentElement, (el) => {
     data-drawer-overlay
     :data-drawer-snap-points="isOpen && hasSnapPoints ? 'true' : 'false'"
     :data-drawer-snap-points-overlay="isOpen && shouldFade ? 'true' : 'false'"
+    :data-swiping="isAllowedToDrag ? 'true' : undefined"
   >
     <slot />
   </DialogOverlay>

@@ -21,4 +21,28 @@ describe('createMachine', () => {
   it('send returns the (typed) resulting state', () => {
     expectTypeOf(machine.send('START')).toEqualTypeOf<'idle' | 'running'>();
   });
+
+  it('empty terminal nodes do not widen the event union to string', () => {
+    const terminal = createMachine({
+      initial: 'idle',
+      states: {
+        idle: { on: { START: 'done' } },
+        done: {},
+      },
+    });
+
+    expectTypeOf(terminal.send).parameter(0).toEqualTypeOf<'START'>();
+  });
+
+  it('entry/exit-only nodes do not widen the event union either', () => {
+    const hooked = createMachine({
+      initial: 'idle',
+      states: {
+        idle: { on: { START: 'done' } },
+        done: { entry: () => {} },
+      },
+    });
+
+    expectTypeOf(hooked.send).parameter(0).toEqualTypeOf<'START'>();
+  });
 });

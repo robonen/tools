@@ -1,3 +1,4 @@
+export * from './activeApp';
 export * from './createSharedComposable';
 export * from './useAppSharedState';
 export * from './useAsyncState';
@@ -11,6 +12,7 @@ export * from './useLastChanged';
 export * from './useManualRefHistory';
 export * from './useOffsetPagination';
 export * from './useRefHistory';
+export * from './useStateMachine';
 export * from './useStepper';
 export * from './useThrottledRefHistory';
 export * from './useToggle';

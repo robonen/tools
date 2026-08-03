@@ -11,7 +11,8 @@ export type { DrawerHandleProps } from './controls';
 </script>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, watchPostEffect } from 'vue';
+import { onScopeDispose, useTemplateRef, watch, watchPostEffect } from 'vue';
+import { onLongPress, useStateMachine } from '@robonen/vue';
 import { injectDrawerRootContext } from './context';
 
 const { preventCycle = false } = defineProps<DrawerHandleProps>();
@@ -19,7 +20,7 @@ const { preventCycle = false } = defineProps<DrawerHandleProps>();
 const LONG_HANDLE_PRESS_TIMEOUT = 250;
 const DOUBLE_TAP_TIMEOUT = 120;
 
-const { onPress, onDrag, handleRef, handleOnly, isOpen, snapPoints, activeSnapPoint, isDragging, dismissible, closeDrawer }
+const { onPress, onDrag, onCancel, handleRef, handleOnly, isOpen, snapPoints, activeSnapPoint, isDragging, isAllowedToDrag, dismissible, closeDrawer }
   = injectDrawerRootContext();
 
 // Mirror the element into the shared context ref. A local template ref + watch
@@ -31,33 +32,67 @@ watchPostEffect(() => {
   handleRef.value = handleElement.value;
 });
 
-const closeTimeoutId = ref<number | null>(null);
-const shouldCancelInteraction = ref(false);
+let cycleTimer: ReturnType<typeof setTimeout> | undefined;
 
-function handleStartCycle() {
-  // Ignore the second tap of a double-tap.
-  if (shouldCancelInteraction.value) {
-    handleCancelInteraction();
-    return;
-  }
+// Tap-to-cycle as an explicit machine: a tap schedules the cycle after the
+// double-tap window, a long hold suppresses it, and a second press inside the
+// window cancels the pending cycle — so a double-tap cycles once, never twice.
+const tap = useStateMachine({
+  initial: 'idle',
+  states: {
+    idle: { on: { PRESS: 'pressed', TAP: 'tapPending' } },
+    pressed: { on: { LONG_PRESS: 'suppressed', DRAG: 'suppressed', TAP: 'tapPending', CANCEL: 'idle' } },
+    suppressed: { on: { TAP: 'idle', PRESS: 'pressed', CANCEL: 'idle' } },
+    tapPending: {
+      entry: () => {
+        cycleTimer = setTimeout(fireCycleElapsed, DOUBLE_TAP_TIMEOUT);
+      },
+      exit: () => clearTimeout(cycleTimer),
+      on: {
+        ELAPSED: { target: 'idle', action: cycleSnapPoints },
+        PRESS: 'pressed',
+        // A long-press timer armed before the release can still outrace the
+        // pending cycle — treat it as suppression, like the release-time flag
+        // check of the pre-machine code did.
+        LONG_PRESS: 'suppressed',
+        DRAG: 'suppressed',
+        CANCEL: 'idle',
+      },
+    },
+  },
+});
 
-  globalThis.setTimeout(() => {
-    handleCycleSnapPoints();
-  }, DOUBLE_TAP_TIMEOUT);
+// The exit hook covers every transition; this covers unmount mid-window.
+onScopeDispose(() => clearTimeout(cycleTimer));
+
+// A gesture that actually engaged the drawer must never read as a tap: pointer
+// capture keeps the release's click on the handle, and 120ms later the drag is
+// long over (isDragging is false again), so only a latch armed DURING the
+// press can tell a short drag apart from a tap.
+watch(isAllowedToDrag, (dragging) => {
+  if (dragging)
+    tap.send('DRAG');
+});
+
+// Annotated `: void` so the machine config can reference it without a type cycle.
+function fireCycleElapsed(): void {
+  tap.send('ELAPSED');
 }
 
-function handleCycleSnapPoints() {
-  // Don't treat an accidental tap during a resize as a cycle.
-  if (isDragging.value || preventCycle || shouldCancelInteraction.value) {
-    handleCancelInteraction();
-    return;
-  }
+// A long hold suppresses the tap-to-cycle. `distanceThreshold: false` keeps the
+// original semantics: the hold counts even while the pointer drags the drawer.
+onLongPress(handleElement, () => {
+  tap.send('LONG_PRESS');
+}, { delay: LONG_HANDLE_PRESS_TIMEOUT, distanceThreshold: false });
 
-  handleCancelInteraction();
+function cycleSnapPoints() {
+  // Don't treat an accidental tap during a resize as a cycle.
+  if (isDragging.value || preventCycle)
+    return;
 
   if (!snapPoints.value || snapPoints.value.length === 0) {
-    if (!dismissible.value)
-      closeDrawer();
+    if (dismissible.value)
+      closeDrawer('handle-press');
 
     return;
   }
@@ -65,7 +100,7 @@ function handleCycleSnapPoints() {
   const isLastSnapPoint = activeSnapPoint.value === snapPoints.value[snapPoints.value.length - 1];
 
   if (isLastSnapPoint && dismissible.value) {
-    closeDrawer();
+    closeDrawer('handle-press');
     return;
   }
 
@@ -78,29 +113,37 @@ function handleCycleSnapPoints() {
   activeSnapPoint.value = snapPoints.value[nextSnapPointIndex];
 }
 
-function handleStartInteraction() {
-  closeTimeoutId.value = globalThis.setTimeout(() => {
-    // A long press cancels the tap-to-cycle.
-    shouldCancelInteraction.value = true;
-  }, LONG_HANDLE_PRESS_TIMEOUT);
-}
-
-function handleCancelInteraction() {
-  if (closeTimeoutId.value)
-    globalThis.clearTimeout(closeTimeoutId.value);
-
-  shouldCancelInteraction.value = false;
+function handleClick() {
+  tap.send('TAP');
 }
 
 function handlePointerDown(event: PointerEvent) {
+  tap.send('PRESS');
+
+  // In handleOnly mode the handle is the capture target so moves keep
+  // arriving here even when the pointer leaves it.
   if (handleOnly.value)
-    onPress(event);
-  handleStartInteraction();
+    onPress(event, handleElement.value ?? undefined);
 }
 
 function handlePointerMove(event: PointerEvent) {
   if (handleOnly.value)
     onDrag(event);
+}
+
+function handlePointerCancel(event: PointerEvent) {
+  tap.send('CANCEL');
+
+  if (handleOnly.value)
+    onCancel(event);
+}
+
+// Fires after every normal release too (pointer capture sits on the pressed
+// element), so it must NOT cancel the tap intent — that would defeat the
+// long-press suppression. Only the drag engine cares, and it ignores stale calls.
+function handleLostPointerCapture(event: PointerEvent) {
+  if (handleOnly.value)
+    onCancel(event);
 }
 </script>
 
@@ -110,8 +153,9 @@ function handlePointerMove(event: PointerEvent) {
     :data-drawer-visible="isOpen ? 'true' : 'false'"
     data-drawer-handle
     aria-hidden="true"
-    @click="handleStartCycle"
-    @pointercancel="handleCancelInteraction"
+    @click="handleClick"
+    @pointercancel="handlePointerCancel"
+    @lostpointercapture="handleLostPointerCapture"
     @pointerdown="handlePointerDown"
     @pointermove="handlePointerMove"
   >

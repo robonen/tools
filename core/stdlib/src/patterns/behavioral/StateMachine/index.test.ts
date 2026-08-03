@@ -418,6 +418,7 @@ describe('asyncStateMachine', () => {
         },
       });
 
+      // @ts-expect-error -- deliberately undeclared event: runtime must ignore it
       const result = await machine.send('STOP');
 
       expect(result).toBe('idle');
@@ -597,6 +598,7 @@ describe('asyncStateMachine', () => {
         },
       });
 
+      // @ts-expect-error -- deliberately undeclared event: can() must report false
       expect(await machine.can('STOP')).toBe(false);
     });
 

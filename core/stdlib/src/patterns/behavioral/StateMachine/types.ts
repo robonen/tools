@@ -57,8 +57,12 @@ export type AsyncStateNodeConfig<Context> = StateNodeConfig<Context, MaybePromis
 
 export type ExtractStates<T> = keyof T & string;
 
+// `on` is matched as REQUIRED here on purpose: an empty terminal node (`{}`)
+// satisfies an optional-`on` pattern with no inference candidate, so `infer E`
+// would fall back to its constraint and collapse the whole union to `string`,
+// silently accepting any event name in `send`/`can`.
 export type ExtractEvents<T> = {
-  [K in keyof T]: T[K] extends { readonly on?: Readonly<Record<infer E extends string, unknown>> }
+  [K in keyof T]: T[K] extends { readonly on: Readonly<Record<infer E extends string, unknown>> }
     ? E
     : never;
 }[keyof T];

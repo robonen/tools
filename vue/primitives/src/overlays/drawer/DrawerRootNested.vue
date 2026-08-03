@@ -9,6 +9,7 @@
 <script setup lang="ts">
 import DrawerRoot from './DrawerRoot.vue';
 import type { DrawerRootEmits, DrawerRootProps } from './controls';
+import type { DrawerOpenChangeDetails } from './types';
 import { injectDrawerRootContext } from './context';
 
 const props = defineProps<DrawerRootProps>();
@@ -31,10 +32,10 @@ function onRelease(open: boolean) {
   emit('release', open);
 }
 
-function onOpenChange(open: boolean) {
+function onOpenChange(open: boolean, details?: DrawerOpenChangeDetails) {
   if (open)
     onNestedOpenChange(open);
-  emit('update:open', open);
+  emit('update:open', open, details);
 }
 </script>
 

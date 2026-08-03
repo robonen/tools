@@ -2,8 +2,8 @@ import { onWatcherCleanup, ref, watchEffect } from 'vue';
 import { isClient } from '@robonen/platform/multi';
 import { assignStyle } from '@robonen/platform/browsers';
 import { injectDrawerRootContext } from './context';
-import { getDrawerWrapper, isVertical } from './helpers';
-import { BORDER_RADIUS, TRANSITIONS, WINDOW_TOP_OFFSET } from './constants';
+import { getDrawerWrapper, getScaleFactor, isVertical } from './helpers';
+import { BORDER_RADIUS, TRANSITIONS } from './constants';
 
 /**
  * Scales the page background down behind the drawer (the stacked-card effect),
@@ -15,10 +15,6 @@ export function useScaleBackground() {
   const { direction, isOpen, shouldScaleBackground, setBackgroundColorOnScale, noBodyStyles } = injectDrawerRootContext();
   const timeoutIdRef = ref<number | null>(null);
   const initialBackgroundColor = ref(typeof document !== 'undefined' ? document.body.style.backgroundColor : '');
-
-  function getScale() {
-    return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
-  }
 
   watchEffect(() => {
     // `flush: 'pre'` watchers run during SSR; this effect touches document/window,
@@ -42,17 +38,18 @@ export function useScaleBackground() {
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
 
+      const scale = getScaleFactor(window.innerWidth);
       const wrapperStylesCleanup = assignStyle(wrapper, {
         borderRadius: `${BORDER_RADIUS}px`,
         overflow: 'hidden',
         ...(isVertical(direction.value)
-          ? { transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)` }
-          : { transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)` }),
+          ? { transform: `scale(${scale}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)` }
+          : { transform: `scale(${scale}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)` }),
       });
 
       onWatcherCleanup(() => {
         wrapperStylesCleanup();
-        timeoutIdRef.value = globalThis.setTimeout(() => {
+        timeoutIdRef.value = setTimeout(() => {
           if (initialBackgroundColor.value)
             document.body.style.background = initialBackgroundColor.value;
           else

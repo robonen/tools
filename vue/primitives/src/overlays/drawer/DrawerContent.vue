@@ -14,6 +14,7 @@ export type DrawerContentEmits = DialogContentEmits;
 
 <script setup lang="ts">
 import { computed, ref, watch, watchEffect } from 'vue';
+import { isClient } from '@robonen/platform/multi';
 import { useForwardExpose } from '@robonen/vue';
 import { DialogContent } from '../dialog';
 import { injectDrawerRootContext } from './context';
@@ -30,6 +31,9 @@ const {
   onPress,
   onDrag,
   onRelease,
+  onCancel,
+  armReason,
+  isAllowedToDrag,
   modal,
   dismissible,
   keyboardIsOpen,
@@ -49,10 +53,12 @@ useScaleBackground();
 const delayedSnapPoints = ref(false);
 
 const snapPointHeight = computed(() => {
-  if (snapPointsOffset.value && snapPointsOffset.value.length > 0)
-    return `${snapPointsOffset.value[0]}px`;
+  const offset = snapPointsOffset.value?.[0];
 
-  return '0';
+  if (typeof offset === 'number' && Number.isFinite(offset))
+    return `${offset}px`;
+
+  return '0px';
 });
 
 function handlePointerDownOutside(event: Event) {
@@ -66,13 +72,21 @@ function handlePointerDownOutside(event: Event) {
 
   // Let the underlying DismissableLayer close a dismissible modal drawer;
   // otherwise hold it open.
-  if (!dismissible.value)
+  if (!dismissible.value) {
     event.preventDefault();
+    return;
+  }
+
+  armReason('outside-press');
 }
 
 function handleEscapeKeyDown(event: KeyboardEvent) {
-  if (!dismissible.value)
+  if (!dismissible.value) {
     event.preventDefault();
+    return;
+  }
+
+  armReason('escape-key');
 }
 
 function handlePointerDown(event: PointerEvent) {
@@ -88,8 +102,9 @@ function handlePointerMove(event: PointerEvent) {
 }
 
 watchEffect(() => {
-  if (hasSnapPoints.value) {
-    globalThis.requestAnimationFrame(() => {
+  // `flush: 'pre'` effects run during SSR, where rAF doesn't exist.
+  if (hasSnapPoints.value && isClient) {
+    requestAnimationFrame(() => {
       delayedSnapPoints.value = true;
     });
   }
@@ -103,10 +118,13 @@ watchEffect(() => {
     :data-drawer-direction="direction"
     :data-drawer-delayed-snap-points="delayedSnapPoints ? 'true' : 'false'"
     :data-drawer-snap-points="isOpen && hasSnapPoints ? 'true' : 'false'"
+    :data-swiping="isAllowedToDrag ? 'true' : undefined"
     :style="{ '--snap-point-height': snapPointHeight }"
     @pointerdown="handlePointerDown"
     @pointermove="handlePointerMove"
     @pointerup="onRelease"
+    @pointercancel="onCancel"
+    @lostpointercapture="onCancel"
     @open-auto-focus.prevent
     @pointer-down-outside="handlePointerDownOutside"
     @escape-key-down="handleEscapeKeyDown"

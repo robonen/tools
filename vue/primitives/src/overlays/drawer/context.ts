@@ -1,13 +1,24 @@
-import type { Ref } from 'vue';
+import type { Ref, ShallowRef } from 'vue';
 import { useContextFactory } from '@robonen/vue';
 import type { MaybeElementRef } from '@robonen/vue';
-import type { DrawerDirection } from './types';
+import type { DrawerDirection, DrawerOpenChangeReason, DrawerPhase } from './types';
 
 export interface DrawerRootContext {
   /** Source-of-truth open state (also bound to the underlying Dialog). */
   open: Ref<boolean>;
   /** Alias of {@link open}; kept for parity with consumers reading `isOpen`. */
   isOpen: Ref<boolean>;
+  /**
+   * Lifecycle phase of the drawer — unlike {@link open}, the enter/exit
+   * transitions are explicit states (`opening`/`closing`).
+   */
+  phase: Readonly<ShallowRef<DrawerPhase>>;
+  /**
+   * Signal that the open/close animation settled. Called by DrawerRoot when the
+   * drawer element's transition/animation ends (or its fallback timeout fires);
+   * advances {@link phase} out of `opening`/`closing`.
+   */
+  notifySettled: () => void;
   /** Whether the drawer blocks the rest of the page (focus trap, scroll lock). */
   modal: Ref<boolean>;
   /** Becomes `true` the first time the drawer opens; gates Safari position fixes. */
@@ -20,11 +31,11 @@ export interface DrawerRootContext {
   handleRef: MaybeElementRef<HTMLElement | undefined>;
   /** Whether a pointer drag is currently in progress. */
   isDragging: Ref<boolean>;
-  /** Timestamp the active drag started, for velocity calculations. */
-  dragStartTime: Ref<Date | null>;
+  /** `event.timeStamp` of the active drag's start (ms, `performance.now()` clock). */
+  dragStartTime: Ref<number | null>;
   /** Latched once a drag is permitted, so it can't be cancelled mid-gesture. */
   isAllowedToDrag: Ref<boolean>;
-  /** Configured snap points (fractions of the screen or px strings). */
+  /** Configured snap points (fractions of the screen, px numbers, or px/rem strings). */
   snapPoints: Ref<Array<number | string> | undefined>;
   /** Whether any snap points are configured. */
   hasSnapPoints: Ref<boolean>;
@@ -38,18 +49,35 @@ export interface DrawerRootContext {
   dismissible: Ref<boolean>;
   /** Measured height of the drawer content in px. */
   drawerHeightRef: Ref<number>;
-  /** Pixel offset of each snap point along the drag axis. */
+  /** Pixel offset of each snap point along the drag axis (`NaN` for invalid points). */
   snapPointsOffset: Ref<number[]>;
   /** The edge the drawer is anchored to. */
   direction: Ref<DrawerDirection>;
-  /** Begin a drag gesture. */
-  onPress: (event: PointerEvent) => void;
+  /**
+   * Begin a drag gesture. `captureTarget` is the element that receives pointer
+   * capture (defaults to the pressed element — capturing any higher, e.g. on
+   * the drawer itself, would retarget `click` away from controls inside; the
+   * handle passes itself so `handleOnly` gestures keep receiving moves).
+   */
+  onPress: (event: PointerEvent, captureTarget?: HTMLElement) => void;
   /** Update the drawer position during a drag. */
   onDrag: (event: PointerEvent) => void;
   /** Settle the drawer (snap, close, or reset) when the pointer is released. */
   onRelease: (event: PointerEvent) => void;
-  /** Programmatically close the drawer. */
-  closeDrawer: () => void;
+  /**
+   * Abort the active drag without a user release (`pointercancel`, lost
+   * capture): resets the drag state and settles the drawer back in place.
+   */
+  onCancel: (event: PointerEvent) => void;
+  /** Programmatically close the drawer, optionally tagging what caused it. */
+  closeDrawer: (reason?: DrawerOpenChangeReason) => void;
+  /**
+   * Tag the next open-state flip with a reason. Consumed (and cleared) by
+   * DrawerRoot's `update:open` emitter; auto-expires when no flip follows.
+   */
+  armReason: (reason: DrawerOpenChangeReason) => void;
+  /** Reason armed for the next open-state flip, if any. */
+  pendingReason: { current: DrawerOpenChangeReason | undefined };
   /** Whether the overlay should fade with the drag at the current snap point. */
   shouldFade: Ref<boolean>;
   /** Snap point index from which the overlay starts fading. */

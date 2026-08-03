@@ -8,7 +8,35 @@
  * The selectors here mirror the `data-drawer-*` attributes set in the component
  * templates and {@link ./controls} — keep them in sync.
  */
-export const DRAWER_STYLE_ID = 'robonen-drawer';
+export const DRAWER_STYLE_ID = 'drawer';
+
+let cssPropertiesRegistered = false;
+
+/**
+ * Registers the drawer's animated custom properties with `inherits: false`, so
+ * a per-frame write of `--snap-point-height` on the content invalidates only
+ * that element instead of cascading a var recompute over its whole subtree.
+ * `--initial-transform` is deliberately NOT registered: consumers may set it on
+ * an ancestor and rely on inheritance. No-op where the API is missing.
+ */
+export function registerDrawerCssProperties(): void {
+  if (cssPropertiesRegistered || typeof CSS === 'undefined' || !CSS.registerProperty)
+    return;
+
+  cssPropertiesRegistered = true;
+
+  try {
+    CSS.registerProperty({
+      name: '--snap-point-height',
+      syntax: '<length>',
+      inherits: false,
+      initialValue: '0px',
+    });
+  }
+  catch {
+    // Older engines without @property support simply keep var inheritance.
+  }
+}
 
 export const DRAWER_STYLES = `
 [data-drawer] {

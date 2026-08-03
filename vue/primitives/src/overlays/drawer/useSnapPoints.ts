@@ -1,9 +1,10 @@
 import type { Ref } from 'vue';
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, watch } from 'vue';
 import { setStyle } from '@robonen/platform/browsers';
-import { useEventListener } from '@robonen/vue';
-import { isVertical } from './helpers';
-import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
+import { isVertical, translateAxis, writeTransform } from './helpers';
+import { TRANSITIONS } from './constants';
+import { computeSettleDuration } from './gesture';
+import { findSnapPointIndex, projectSnapRelease, resolveSnapPointOffset } from './snapping';
 import type { DrawerDirection } from './types';
 
 interface UseSnapPointsProps {
@@ -14,16 +15,23 @@ interface UseSnapPointsProps {
   overlayRef: Ref<HTMLElement | undefined>;
   onSnapPointChange: (activeSnapPointIndex: number, snapPointsOffset: number[]) => void;
   direction: Ref<DrawerDirection>;
+  snapToSequentialPoints: Ref<boolean>;
+  /** Shared reactive window dimensions (from the engine's `useWindowSize`). */
+  windowWidth: Ref<number>;
+  windowHeight: Ref<number>;
 }
 
-const transition = (property: 'transform' | 'opacity') =>
-  `${property} ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`;
+const transition = (property: 'transform' | 'opacity', duration: number = TRANSITIONS.DURATION) =>
+  `${property} ${duration}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`;
+
+function readRootFontSize(): number {
+  return Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+}
 
 /**
  * Drag/release maths for drawers configured with snap points: resolves each
- * snap point to a pixel offset, animates the drawer between them, and decides
- * which point to settle on (or whether to close) based on drag distance and
- * velocity.
+ * snap point to a pixel offset, animates the drawer between them, and settles
+ * on release by projecting the drag target along the fling velocity.
  */
 export function useSnapPoints({
   activeSnapPoint,
@@ -33,26 +41,64 @@ export function useSnapPoints({
   fadeFromIndex,
   onSnapPointChange,
   direction,
+  snapToSequentialPoints,
+  windowWidth,
+  windowHeight,
 }: UseSnapPointsProps) {
-  const windowDimensions = ref(globalThis.window !== undefined
-    ? { innerWidth: window.innerWidth, innerHeight: window.innerHeight }
-    : undefined);
+  // Direction resolved once per change instead of string-comparing per move.
+  const verticalAxis = computed(() => isVertical(direction.value));
+  const dismissMultiplier = computed<1 | -1>(() =>
+    direction.value === 'bottom' || direction.value === 'right' ? 1 : -1,
+  );
 
-  function onResize() {
-    const innerWidth = window.innerWidth;
-    const innerHeight = window.innerHeight;
-    const cur = windowDimensions.value;
-    // Skip the ref write (and the snapPointsOffset recompute it would trigger)
-    // when dimensions are unchanged — some resize events report identical sizes.
-    if (!cur || cur.innerWidth !== innerWidth || cur.innerHeight !== innerHeight)
-      windowDimensions.value = { innerWidth, innerHeight };
+  function windowSizeFor(dir: DrawerDirection): number {
+    return isVertical(dir) ? windowHeight.value : windowWidth.value;
   }
 
-  // Defaults to `defaultWindow` (SSR-safe) and auto-removes on scope dispose.
-  useEventListener('resize', onResize);
+  let warnedInvalid = false;
+
+  /**
+   * Inline-translate offsets, index-aligned with `snapPoints` (identity such as
+   * `fadeFromIndex` is preserved). Unresolvable points map to `NaN` and are
+   * excluded from every settle decision.
+   */
+  const snapPointsOffset = computed<number[]>(() => {
+    const points = snapPoints.value;
+
+    if (!points)
+      return [];
+
+    const windowSize = windowSizeFor(direction.value);
+    const rootFontSize = globalThis.document !== undefined ? readRootFontSize() : 16;
+    const offsets = points.map(point => resolveSnapPointOffset(point, direction.value, windowSize, rootFontSize));
+
+    if (!warnedInvalid && offsets.some(offset => !Number.isFinite(offset))) {
+      warnedInvalid = true;
+      console.warn(
+        '[Drawer] Unsupported snap point value. Use a fraction (0-1), a px number, or a px/rem string:',
+        points.filter((_, index) => !Number.isFinite(offsets[index])),
+      );
+    }
+
+    return offsets;
+  });
+
+  const activeSnapPointIndex = computed<number | null>(() => {
+    const points = snapPoints.value;
+
+    if (!points)
+      return null;
+
+    const windowSize = windowSizeFor(direction.value);
+    const rootFontSize = globalThis.document !== undefined ? readRootFontSize() : 16;
+
+    // Identity first, then resolved-size equivalence (`0.5` vs `'360px'`) so a
+    // controlled active point in a different representation still matches.
+    return findSnapPointIndex(points, activeSnapPoint.value, windowSize, rootFontSize);
+  });
 
   const isLastSnapPoint = computed(
-    () => (snapPoints.value && activeSnapPoint.value === snapPoints.value[snapPoints.value.length - 1]) ?? null,
+    () => (snapPoints.value && activeSnapPointIndex.value === snapPoints.value.length - 1) ?? null,
   );
 
   const shouldFade = computed(
@@ -65,58 +111,25 @@ export function useSnapPoints({
       || !snapPoints.value,
   );
 
-  const activeSnapPointIndex = computed(
-    () => snapPoints.value?.indexOf(activeSnapPoint.value) ?? null,
-  );
-
-  const snapPointsOffset = computed(
-    () =>
-      snapPoints.value?.map((snapPoint) => {
-        const isPx = typeof snapPoint === 'string';
-        let snapPointAsNumber = 0;
-
-        if (isPx)
-          snapPointAsNumber = Number.parseInt(snapPoint, 10);
-
-        if (isVertical(direction.value)) {
-          const height = isPx
-            ? snapPointAsNumber
-            : windowDimensions.value
-              ? (snapPoint as number) * windowDimensions.value.innerHeight
-              : 0;
-
-          if (windowDimensions.value)
-            return direction.value === 'bottom' ? windowDimensions.value.innerHeight - height : -windowDimensions.value.innerHeight + height;
-
-          return height;
-        }
-
-        const width = isPx
-          ? snapPointAsNumber
-          : windowDimensions.value
-            ? (snapPoint as number) * windowDimensions.value.innerWidth
-            : 0;
-
-        if (windowDimensions.value)
-          return direction.value === 'right' ? windowDimensions.value.innerWidth - width : -windowDimensions.value.innerWidth + width;
-
-        return width;
-      }) ?? [],
-  );
-
   const activeSnapPointOffset = computed(() =>
     activeSnapPointIndex.value !== null ? snapPointsOffset.value?.[activeSnapPointIndex.value] : null,
   );
 
-  function snapToPoint(dimension: number) {
+  function snapToPoint(dimension: number, options?: { velocity?: number; from?: number | null }) {
+    if (!Number.isFinite(dimension))
+      return;
+
     const newSnapPointIndex = snapPointsOffset.value?.indexOf(dimension) ?? null;
+    const from = options?.from;
+    const remaining = typeof from === 'number' ? Math.abs(dimension - from) : Number.NaN;
+    const duration = computeSettleDuration(remaining, options?.velocity ?? 0);
 
     // Wait for the element to be mounted before transforming it.
     nextTick(() => {
       onSnapPointChange(newSnapPointIndex, snapPointsOffset.value);
       setStyle(drawerRef.value, {
-        transition: transition('transform'),
-        transform: isVertical(direction.value) ? `translate3d(0, ${dimension}px, 0)` : `translate3d(${dimension}px, 0, 0)`,
+        transition: transition('transform', duration),
+        transform: translateAxis(verticalAxis.value, dimension),
       });
     });
 
@@ -125,22 +138,30 @@ export function useSnapPoints({
       && newSnapPointIndex !== snapPointsOffset.value.length - 1
       && newSnapPointIndex !== fadeFromIndex?.value
     ) {
-      setStyle(overlayRef.value, { transition: transition('opacity'), opacity: '0' });
+      setStyle(overlayRef.value, { transition: transition('opacity', duration), opacity: '0' });
     }
     else {
-      setStyle(overlayRef.value, { transition: transition('opacity'), opacity: '1' });
+      setStyle(overlayRef.value, { transition: transition('opacity', duration), opacity: '1' });
     }
 
     activeSnapPoint.value = newSnapPointIndex !== null ? snapPoints.value?.[newSnapPointIndex] ?? null : null;
+  }
+
+  /** Settle back onto the active snap point (used when a gesture is aborted). */
+  function restoreActiveSnapPoint() {
+    const offset = activeSnapPointOffset.value;
+
+    if (typeof offset === 'number' && Number.isFinite(offset))
+      snapToPoint(offset);
   }
 
   watch(
     [activeSnapPoint, snapPointsOffset, snapPoints],
     () => {
       if (activeSnapPoint.value) {
-        const newIndex = snapPoints.value?.indexOf(activeSnapPoint.value) ?? -1;
+        const newIndex = activeSnapPointIndex.value ?? -1;
 
-        if (snapPointsOffset.value && newIndex !== -1 && typeof snapPointsOffset.value[newIndex] === 'number')
+        if (snapPointsOffset.value && newIndex !== -1 && Number.isFinite(snapPointsOffset.value[newIndex]))
           snapToPoint(snapPointsOffset.value[newIndex]);
       }
     },
@@ -152,89 +173,66 @@ export function useSnapPoints({
     closeDrawer,
     velocity,
     dismissible,
+    drawerSize,
   }: {
+    /** Drag distance since press, positive toward open/expand. */
     draggedDistance: number;
     closeDrawer: () => void;
+    /** Instantaneous release velocity, positive toward dismiss (px/ms). */
     velocity: number;
     dismissible: boolean;
+    /** Drawer size (px) along the drag axis. */
+    drawerSize: number;
   }) {
     if (fadeFromIndex.value === undefined)
       return;
 
-    const currentPosition
-      = direction.value === 'bottom' || direction.value === 'right'
-        ? (activeSnapPointOffset.value ?? 0) - draggedDistance
-        : (activeSnapPointOffset.value ?? 0) + draggedDistance;
+    const multiplier = dismissMultiplier.value;
+    const offsets = snapPointsOffset.value.map(offset => offset * multiplier);
     const isOverlaySnapPoint = activeSnapPointIndex.value === fadeFromIndex.value - 1;
-    const isFirst = activeSnapPointIndex.value === 0;
-    const hasDraggedUp = draggedDistance > 0;
 
     if (isOverlaySnapPoint)
       setStyle(overlayRef.value, { transition: transition('opacity') });
 
-    if (velocity > 2 && !hasDraggedUp) {
-      if (dismissible)
-        closeDrawer();
-      else
-        snapToPoint(snapPointsOffset.value[0]); // snap to initial point
-      return;
-    }
-
-    if (velocity > 2 && hasDraggedUp && snapPointsOffset.value && snapPoints.value) {
-      snapToPoint(snapPointsOffset.value[snapPoints.value.length - 1]);
-      return;
-    }
-
-    // Settle on the snap point closest to where the drag ended.
-    const closestSnapPoint = snapPointsOffset.value?.reduce((prev, curr) => {
-      if (typeof prev !== 'number' || typeof curr !== 'number')
-        return prev;
-
-      return Math.abs(curr - currentPosition) < Math.abs(prev - currentPosition) ? curr : prev;
+    const result = projectSnapRelease({
+      offsets,
+      activeIndex: activeSnapPointIndex.value,
+      draggedDistance,
+      velocity,
+      drawerSize,
+      dismissible,
+      sequential: snapToSequentialPoints.value,
     });
 
-    const dim = isVertical(direction.value) ? window.innerHeight : window.innerWidth;
-    if (velocity > VELOCITY_THRESHOLD && Math.abs(draggedDistance) < dim * 0.4) {
-      const dragDirection = hasDraggedUp ? 1 : -1; // 1 = up, -1 = down
-
-      // Ignore an upward flick while already on the last snap point.
-      if (dragDirection > 0 && isLastSnapPoint.value) {
-        snapToPoint(snapPointsOffset.value[(snapPoints.value?.length ?? 0) - 1]);
-        return;
-      }
-
-      if (isFirst && dragDirection < 0 && dismissible)
-        closeDrawer();
-
-      if (activeSnapPointIndex.value === null)
-        return;
-
-      snapToPoint(snapPointsOffset.value[activeSnapPointIndex.value + dragDirection]);
+    if (result.type === 'close') {
+      closeDrawer();
       return;
     }
 
-    snapToPoint(closestSnapPoint);
+    const target = snapPointsOffset.value[result.index];
+    const from = (activeSnapPointOffset.value ?? 0) - draggedDistance * multiplier;
+
+    snapToPoint(target, { velocity, from });
   }
 
-  function onDrag({ draggedDistance }: { draggedDistance: number }) {
-    if (activeSnapPointOffset.value === null)
-      return;
+  function onDrag({ draggedDistance }: { draggedDistance: number }): number | null {
+    const activeOffset = activeSnapPointOffset.value;
 
-    const newValue
-      = direction.value === 'bottom' || direction.value === 'right'
-        ? (activeSnapPointOffset.value ?? 0) - draggedDistance
-        : (activeSnapPointOffset.value ?? 0) + draggedDistance;
+    if (activeOffset === null || activeOffset === undefined || !Number.isFinite(activeOffset))
+      return null;
+
+    const positive = dismissMultiplier.value === 1;
+    const newValue = positive ? activeOffset - draggedDistance : activeOffset + draggedDistance;
+    const offsets = snapPointsOffset.value;
+    const lastOffset = offsets[offsets.length - 1];
 
     // Don't drag past the last (largest) snap point.
-    if ((direction.value === 'bottom' || direction.value === 'right') && newValue < snapPointsOffset.value[snapPointsOffset.value.length - 1])
-      return;
+    if (Number.isFinite(lastOffset) && (positive ? newValue < lastOffset : newValue > lastOffset))
+      return null;
 
-    if ((direction.value === 'top' || direction.value === 'left') && newValue > snapPointsOffset.value[snapPointsOffset.value.length - 1])
-      return;
+    writeTransform(drawerRef.value, translateAxis(verticalAxis.value, newValue));
 
-    setStyle(drawerRef.value, {
-      transform: isVertical(direction.value) ? `translate3d(0, ${newValue}px, 0)` : `translate3d(${newValue}px, 0, 0)`,
-    });
+    return newValue;
   }
 
   function getPercentageDragged(absDraggedDistance: number, isDraggingDown: boolean) {
@@ -278,6 +276,7 @@ export function useSnapPoints({
     activeSnapPointIndex,
     onRelease,
     onDrag,
+    restoreActiveSnapPoint,
     snapPointsOffset,
   };
 }

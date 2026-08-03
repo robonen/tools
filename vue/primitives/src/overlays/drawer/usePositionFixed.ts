@@ -79,7 +79,7 @@ export function usePositionFixed(options: PositionFixedOptions) {
 
       Object.assign(document.body.style, previousBodyPosition);
 
-      globalThis.requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         if (preventScrollRestoration.value && activeUrl.value !== globalThis.location.href) {
           activeUrl.value = globalThis.location.href;
           return;

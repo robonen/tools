@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import type { MaybeComputedElementRef } from '@/composables/component/unrefElement';
 import { unrefElement } from '@/composables/component/unrefElement';
 import { useEventListener } from '@/composables/browser/useEventListener';
+import { tryOnScopeDispose } from '@/composables/lifecycle/tryOnScopeDispose';
 
 const DEFAULT_DELAY = 500;
 const DEFAULT_THRESHOLD = 10;
@@ -219,6 +220,11 @@ export function onLongPress(
     useEventListener(elementRef, 'pointermove', onMove, listenerOptions),
     useEventListener(elementRef, ['pointerup', 'pointerleave'], onRelease, listenerOptions),
   ];
+
+  // The listeners above self-dispose with the scope, but a delay timer armed
+  // by a press that never released would outlive the component and fire the
+  // handler against a dead scope.
+  tryOnScopeDispose(clear);
 
   return (): void => {
     clear();

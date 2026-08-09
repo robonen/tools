@@ -14,6 +14,9 @@ import type { RovingDirection } from '../../internal/utils/roving-focus';
 export type AccordionType = 'single' | 'multiple';
 
 export interface AccordionRootProps extends PrimitiveProps {
+  /** Controlled open value(s). Bind with `v-model`. */
+  modelValue?: string | string[];
+
   /** Initial value(s) for uncontrolled mode. */
   defaultValue?: string | string[];
 
@@ -51,6 +54,10 @@ export interface AccordionRootProps extends PrimitiveProps {
 /**
  * Emit contract for `AccordionRoot`. The payload narrows with `Type`: a single
  * accordion emits `string | undefined`, a multiple accordion emits `string[]`.
+ *
+ * The event itself is declared by `defineModel`: passing a model key through
+ * `defineEmits` as well erases its payload type from the generated
+ * declarations, leaving consumers with `unknown`.
  */
 export interface AccordionRootEmits<Type extends AccordionType = AccordionType> {
   'update:modelValue': [value: (Type extends 'single' ? string : string[]) | undefined];
@@ -78,8 +85,6 @@ const {
   modelValue,
   as = 'div',
 } = defineProps<AccordionRootProps>();
-
-defineEmits<AccordionRootEmits>();
 
 defineSlots<{
   default?: (props: {

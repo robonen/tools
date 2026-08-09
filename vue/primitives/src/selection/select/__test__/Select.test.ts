@@ -385,3 +385,74 @@ describe('Select — native form submission', () => {
     w.unmount();
   });
 });
+
+describe('Select — attribute forwarding on the panel', () => {
+  function mountStyled() {
+    return track(mount(
+      defineComponent({
+        setup() {
+          return () => h(
+            SelectRoot,
+            { defaultOpen: true },
+            {
+              default: () => [
+                h(SelectTrigger, { id: 'styled-trigger', 'aria-label': 'Fruit' }, {
+                  default: () => h(SelectValue, { placeholder: 'Pick one' }),
+                }),
+                h(SelectPortal, null, {
+                  default: () => h(SelectContent, { class: 'panel', 'data-panel': 'yes' }, {
+                    default: () => h(SelectViewport, { class: 'viewport' }, {
+                      default: () => h(SelectItem, { value: 'apple' }, {
+                        default: () => h(SelectItemText, null, { default: () => 'Apple' }),
+                      }),
+                    }),
+                  }),
+                }),
+              ],
+            },
+          );
+        },
+      }),
+      { attachTo: document.body },
+    ));
+  }
+
+  it('forwards class and data attributes from SelectContent to the panel element', async () => {
+    const w = mountStyled();
+    await flush();
+    const panel = document.querySelector('[data-primitives-select-content]') as HTMLElement | null;
+    expect(panel).toBeTruthy();
+    expect(panel!.classList.contains('panel')).toBe(true);
+    expect(panel!.getAttribute('data-panel')).toBe('yes');
+    w.unmount();
+  });
+
+  it('forwards class from SelectViewport to the viewport element', async () => {
+    const w = mountStyled();
+    await flush();
+    const viewport = document.querySelector('[data-primitives-select-viewport]') as HTMLElement | null;
+    expect(viewport).toBeTruthy();
+    expect(viewport!.classList.contains('viewport')).toBe(true);
+    w.unmount();
+  });
+
+  it('keeps the trigger a single root that accepts native attributes', async () => {
+    const w = mountStyled();
+    await flush();
+    const trigger = getTrigger();
+    expect(trigger.id).toBe('styled-trigger');
+    expect(trigger.getAttribute('aria-label')).toBe('Fruit');
+    w.unmount();
+  });
+
+  it('injects the scrollbar-hiding stylesheet into head instead of a sibling style node', async () => {
+    const w = mountStyled();
+    await flush();
+    const injected = document.head.querySelector('#primitives-select-viewport');
+    expect(injected).toBeTruthy();
+    expect(injected!.textContent).toContain('[data-primitives-select-viewport]');
+    const panel = document.querySelector('[data-primitives-select-content]') as HTMLElement;
+    expect(panel.querySelector('style')).toBeNull();
+    w.unmount();
+  });
+});

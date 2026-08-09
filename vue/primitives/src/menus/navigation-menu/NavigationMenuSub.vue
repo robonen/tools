@@ -15,6 +15,11 @@ export interface NavigationMenuSubProps extends PrimitiveProps {
   orientation?: Orientation;
 }
 
+/**
+ * Emit contract for `NavigationMenuSub`. The model events are declared by `defineModel`:
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
 export interface NavigationMenuSubEmits {
   'update:modelValue': [value: string];
 }
@@ -34,8 +39,6 @@ import { NAVIGATION_MENU_COLLECTION_KEY } from './utils';
 defineOptions({ inheritAttrs: false });
 
 const { defaultValue, orientation = 'horizontal', as = 'div' } = defineProps<NavigationMenuSubProps>();
-
-defineEmits<NavigationMenuSubEmits>();
 
 defineSlots<{
   default?: (props: { modelValue: string }) => unknown;

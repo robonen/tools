@@ -43,6 +43,11 @@ export interface SwitchProps<T = boolean> extends PrimitiveProps {
   value?: string;
 }
 
+/**
+ * Emit contract for `Switch`. The model events are declared by `defineModel`:
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
 export interface SwitchEmits<T = boolean> {
   /** Emitted whenever the value changes (also drives `v-model`). */
   'update:modelValue': [value: T];
@@ -70,8 +75,6 @@ const {
   value: valueProp,
   as = 'button',
 } = defineProps<SwitchProps<T>>();
-
-defineEmits<SwitchEmits<T>>();
 
 const { forwardRef, currentElement } = useForwardExpose();
 

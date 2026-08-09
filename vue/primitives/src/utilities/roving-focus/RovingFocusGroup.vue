@@ -45,6 +45,14 @@ export interface RovingFocusGroupEmits {
   'update:currentTabStopId': [value: string | null | undefined];
 }
 
+/**
+ * The subset `defineEmits` declares. `update:currentTabStopId` comes from
+ * `defineModel`; passing a model key through `defineEmits` as well erases its
+ * payload type from the generated declarations, leaving consumers with
+ * `unknown`.
+ */
+type RovingFocusGroupOwnEmits = Omit<RovingFocusGroupEmits, 'update:currentTabStopId'>;
+
 export interface RovingFocusGroupContext {
   orientation: Ref<Orientation | undefined>;
   dir: Ref<Direction>;
@@ -77,7 +85,7 @@ const {
   as = 'div',
 } = defineProps<RovingFocusGroupProps>();
 
-const emit = defineEmits<RovingFocusGroupEmits>();
+const emit = defineEmits<RovingFocusGroupOwnEmits>();
 
 const config = useConfig();
 // `dir` falls back to the provider's configured direction when not given as prop.

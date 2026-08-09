@@ -44,6 +44,14 @@ export interface ToolbarRootEmits {
   /** Backs `v-model:currentTabStopId`. */
   'update:currentTabStopId': [value: string | null | undefined];
 }
+
+/**
+ * The subset `defineEmits` declares. `update:currentTabStopId` comes from
+ * `defineModel`; passing a model key through `defineEmits` as well erases its
+ * payload type from the generated declarations, leaving consumers with
+ * `unknown`.
+ */
+type ToolbarRootOwnEmits = Omit<ToolbarRootEmits, 'update:currentTabStopId'>;
 </script>
 
 <script setup lang="ts">
@@ -64,7 +72,7 @@ const {
   as = 'div',
 } = defineProps<ToolbarRootProps>();
 
-const emit = defineEmits<ToolbarRootEmits>();
+const emit = defineEmits<ToolbarRootOwnEmits>();
 
 const { forwardRef } = useForwardExpose();
 

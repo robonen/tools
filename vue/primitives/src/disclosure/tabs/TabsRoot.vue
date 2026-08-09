@@ -13,11 +13,11 @@ import type { TabsValue } from './context';
  * via `defaultValue`), orientation, keyboard roving focus across triggers, and
  * provides context to every `TabsList`, `TabsTrigger`, and `TabsContent`.
  */
-export interface TabsRootProps extends PrimitiveProps {
+export interface TabsRootProps<Value extends TabsValue = TabsValue> extends PrimitiveProps {
   /** Controlled selected value. Bind with `v-model`. */
-  modelValue?: TabsValue;
+  modelValue?: Value;
   /** Uncontrolled initial value. */
-  defaultValue?: TabsValue;
+  defaultValue?: Value;
   /** Orientation of the tab list. @default 'horizontal' */
   orientation?: 'horizontal' | 'vertical';
   /**
@@ -40,13 +40,14 @@ export interface TabsRootProps extends PrimitiveProps {
   unmountOnHide?: boolean;
 }
 
-export interface TabsRootEmits {
+export interface TabsRootEmits<Value extends TabsValue = TabsValue> {
   /** Fired when the selected value changes. */
-  'update:modelValue': [value: TabsValue | undefined];
+  'update:modelValue': [value: Value];
 }
 </script>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="Value extends TabsValue = TabsValue">
+import type { Ref } from 'vue';
 import { computed, ref, shallowRef, toRef } from 'vue';
 import { resolveNextIndex, rovingKeyToAction } from '../../internal/utils/roving-focus';
 import { useCollectionProvider } from '../../utilities/collection';
@@ -63,15 +64,16 @@ const {
   activationMode = 'automatic',
   unmountOnHide = true,
   defaultValue,
+  modelValue,
   as = 'div',
-} = defineProps<TabsRootProps>();
+} = defineProps<TabsRootProps<Value>>();
 
-defineEmits<TabsRootEmits>();
+const emit = defineEmits<TabsRootEmits<Value>>();
 
 defineSlots<{
   default?: (props: {
     /** Current selected value. */
-    value: TabsValue | undefined;
+    value: Value | undefined;
   }) => unknown;
 }>();
 
@@ -79,15 +81,23 @@ const { forwardRef } = useForwardExpose();
 
 const direction = useDirection(() => dir);
 
-const localValue = ref<TabsValue | undefined>(defaultValue);
+// `defineModel` would type `update:modelValue` as `TabsValue | undefined`,
+// forcing every consumer's `v-model` target to accept `undefined` even though
+// a tab is never deselected. The prop and the emit are declared separately so
+// the emitted payload stays exactly `TabsValue` (see AGENTS §3.2.3).
+const localValue = ref<Value | undefined>(defaultValue) as Ref<Value | undefined>;
 
-const value = defineModel<TabsValue | undefined>({
-  get: v => v ?? localValue.value,
+const value = computed<Value | undefined>({
+  get: () => modelValue ?? localValue.value,
   set: (v) => {
     localValue.value = v;
-    return v;
+    if (v !== undefined) emit('update:modelValue', v);
   },
 });
+
+// The tab parts read and write plain `TabsValue`s through the context; the
+// narrowed `Value` only exists to keep the consumer's `v-model` typed.
+const contextValue = value as unknown as Ref<TabsValue | undefined>;
 
 const baseId = useId(undefined, 'tabs');
 const tabsListElement = shallowRef<HTMLElement>();
@@ -116,7 +126,7 @@ function unregisterContent(v: TabsValue): void {
 
 function select(v: TabsValue): void {
   if (disabled) return;
-  value.value = v;
+  contextValue.value = v;
 }
 
 // DOM-order tabs via Collection primitive — survives `v-for` reorders and
@@ -161,7 +171,7 @@ function onTriggerKeyDown(event: KeyboardEvent, el: HTMLElement): void {
 }
 
 provideTabsContext({
-  value,
+  value: contextValue,
   // Identity passthroughs via `toRef` — reactive without `computed`'s effect/cache.
   orientation: toRef(() => orientation),
   direction,

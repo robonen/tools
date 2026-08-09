@@ -4,7 +4,11 @@ import type { PrimitiveProps } from '../../internal/primitive';
 /** Canonical `data-state` value reflected on the host element. */
 export type ToggleState = 'on' | 'off';
 
-/** Events emitted by `Toggle`. */
+/**
+ * Emit contract for `Toggle`. The model events are declared by `defineModel`:
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
 export interface ToggleEmits {
   /** Fired when the pressed state changes. Backs `v-model:pressed`. */
   'update:pressed': [pressed: boolean];
@@ -57,8 +61,6 @@ const {
   required = false,
   value = 'on',
 } = defineProps<ToggleProps>();
-
-defineEmits<ToggleEmits>();
 
 const { forwardRef, currentElement } = useForwardExpose();
 

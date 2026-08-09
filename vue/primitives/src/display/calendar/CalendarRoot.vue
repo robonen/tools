@@ -66,6 +66,11 @@ export interface CalendarRootProps extends PrimitiveProps {
   dateAdapter?: DateAdapter<Date>;
 }
 
+/**
+ * Emit contract for `CalendarRoot`. The model events are declared by `defineModel`:
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
 export interface CalendarRootEmits {
   'update:modelValue': [date: Date | Date[] | undefined];
   'update:placeholder': [date: Date];
@@ -105,8 +110,6 @@ const {
   disableDaysOutsideCurrentView = false,
   dateAdapter,
 } = defineProps<CalendarRootProps>();
-
-defineEmits<CalendarRootEmits>();
 
 defineSlots<{
   default?: (props: {

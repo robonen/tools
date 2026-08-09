@@ -37,6 +37,11 @@ export interface ProgressRootProps extends PrimitiveProps {
   accessibleLabel?: string | ((value: number | null, max: number) => string | undefined);
 }
 
+/**
+ * Emit contract for `ProgressRoot`. The model events are declared by `defineModel`:
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
 export interface ProgressRootEmits {
   /** Emitted when the value changes (after validation/clamping). */
   'update:modelValue': [value: number | null];
@@ -58,8 +63,6 @@ const {
   accessibleLabel,
   as = 'div',
 } = defineProps<ProgressRootProps>();
-
-defineEmits<ProgressRootEmits>();
 
 const { forwardRef } = useForwardExpose();
 

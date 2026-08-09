@@ -8,6 +8,7 @@
     "vueCompilerOptions": {
         "strictTemplates": true,
         "fallthroughAttributes": true,
+        "htmlAttributes": ["aria-*", "data-*"],
         "inferTemplateDollarAttrs": true,
         "inferTemplateDollarEl": true,
         "inferTemplateDollarRefs": true

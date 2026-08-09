@@ -4,13 +4,6 @@ import type { AcceptableValue } from './utils';
 
 import { useContextFactory } from '@robonen/vue';
 
-/**
- * @deprecated Kept for backward compatibility. The select now accepts any
- * {@link AcceptableValue} (string/number/boolean/object). `SelectValue` remains
- * a string alias so existing `string`-typed consumers keep compiling.
- */
-export type SelectValue = string;
-
 export interface SelectOption {
   value: AcceptableValue;
   disabled?: boolean;

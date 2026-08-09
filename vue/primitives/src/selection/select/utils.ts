@@ -9,6 +9,11 @@ export const OPEN_KEYS = [' ', 'Enter', 'ArrowUp', 'ArrowDown'];
 export const SELECTION_KEYS = [' ', 'Enter'];
 export const CONTENT_MARGIN = 10;
 
+/** Hides the viewport's scrollbar across engines while keeping it scrollable. */
+export const VIEWPORT_SCROLLBAR_CSS
+  = '[data-primitives-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}'
+    + '[data-primitives-select-viewport]::-webkit-scrollbar{display:none;}';
+
 export function getOpenState(open: boolean): 'open' | 'closed' {
   return open ? 'open' : 'closed';
 }

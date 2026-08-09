@@ -38,6 +38,11 @@ export interface NavigationMenuRootProps extends PrimitiveProps {
   unmountOnHide?: boolean;
 }
 
+/**
+ * Emit contract for `NavigationMenuRoot`. The model events are declared by `defineModel`:
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
 export interface NavigationMenuRootEmits {
   'update:modelValue': [value: string];
 }
@@ -69,8 +74,6 @@ const {
   unmountOnHide = true,
   as = 'nav',
 } = defineProps<NavigationMenuRootProps>();
-
-defineEmits<NavigationMenuRootEmits>();
 
 defineSlots<{
   default?: (props: { modelValue: string }) => unknown;

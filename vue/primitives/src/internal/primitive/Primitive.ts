@@ -4,7 +4,35 @@ import { renderSlotChild } from './Slot';
 
 type FunctionalComponentContext = Omit<SetupContext, 'expose'>;
 
-export interface PrimitiveProps {
+type Booleanish = boolean | 'true' | 'false';
+
+/**
+ * Global DOM attributes any part accepts and forwards, through `$attrs`, to the
+ * element it renders. They are deliberately kept out of the runtime props (the
+ * `@vue-ignore` marker on the heritage clause below stops the SFC compiler from
+ * lifting them out of `$attrs`), so this only teaches `strictTemplates` that
+ * they are valid — the runtime behaviour is unchanged.
+ */
+export interface PrimitiveAttributes {
+  id?: string;
+  role?: string;
+  title?: string;
+  tabindex?: number | string;
+  lang?: string;
+  dir?: string;
+  hidden?: Booleanish | 'until-found' | '';
+  inert?: Booleanish;
+  autofocus?: Booleanish;
+  draggable?: Booleanish;
+  spellcheck?: Booleanish;
+  translate?: 'yes' | 'no';
+  nonce?: string;
+  part?: string;
+  slot?: string;
+  [key: `data-${string}` | `aria-${string}`]: unknown;
+}
+
+export interface PrimitiveProps extends /* @vue-ignore */ PrimitiveAttributes {
   as?: keyof IntrinsicElementAttributes | Component;
 }
 

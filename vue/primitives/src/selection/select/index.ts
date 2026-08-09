@@ -29,7 +29,6 @@ export {
 } from './context';
 
 export type {
-  SelectValue,
   SelectOption,
   SelectRootContext,
   SelectContentContext,
@@ -38,7 +37,7 @@ export type {
   SelectItemContext,
 } from './context';
 export type { AcceptableValue as SelectAcceptableValue } from './utils';
-export type { SelectRootProps, SelectRootEmits } from './SelectRoot.vue';
+export type { SelectModelValue, SelectRootProps, SelectRootEmits } from './SelectRoot.vue';
 export type { SelectTriggerProps } from './SelectTrigger.vue';
 export type { SelectValueProps } from './SelectValue.vue';
 export type { SelectIconProps } from './SelectIcon.vue';

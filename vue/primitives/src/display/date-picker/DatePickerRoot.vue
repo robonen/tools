@@ -40,6 +40,11 @@ export interface DatePickerRootProps extends PrimitiveProps,
   hourCycle?: HourCycle;
 }
 
+/**
+ * Emit contract for `DatePickerRoot`. The model events are declared by `defineModel`:
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
 export interface DatePickerRootEmits {
   'update:modelValue': [date: Date | undefined];
   'update:placeholder': [date: Date];
@@ -94,8 +99,6 @@ const {
   calendarLabel = 'Calendar',
   dateAdapter,
 } = defineProps<DatePickerRootProps>();
-
-defineEmits<DatePickerRootEmits>();
 
 const { forwardRef, currentElement: parentElement } = useForwardExpose();
 

@@ -28,6 +28,11 @@ import { useSelectRootContext } from './context';
 import SelectContentImpl from './SelectContentImpl.vue';
 import SelectProvider from './SelectProvider.vue';
 
+// Neither branch below is a single element root (`Presence` wraps the panel,
+// the closed branch is a `Teleport`), so Vue cannot inherit `class`/`style` or
+// any other attribute automatically — they are forwarded onto the panel itself.
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<SelectContentProps>();
 const emit = defineEmits<SelectContentEmits>();
 const rootCtx = useSelectRootContext();
@@ -57,7 +62,7 @@ onMounted(() => {
     :present="present"
   >
     <SelectContentImpl
-      v-bind="props"
+      v-bind="{ ...props, ...$attrs }"
       @close-auto-focus="emit('closeAutoFocus', $event)"
       @escape-key-down="emit('escapeKeyDown', $event)"
       @pointer-down-outside="emit('pointerDownOutside', $event)"

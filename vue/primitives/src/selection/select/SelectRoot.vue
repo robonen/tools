@@ -3,6 +3,12 @@ import type { Direction } from '../../utilities/config-provider';
 import type { AcceptableValue } from './utils';
 
 /**
+ * Shape of the select's model value: an array of `T` in multiple mode, a bare
+ * `T` otherwise. Keeps `v-model` narrow on both sides of the binding.
+ */
+export type SelectModelValue<T extends AcceptableValue, Multiple extends boolean> = Multiple extends true ? T[] : T;
+
+/**
  * A custom, fully stylable replacement for the native `<select>` element: a
  * trigger button that opens a floating listbox of options, with full keyboard
  * support (arrow keys, Home/End, type-ahead search), focus trapping, and an
@@ -16,7 +22,9 @@ import type { AcceptableValue } from './utils';
  * (compared via `by`). Compose it from a `SelectTrigger` (with
  * `SelectValue`/`SelectIcon`) plus a portalled `SelectContent` of `SelectItem`s.
  */
-export interface SelectRootProps<T extends AcceptableValue = AcceptableValue> {
+export interface SelectRootProps<T extends AcceptableValue = AcceptableValue, Multiple extends boolean = false> {
+  /** Controlled value. Bind with `v-model`. */
+  modelValue?: SelectModelValue<T, Multiple>;
   /** Reading direction. Falls back to ConfigProvider. */
   dir?: Direction;
   /** Disable the whole select. */
@@ -26,11 +34,11 @@ export interface SelectRootProps<T extends AcceptableValue = AcceptableValue> {
   /** Native input name for form submission. */
   name?: string;
   /** Uncontrolled default value. */
-  defaultValue?: T | T[];
+  defaultValue?: SelectModelValue<T, Multiple>;
   /** Uncontrolled default open state. */
   defaultOpen?: boolean;
   /** Allow selecting multiple options; the model becomes an array. */
-  multiple?: boolean;
+  multiple?: Multiple;
   /**
    * Compare object values by a property key or a custom comparator. Omitted →
    * `===` for primitives / structural deep-equality for objects.
@@ -40,13 +48,20 @@ export interface SelectRootProps<T extends AcceptableValue = AcceptableValue> {
   autocomplete?: string;
 }
 
-export interface SelectRootEmits<T extends AcceptableValue = AcceptableValue> {
-  'update:modelValue': [value: T | T[] | undefined];
+export interface SelectRootEmits<T extends AcceptableValue = AcceptableValue, Multiple extends boolean = false> {
+  'update:modelValue': [value: SelectModelValue<T, Multiple>];
   'update:open': [open: boolean];
 }
+
+/**
+ * The subset `defineEmits` declares. `update:open` comes from `defineModel`;
+ * passing a model key through `defineEmits` as well erases its payload type
+ * from the generated declarations, leaving consumers with `unknown`.
+ */
+type SelectRootOwnEmits<T extends AcceptableValue, Multiple extends boolean> = Omit<SelectRootEmits<T, Multiple>, 'update:open'>;
 </script>
 
-<script setup lang="ts" generic="T extends AcceptableValue = AcceptableValue">
+<script setup lang="ts" generic="T extends AcceptableValue = AcceptableValue, Multiple extends boolean = false">
 import type { Ref } from 'vue';
 import { computed, ref, shallowRef, toRef, watch } from 'vue';
 
@@ -60,6 +75,7 @@ import { compare, shouldShowPlaceholder } from './utils';
 defineOptions({ inheritAttrs: false });
 
 const {
+  modelValue,
   dir,
   disabled = false,
   required = false,
@@ -69,11 +85,13 @@ const {
   multiple = false,
   by,
   autocomplete,
-} = defineProps<SelectRootProps<T>>();
+} = defineProps<SelectRootProps<T, Multiple>>();
+
+const emit = defineEmits<SelectRootOwnEmits<T, Multiple>>();
 
 defineSlots<{
   default?: (props: {
-    modelValue: T | T[] | undefined;
+    modelValue: SelectModelValue<T, Multiple> | undefined;
     open: boolean;
   }) => unknown;
 }>();
@@ -88,15 +106,25 @@ const open = defineModel<boolean>('open', {
   },
 });
 
-const localValue = ref<T | T[] | undefined>(defaultValue ?? (multiple ? ([] as T[]) : undefined)) as Ref<T | T[] | undefined>;
-const value = defineModel<T | T[] | undefined>('modelValue', {
-  default: undefined,
-  get: v => (v ?? localValue.value),
+type ModelValue = SelectModelValue<T, Multiple>;
+
+// `defineModel` would type `update:modelValue` as `ModelValue | undefined`,
+// forcing every consumer's `v-model` target to accept `undefined` even though
+// a selection is never cleared. The prop and the emit are declared separately
+// so the emitted payload stays exactly `ModelValue` (see AGENTS §3.2.3).
+const localValue = ref(defaultValue ?? (multiple ? [] : undefined)) as Ref<ModelValue | undefined>;
+const value = computed<ModelValue | undefined>({
+  get: () => modelValue ?? localValue.value,
   set: (v) => {
     localValue.value = v;
-    return v;
+    emit('update:modelValue', v as ModelValue);
   },
 });
+
+// The public model type is conditional on `Multiple`, which TypeScript cannot
+// narrow inside the component; the internal logic reads and writes the union
+// through this widened alias instead.
+const model = value as unknown as Ref<T | T[] | undefined>;
 
 const contentId = useId(undefined, 'select-content');
 const dirRef = toRef(() => dir);
@@ -119,7 +147,7 @@ const displayValue = ref<string | undefined>(undefined);
 const rawOptions = new Set<SelectOption>();
 const optionsSet = shallowRef(new Set<SelectOption>());
 
-const isEmptyModelValue = computed(() => shouldShowPlaceholder(value.value));
+const isEmptyModelValue = computed(() => shouldShowPlaceholder(model.value));
 
 function getOptionFrom(source: Iterable<SelectOption>, v: AcceptableValue): SelectOption | undefined {
   for (const option of source) {
@@ -143,8 +171,8 @@ function onOptionRemove(option: SelectOption) {
 }
 
 // Persist a single-value label for the legacy `displayValue` slot path.
-watch([optionsSet, value], () => {
-  const current = value.value;
+watch([optionsSet, model], () => {
+  const current = model.value;
   if (current === undefined || Array.isArray(current)) return;
   const text = getOptionFrom(optionsSet.value, current)?.textContent;
   if (text !== undefined) displayValue.value = text;
@@ -152,21 +180,21 @@ watch([optionsSet, value], () => {
 
 function handleValueChange(newValue: AcceptableValue) {
   if (multiple) {
-    const array = Array.isArray(value.value) ? [...value.value] : [];
+    const array = Array.isArray(model.value) ? [...model.value] : [];
     const index = array.findIndex(v => compare(v as T, newValue as T, by as never));
     if (index === -1) array.push(newValue as T);
     else array.splice(index, 1);
-    value.value = [...array] as T[];
+    model.value = [...array] as T[];
   }
   else {
-    value.value = newValue as T;
+    model.value = newValue as T;
     displayValue.value = getOptionFrom(rawOptions, newValue)?.textContent;
     open.value = false;
   }
 }
 
 function isSelectedValue(itemValue: AcceptableValue): boolean {
-  const current = value.value;
+  const current = model.value;
   if (current === undefined) return false;
   if (Array.isArray(current)) {
     for (const v of current) {
@@ -197,7 +225,7 @@ const isFormControl = computed(() => {
 });
 
 provideSelectRootContext({
-  value,
+  value: model,
   onValueChange: handleValueChange,
   open,
   onOpenChange: (v) => { open.value = v; },
@@ -237,7 +265,7 @@ provideSelectRootContext({
       :disabled="disabled"
       :multiple="multiple"
       :options="nativeOptions"
-      :value="value"
+      :value="model"
       @change="handleValueChange"
     />
 
@@ -245,7 +273,7 @@ provideSelectRootContext({
       v-else-if="name"
       type="hidden"
       :name="name"
-      :value="Array.isArray(value) ? '' : (value ?? '')"
+      :value="Array.isArray(model) ? '' : (model ?? '')"
       :required="required"
       :disabled="disabled"
       :autocomplete="autocomplete"

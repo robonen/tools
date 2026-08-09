@@ -20,17 +20,22 @@ export interface SelectViewportProps extends PrimitiveProps {
 <script setup lang="ts">
 import { ref, toRef, watchPostEffect } from 'vue';
 
-import { useForwardExpose } from '@robonen/vue';
+import { useForwardExpose, useStyleTag } from '@robonen/vue';
 import { useNonce } from '../../utilities/config-provider';
 import { Primitive } from '../../internal/primitive';
 import { useSelectContentContext, useSelectItemAlignedPositionContext } from './context';
-import { CONTENT_MARGIN } from './utils';
+import { CONTENT_MARGIN, VIEWPORT_SCROLLBAR_CSS } from './utils';
 
 const { as = 'div', nonce: propNonce } = defineProps<SelectViewportProps>();
 
 const { forwardRef, currentElement } = useForwardExpose();
 const contentCtx = useSelectContentContext();
 const nonce = useNonce(toRef(() => propNonce));
+
+// Injected into `<head>` (one reference-counted tag per document) rather than
+// rendered as a sibling `<style>`: a second root node would turn this component
+// into a fragment, and Vue cannot inherit a consumer's `class` onto a fragment.
+useStyleTag(VIEWPORT_SCROLLBAR_CSS, { id: 'primitives-select-viewport', nonce: nonce.value });
 
 const alignedCtx = contentCtx.position === 'item-aligned'
   ? useSelectItemAlignedPositionContext(null as never)
@@ -81,9 +86,5 @@ function handleScroll(event: Event) {
     @scroll="handleScroll"
   >
     <slot />
-  </Primitive>
-  <Primitive as="style" :nonce="nonce">
-    [data-primitives-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}
-    [data-primitives-select-viewport]::-webkit-scrollbar{display:none;}
   </Primitive>
 </template>

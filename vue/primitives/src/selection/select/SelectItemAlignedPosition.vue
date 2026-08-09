@@ -47,6 +47,16 @@ const shouldExpandOnScrollRef = ref(false);
 const shouldRepositionRef = ref(true);
 const contentZIndex = ref('');
 
+// When nothing is selected the content adopts the first valid item as the
+// alignment anchor, but only that item is registered — its text node registers
+// solely for the *selected* value. Recover it from the item's own label
+// association instead of demanding a second registration, which would mean
+// writing to the anchor refs from inside the item's own tracking effect.
+function itemTextOf(item: HTMLElement | undefined): HTMLElement | undefined {
+  const id = item?.getAttribute('aria-labelledby');
+  return id ? item?.ownerDocument.getElementById(id) ?? undefined : undefined;
+}
+
 function position() {
   const trigger = rootCtx.triggerElement.value;
   const valueNode = rootCtx.valueElement.value;
@@ -54,9 +64,25 @@ function position() {
   const content = contentElement.value;
   const viewport = contentCtx.viewportRef.value;
   const selectedItem = contentCtx.selectedItemRef.value;
-  const selectedItemText = contentCtx.selectedItemTextRef.value;
+  const selectedItemText = contentCtx.selectedItemTextRef.value ?? itemTextOf(selectedItem);
 
-  if (!trigger || !valueNode || !wrapper || !content || !viewport || !selectedItem || !selectedItemText) {
+  if (!trigger || !wrapper || !content || !viewport) {
+    emit('placed');
+    return;
+  }
+
+  // Item-aligned placement centres the panel on the selected item, so without
+  // one there is nothing to align to — an empty option list, or items that have
+  // not registered yet. Drop the panel under the trigger instead of returning:
+  // the wrapper is `position: fixed`, so leaving it unplaced pins it to the
+  // viewport origin, where it reads as "the dropdown does not open".
+  if (!valueNode || !selectedItem || !selectedItemText) {
+    const rect = trigger.getBoundingClientRect();
+    const rightEdge = window.innerWidth - CONTENT_MARGIN;
+    wrapper.style.minWidth = `${rect.width}px`;
+    wrapper.style.left = `${clamp(rect.left, CONTENT_MARGIN, Math.max(CONTENT_MARGIN, rightEdge - rect.width))}px`;
+    wrapper.style.top = `${rect.bottom}px`;
+    wrapper.style.maxHeight = `${Math.max(0, window.innerHeight - rect.bottom - CONTENT_MARGIN)}px`;
     emit('placed');
     return;
   }

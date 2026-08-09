@@ -456,3 +456,62 @@ describe('Select — attribute forwarding on the panel', () => {
     w.unmount();
   });
 });
+
+describe('Select — panel placement without a selection', () => {
+  function mountUnmatched(options: Opt[]) {
+    return track(mount(
+      defineComponent({
+        setup() {
+          // A model value that matches no option — a stale id, a deleted user,
+          // a directory that has not loaded yet.
+          return () => h(
+            SelectRoot,
+            { defaultOpen: true, modelValue: 'gone' as never },
+            {
+              default: () => [
+                h(SelectTrigger, null, { default: () => h(SelectValue, { placeholder: 'Pick one' }) }),
+                h(SelectPortal, null, {
+                  default: () => h(SelectContent, null, {
+                    default: () => h(SelectViewport, null, {
+                      default: () => options.map(opt =>
+                        h(SelectItem, { key: String(opt.value), value: opt.value as never }, {
+                          default: () => h(SelectItemText, null, { default: () => opt.label }),
+                        }),
+                      ),
+                    }),
+                  }),
+                }),
+              ],
+            },
+          );
+        },
+      }),
+      { attachTo: document.body },
+    ));
+  }
+
+  it('aligns on the first valid item when the model matches nothing', async () => {
+    const w = mountUnmatched([{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }]);
+    await flush();
+    const wrapper = document.querySelector('[data-primitives-select-content-wrapper]') as HTMLElement | null;
+    expect(wrapper).toBeTruthy();
+    // Item-aligned placement sets all three; bailing out leaves them empty and
+    // the fixed wrapper pinned to the viewport origin.
+    expect(wrapper!.style.minWidth).not.toBe('');
+    expect(wrapper!.style.height).not.toBe('');
+    expect(wrapper!.style.left || wrapper!.style.right).not.toBe('');
+    w.unmount();
+  });
+
+  it('places the panel instead of leaving it pinned to the viewport origin', async () => {
+    const w = mountUnmatched([]);
+    await flush();
+    const wrapper = document.querySelector('[data-primitives-select-content-wrapper]') as HTMLElement | null;
+    expect(wrapper).toBeTruthy();
+    // With no items at all there is nothing to align to; the fallback still has
+    // to give the wrapper explicit coordinates.
+    expect(wrapper!.style.top).not.toBe('');
+    expect(wrapper!.style.left).not.toBe('');
+    w.unmount();
+  });
+});

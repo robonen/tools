@@ -63,8 +63,11 @@ const selectedItemTextRef = rootCtx.selectedItemTextRef;
 
 const firstValidItemFoundRef = ref(false);
 
-// Recompute the selected/first-valid item afresh for this open cycle.
+// Recompute the selected/first-valid item afresh for this open cycle. The text
+// node is reset alongside it: the item-aligned positioner reads the two as a
+// pair, so a stale text node would pair with a fresh item and skew placement.
 selectedItemRef.value = undefined;
+selectedItemTextRef.value = undefined;
 
 // Resolve the actual listbox content element. The item-aligned strategy renders
 // a positioning wrapper whose first child is the listbox; the popper strategy

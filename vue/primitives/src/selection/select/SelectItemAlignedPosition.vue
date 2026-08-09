@@ -57,6 +57,36 @@ function itemTextOf(item: HTMLElement | undefined): HTMLElement | undefined {
   return id ? item?.ownerDocument.getElementById(id) ?? undefined : undefined;
 }
 
+/**
+ * Inline styles the wrapper is positioned with. Written as one object and
+ * committed in a single pass: every geometry read below happens before the
+ * first write, so the browser performs one layout for the whole placement
+ * instead of one per interleaved read.
+ *
+ * Both edges of each axis are always present. A resize can flip the vertical
+ * branch, and leaving the previous edge behind would over-constrain the box.
+ */
+interface WrapperPlacement {
+  minWidth: string;
+  left: string;
+  right: string;
+  top: string;
+  bottom: string;
+  height: string;
+  minHeight: string;
+  maxHeight: string;
+  margin: string;
+}
+
+const EMPTY_PLACEMENT: WrapperPlacement = {
+  minWidth: '', left: '', right: '', top: '', bottom: '',
+  height: '', minHeight: '', maxHeight: '', margin: '',
+};
+
+function commit(wrapper: HTMLElement, placement: Partial<WrapperPlacement>) {
+  Object.assign(wrapper.style, EMPTY_PLACEMENT, placement);
+}
+
 function position() {
   const trigger = rootCtx.triggerElement.value;
   const valueNode = rootCtx.valueElement.value;
@@ -79,20 +109,45 @@ function position() {
   if (!valueNode || !selectedItem || !selectedItemText) {
     const rect = trigger.getBoundingClientRect();
     const rightEdge = window.innerWidth - CONTENT_MARGIN;
-    wrapper.style.minWidth = `${rect.width}px`;
-    wrapper.style.left = `${clamp(rect.left, CONTENT_MARGIN, Math.max(CONTENT_MARGIN, rightEdge - rect.width))}px`;
-    wrapper.style.top = `${rect.bottom}px`;
-    wrapper.style.maxHeight = `${Math.max(0, window.innerHeight - rect.bottom - CONTENT_MARGIN)}px`;
+    commit(wrapper, {
+      minWidth: `${rect.width}px`,
+      left: `${clamp(rect.left, CONTENT_MARGIN, Math.max(CONTENT_MARGIN, rightEdge - rect.width))}px`,
+      top: `${rect.bottom}px`,
+      maxHeight: `${Math.max(0, window.innerHeight - rect.bottom - CONTENT_MARGIN)}px`,
+    });
     emit('placed');
     return;
   }
 
+  // --- Measure: every layout read lives here, before the first write ---
   const triggerRect = trigger.getBoundingClientRect();
-
-  // --- Horizontal positioning ---
   const contentRect = content.getBoundingClientRect();
   const valueNodeRect = valueNode.getBoundingClientRect();
   const itemTextRect = selectedItemText.getBoundingClientRect();
+
+  const items = Array.from(
+    viewport.querySelectorAll<HTMLElement>('[data-primitives-select-item]'),
+  );
+  const itemsHeight = viewport.scrollHeight;
+  const viewportOffsetTop = viewport.offsetTop;
+  const viewportOffsetHeight = viewport.offsetHeight;
+  const contentClientHeight = content.clientHeight;
+  const selectedItemHeight = selectedItem.offsetHeight;
+  const selectedItemOffsetTop = selectedItem.offsetTop;
+
+  const contentStyles = globalThis.getComputedStyle(content);
+  const contentBorderTopWidth = Number.parseInt(contentStyles.borderTopWidth, 10) || 0;
+  const contentPaddingTop = Number.parseInt(contentStyles.paddingTop, 10) || 0;
+  const contentBorderBottomWidth = Number.parseInt(contentStyles.borderBottomWidth, 10) || 0;
+  const contentPaddingBottom = Number.parseInt(contentStyles.paddingBottom, 10) || 0;
+
+  const viewportStyles = globalThis.getComputedStyle(viewport);
+  const viewportPaddingTop = Number.parseInt(viewportStyles.paddingTop, 10) || 0;
+  const viewportPaddingBottom = Number.parseInt(viewportStyles.paddingBottom, 10) || 0;
+
+  // --- Compute ---
+  const placement: Partial<WrapperPlacement> = {};
+  const availableHeight = window.innerHeight - CONTENT_MARGIN * 2;
 
   if (rootCtx.dir.value !== 'rtl') {
     const itemTextOffset = itemTextRect.left - contentRect.left;
@@ -101,10 +156,9 @@ function position() {
     const minContentWidth = triggerRect.width + leftDelta;
     const contentWidth = Math.max(minContentWidth, contentRect.width);
     const rightEdge = window.innerWidth - CONTENT_MARGIN;
-    const clampedLeft = clamp(left, CONTENT_MARGIN, Math.max(CONTENT_MARGIN, rightEdge - contentWidth));
 
-    wrapper.style.minWidth = `${minContentWidth}px`;
-    wrapper.style.left = `${clampedLeft}px`;
+    placement.minWidth = `${minContentWidth}px`;
+    placement.left = `${clamp(left, CONTENT_MARGIN, Math.max(CONTENT_MARGIN, rightEdge - contentWidth))}px`;
   }
   else {
     const itemTextOffset = contentRect.right - itemTextRect.right;
@@ -113,67 +167,52 @@ function position() {
     const minContentWidth = triggerRect.width + rightDelta;
     const contentWidth = Math.max(minContentWidth, contentRect.width);
     const leftEdge = window.innerWidth - CONTENT_MARGIN;
-    const clampedRight = clamp(right, CONTENT_MARGIN, Math.max(CONTENT_MARGIN, leftEdge - contentWidth));
 
-    wrapper.style.minWidth = `${minContentWidth}px`;
-    wrapper.style.right = `${clampedRight}px`;
+    placement.minWidth = `${minContentWidth}px`;
+    placement.right = `${clamp(right, CONTENT_MARGIN, Math.max(CONTENT_MARGIN, leftEdge - contentWidth))}px`;
   }
 
-  // --- Vertical positioning ---
-  const items = Array.from(
-    viewport.querySelectorAll<HTMLElement>('[data-primitives-select-item]'),
-  );
-  const availableHeight = window.innerHeight - CONTENT_MARGIN * 2;
-  const itemsHeight = viewport.scrollHeight;
-
-  const contentStyles = globalThis.getComputedStyle(content);
-  const contentBorderTopWidth = Number.parseInt(contentStyles.borderTopWidth, 10) || 0;
-  const contentPaddingTop = Number.parseInt(contentStyles.paddingTop, 10) || 0;
-  const contentBorderBottomWidth = Number.parseInt(contentStyles.borderBottomWidth, 10) || 0;
-  const contentPaddingBottom = Number.parseInt(contentStyles.paddingBottom, 10) || 0;
   const fullContentHeight = contentBorderTopWidth + contentPaddingTop + itemsHeight + contentPaddingBottom + contentBorderBottomWidth;
-  const minContentHeight = Math.min(selectedItem.offsetHeight * 5, fullContentHeight);
-
-  const viewportStyles = globalThis.getComputedStyle(viewport);
-  const viewportPaddingTop = Number.parseInt(viewportStyles.paddingTop, 10) || 0;
-  const viewportPaddingBottom = Number.parseInt(viewportStyles.paddingBottom, 10) || 0;
-
   const topEdgeToTriggerMiddle = triggerRect.top + triggerRect.height / 2 - CONTENT_MARGIN;
   const triggerMiddleToBottomEdge = availableHeight - topEdgeToTriggerMiddle;
 
-  const selectedItemHalfHeight = selectedItem.offsetHeight / 2;
-  const itemOffsetMiddle = selectedItem.offsetTop + selectedItemHalfHeight;
+  const selectedItemHalfHeight = selectedItemHeight / 2;
+  const itemOffsetMiddle = selectedItemOffsetTop + selectedItemHalfHeight;
   const contentTopToItemMiddle = contentBorderTopWidth + contentPaddingTop + itemOffsetMiddle;
   const itemMiddleToContentBottom = fullContentHeight - contentTopToItemMiddle;
 
-  const willAlignWithoutTopOverflow = contentTopToItemMiddle <= topEdgeToTriggerMiddle;
+  let scrollTop: number | undefined;
 
-  if (willAlignWithoutTopOverflow) {
+  if (contentTopToItemMiddle <= topEdgeToTriggerMiddle) {
     const isLastItem = selectedItem === items.at(-1);
-    wrapper.style.bottom = '0px';
-    const viewportOffsetBottom = content.clientHeight - viewport.offsetTop - viewport.offsetHeight;
+    const viewportOffsetBottom = contentClientHeight - viewportOffsetTop - viewportOffsetHeight;
     const clampedTriggerMiddleToBottomEdge = Math.max(
       triggerMiddleToBottomEdge,
       selectedItemHalfHeight + (isLastItem ? viewportPaddingBottom : 0) + viewportOffsetBottom + contentBorderBottomWidth,
     );
-    const height = contentTopToItemMiddle + clampedTriggerMiddleToBottomEdge;
-    wrapper.style.height = `${height}px`;
+
+    placement.bottom = '0px';
+    placement.height = `${contentTopToItemMiddle + clampedTriggerMiddleToBottomEdge}px`;
   }
   else {
     const isFirstItem = selectedItem === items[0];
-    wrapper.style.top = '0px';
     const clampedTopEdgeToTriggerMiddle = Math.max(
       topEdgeToTriggerMiddle,
-      contentBorderTopWidth + viewport.offsetTop + (isFirstItem ? viewportPaddingTop : 0) + selectedItemHalfHeight,
+      contentBorderTopWidth + viewportOffsetTop + (isFirstItem ? viewportPaddingTop : 0) + selectedItemHalfHeight,
     );
-    const height = clampedTopEdgeToTriggerMiddle + itemMiddleToContentBottom;
-    wrapper.style.height = `${height}px`;
-    viewport.scrollTop = contentTopToItemMiddle - topEdgeToTriggerMiddle + viewport.offsetTop;
+
+    placement.top = '0px';
+    placement.height = `${clampedTopEdgeToTriggerMiddle + itemMiddleToContentBottom}px`;
+    scrollTop = contentTopToItemMiddle - topEdgeToTriggerMiddle + viewportOffsetTop;
   }
 
-  wrapper.style.margin = `${CONTENT_MARGIN}px 0`;
-  wrapper.style.minHeight = `${minContentHeight}px`;
-  wrapper.style.maxHeight = `${availableHeight}px`;
+  placement.margin = `${CONTENT_MARGIN}px 0`;
+  placement.minHeight = `${Math.min(selectedItemHeight * 5, fullContentHeight)}px`;
+  placement.maxHeight = `${availableHeight}px`;
+
+  // --- Commit ---
+  commit(wrapper, placement);
+  if (scrollTop !== undefined) viewport.scrollTop = scrollTop;
 
   emit('placed');
   requestAnimationFrame(() => (shouldExpandOnScrollRef.value = true));

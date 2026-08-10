@@ -23,5 +23,5 @@ export const image = defineBlock({
     }],
   },
   component: ImageBlock,
-  meta: { title: 'Image', icon: 'image', keywords: ['image', 'img', 'picture', 'photo'], group: 'media' },
+  meta: { title: 'Image', icon: 'image', keywords: ['image', 'img', 'picture', 'photo'], group: 'media', description: 'An image with an optional caption.' },
 });

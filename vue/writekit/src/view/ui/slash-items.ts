@@ -6,6 +6,7 @@ export interface SlashItem {
   title: string;
   group: string;
   keywords: readonly string[];
+  description?: string;
 }
 
 /**
@@ -21,6 +22,7 @@ export function getSlashItems(registry: Registry, query = ''): SlashItem[] {
       title: def.meta!.title,
       group: def.meta!.group ?? 'blocks',
       keywords: def.meta!.keywords ?? [],
+      ...(def.meta!.description !== undefined && { description: def.meta!.description }),
     }));
 
   const q = query.trim().toLowerCase();

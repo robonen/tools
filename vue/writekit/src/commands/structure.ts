@@ -2,6 +2,7 @@ import type { Attrs, Node } from '../model';
 import {
   blockById,
   caret,
+  createNode,
   inlineLength,
   isAcrossBlocks,
   isCollapsed,
@@ -83,6 +84,36 @@ export const splitBlock: Command = (state, dispatch) => {
     tr.splitBlock(pos, cont.type, cont.attrs);
     tr.setSelection(caret(tr.lastSplitId!, 0));
     dispatch(tr);
+  }
+
+  return true;
+};
+
+/**
+ * Enter with an atom selected: start a paragraph right below it.
+ *
+ * An atom (image, divider, an app's card) has no text position inside it, so
+ * without this the only way OUT of a selected atom — and the only way to write
+ * between two atoms, or after one that ends the document — was to abandon the
+ * keyboard. Mirrors `createParagraphNear` in the ProseMirror tradition.
+ */
+export const exitAtom: Command = (state, dispatch) => {
+  const sel = state.selection;
+
+  if (sel.kind !== 'node' || sel.ids.length === 0 || !state.registry.hasBlock('paragraph'))
+    return false;
+
+  const lastId = sel.ids.at(-1)!;
+  const index = state.doc.content.findIndex(block => block.id === lastId);
+
+  if (index === -1)
+    return false;
+
+  if (dispatch) {
+    const paragraph = createNode('paragraph');
+    dispatch(createTransaction(state)
+      .insertBlock(paragraph, index + 1)
+      .setSelection(caret(paragraph.id, 0)));
   }
 
   return true;

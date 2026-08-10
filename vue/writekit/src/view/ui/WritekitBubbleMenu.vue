@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, ref, shallowRef } from 'vue';
 import { DismissableLayer, PopperContent, PopperRoot, Portal } from '@robonen/primitives';
 import { isCollapsed } from '../../model';
 import { isMarkActive, toggleMark } from '../../commands';
@@ -17,7 +17,7 @@ const ctx = useWritekitContext();
 // Virtual reference (a `Measurable`) anchored to the selection rect — Popper
 // positions against it with no trigger element. Reassigned on every refresh so
 // PopperContent re-resolves position as the selection moves.
-const reference = ref<{ getBoundingClientRect: () => DOMRect } | undefined>();
+const reference = shallowRef<{ getBoundingClientRect: () => DOMRect } | undefined>();
 const open = ref(false);
 const rev = ref(0);
 
@@ -54,8 +54,11 @@ function toggle(type: string): void {
 </script>
 
 <template>
-  <Portal to="body">
-    <PopperRoot>
+  <!-- Combobox layering: PopperRoot provides the positioning context outside
+       the portal. The bare Portal resolves its target from the ConfigProvider's
+       teleportTarget (body unless the app overrides it). -->
+  <PopperRoot>
+    <Portal>
       <PopperContent
         v-if="open && reference"
         :reference="reference"
@@ -83,6 +86,6 @@ function toggle(type: string): void {
           </slot>
         </DismissableLayer>
       </PopperContent>
-    </PopperRoot>
-  </Portal>
+    </Portal>
+  </PopperRoot>
 </template>

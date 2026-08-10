@@ -14,7 +14,7 @@ function indentOf(node: Node): number {
  * `checked` for to-dos). Markers/numbering and indentation are presentation
  * (CSS), so the model stays a simple flat block list that maps cleanly to a CRDT.
  */
-function defineListBlock(options: { type: string; listType: ListType; title: string; keywords: readonly string[] }) {
+function defineListBlock(options: { type: string; listType: ListType; title: string; keywords: readonly string[]; description?: string }) {
   const todo = options.listType === 'todo';
 
   const attrs: AttrsSpec = {
@@ -43,10 +43,16 @@ function defineListBlock(options: { type: string; listType: ListType; title: str
       parseDOM: [{ tag: `[data-list='${options.listType}']` }],
     },
     inputRules,
-    meta: { title: options.title, icon: 'list', keywords: options.keywords, group: 'lists' },
+    meta: {
+      title: options.title,
+      icon: 'list',
+      keywords: options.keywords,
+      group: 'lists',
+      ...(options.description !== undefined && { description: options.description }),
+    },
   });
 }
 
-export const bulletedList = defineListBlock({ type: 'bulleted-list', listType: 'bullet', title: 'Bulleted list', keywords: ['ul', 'bullet', 'unordered', 'list'] });
-export const numberedList = defineListBlock({ type: 'numbered-list', listType: 'ordered', title: 'Numbered list', keywords: ['ol', 'number', 'ordered', 'list'] });
-export const todoList = defineListBlock({ type: 'todo-list', listType: 'todo', title: 'To-do list', keywords: ['todo', 'task', 'checkbox', 'check'] });
+export const bulletedList = defineListBlock({ type: 'bulleted-list', listType: 'bullet', title: 'Bulleted list', keywords: ['ul', 'bullet', 'unordered', 'list'], description: 'Items marked with bullets; Tab indents.' });
+export const numberedList = defineListBlock({ type: 'numbered-list', listType: 'ordered', title: 'Numbered list', keywords: ['ol', 'number', 'ordered', 'list'], description: 'Items numbered in order; Tab indents.' });
+export const todoList = defineListBlock({ type: 'todo-list', listType: 'todo', title: 'To-do list', keywords: ['todo', 'task', 'checkbox', 'check'], description: 'Checkable tasks; Enter adds the next one.' });

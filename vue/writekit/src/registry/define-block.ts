@@ -25,6 +25,8 @@ export interface BlockMeta {
   readonly icon?: string;
   readonly keywords?: readonly string[];
   readonly group?: string;
+  /** One sentence for pickers (the slash menu shows it beside the list). */
+  readonly description?: string;
 }
 
 /** Optional block-specific behaviors used by core commands. */

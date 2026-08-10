@@ -12,5 +12,5 @@ export const codeBlock = defineBlock({
     toDOM: (node: Node) => ['pre', { 'data-language': String(node.attrs['language'] ?? 'plain') }, 0],
     parseDOM: [{ tag: 'pre' }],
   },
-  meta: { title: 'Code block', icon: 'code', keywords: ['code', 'pre', 'snippet'], group: 'basic' },
+  meta: { title: 'Code block', icon: 'code', keywords: ['code', 'pre', 'snippet'], group: 'basic', description: 'Verbatim monospaced text; Enter stays inside.' },
 });

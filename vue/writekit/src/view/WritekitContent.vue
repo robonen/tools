@@ -3,7 +3,7 @@ import type { PrimitiveProps } from './primitive';
 </script>
 
 <script setup lang="ts">
-import { blockById, caret, inlineLength, isCollapsed, nodeInline } from '../model';
+import { blockById, caret, createNode, inlineLength, isCollapsed, nodeInline } from '../model';
 import { applyInputRule, deleteSelection, insertHardBreak, joinBackward, joinForward, splitBlock } from '../commands';
 import { createTransaction } from '../state';
 import { Primitive } from './primitive';
@@ -117,6 +117,41 @@ function onInput(event?: Event): void {
   ctx.writekit.command(applyInputRule);
 }
 
+/**
+ * A click on the root's own padding below the last block means "write here".
+ * When the document ends in an atom there is no text position to click into at
+ * all — without this the only way to continue writing was the keyboard path
+ * (select the atom, press Enter). Ends-in-text just places the caret at the end.
+ */
+function onRootPointerDown(event: PointerEvent): void {
+  if (!ctx.config.editable || event.target !== ctx.contentRoot.value)
+    return;
+
+  const last = ctx.writekit.state.doc.content.at(-1);
+  if (!last)
+    return;
+
+  const lastEl = ctx.blockElements.get(last.id) ?? null;
+  if (lastEl && event.clientY <= lastEl.getBoundingClientRect().bottom)
+    return;
+
+  event.preventDefault();
+
+  if (ctx.writekit.state.schema.nodeSpec(last.type)?.content.kind === 'text') {
+    ctx.writekit.dispatch(createTransaction(ctx.writekit.state)
+      .setSelection(caret(last.id, inlineLength(nodeInline(last)))));
+    return;
+  }
+
+  if (!ctx.writekit.state.registry.hasBlock('paragraph'))
+    return;
+
+  const paragraph = createNode('paragraph');
+  ctx.writekit.dispatch(createTransaction(ctx.writekit.state)
+    .insertBlock(paragraph, ctx.writekit.state.doc.content.length)
+    .setSelection(caret(paragraph.id, 0)));
+}
+
 function onCompositionStart(event: CompositionEvent): void {
   if (isInteractiveTarget(event.target))
     return;
@@ -143,6 +178,7 @@ function onCompositionEnd(event: CompositionEvent): void {
     :spellcheck="ctx.config.spellcheck"
     @beforeinput="onBeforeInput"
     @input="onInput"
+    @pointerdown="onRootPointerDown"
     @compositionstart="onCompositionStart"
     @compositionend="onCompositionEnd"
   >

@@ -9,5 +9,5 @@ export const paragraph = defineBlock({
     parseDOM: [{ tag: 'p' }],
   },
   placeholder: 'Write something…',
-  meta: { title: 'Paragraph', icon: 'text', keywords: ['paragraph', 'text', 'p'], group: 'basic' },
+  meta: { title: 'Paragraph', icon: 'text', keywords: ['paragraph', 'text', 'p'], group: 'basic', description: 'Plain prose — the default block.' },
 });

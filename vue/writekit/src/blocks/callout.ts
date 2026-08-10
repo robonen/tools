@@ -13,5 +13,5 @@ export const callout = defineBlock({
       getAttrs: (el: HTMLElement) => ({ variant: el.getAttribute('data-callout') ?? 'info' }),
     }],
   },
-  meta: { title: 'Callout', icon: 'info', keywords: ['callout', 'note', 'info', 'warning'], group: 'basic' },
+  meta: { title: 'Callout', icon: 'info', keywords: ['callout', 'note', 'info', 'warning'], group: 'basic', description: 'A highlighted note the eye cannot miss.' },
 });

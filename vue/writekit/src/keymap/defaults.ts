@@ -1,6 +1,7 @@
 import {
   chainCommands,
   deleteSelection,
+  exitAtom,
   indentListItem,
   insertHardBreak,
   joinBackward,
@@ -36,7 +37,8 @@ export function defaultKeymap(writekit: Writekit): Keymap {
     'Mod-z': undo,
     'Mod-Shift-z': redo,
     'Mod-y': redo,
-    Enter: splitBlock,
+    // With an atom selected, Enter starts a paragraph below it; in text it splits.
+    Enter: chainCommands(exitAtom, splitBlock),
     'Shift-Enter': insertHardBreak,
     Backspace: chainCommands(deleteSelection, joinBackward),
     Delete: chainCommands(deleteSelection, joinForward),

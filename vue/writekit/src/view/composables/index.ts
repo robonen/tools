@@ -1,1 +1,1 @@
-export { useContextFactory, useEventListener } from '@robonen/vue';
+export { unrefElement, useContextFactory, useEventListener } from '@robonen/vue';

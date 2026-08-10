@@ -134,3 +134,57 @@ describe('WritekitRoot (single contenteditable)', () => {
     expect(hosts[0]!.textContent).toBe('foobar');
   });
 });
+
+describe('writing after a trailing atom', () => {
+  it('a click below the last block starts a paragraph when the doc ends in an atom', async () => {
+    const registry = createDefaultRegistry();
+    const writekit = createWritekit({
+      state: createWritekitState({
+        registry,
+        doc: createDoc([para('a', 'text'), createNode('divider', { id: 'd' })]),
+      }),
+    });
+    render(WritekitRoot, { props: { writekit, platform: 'mac' } });
+    await nextTick();
+
+    const root = document.querySelector('[data-writekit-content]') as HTMLElement;
+    root.style.paddingBottom = '120px';
+    const rect = root.getBoundingClientRect();
+
+    root.dispatchEvent(new PointerEvent('pointerdown', {
+      bubbles: true,
+      cancelable: true,
+      clientX: rect.left + 10,
+      clientY: rect.bottom - 10,
+    }));
+    await nextTick();
+
+    expect(writekit.state.doc.content.map(block => block.type)).toEqual(['paragraph', 'divider', 'paragraph']);
+    expect(writekit.state.selection.kind).toBe('text');
+  });
+
+  it('a click below the last block just places the caret when it is text', async () => {
+    const registry = createDefaultRegistry();
+    const writekit = createWritekit({
+      state: createWritekitState({ registry, doc: createDoc([para('a', 'text')]) }),
+    });
+    render(WritekitRoot, { props: { writekit, platform: 'mac' } });
+    await nextTick();
+
+    const root = document.querySelector('[data-writekit-content]') as HTMLElement;
+    root.style.paddingBottom = '120px';
+    const rect = root.getBoundingClientRect();
+
+    root.dispatchEvent(new PointerEvent('pointerdown', {
+      bubbles: true,
+      cancelable: true,
+      clientX: rect.left + 10,
+      clientY: rect.bottom - 10,
+    }));
+    await nextTick();
+
+    expect(writekit.state.doc.content).toHaveLength(1);
+    const sel = writekit.state.selection;
+    expect(sel.kind === 'text' && sel.focus.offset).toBe(4);
+  });
+});

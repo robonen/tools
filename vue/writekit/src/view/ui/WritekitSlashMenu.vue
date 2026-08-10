@@ -1,38 +1,8 @@
-<script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue';
-import { DismissableLayer, PopperContent, PopperRoot, Portal } from '@robonen/primitives';
-import { blockById, caret, createNode, inlineText, isCollapsed, nodeInline, nodeSelection } from '../../model';
-import { createTransaction } from '../../state';
-import { useWritekitContext } from '../context';
-import { useEventListener } from '../composables';
-import type { SlashItem } from './slash-items';
-import { getSlashItems } from './slash-items';
+<script lang="ts">
+/** Regexp-special characters, escaped when the trigger is interpolated. */
+const ESCAPE_RE = /[.*+?^${}()|[\]\\]/g;
 
-export interface WritekitSlashMenuProps {
-  /** Character that opens the menu (default `'/'`). */
-  trigger?: string;
-}
-
-const { trigger = '/' } = defineProps<WritekitSlashMenuProps>();
-
-const ctx = useWritekitContext();
-const open = ref(false);
-const items = ref<SlashItem[]>([]);
-const highlighted = ref(0);
-// Virtual reference (a `Measurable`) anchored to the caret rect; Popper positions
-// against it with no trigger element. Focus stays in the contenteditable (so the
-// user keeps typing to filter), so nav is driven by the capture-phase keydown
-// below and the highlight is an index — not roving focus / listbox focus.
-const reference = ref<{ getBoundingClientRect: () => DOMRect } | undefined>();
-
-let triggerBlockId = '';
-let triggerStart = 0;
-let caretOffset = 0;
-
-function escapeRegExp(value: string): string {
-  return value.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
+/** The caret's client rect, when the native selection has a visible one. */
 function caretRect(): DOMRect | null {
   const selection = globalThis.window === undefined ? null : globalThis.getSelection();
   if (!selection || selection.rangeCount === 0)
@@ -43,6 +13,60 @@ function caretRect(): DOMRect | null {
   const rect = rects.length > 0 ? rects[0]! : range.getBoundingClientRect();
   return rect.width || rect.height ? rect : null;
 }
+</script>
+
+<script setup lang="ts">
+import { computed, nextTick, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from 'vue';
+import { DismissableLayer, PopperContent, PopperRoot, Portal } from '@robonen/primitives';
+import { blockById, caret, createNode, inlineText, isCollapsed, nodeInline, nodeSelection } from '../../model';
+import { createTransaction } from '../../state';
+import { useWritekitContext } from '../context';
+import { unrefElement, useEventListener } from '../composables';
+import type { SlashItem } from './slash-items';
+import { getSlashItems } from './slash-items';
+
+export interface WritekitSlashMenuProps {
+  /** Character that opens the menu (default `'/'`). */
+  trigger?: string;
+}
+
+const { trigger = '/' } = defineProps<WritekitSlashMenuProps>();
+
+/**
+ * Optional detail pane beside the list. Headless: the menu only knows WHICH
+ * item is highlighted; what a block looks like is the app's knowledge, so the
+ * pane renders the `preview` slot when given one and plain `meta.description`
+ * text otherwise. No slot and no description → no pane, same menu as before.
+ */
+const slots = defineSlots<{
+  preview?: (props: { item: SlashItem }) => unknown;
+}>();
+
+const ctx = useWritekitContext();
+const open = ref(false);
+const items = shallowRef<SlashItem[]>([]);
+const highlighted = ref(0);
+// Virtual reference (a `Measurable`) anchored to the caret rect; Popper positions
+// against it with no trigger element. Focus stays in the contenteditable (so the
+// user keeps typing to filter), so nav is driven by the capture-phase keydown
+// below and the highlight is an index — not roving focus / listbox focus.
+const reference = shallowRef<{ getBoundingClientRect: () => DOMRect } | undefined>();
+
+// vue ≥3.5: a template ref inside v-for collects the elements in source order.
+const layer = useTemplateRef<InstanceType<typeof DismissableLayer>>('layer');
+const itemRefs = useTemplateRef<HTMLButtonElement[]>('options');
+const layerEl = computed(() => unrefElement(layer.value));
+
+const active = computed<SlashItem | undefined>(() => items.value[highlighted.value]);
+const hasPreview = computed(() => slots.preview !== undefined || active.value?.description !== undefined);
+
+/** `(start or whitespace) + trigger + query` immediately before the caret. */
+const matcher = computed(() =>
+  new RegExp(`(?:^|\\s)${trigger.replaceAll(ESCAPE_RE, '\\$&')}([\\p{L}\\p{N}]*)$`, 'u'));
+
+let triggerBlockId = '';
+let triggerStart = 0;
+let caretOffset = 0;
 
 function close(): void {
   open.value = false;
@@ -65,7 +89,7 @@ function refresh(): void {
   }
 
   const before = inlineText(nodeInline(block)).slice(0, sel.focus.offset);
-  const match = new RegExp(`(?:^|\\s)${escapeRegExp(trigger)}([\\p{L}\\p{N}]*)$`, 'u').exec(before);
+  const match = matcher.value.exec(before);
 
   if (!match) {
     close();
@@ -149,15 +173,41 @@ function onKeydownCapture(event: KeyboardEvent): void {
   }
 }
 
+// Keyboard navigation must chase the highlight into view — a list longer than
+// the menu's max-height otherwise walks the selection out of sight.
+watch(highlighted, index => void nextTick(() => {
+  itemRefs.value?.[index]?.scrollIntoView({ block: 'nearest' });
+}));
+
+/**
+ * The menu is anchored to a caret rect that does NOT move with the page, so a
+ * background scroll visually tears the menu off its anchor. Scrolling inside
+ * the menu (a long block list) stays allowed.
+ */
+function onScrollIntent(event: Event): void {
+  if (!open.value)
+    return;
+
+  if (layerEl.value && event.target instanceof Node && layerEl.value.contains(event.target))
+    return;
+
+  event.preventDefault();
+}
+
 ctx.writekit.on('transaction', refresh);
 useEventListener(() => (typeof document === 'undefined' ? undefined : document), 'selectionchange', refresh);
 useEventListener(() => (typeof document === 'undefined' ? undefined : document), 'keydown', onKeydownCapture as (event: Event) => void, { capture: true });
+useEventListener(() => (typeof document === 'undefined' ? undefined : document), 'wheel', onScrollIntent, { capture: true, passive: false });
+useEventListener(() => (typeof document === 'undefined' ? undefined : document), 'touchmove', onScrollIntent, { capture: true, passive: false });
 onBeforeUnmount(() => ctx.writekit.off('transaction', refresh));
 </script>
 
 <template>
-  <Portal to="body">
-    <PopperRoot>
+  <!-- Combobox layering: PopperRoot provides the positioning context outside
+       the portal. The bare Portal resolves its target from the ConfigProvider's
+       teleportTarget (body unless the app overrides it). -->
+  <PopperRoot>
+    <Portal>
       <PopperContent
         v-if="open && reference"
         :reference="reference"
@@ -167,27 +217,46 @@ onBeforeUnmount(() => ctx.writekit.off('transaction', refresh));
         :collision-padding="8"
       >
         <DismissableLayer
-          class="writekit-slash-menu"
-          role="listbox"
-          data-writekit-slash-menu=""
+          ref="layer"
+          class="writekit-slash"
+          data-writekit-slash=""
           @dismiss="close"
           @focus-outside.prevent
         >
-          <button
-            v-for="(item, index) in items"
-            :key="item.type"
-            type="button"
-            role="option"
-            :data-highlighted="index === highlighted || undefined"
-            :aria-selected="index === highlighted"
-            @mousedown.prevent="selectItem(item)"
-            @mousemove="highlighted = index"
+          <div
+            class="writekit-slash-menu"
+            role="listbox"
+            data-writekit-slash-menu=""
           >
-            <span class="slash-title">{{ item.title }}</span>
-            <span class="slash-group">{{ item.group }}</span>
-          </button>
+            <button
+              v-for="(item, index) in items"
+              :key="item.type"
+              ref="options"
+              type="button"
+              role="option"
+              :data-highlighted="index === highlighted || undefined"
+              :aria-selected="index === highlighted"
+              @mousedown.prevent="selectItem(item)"
+              @mousemove="highlighted = index"
+            >
+              <span class="slash-title">{{ item.title }}</span>
+              <span class="slash-group">{{ item.group }}</span>
+            </button>
+          </div>
+
+          <aside
+            v-if="active && hasPreview"
+            class="writekit-slash-preview"
+            data-writekit-slash-preview=""
+            aria-hidden="true"
+          >
+            <slot name="preview" :item="active">
+              <span class="slash-preview-title">{{ active.title }}</span>
+              <span class="slash-preview-text">{{ active.description }}</span>
+            </slot>
+          </aside>
         </DismissableLayer>
       </PopperContent>
-    </PopperRoot>
-  </Portal>
+    </Portal>
+  </PopperRoot>
 </template>

@@ -9,5 +9,5 @@ export const blockquote = defineBlock({
     parseDOM: [{ tag: 'blockquote' }],
   },
   inputRules: [{ match: /^>\s$/ }],
-  meta: { title: 'Quote', icon: 'quote', keywords: ['quote', 'blockquote', 'citation'], group: 'basic' },
+  meta: { title: 'Quote', icon: 'quote', keywords: ['quote', 'blockquote', 'citation'], group: 'basic', description: 'Set a passage apart from the narration.' },
 });

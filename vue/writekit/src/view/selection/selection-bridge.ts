@@ -151,10 +151,25 @@ export function createSelectionBridge(
       return;
 
     if (selection.kind === 'node') {
-      // Block-level selection has no native text range; the visual highlight
-      // comes from [data-selected] on the block wrapper. Keep the editable root
-      // focused so keyboard commands (Backspace/Delete on the node) still reach it.
+      // The node selection must exist in the DOM too, as a range around the
+      // block element. Merely clearing the ranges left a focused editable with
+      // no selection — the browser then invents a caret at the START of the
+      // content, `selectionchange` reads it, and the model's node selection
+      // gets overwritten by a text caret in the first block (the Enter meant
+      // for the atom split the opening paragraph instead).
       domSel.removeAllRanges();
+
+      const lastId = selection.ids.at(-1);
+      const el = lastId === undefined
+        ? null
+        : root.querySelector(`[data-block-id="${CSS.escape(lastId)}"]`);
+
+      if (el) {
+        const range = root.ownerDocument.createRange();
+        range.selectNode(el);
+        domSel.addRange(range);
+      }
+
       if (root.isContentEditable && root.ownerDocument.activeElement !== root)
         root.focus({ preventScroll: true });
       return;

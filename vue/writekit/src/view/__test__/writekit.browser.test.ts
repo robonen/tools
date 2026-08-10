@@ -188,3 +188,43 @@ describe('writing after a trailing atom', () => {
     expect(sel.kind === 'text' && sel.focus.offset).toBe(4);
   });
 });
+
+describe('node selection survives the DOM', () => {
+  it('is represented as a real range, so selectionchange cannot overwrite it', async () => {
+    const registry = createDefaultRegistry();
+    const writekit = createWritekit({
+      state: createWritekitState({
+        registry,
+        doc: createDoc([para('a', 'first paragraph'), createNode('divider', { id: 'd' })]),
+      }),
+    });
+    render(WritekitRoot, { props: { writekit, platform: 'mac' } });
+    await nextTick();
+
+    writekit.dispatch(createTransaction(writekit.state).setSelection({ kind: 'node', ids: ['d'] }));
+    await nextTick();
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
+    // The selection exists in the DOM as a range around the atom's element —
+    // a focused editable with NO range makes the browser invent a caret at the
+    // start of the content, which used to overwrite the model's node selection.
+    const domSel = getSelection()!;
+    expect(domSel.rangeCount).toBe(1);
+    const selected = domSel.getRangeAt(0).cloneContents().querySelector('[data-block-id="d"]');
+    expect(selected).not.toBeNull();
+
+    // A selectionchange pass over that range must NOT rewrite the model.
+    document.dispatchEvent(new Event('selectionchange'));
+    await nextTick();
+    expect(writekit.state.selection).toEqual({ kind: 'node', ids: ['d'] });
+
+    // Enter on the selected atom exits into a fresh paragraph below it.
+    const root = document.querySelector('[data-writekit-root]') as HTMLElement;
+    root.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    await nextTick();
+
+    expect(writekit.state.doc.content.map(block => block.type)).toEqual(['paragraph', 'divider', 'paragraph']);
+    const sel = writekit.state.selection;
+    expect(sel.kind === 'text' && sel.focus.blockId).toBe(writekit.state.doc.content[2]!.id);
+  });
+});

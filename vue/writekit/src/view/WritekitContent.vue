@@ -4,7 +4,7 @@ import type { PrimitiveProps } from './primitive';
 
 <script setup lang="ts">
 import { blockById, caret, createNode, inlineLength, isCollapsed, nodeInline } from '../model';
-import { applyInputRule, deleteSelection, insertHardBreak, joinBackward, joinForward, splitBlock } from '../commands';
+import { applyInputRule, deleteSelection, exitAtom, insertHardBreak, joinBackward, joinForward, splitBlock } from '../commands';
 import { createTransaction } from '../state';
 import { Primitive } from './primitive';
 import { useWritekitContext } from './context';
@@ -34,6 +34,20 @@ function onBeforeInput(event: InputEvent): void {
   const type = event.inputType;
   if (!type.startsWith('insert') && !type.startsWith('delete'))
     return;
+
+  // With an atom selected the native range wraps the block element; letting the
+  // browser edit through it would rewrite DOM the model never agreed to.
+  const modelSel = ctx.writekit.state.selection;
+  if (modelSel.kind === 'node') {
+    event.preventDefault();
+
+    if (type.startsWith('delete'))
+      ctx.writekit.command(deleteSelection);
+    else if (type === 'insertParagraph')
+      ctx.writekit.command(exitAtom);
+
+    return;
+  }
 
   const sel = ctx.selection.read();
   if (!sel || sel.kind !== 'text')

@@ -3,8 +3,9 @@ import type { Attrs, Node } from '../model';
 </script>
 
 <script setup lang="ts">
-import type { IntrinsicElementAttributes } from 'vue';
-import { computed } from 'vue';
+import type { Component, IntrinsicElementAttributes } from 'vue';
+import type { BlockDefinition } from '../registry';
+import { computed, defineAsyncComponent } from 'vue';
 import { nodeSelection } from '../model';
 import { createTransaction } from '../state';
 import { Primitive } from './primitive';
@@ -21,7 +22,30 @@ const ctx = useWritekitContext();
 const def = computed(() => ctx.registry.getBlock(block.type));
 const wrapperTag = computed<keyof IntrinsicElementAttributes>(() => (def.value?.as ?? 'div') as keyof IntrinsicElementAttributes);
 const isText = computed(() => def.value?.spec.content.kind === 'text');
-const atomComponent = computed(() => def.value?.component);
+/**
+ * A function-shaped `component` is a lazy loader; wrap it once per definition
+ * so repeated renders reuse the same async component (and its resolved state)
+ * instead of re-importing per block instance.
+ */
+const asyncCache = new WeakMap<() => Promise<unknown>, Component>();
+
+function resolveComponent(raw: BlockDefinition['component']): Component | undefined {
+  if (typeof raw !== 'function' || (raw as Component & { render?: unknown }).render || (raw as { setup?: unknown }).setup)
+    return raw as Component | undefined;
+
+  const loader = raw as () => Promise<Component | { default: Component }>;
+  let wrapped = asyncCache.get(loader);
+
+  if (!wrapped) {
+    wrapped = defineAsyncComponent(() =>
+      loader().then(m => ('default' in m ? m.default : m) as Component));
+    asyncCache.set(loader, wrapped);
+  }
+
+  return wrapped;
+}
+
+const atomComponent = computed(() => resolveComponent(def.value?.component));
 const isSelected = computed(() => {
   const sel = ctx.state.value.selection;
   return sel.kind === 'node' && sel.ids.includes(block.id);

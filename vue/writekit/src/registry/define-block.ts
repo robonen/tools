@@ -4,6 +4,9 @@ import type { NodeSpec } from '../schema';
 import type { CommandFactory } from '../state/command';
 import type { InputRuleSpec } from './input-rule';
 
+/** A lazy block component: resolved by the view on first render. */
+export type BlockComponentLoader = () => Promise<Component | { default: Component }>;
+
 /** Props passed to an atom/void block's Vue `component`. */
 export interface BlockComponentProps {
   /** The block's model node (read its `attrs`). */
@@ -36,11 +39,16 @@ export interface BlockBehavior {
  * A block definition: schema contribution + behavior + an opaque Vue component.
  * Non-view layers treat `component` as an opaque value; only the view resolves
  * it. The type is `Component` purely for authoring ergonomics (type-only import).
+ *
+ * `component` may be a lazy loader (`() => import('./Card.vue')`): a registry
+ * imported for its SCHEMA — a codec, a test, a server-side normalizer — then
+ * carries no view graph at all, and the view resolves the loader on first
+ * render exactly like any async component.
  */
 export interface BlockDefinition {
   readonly type: string;
   readonly spec: NodeSpec;
-  readonly component?: Component;
+  readonly component?: Component | BlockComponentLoader;
   readonly meta?: BlockMeta;
   readonly behavior?: BlockBehavior;
   readonly commands?: Record<string, CommandFactory>;

@@ -63,6 +63,11 @@ export function createWritekit(options: CreateWritekitOptions): Writekit {
         selectionAfter: next.selection,
       });
     }
+    else {
+      // Anything that lands between recordings — a remote setDoc, undo/redo, a
+      // selection-only move — is a boundary the coalescer must not merge over.
+      history.interrupt();
+    }
 
     bus.emit('transaction', tr, next, prev);
     if (next.doc !== prev.doc)

@@ -14,27 +14,61 @@ export interface Schema {
   markSpec: (type: string) => MarkSpec | undefined;
   /** Default attrs for a block type (all defaults applied). */
   defaultAttrs: (type: string) => Attrs;
-  /** Fill defaults and drop unknown keys for a block type. */
+  /** Fill defaults, run `validate`, keep unknown keys for a block type. */
   coerceAttrs: (type: string, attrs?: Attrs) => Attrs;
   /** Default attrs for a mark type. */
   defaultMarkAttrs: (type: string) => Attrs;
-  /** Fill defaults and drop unknown keys for a mark type. */
+  /** Fill defaults, run `validate`, keep unknown keys for a mark type. */
   coerceMarkAttrs: (type: string, attrs?: Attrs) => Attrs;
 }
 
+/**
+ * Coercion fills defaults and enforces `validate`; it is NOT a whitelist.
+ *
+ * Unknown keys pass through verbatim: a document round-tripping through the
+ * editor must never lose fields this schema version does not know about —
+ * dropping them silently erased consumer data (a `condition` attribute the
+ * spec forgot to declare disappeared on the first normalization pass and the
+ * loss was autosaved). Parse rules build attrs explicitly, so pasted markup
+ * cannot smuggle arbitrary keys through this path.
+ *
+ * A provided value failing its `validate` falls back to the declared default:
+ * deterministic for CRDT replicas (given one spec), loud in dev, and never a
+ * silently-kept invalid value.
+ */
 function coerceWithSpec(spec: AttrsSpec | undefined, attrs?: Attrs): Attrs {
-  if (!spec)
-    return {};
+  if (!spec) {
+    return attrs ? { ...attrs } : {};
+  }
 
   const result: Record<string, AttrValue> = {};
 
+  if (attrs) {
+    for (const key in attrs) {
+      if (attrs[key] !== undefined && !(key in spec))
+        result[key] = attrs[key]!;
+    }
+  }
+
   for (const key in spec) {
+    const attr = spec[key]!;
     const provided = attrs?.[key];
 
-    if (provided !== undefined)
-      result[key] = provided;
-    else if (spec[key]!.default !== undefined)
-      result[key] = spec[key]!.default!;
+    if (provided !== undefined) {
+      if (attr.validate && !attr.validate(provided)) {
+        if (__DEV__)
+          console.warn(`[writekit] Attr "${key}" rejected by validate(); falling back to its default.`, provided);
+
+        if (attr.default !== undefined)
+          result[key] = attr.default;
+      }
+      else {
+        result[key] = provided;
+      }
+    }
+    else if (attr.default !== undefined) {
+      result[key] = attr.default;
+    }
   }
 
   return result;

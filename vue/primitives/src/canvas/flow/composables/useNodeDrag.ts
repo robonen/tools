@@ -35,6 +35,9 @@ export interface NodeDragOptions {
 /** Elements inside a node that must not initiate a drag. */
 const NO_DRAG_SELECTOR = 'input, textarea, select, button, [contenteditable="true"], [data-handleid], .nodrag';
 
+/** Two settled clicks within this window read as a double click. */
+const DOUBLE_CLICK_MS = 350;
+
 /**
  * Pointer-capture node drag. Moves the node (and every co-selected node) by the
  * pointer delta converted to flow space (`delta / zoom`), optionally snapped to
@@ -57,6 +60,7 @@ export function useNodeDrag(
   let startX = 0;
   let startY = 0;
   let started = false;
+  let lastClickAt = 0;
   let lastX = 0;
   let lastY = 0;
   let rafId: number | null = null;
@@ -150,6 +154,26 @@ export function useNodeDrag(
     if (started) {
       flush();
       ctx.commitNodeDrag();
+      lastClickAt = 0;
+    }
+    else if (snapshot.size > 0) {
+      // The pointer never crossed the drag threshold: this is a click. The
+      // pane cannot see it (propagation stopped on pointerdown), so the node
+      // is the only place that can report it — and pair two settled clicks
+      // into a double click.
+      const id = toValue(nodeId);
+
+      ctx.emitNodeClick(id, event);
+
+      const now = event.timeStamp;
+
+      if (now - lastClickAt <= DOUBLE_CLICK_MS) {
+        ctx.emitNodeDoubleClick(id, event);
+        lastClickAt = 0;
+      }
+      else {
+        lastClickAt = now;
+      }
     }
     pointerId = -1;
     started = false;

@@ -42,6 +42,9 @@ const transform = computed(() => {
       left: '0',
       width: '100%',
       height: '100%',
+      // The slot (background, panels) renders after this element; explicit
+      // layers keep the graph above the background and below the chrome.
+      zIndex: 1,
       transformOrigin: '0 0',
       transform,
       willChange: ctx.isInteracting.value ? 'transform' : undefined,

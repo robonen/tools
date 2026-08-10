@@ -121,6 +121,10 @@ export interface FlowContext {
   // ── change emission ──────────────────────────────────────────────────────
   emitNodesChange: (changes: NodeChange[]) => void;
   emitEdgesChange: (changes: EdgeChange[]) => void;
+  emitNodeClick: (id: string, event: PointerEvent) => void;
+  emitNodeDoubleClick: (id: string, event: PointerEvent) => void;
+  emitEdgeClick: (id: string, event: PointerEvent) => void;
+  emitPaneClick: (event: PointerEvent) => void;
 }
 
 const flow = useContextFactory<FlowContext>('FlowContext');

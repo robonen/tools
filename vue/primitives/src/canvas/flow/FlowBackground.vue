@@ -54,7 +54,7 @@ const linePath = computed(() => {
   <svg
     data-flow-background=""
     :data-variant="variant"
-    :style="{ position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none', color }"
+    :style="{ position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, color }"
   >
     <pattern
       :id="patternId"

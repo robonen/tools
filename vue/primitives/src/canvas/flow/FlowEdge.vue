@@ -134,13 +134,14 @@ function onPointerdown(event: PointerEvent): void {
   if (event.button !== 0 || edge.value?.selectable === false || !ctx.elementsSelectable.value) return;
   event.stopPropagation();
   ctx.selectEdge(id, event.shiftKey || event.metaKey || event.ctrlKey);
+  ctx.emitEdgeClick(id, event);
 }
 </script>
 
 <template>
   <g
     v-if="endpoints"
-    v-memo="[path[0], selected, edge?.animated, edge?.selectable, edge?.data, markerStartRef, markerEndRef]"
+    v-memo="[path[0], selected, edge?.animated, edge?.selectable, edge?.data, edge?.label, markerStartRef, markerEndRef]"
     data-flow-edge=""
     :data-id="id"
     :data-type="resolvedType"
@@ -176,6 +177,21 @@ function onPointerdown(event: PointerEvent): void {
         :style="interactionPathStyle"
         @pointerdown="onPointerdown"
       />
+      <!-- The halo (paint-order + stroke) keeps the text legible over the
+           path and the background without the consumer styling anything. -->
+      <text
+        v-if="edge?.label"
+        data-flow-edge-label=""
+        :x="path[1]"
+        :y="path[2]"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        fill="currentColor"
+        stroke="var(--flow-edge-label-halo, white)"
+        stroke-width="3"
+        paint-order="stroke"
+        :style="{ pointerEvents: 'none', fontSize: '12px' }"
+      >{{ edge.label }}</text>
     </template>
   </g>
 </template>

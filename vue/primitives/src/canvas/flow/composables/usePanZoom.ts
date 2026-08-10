@@ -158,7 +158,9 @@ export function usePanZoom(
   // ── double-click zoom ──────────────────────────────────────────────────────
   useEventListener(target, 'dblclick', (event: MouseEvent) => {
     if (!zoomOnDoubleClick || !ctx.interactive.value) return;
-    if (event.target instanceof Element && event.target.closest('.nopan')) return;
+    // A double click on a node belongs to the node (nodeDoubleClick), not
+    // to the zoom gesture.
+    if (event.target instanceof Element && event.target.closest('.nopan, [data-flow-node]')) return;
     const vp = current();
     const newZoom = clampZoom(vp.zoom * doubleClickZoomFactor, ctx.minZoom.value, ctx.maxZoom.value);
     if (newZoom === vp.zoom) return;

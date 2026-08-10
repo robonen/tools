@@ -28,7 +28,9 @@ const { forwardRef } = useForwardExpose();
 
 const style = computed<CSSProperties>(() => {
   const [v, h] = position.split('-') as ['top' | 'bottom', 'left' | 'center' | 'right'];
-  const s: CSSProperties = { position: 'absolute', pointerEvents: 'all' };
+  // Above the viewport's explicit layer (zIndex 1): a positioned sibling
+  // with z-index auto would otherwise paint underneath the graph.
+  const s: CSSProperties = { position: 'absolute', pointerEvents: 'all', zIndex: 2 };
   s[v] = '0';
   if (h === 'center') {
     s.left = '50%';

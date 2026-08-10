@@ -73,6 +73,14 @@ export interface FlowRootProps extends PrimitiveProps {
   isValidConnection?: IsValidConnection;
   /** Cull nodes/edges outside the viewport — for large graphs. @default false */
   onlyRenderVisibleElements?: boolean;
+  /**
+   * Frame the whole graph once after the initial nodes are measured. Skipped
+   * when an explicit `viewport` / `defaultViewport` is provided — a restored
+   * viewport must not be stomped by a fit. With virtualization the fit uses
+   * whatever is measured plus declared node sizes; fully unmeasured nodes are
+   * framed by position alone. @default false
+   */
+  fitViewOnMount?: boolean | FitViewParams;
   /** Extra px kept rendered around the viewport when virtualizing. @default 200 */
   virtualizationBuffer?: number;
 }
@@ -87,12 +95,13 @@ export interface FlowRootEmits {
   selectionChange: [selection: { nodes: string[]; edges: string[] }];
   paneClick: [event: PointerEvent];
   nodeClick: [id: string, event: PointerEvent];
+  nodeDoubleClick: [id: string, event: PointerEvent];
   edgeClick: [id: string, event: PointerEvent];
 }
 </script>
 
 <script setup lang="ts">
-import { computed, shallowRef, toRef, triggerRef, useSlots, watch } from 'vue';
+import { computed, getCurrentInstance, shallowRef, toRef, triggerRef, useSlots, watch } from 'vue';
 import { useId } from '@robonen/vue';
 import FlowPane from './FlowPane.vue';
 import FlowViewport from './FlowViewport.vue';
@@ -124,6 +133,7 @@ const {
   disableKeyboardA11y = false,
   isValidConnection,
   onlyRenderVisibleElements = false,
+  fitViewOnMount = false,
   virtualizationBuffer = 200,
   as = 'div',
 } = defineProps<FlowRootProps>();
@@ -330,6 +340,7 @@ function setNodeMeasured(id: string, size: Dimensions, handleBounds: InternalNod
   // pick up the fresh measurement / handle geometry.
   map.set(id, { ...n, measured: sizeChanged ? size : n.measured, handleBounds });
   triggerRef(nodeLookup);
+  maybeFitOnMount();
 }
 
 function updateNode(id: string, patch: Partial<FlowNode>): void {
@@ -515,11 +526,55 @@ const context: FlowContext = {
   endConnection,
   emitNodesChange: changes => emit('nodesChange', changes),
   emitEdgesChange: changes => emit('edgesChange', changes),
+  emitNodeClick: (id, event) => emit('nodeClick', id, event),
+  emitNodeDoubleClick: (id, event) => emit('nodeDoubleClick', id, event),
+  emitEdgeClick: (id, event) => emit('edgeClick', id, event),
+  emitPaneClick: event => emit('paneClick', event),
 };
 provideFlowContext(context);
 
 // Imperative API, also exposed so consumers can drive the flow via a template ref.
 const api = useViewportApi(context);
+
+// ── fitViewOnMount ────────────────────────────────────────────────────────
+// A viewport the consumer controls (v-model:viewport) or seeds
+// (defaultViewport) is restored state; a fit must never stomp it. Model
+// getters fall back to a local default, so controlledness is read off the
+// vnode, not the value.
+const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
+let fitOnMountPending = fitViewOnMount !== false
+  && defaultViewport === undefined
+  && !('viewport' in vnodeProps)
+  && !('onUpdate:viewport' in vnodeProps);
+
+/**
+ * Armed until it fires once: waits for every RENDERED node to report a
+ * measurement — fitting to unmeasured nodes fits to nothing. Under
+ * virtualization only the rendered subset ever measures; the rest contribute
+ * their declared or positional bounds through `fitView` itself.
+ */
+function maybeFitOnMount(): void {
+  if (!fitOnMountPending) return;
+
+  // Nodes can finish measuring before the pane has a size (or the reverse);
+  // the shot must not burn against a 0×0 container, so both gates hold it and
+  // the pane-rect watcher below re-arms the attempt.
+  const rect = paneRect.value;
+  if (rect.width === 0 || rect.height === 0) return;
+
+  const map = nodeLookup.value;
+  if (map.size === 0) return;
+
+  for (const id of visibleNodeIds.value) {
+    const n = map.get(id);
+    if (n && n.measured.width === 0 && n.measured.height === 0) return;
+  }
+
+  fitOnMountPending = false;
+  api.fitView(typeof fitViewOnMount === 'object' ? fitViewOnMount : undefined);
+}
+
+watch(paneRect, maybeFitOnMount);
 
 const nodeSlotNames = computed(() => Object.keys(slots).filter(n => n === 'node' || n.startsWith('node-')));
 const edgeSlotNames = computed(() => Object.keys(slots).filter(n => n === 'edge' || n.startsWith('edge-')));

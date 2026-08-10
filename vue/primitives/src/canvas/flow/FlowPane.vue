@@ -65,8 +65,10 @@ useKeyboard(currentElement, ctx, useViewportApi(ctx));
 
 useEventListener(currentElement, 'click', (event: MouseEvent) => {
   const target = event.target as Element | null;
-  if (target && !target.closest('[data-flow-node],[data-flow-edge]'))
+  if (target && !target.closest('[data-flow-node],[data-flow-edge]')) {
     ctx.clearSelection();
+    ctx.emitPaneClick(event as PointerEvent);
+  }
 });
 </script>
 
@@ -79,7 +81,16 @@ useEventListener(currentElement, 'click', (event: MouseEvent) => {
     :data-interactive="ctx.interactive.value ? '' : undefined"
     :role="ctx.disableKeyboardA11y.value ? undefined : 'application'"
     :tabindex="ctx.disableKeyboardA11y.value ? undefined : 0"
-    :style="{ position: 'relative', overflow: 'hidden', touchAction: 'none' }"
+    :style="{
+      position: 'relative',
+      overflow: 'hidden',
+      touchAction: 'none',
+      // Everything inside is absolutely positioned, so content-sizing always
+      // collapsed to 0×N and the graph rendered into an invisible strip.
+      // Vue merges a consumer's style attr over this, so it stays overridable.
+      width: '100%',
+      height: '100%',
+    }"
   >
     <slot />
 

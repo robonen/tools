@@ -142,6 +142,11 @@ export interface ComponentPartMeta {
   props: PropertyMeta[];
   /** Emitted events parsed from `defineEmits` */
   emits: EmitMeta[];
+  /**
+   * The template-ref surface parsed from `defineExpose`, spreads expanded
+   * through the type checker (`...api` lists the composable's whole return).
+   */
+  exposes?: PropertyMeta[];
 }
 
 export interface EmitMeta {

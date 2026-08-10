@@ -89,7 +89,12 @@ const roleColor: Record<string, string> = {
             <DocsEmitsTable :emits="part.emits" />
           </div>
 
-          <p v-if="part.props.length === 0 && part.emits.length === 0" class="text-sm text-fg-subtle italic">
+          <div v-if="part.exposes?.length" class="mb-3">
+            <div class="text-[11px] font-semibold uppercase tracking-wider text-fg-subtle mb-2">Exposes (template ref)</div>
+            <DocsExposesTable :exposes="part.exposes" />
+          </div>
+
+          <p v-if="part.props.length === 0 && part.emits.length === 0 && !part.exposes?.length" class="text-sm text-fg-subtle italic">
             No props or events — renders its element and forwards attributes.
           </p>
         </div>

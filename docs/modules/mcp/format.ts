@@ -226,6 +226,11 @@ function renderComponentPart(part: ComponentPartMeta): string[] {
     const rows = part.emits.map(e => [cell(e.name), cell(`\`${e.payload}\``), cell(e.description)]);
     out.push('#### Emits', '', table(['Event', 'Payload', 'Description'], rows), '');
   }
+
+  if (part.exposes && part.exposes.length > 0) {
+    const rows = part.exposes.map(x => [cell(x.name), cell(`\`${x.type}\``), cell(x.description)]);
+    out.push('#### Exposes (template ref)', '', table(['Name', 'Type', 'Description'], rows), '');
+  }
   return out;
 }
 

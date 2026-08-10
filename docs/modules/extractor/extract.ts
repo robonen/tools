@@ -12,7 +12,7 @@
 
 import { basename, dirname, relative, resolve } from 'node:path';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { Node, Project, SyntaxKind } from 'ts-morph';
+import { Node, Project, SyntaxKind, ts } from 'ts-morph';
 import type { ClassDeclaration, FunctionDeclaration, InterfaceDeclaration, JSDoc, JSDocTag, MethodDeclaration, PropertyDeclaration, PropertySignature, SourceFile, TypeAliasDeclaration, VariableDeclaration } from 'ts-morph';
 import type {
   CategoryMeta,
@@ -858,6 +858,144 @@ function extractScriptBlock(sfc: string, setup: boolean): string {
   return '';
 }
 
+// ── SFC type project ─────────────────────────────────────────────────────────
+
+/**
+ * One type-checking project per components package: every real `src/**\/*.ts`
+ * file plus, for each SFC part, a virtual `<file>.vue.ts` mirror holding its
+ * two script blocks. TS resolves a `./X.vue` specifier by appending `.ts`, so
+ * the mirrors make cross-file shapes resolve for real — `defineEmits<XEmits>()`
+ * where the interface lives in another block, a sibling `.ts` or another SFC,
+ * and `defineExpose({ ...api })` where the spread's type is a composable's
+ * return. The per-part regexes never saw any of those, which is exactly how
+ * half of Flow's API ended up invisible in the docs.
+ */
+function buildSfcProject(pkgDir: string): Project {
+  const srcDir = resolve(pkgDir, 'src');
+  const tsconfigPath = resolve(pkgDir, 'tsconfig.json');
+  const project = new Project({
+    tsConfigFilePath: existsSync(tsconfigPath) ? tsconfigPath : undefined,
+    skipAddingFilesFromTsConfig: true,
+  });
+
+  project.addSourceFilesAtPaths([`${srcDir}/**/*.ts`, `!${srcDir}/**/__test__/**`]);
+
+  for (const entry of readdirSync(srcDir, { recursive: true, withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith('.vue') || entry.name === 'demo.vue') continue;
+
+    const full = resolve(entry.parentPath, entry.name);
+    if (full.includes('__test__')) continue;
+
+    const sfc = readFileSync(full, 'utf-8');
+    const script = `${extractScriptBlock(sfc, false)}\n${extractScriptBlock(sfc, true)}`;
+    if (script.trim()) project.createSourceFile(`${full}.ts`, script, { overwrite: true });
+  }
+
+  return project;
+}
+
+/** Type display: keep alias names (`Ref<T>`, not its expansion), never truncate. */
+const TYPE_TEXT_FLAGS = ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope | ts.TypeFormatFlags.NoTruncation;
+
+/** JSDoc description of a declaration; a const's doc sits on its statement. */
+function describeDecl(node: Node | undefined): string {
+  if (!node) return '';
+  const holder = Node.isVariableDeclaration(node) ? node.getVariableStatement() ?? node : node;
+  if (!Node.isJSDocable(holder)) return '';
+  const jsdocs = holder.getJsDocs();
+  return getDescription(jsdocs, getJsDocTags(jsdocs));
+}
+
+/**
+ * Emits through the checker's view of `defineEmits<T>()`: the inline literal
+ * AND a named interface (same block, sibling `.ts`, another SFC via the
+ * mirrors), `extends` chains included — with each member's JSDoc.
+ */
+function extractEmitsFrom(sf: SourceFile): EmitMeta[] {
+  const call = sf.getDescendantsOfKind(SyntaxKind.CallExpression)
+    .find(c => c.getExpression().getText() === 'defineEmits');
+  const typeArg = call?.getTypeArguments()[0];
+  if (!call || !typeArg) return [];
+
+  const emits: EmitMeta[] = [];
+  for (const prop of typeArg.getType().getProperties()) {
+    const decl = prop.getDeclarations()[0];
+    const written = decl && Node.isPropertySignature(decl) ? decl.getTypeNode()?.getText() : undefined;
+
+    emits.push({
+      name: prop.getName(),
+      payload: cleanType(written ?? prop.getTypeAtLocation(call).getText(call, TYPE_TEXT_FLAGS)),
+      description: describeDecl(decl),
+    });
+  }
+
+  return emits;
+}
+
+/**
+ * `defineExpose({ … })` → the template-ref surface. Spreads expand through the
+ * checker (`...api` lists every member of the composable's return type with its
+ * JSDoc), so the docs show the full instance API instead of nothing at all.
+ */
+function extractExposesFrom(sf: SourceFile): PropertyMeta[] {
+  const call = sf.getDescendantsOfKind(SyntaxKind.CallExpression)
+    .find(c => c.getExpression().getText() === 'defineExpose');
+  const arg = call?.getArguments()[0];
+  if (!arg || !Node.isObjectLiteralExpression(arg)) return [];
+
+  const out: PropertyMeta[] = [];
+  const push = (name: string, type: string, description: string, optional = false) => {
+    if (!out.some(p => p.name === name))
+      out.push({ name, type: cleanType(type), description, optional, defaultValue: null, readonly: false });
+  };
+
+  for (const member of arg.getProperties()) {
+    if (Node.isSpreadAssignment(member)) {
+      const spreadType = member.getExpression().getType();
+      const props = spreadType.getProperties();
+
+      // Unresolvable spread — surface it verbatim rather than dropping it.
+      if (spreadType.isAny() || props.length === 0) {
+        push(member.getText(), '', '');
+        continue;
+      }
+
+      for (const prop of props) {
+        const decl = prop.getDeclarations()[0];
+        const written = decl && Node.isPropertySignature(decl) ? decl.getTypeNode()?.getText() : undefined;
+        push(
+          prop.getName(),
+          written ?? prop.getTypeAtLocation(member).getText(member, TYPE_TEXT_FLAGS),
+          describeDecl(decl),
+          decl !== undefined && Node.isQuestionTokenable(decl) && decl.hasQuestionToken(),
+        );
+      }
+    }
+    else if (Node.isShorthandPropertyAssignment(member)) {
+      const local = sf.getProject().getTypeChecker().getShorthandAssignmentValueSymbol(member);
+      push(
+        member.getName(),
+        member.getType().getText(member, TYPE_TEXT_FLAGS),
+        describeDecl(local?.getDeclarations()[0]),
+      );
+    }
+    else if (Node.isPropertyAssignment(member)) {
+      const init = member.getInitializer();
+      const initDecl = init && Node.isIdentifier(init) ? init.getSymbol()?.getDeclarations()[0] : undefined;
+      push(
+        member.getName().replaceAll(/^['"]|['"]$/g, ''),
+        (init ?? member).getType().getText(member, TYPE_TEXT_FLAGS),
+        describeDecl(member) || describeDecl(initDecl),
+      );
+    }
+    else if (Node.isMethodDeclaration(member)) {
+      push(member.getName(), member.getType().getText(member, TYPE_TEXT_FLAGS), describeDecl(member));
+    }
+  }
+
+  return out;
+}
+
 /** Parse `defineEmits<{ 'a': [x: T]; b: [] }>()` from a setup block. */
 function extractEmits(setupScript: string): EmitMeta[] {
   const m = setupScript.match(/defineEmits<\{([\s\S]*?)\}>\s*\(\s*\)/);
@@ -907,7 +1045,7 @@ function extractModels(setupScript: string): { props: PropertyMeta[]; emits: Emi
       defaultValue: null,
       readonly: false,
     });
-    emits.push({ name: `update:${name}`, payload: `[value: ${type}]`, description: '' });
+    emits.push({ name: `update:${name}`, payload: `[value: ${type}]`, description: `Emitted when \`v-model${name === 'modelValue' ? '' : `:${name}`}\` updates.` });
   }
 
   return { props, emits };
@@ -968,7 +1106,7 @@ function roleFromName(componentName: string, base: string): string {
  * not a component group (no `.vue`). `category` is the display label; `entryPoint`
  * is the package subpath (e.g. `./forms/checkbox`).
  */
-function buildComponentAt(dir: string, slug: string, category: string, entryPoint: string): ComponentMeta | null {
+function buildComponentAt(dir: string, slug: string, category: string, entryPoint: string, sfcProject?: Project): ComponentMeta | null {
   // A component group is any dir that ships at least one .vue file.
   const vueFiles = readdirSync(dir).filter(f => f.endsWith('.vue'));
   if (vueFiles.length === 0) return null;
@@ -1001,16 +1139,22 @@ function buildComponentAt(dir: string, slug: string, category: string, entryPoin
     const role = roleFromName(name, base);
     if (role === 'Root' && description && !groupDescription) groupDescription = description;
 
+    // Emits/exposes come from the typed SFC project when it has this part;
+    // the regex parser stays as the fallback for inline-literal emits.
+    const virtual = sfcProject?.getSourceFile(`${resolve(dir, file)}.ts`);
+    let emits = virtual ? extractEmitsFrom(virtual) : [];
+    if (emits.length === 0) emits = extractEmits(setup);
+    const exposes = virtual ? extractExposesFrom(virtual) : [];
+
     // Merge in `defineModel` v-model props/emits (invisible to the interface/
     // defineEmits parsers), de-duping against any explicitly-declared ones.
     const models = extractModels(setup);
-    const emits = extractEmits(setup);
     for (const mp of models.props)
       if (!props.some(p => p.name === mp.name)) props.push(mp);
     for (const me of models.emits)
       if (!emits.some(e => e.name === me.name)) emits.push(me);
 
-    parts.push({ name, role, description, props, emits });
+    parts.push({ name, role, description, props, emits, exposes });
   }
 
   return {
@@ -1030,6 +1174,7 @@ function buildComponents(pkgDir: string): ComponentMeta[] {
   const srcDir = resolve(pkgDir, 'src');
   if (!existsSync(srcDir)) return [];
 
+  const sfcProject = buildSfcProject(pkgDir);
   const components: ComponentMeta[] = [];
 
   // Components live one level deep, in category folders: src/<category>/<component>/.
@@ -1048,13 +1193,14 @@ function buildComponents(pkgDir: string): ComponentMeta[] {
           compEntry.name,
           label,
           `./${catEntry.name}/${compEntry.name}`,
+          sfcProject,
         );
         if (c) components.push(c);
       }
     }
     else {
       // Backward-compat: a flat component dir directly under src.
-      const c = buildComponentAt(catDir, catEntry.name, 'Other', `./${catEntry.name}`);
+      const c = buildComponentAt(catDir, catEntry.name, 'Other', `./${catEntry.name}`, sfcProject);
       if (c) components.push(c);
     }
   }

@@ -12,6 +12,7 @@ defineProps<{
         <tr class="bg-bg-subtle text-left">
           <th class="py-2.5 px-4 font-medium text-fg-muted text-xs uppercase tracking-wider">Event</th>
           <th class="py-2.5 px-4 font-medium text-fg-muted text-xs uppercase tracking-wider">Payload</th>
+          <th class="py-2.5 px-4 font-medium text-fg-muted text-xs uppercase tracking-wider">Description</th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +22,10 @@ defineProps<{
           </td>
           <td class="py-2.5 px-4">
             <code class="text-xs font-mono text-fg-muted bg-bg-inset px-1.5 py-0.5 rounded border border-border wrap-break-word">{{ e.payload }}</code>
+          </td>
+          <td class="py-2.5 px-4 text-fg-muted min-w-48">
+            <DocsText v-if="e.description" :text="e.description" />
+            <span v-else>—</span>
           </td>
         </tr>
       </tbody>

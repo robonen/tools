@@ -86,16 +86,27 @@ export interface FlowRootProps extends PrimitiveProps {
 }
 
 export interface FlowRootEmits {
+  /** Granular node mutations (position, selection, removal) — apply them to your controlled state. */
   nodesChange: [changes: NodeChange[]];
+  /** Granular edge mutations (selection, removal). */
   edgesChange: [changes: EdgeChange[]];
+  /** A connection gesture completed between two handles. */
   connect: [connection: Connection];
+  /** A connection gesture started from a handle. */
   connectStart: [payload: { nodeId: string; handleId: string | null; handleType: HandleType }];
+  /** The connection gesture ended, successfully or not. */
   connectEnd: [];
+  /** A node drag finished; ids of every node that moved. */
   nodeDragStop: [ids: string[]];
+  /** The set of selected nodes/edges changed. */
   selectionChange: [selection: { nodes: string[]; edges: string[] }];
+  /** A click landed on the empty pane — not on a node or an edge. */
   paneClick: [event: PointerEvent];
+  /** A settled click on a node (a drag that never started moving). */
   nodeClick: [id: string, event: PointerEvent];
+  /** Two settled clicks on the same node within the double-click interval. */
   nodeDoubleClick: [id: string, event: PointerEvent];
+  /** A click on an edge path. */
   edgeClick: [id: string, event: PointerEvent];
 }
 </script>
@@ -145,6 +156,7 @@ const flowId = useId(undefined, 'flow').value;
 
 // ── models (controlled + uncontrolled) ────────────────────────────────────
 const localNodes = shallowRef<FlowNode[]>(defaultNodes ? defaultNodes.slice() : []);
+/** Current nodes (controlled `v-model:nodes` or internal state). */
 const nodes = defineModel<FlowNode[]>('nodes', {
   get: external => external ?? localNodes.value,
   set: (value) => {
@@ -154,6 +166,7 @@ const nodes = defineModel<FlowNode[]>('nodes', {
 });
 
 const localEdges = shallowRef<FlowEdge[]>(defaultEdges ? defaultEdges.slice() : []);
+/** Current edges (controlled `v-model:edges` or internal state). */
 const edges = defineModel<FlowEdge[]>('edges', {
   get: external => external ?? localEdges.value,
   set: (value) => {
@@ -163,6 +176,7 @@ const edges = defineModel<FlowEdge[]>('edges', {
 });
 
 const localViewport = shallowRef<Viewport>(defaultViewport ?? { x: 0, y: 0, zoom: 1 });
+/** Current viewport (controlled `v-model:viewport` or internal state). */
 const viewport = defineModel<Viewport>('viewport', {
   get: external => external ?? localViewport.value,
   set: (value) => {
@@ -178,6 +192,7 @@ const viewport = defineModel<Viewport>('viewport', {
 // would never visually update). ────────────────────────────────────────────
 const nodeLookup = shallowRef(new Map<string, InternalNode>());
 const edgeLookup = shallowRef(new Map<string, FlowEdge>());
+/** Selected node/edge id sets. */
 const selection = shallowRef<FlowSelection>({ nodes: new Set(), edges: new Set() });
 const paneRect = shallowRef({ left: 0, top: 0, width: 0, height: 0 });
 const isDragging = shallowRef(false);
@@ -357,6 +372,7 @@ function emitSelection(): void {
   emit('selectionChange', { nodes: [...selection.value.nodes], edges: [...selection.value.edges] });
 }
 
+/** Select a node — replacing the selection, or adding to it. */
 function selectNode(id: string, additive = false): void {
   if (!elementsSelectable) return;
   const sel = selection.value;
@@ -368,6 +384,7 @@ function selectNode(id: string, additive = false): void {
   emitSelection();
 }
 
+/** Select an edge — replacing the selection, or adding to it. */
 function selectEdge(id: string, additive = false): void {
   if (!elementsSelectable) return;
   const sel = selection.value;
@@ -379,17 +396,20 @@ function selectEdge(id: string, additive = false): void {
   emitSelection();
 }
 
+/** Replace the selection with exactly these nodes and edges. */
 function setSelection(nodeIds: string[], edgeIds: string[]): void {
   selection.value = { nodes: new Set(nodeIds), edges: new Set(edgeIds) };
   emitSelection();
 }
 
+/** Deselect everything. */
 function clearSelection(): void {
   if (selection.value.nodes.size === 0 && selection.value.edges.size === 0) return;
   selection.value = { nodes: new Set(), edges: new Set() };
   emitSelection();
 }
 
+/** Remove every selected node (with its edges) and selected edge. */
 function removeSelected(): void {
   const sel = selection.value;
   if (sel.nodes.size === 0 && sel.edges.size === 0) return;

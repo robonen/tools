@@ -6,7 +6,10 @@ export default defineConfig({
   ...sharedConfig,
   tsconfig: './tsconfig.src.json',
   entry: ['src/index.ts', 'src/*/index.ts'],
-  plugins: [Vue({ isProduction: true })],
+  // `comments: false` matches primitives: a root-adjacent template comment
+  // turns the root into a Fragment, and production Vue drops fallthrough attrs
+  // on fragment roots (WritekitBubbleMenu/WritekitSlashMenu were affected).
+  plugins: [Vue({ isProduction: true, template: { compilerOptions: { comments: false } } })],
   dts: { vue: true },
   deps: {
     neverBundle: ['vue'],

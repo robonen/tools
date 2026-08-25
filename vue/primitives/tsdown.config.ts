@@ -7,7 +7,11 @@ export default defineConfig({
   tsconfig: './tsconfig.src.json',
   // Components live one level deep now: src/<category>/<component>/index.ts.
   entry: ['src/index.ts', 'src/*/*/index.ts'],
-  plugins: [Vue({ isProduction: true })],
+  // `comments: false` is load-bearing: a template comment next to a single
+  // root node compiles into a Fragment root, and production Vue never applies
+  // fallthrough attrs to fragments (dev filters comments out, prod does not) —
+  // consumers' `class` silently vanished from SelectTrigger/ComboboxAnchor.
+  plugins: [Vue({ isProduction: true, template: { compilerOptions: { comments: false } } })],
   dts: { vue: true },
   deps: {
     neverBundle: ['vue'],

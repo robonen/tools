@@ -10,6 +10,7 @@ import { nodeSelection } from '../model';
 import { createTransaction } from '../state';
 import { Primitive } from './primitive';
 import { useWritekitContext } from './context';
+import { isInteractiveControl } from './interactive';
 import TextBlockHost from './TextBlockHost.vue';
 
 export interface BlockViewProps {
@@ -60,8 +61,9 @@ function onMousedown(event: MouseEvent): void {
   if (isText.value)
     return;
 
-  // Don't hijack interactive controls inside the atom (e.g. image fields).
-  if ((event.target as HTMLElement).closest('input, textarea, button, a, select'))
+  // Don't hijack controls the atom renders for its own use — see
+  // `isInteractiveControl` for why native tags alone are not enough.
+  if (isInteractiveControl(event.target))
     return;
 
   event.preventDefault();

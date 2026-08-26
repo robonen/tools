@@ -9,3 +9,54 @@ export function isInteractiveTarget(node: EventTarget | null): boolean {
   return node instanceof Element
     && node.closest('input, textarea, select, button, [contenteditable="false"]') !== null;
 }
+
+/**
+ * Controls whose mousedown belongs to the control, not to the editor.
+ *
+ * Native elements are only half the story: a switch is usually a `<label>` over
+ * a visually-hidden checkbox (the click lands on a `<span>`), and sliders,
+ * comparison handles and menu items are plain elements carrying an ARIA role.
+ * `[data-writekit-interactive]` is the escape hatch for anything else.
+ */
+const INTERACTIVE_CONTROL = [
+  'input',
+  'textarea',
+  'select',
+  'option',
+  'button',
+  'a[href]',
+  'label',
+  'summary',
+  '[contenteditable="true"]',
+  '[role="button"]',
+  '[role="checkbox"]',
+  '[role="switch"]',
+  '[role="radio"]',
+  '[role="slider"]',
+  '[role="spinbutton"]',
+  '[role="textbox"]',
+  '[role="combobox"]',
+  '[role="listbox"]',
+  '[role="option"]',
+  '[role="menuitem"]',
+  '[role="menuitemcheckbox"]',
+  '[role="menuitemradio"]',
+  '[role="tab"]',
+  '[role="link"]',
+  '[data-writekit-interactive]',
+].join(', ');
+
+/**
+ * Whether a node is (inside) a control an atom block renders for its own use.
+ *
+ * Unlike {@link isInteractiveTarget} this deliberately ignores the
+ * `contenteditable="false"` island itself — every atom block is one, so testing
+ * for it would match every click inside an atom. Selecting the block on
+ * mousedown has to `preventDefault()` to keep the browser from placing a caret,
+ * and that same call is what stops a slider drag from ever starting or a
+ * `<label>` from reaching its checkbox — so the editor stays out of the way
+ * here and lets the control have the event.
+ */
+export function isInteractiveControl(node: EventTarget | null): boolean {
+  return node instanceof Element && node.closest(INTERACTIVE_CONTROL) !== null;
+}

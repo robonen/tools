@@ -62,8 +62,9 @@ function onMousedown(event: MouseEvent): void {
     return;
 
   // Don't hijack controls the atom renders for its own use — see
-  // `isInteractiveControl` for why native tags alone are not enough.
-  if (isInteractiveControl(event.target))
+  // `isInteractiveControl` for why native tags alone are not enough, and why
+  // the search is bounded to this block.
+  if (isInteractiveControl(event.target, event.currentTarget as Element))
     return;
 
   event.preventDefault();

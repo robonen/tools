@@ -1,6 +1,6 @@
 {
   "name": "@robonen/writekit",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "Apache-2.0",
   "description": "Headless block-based rich-text writekit for Vue with a registry-driven schema and pluggable CRDT",
   "keywords": [

@@ -34,9 +34,7 @@ const INTERACTIVE_CONTROL = [
   '[role="radio"]',
   '[role="slider"]',
   '[role="spinbutton"]',
-  '[role="textbox"]',
   '[role="combobox"]',
-  '[role="listbox"]',
   '[role="option"]',
   '[role="menuitem"]',
   '[role="menuitemcheckbox"]',
@@ -56,7 +54,17 @@ const INTERACTIVE_CONTROL = [
  * and that same call is what stops a slider drag from ever starting or a
  * `<label>` from reaching its checkbox — so the editor stays out of the way
  * here and lets the control have the event.
+ *
+ * `boundary` is the atom's own element and is not optional in spirit: the
+ * content root is itself a widget (`role="textbox"`), so an unbounded search
+ * finds it from anywhere and would report every click as interactive, leaving
+ * atoms permanently unselectable.
  */
-export function isInteractiveControl(node: EventTarget | null): boolean {
-  return node instanceof Element && node.closest(INTERACTIVE_CONTROL) !== null;
+export function isInteractiveControl(node: EventTarget | null, boundary?: Element | null): boolean {
+  if (!(node instanceof Element))
+    return false;
+
+  const control = node.closest(INTERACTIVE_CONTROL);
+
+  return control !== null && (!boundary || boundary.contains(control));
 }

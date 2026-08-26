@@ -32,6 +32,19 @@ function selectionRect(): DOMRect | null {
 
 function refresh(): void {
   rev.value += 1;
+
+  // A control inside the menu's own slot (a text input a consumer's custom
+  // toolbar renders) needs real focus to be typeable, and taking it collapses
+  // `document.getSelection()` away from the editor — `selectionRect` then
+  // reads null on every keystroke there. That is the menu's own content
+  // asking for focus, not the user abandoning the selection, so leave `open`
+  // and `reference` exactly as they were rather than closing on it.
+  const focusInMenu = typeof document !== 'undefined'
+    && document.activeElement?.closest('[data-writekit-bubble-menu]');
+
+  if (focusInMenu && open.value)
+    return;
+
   const sel = ctx.writekit.state.selection;
   const rect = selectionRect();
   open.value = sel.kind === 'text' && !isCollapsed(sel) && !ctx.composing.value && rect !== null;

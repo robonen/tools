@@ -1,0 +1,135 @@
+# CI for the @robonen/* monorepo. Converted from .gitea/workflows/{ci,publish}.yaml.
+#
+# Two things the Gitea version needed and GitLab does not:
+#
+#   * the sentinel `CI` job. It existed to collapse 16 matrix results into one
+#     required status check. In GitLab the pipeline status *is* that aggregate -
+#     enable "Pipelines must succeed" in Settings > Merge requests instead.
+#   * the static package list. It was a workaround: act_runner evaluates
+#     `strategy` before the producing job runs, so a matrix built from another
+#     job's output came out empty. GitLab has the same limitation for
+#     parallel:matrix, so the list stays static here too - but unlike Gitea,
+#     GitLab can do it properly via a generated child pipeline if this list
+#     ever becomes a burden. See the note at the bottom.
+
+stages: [check, publish]
+
+default:
+  # bookworm rather than alpine: playwright's --with-deps needs apt.
+  image: node:24-bookworm
+  interruptible: true
+
+workflow:
+  auto_cancel:
+    # Replaces concurrency.cancel-in-progress from ci.yaml. Only applies to
+    # jobs marked interruptible, which is why publish sets it to false.
+    on_new_commit: interruptible
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"
+
+.pnpm:
+  before_script:
+    - corepack enable
+    - pnpm config set store-dir .pnpm-store
+  cache:
+    key:
+      files: [pnpm-lock.yaml]
+    paths: [.pnpm-store]
+
+# One job per package - build (with workspace deps), lint and test in parallel.
+# GitLab runs every matrix job regardless of siblings failing, so the Gitea
+# `fail-fast: false` has no equivalent here: it is already the behaviour.
+check:
+  extends: .pnpm
+  stage: check
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  parallel:
+    matrix:
+      - PACKAGE:
+          - "@robonen/eslint"
+          - "@robonen/tsconfig"
+          - "@robonen/tsdown"
+          - "@robonen/crdt"
+          - "@robonen/encoding"
+          - "@robonen/fetch"
+          - "@robonen/platform"
+          - "@robonen/stdlib"
+          - "@robonen/docs"
+          - "@robonen/renovate"
+          - "@robonen/primitives"
+          - "@robonen/primitives-playground"
+          - "@robonen/stories"
+          - "@robonen/vue"
+          - "@robonen/writekit"
+          - "@robonen/writekit-playground"
+  script:
+    - pnpm install --frozen-lockfile
+    # Build the package *and* the workspace deps it relies on - including
+    # @robonen/eslint, whose built dist every lint config imports.
+    - pnpm --filter "${PACKAGE}..." --if-present run build
+    # Only the browser-mode suites (vitest instances: chromium) need a browser,
+    # and playwright is a devDep of those packages, not of the root.
+    - |
+      case "$PACKAGE" in
+        "@robonen/primitives"|"@robonen/writekit")
+          pnpm --filter "$PACKAGE" exec playwright install --with-deps chromium ;;
+      esac
+    - pnpm --filter "$PACKAGE" --if-present run lint:check
+    - pnpm --filter "$PACKAGE" --if-present run test
+
+# The registry is append-only - a half-finished release cannot be rolled back.
+# resource_group serializes runs; interruptible:false stops auto_cancel from
+# killing one mid-write. Together they replace concurrency.cancel-in-progress:false.
+publish:
+  extends: .pnpm
+  stage: publish
+  resource_group: publish-npm
+  interruptible: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"
+  script:
+    # npm reports an unauthorized write as 404, not 401, so a dead token would
+    # surface as "package does not exist" after a full build+test. Check first.
+    - |
+      set -euo pipefail
+      if [ -z "${NPM_TOKEN:-}" ]; then
+        echo "NPM_TOKEN is empty. Add it under Settings > CI/CD > Variables (masked, protected)." >&2
+        exit 1
+      fi
+      printf '//registry.npmjs.org/:_authToken=%s\n' "$NPM_TOKEN" > "$HOME/.npmrc"
+      chmod 600 "$HOME/.npmrc"
+      if ! WHO=$(npm whoami --registry=https://registry.npmjs.org 2>&1); then
+        echo "npm rejected the token - expired, revoked, or wrong account: ${WHO}" >&2
+        exit 1
+      fi
+      echo "Authenticated to npm as: ${WHO}"
+    - pnpm install --frozen-lockfile
+    - pnpm --filter "@robonen/primitives" exec playwright install --with-deps chromium
+    - pnpm build && pnpm test
+    - |
+      set -euo pipefail
+      for file in $(find . -path "*/package.json" -not -path "*/node_modules/*"); do
+        dir=$(dirname "$file")
+        [ "$dir" = "." ] && continue
+        name=$(node -p "require('./$file').name")
+        version=$(node -p "require('./$file').version")
+        private=$(node -p "require('./$file').private || false")
+        if [ "$private" = "true" ]; then echo "skip private $name"; continue; fi
+        published=$(npm view "$name" version 2>/dev/null || echo "0.0.0")
+        if [ "$version" != "$published" ]; then
+          echo "publishing $name@$version (was $published)"
+          (cd "$dir" && pnpm publish --access public --no-git-checks)
+        else
+          echo "no version change for $name"
+        fi
+      done
+  after_script:
+    - rm -f "$HOME/.npmrc"
+
+# Making the matrix dynamic again, if the static list becomes a maintenance
+# burden: add a `generate` job that writes a child .yml from `pnpm list -r`
+# and a `trigger: include: [artifact:]` job that runs it. That is the pattern
+# act_runner could not do; GitLab can. Not done here because the list is only
+# 16 entries and a static file is easier to read than a generated one.

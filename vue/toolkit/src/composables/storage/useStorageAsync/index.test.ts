@@ -496,36 +496,52 @@ describe(useStorageAsync, () => {
   // --- Write ordering ---
 
   it('keeps queued writes ordered when the backend resolves out of order', async () => {
-    // Pre-seed so writeDefaults does not consume the slow first write
-    const store = new Map<string, string>([['ordered', 'initial']]);
-    let delay = 30;
+    // The only assertion in this file with a real deadline: it waits for the
+    // queue to drain 31ms of backend delay. On a wall clock that makes the
+    // test a CPU-contention detector - on a loaded runner the 100ms elapsed
+    // before the timers had run at all, and it failed with 'initial' rather
+    // than the 'slow' a genuine ordering bug would produce.
+    // Driving the clock keeps the assertion about ordering, which is the point.
+    vi.useFakeTimers();
 
-    const storage: StorageLikeAsync = {
-      getItem: async (key: string) => store.get(key) ?? null,
-      setItem: (key: string, value: string) => {
-        // First write is slow, subsequent ones fast — without a queue the
-        // fast write would be overwritten by the slow one landing late.
-        const currentDelay = delay;
-        delay = 1;
+    try {
+      // Pre-seed so writeDefaults does not consume the slow first write
+      const store = new Map<string, string>([['ordered', 'initial']]);
+      let delay = 30;
 
-        return new Promise(resolve => setTimeout(() => {
-          store.set(key, value);
-          resolve();
-        }, currentDelay));
-      },
-      removeItem: async (key: string) => { store.delete(key); },
-    };
+      const storage: StorageLikeAsync = {
+        getItem: async (key: string) => store.get(key) ?? null,
+        setItem: (key: string, value: string) => {
+          // First write is slow, subsequent ones fast - without a queue the
+          // fast write would be overwritten by the slow one landing late.
+          const currentDelay = delay;
+          delay = 1;
 
-    const { state } = await useStorageAsync<string>('ordered', 'initial', storage);
+          return new Promise(resolve => setTimeout(() => {
+            store.set(key, value);
+            resolve();
+          }, currentDelay));
+        },
+        removeItem: async (key: string) => { store.delete(key); },
+      };
 
-    state.value = 'slow';
-    await nextTick();
-    state.value = 'fast';
-    await nextTick();
+      const { state } = await useStorageAsync<string>('ordered', 'initial', storage);
 
-    await new Promise(resolve => setTimeout(resolve, 100));
+      state.value = 'slow';
+      await nextTick();
+      state.value = 'fast';
+      await nextTick();
 
-    expect(store.get('ordered')).toBe('fast');
+      // Advance past both backend delays. The async variant flushes the
+      // promise each setItem returns between timer ticks; the sync one would
+      // fire the timers without ever letting the queue resume.
+      await vi.advanceTimersByTimeAsync(100);
+
+      expect(store.get('ordered')).toBe('fast');
+    }
+    finally {
+      vi.useRealTimers();
+    }
   });
 
   // --- eventFilter ---

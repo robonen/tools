@@ -180,6 +180,11 @@ function numberPostprocessor(params: ResolvedNumberParams): MaskPostprocessor {
         canonical = String(max).replace('.', decimalSeparator);
     }
 
+    // No digits, no affixes: an empty field stays empty so its placeholder
+    // shows, instead of a lone "$" or " USD" the user cannot delete.
+    if (canonical === '')
+      return { value: '', selection: [0, 0] };
+
     const negative = canonical.startsWith('-');
     const unsigned = negative ? canonical.slice(1) : canonical;
     const [intPart = '', fracPart] = unsigned.split(decimalSeparator);

@@ -245,3 +245,11 @@ describe('isMaskComplete / calibrate / removeFixed', () => {
     expect(result.selection).toEqual([2, 2]);
   });
 });
+
+describe('maskNumberOptions — empty value', () => {
+  it('leaves an empty value without prefix or postfix', () => {
+    expect(maskTransform('', maskNumberOptions({ prefix: '$' }))).toBe('');
+    expect(maskTransform('', maskNumberOptions({ postfix: ' USD', thousandSeparator: ' ' }))).toBe('');
+    expect(maskTransform('7', maskNumberOptions({ postfix: ' USD' }))).toBe('7 USD');
+  });
+});

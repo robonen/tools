@@ -91,3 +91,18 @@ describe(useMaskedInput, () => {
     unmount();
   });
 });
+
+describe('useMaskedInput — component refs', () => {
+  it('resolves a component instance passed to `bind.ref` to its root element', () => {
+    const { api, input, unmount } = mountInput('+1 (###) ###-####');
+
+    api.bind.ref(null);
+    api.bind.ref({ $el: input } as unknown as Parameters<typeof api.bind.ref>[0]);
+
+    input.value = '1234567890';
+    api.ensureFitsMask();
+
+    expect(input.value).toBe('+1 (123) 456-7890');
+    unmount();
+  });
+});

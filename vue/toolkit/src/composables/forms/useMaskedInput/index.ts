@@ -164,7 +164,10 @@ export function useMaskedInput(options: UseMaskedInputOptions): UseMaskedInputRe
 
   const bind: MaskInputBindings = {
     ref: (el) => {
-      element.value = (el as TextFieldElement | null) ?? null;
+      // `<Comp v-bind="bind">` hands over a component instance — its root
+      // element is the field.
+      const node = el instanceof Element ? el : (el?.$el as Element | null | undefined) ?? null;
+      element.value = node as TextFieldElement | null;
     },
     onInput,
     onBeforeinput,

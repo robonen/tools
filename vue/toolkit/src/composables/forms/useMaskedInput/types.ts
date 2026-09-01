@@ -1,4 +1,4 @@
-import type { ComputedRef, MaybeRefOrGetter, ShallowRef } from 'vue';
+import type { ComponentPublicInstance, ComputedRef, MaybeRefOrGetter, ShallowRef } from 'vue';
 import type { MaskOptionInput, OverwriteMode } from '../mask';
 
 /**
@@ -41,8 +41,10 @@ export interface UseMaskedInputOptions {
 export interface MaskInputBindings {
   /**
    * Template-ref callback — attaches the element (`v-bind` sets it for you).
+   * Typed like Vue's own function ref so `v-bind="bind"` type-checks under
+   * `strictFunctionTypes`; a component instance resolves to its root element.
    */
-  ref: (element: Element | null) => void;
+  ref: (element: Element | ComponentPublicInstance | null) => void;
   /**
    * `input` handler — re-conforms after exotic/composition input types.
    */

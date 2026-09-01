@@ -463,12 +463,18 @@ provideCalendarRootContext({
         tabindex="-1"
         style="display: none"
       >
+      <!-- Native constraint validation only: the segments are the accessible
+           control, and without `aria-hidden` a screen reader announced the
+           date twice — as segments and again as this native input. It stays
+           focusable so the browser's validation bubble can land on it and be
+           forwarded to the first segment. -->
       <VisuallyHidden
         v-if="required || minValue || maxValue"
         :id="fieldId"
         as="input"
         feature="focusable"
         tabindex="-1"
+        aria-hidden="true"
         :type="nativeInputType"
         :value="nativeValue"
         :required="required"

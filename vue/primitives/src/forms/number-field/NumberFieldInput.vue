@@ -32,6 +32,12 @@ const { forwardRef, currentElement } = useForwardExpose();
 // decimal separator) survive until the value is committed/reformatted.
 const inputValue = ref(ctx.textValue.value);
 watch(() => ctx.textValue.value, (v) => {
+  // While the typed text still reads as the current value ("1" for 1.00,
+  // "15000" under a step of 500), leave it alone: rewriting it mid-edit moves
+  // the caret and fights every keystroke. Anything else — stepper, arrow keys,
+  // an outside model write — is reflected at once.
+  if (inputValue.value !== '' && ctx.parseInput(inputValue.value) === ctx.value.value)
+    return;
   inputValue.value = v;
 });
 
@@ -44,10 +50,11 @@ onMounted(() => {
 function onInput(event: Event): void {
   const target = event.target as HTMLInputElement;
   inputValue.value = target.value;
-  // Live update: empty clears to null, unparseable also clears to null (the
-  // value is re-clamped/snapped/reformatted only on commit via `applyInputValue`).
+  // Live update: empty clears to null, unparseable also clears to null. The
+  // number is neither clamped nor snapped here — that happens on commit via
+  // `applyInputValue`, once the user is done typing it.
   const parsed = ctx.parseInput(target.value);
-  ctx.setValue(parsed);
+  ctx.setValue(parsed, { clamp: false });
 }
 
 function onBeforeInput(event: InputEvent): void {
@@ -62,6 +69,9 @@ function onBeforeInput(event: InputEvent): void {
 
 function commit(event: Event): void {
   ctx.applyInputValue((event.target as HTMLInputElement).value);
+  // The committed number is final: show it clamped, snapped and formatted even
+  // when the value itself did not change (the watch above would not fire).
+  inputValue.value = ctx.textValue.value;
 }
 
 function onWheel(event: WheelEvent): void {
@@ -114,7 +124,7 @@ function onKeyDown(event: KeyboardEvent): void {
       }
       break;
     case 'Enter':
-      ctx.applyInputValue((event.target as HTMLInputElement).value);
+      commit(event);
       break;
   }
 }

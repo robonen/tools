@@ -128,3 +128,79 @@ describe('NumberField', () => {
     wrapper.unmount();
   });
 });
+
+describe('NumberField live typing', () => {
+  function type(input: HTMLInputElement, text: string): void {
+    input.value = text;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  it('keeps typed digits under a coarse step until commit, then snaps', async () => {
+    const { wrapper, model } = mountField({ step: 500 });
+    await nextTick();
+    const input = document.querySelector<HTMLInputElement>('#inp')!;
+
+    for (const text of ['1', '15', '150', '1500', '15000']) {
+      type(input, text);
+      await nextTick();
+      expect(input.value).toBe(text);
+    }
+    expect(model.value).toBe(15000);
+
+    type(input, '15249');
+    await nextTick();
+    expect(model.value).toBe(15249);
+
+    input.dispatchEvent(new Event('blur'));
+    await nextTick();
+    expect(model.value).toBe(15000);
+    expect(input.value).toBe('15000');
+    wrapper.unmount();
+  });
+
+  it('does not clamp to the bounds while a number is still being typed', async () => {
+    const { wrapper, model } = mountField({ min: 10, max: 100 });
+    await nextTick();
+    const input = document.querySelector<HTMLInputElement>('#inp')!;
+
+    type(input, '1');
+    await nextTick();
+    expect(input.value).toBe('1');
+    type(input, '15');
+    await nextTick();
+    expect(model.value).toBe(15);
+
+    type(input, '500');
+    await nextTick();
+    expect(model.value).toBe(500);
+    input.dispatchEvent(new Event('blur'));
+    await nextTick();
+    expect(model.value).toBe(100);
+    expect(input.value).toBe('100');
+    wrapper.unmount();
+  });
+
+  it('leaves text that reads as the value alone and reformats it on commit', async () => {
+    const { wrapper, model } = mountField({
+      locale: 'en',
+      formatOptions: { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+    });
+    await nextTick();
+    const input = document.querySelector<HTMLInputElement>('#inp')!;
+
+    type(input, '1');
+    await nextTick();
+    expect(model.value).toBe(1);
+    expect(input.value).toBe('1');
+
+    input.dispatchEvent(new Event('blur'));
+    await nextTick();
+    expect(input.value).toBe('1.00');
+
+    (document.querySelector<HTMLButtonElement>('#inc')!).click();
+    await nextTick();
+    expect(model.value).toBe(2);
+    expect(input.value).toBe('2.00');
+    wrapper.unmount();
+  });
+});

@@ -151,6 +151,10 @@ describe('NumberField decimal-safe stepping & snapping', () => {
     input.value = '7';
     input.dispatchEvent(new Event('input', { bubbles: true }));
     await nextTick();
+    // Typing is live and unsnapped; the grid applies once the number is committed.
+    expect(model.value).toBe(7);
+    input.dispatchEvent(new Event('blur'));
+    await nextTick();
     expect(model.value).toBe(5);
   });
 

@@ -38,6 +38,17 @@ export interface NumberFieldRootProps extends PrimitiveProps {
 export interface NumberFieldRootEmits {
   valueChange: [value: number | null];
 }
+
+export interface SetValueOptions {
+  /**
+   * Clamp to `min`/`max` and snap to `step` before writing. Live typing passes
+   * `false`: a number is not final until it is committed, and snapping every
+   * keystroke turns "15000" typed under a step of 500 into 0 after the first
+   * digit.
+   * @default true
+   */
+  clamp?: boolean;
+}
 </script>
 
 <script setup lang="ts">
@@ -97,9 +108,9 @@ function clampInput(v: number): number {
   return clamp(v, min ?? -Infinity, max ?? Infinity);
 }
 
-function setValue(v: number | null): void {
+function setValue(v: number | null, { clamp: shouldClamp = true }: SetValueOptions = {}): void {
   if (disabled || readonly) return;
-  const next = v === null ? null : clampInput(v);
+  const next = v === null || !shouldClamp ? v : clampInput(v);
   if (next === localValue.value) return;
   localValue.value = next;
   // `defineModel` emits `update:modelValue` on write — no manual emit needed.

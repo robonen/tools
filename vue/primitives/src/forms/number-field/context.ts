@@ -10,7 +10,8 @@ export interface NumberFieldContext {
   readonly: Ref<boolean>;
   increment: (delta?: number) => void;
   decrement: (delta?: number) => void;
-  setValue: (v: number | null) => void;
+  /** Write a value; `{ clamp: false }` skips clamp/snap for a number still being typed. */
+  setValue: (v: number | null, options?: { clamp?: boolean }) => void;
   inputId: string;
   /** Text shown in the field, formatted with the active locale/format options. */
   textValue: ComputedRef<string>;

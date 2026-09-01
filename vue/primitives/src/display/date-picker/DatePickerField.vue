@@ -19,6 +19,7 @@ export interface DatePickerFieldProps extends PrimitiveProps {
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useDatePickerRootContext } from './context';
+import { parseLocalizedDate } from './parse-localized';
 
 const {
   as: _as = 'input',
@@ -47,7 +48,10 @@ function commit() {
     ctx.modelValue.value = undefined;
     return;
   }
-  const parsed = adapter.value.parse(text);
+  // What the user types mirrors what the field shows, so the locale's own
+  // part order goes first; the adapter's free-form parse covers the rest
+  // (ISO strings, month names).
+  const parsed = parseLocalizedDate(text, ctx.locale.value, format, adapter.value) ?? adapter.value.parse(text);
   if (parsed)
     ctx.modelValue.value = adapter.value.toDateOnly(parsed);
   else

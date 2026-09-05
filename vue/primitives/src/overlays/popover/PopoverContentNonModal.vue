@@ -2,10 +2,13 @@
 import type { PopoverContentImplEmits, PopoverContentImplProps } from './PopoverContentImpl.vue';
 import PopoverContentImpl from './PopoverContentImpl.vue';
 import { ref } from 'vue';
-import { useForwardExpose } from '@robonen/vue';
+import { useForwardExpose, useForwardProps } from '@robonen/vue';
 import { usePopoverContext } from './context';
 
 const props = defineProps<PopoverContentImplProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<PopoverContentImplEmits>();
 
 const ctx = usePopoverContext();
@@ -17,7 +20,7 @@ const { forwardRef } = useForwardExpose();
 
 <template>
   <PopoverContentImpl
-    v-bind="props"
+    v-bind="forwardedProps"
     :ref="forwardRef"
     :trap-focus="false"
     :disable-outside-pointer-events="false"

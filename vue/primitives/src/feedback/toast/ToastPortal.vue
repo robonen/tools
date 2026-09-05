@@ -11,12 +11,16 @@ export interface ToastPortalProps extends TeleportPrimitiveProps {}
 
 <script setup lang="ts">
 import { Teleport as TeleportPrimitive } from '../../utilities/teleport';
+import { useForwardProps } from '@robonen/vue';
 
 const props = defineProps<ToastPortalProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 </script>
 
 <template>
-  <TeleportPrimitive v-bind="props">
+  <TeleportPrimitive v-bind="forwardedProps">
     <slot />
   </TeleportPrimitive>
 </template>

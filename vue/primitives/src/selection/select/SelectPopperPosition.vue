@@ -12,7 +12,7 @@ export type SelectPopperPositionEmits = PopperContentEmits;
 </script>
 
 <script setup lang="ts">
-import { useForwardExpose } from '@robonen/vue';
+import { useForwardExpose, useForwardProps } from '@robonen/vue';
 
 import { PopperContent } from '../../overlays/popper';
 
@@ -22,12 +22,17 @@ const emit = defineEmits<SelectPopperPositionEmits>();
 defineOptions({ inheritAttrs: false });
 
 const { forwardRef } = useForwardExpose();
+
+// Only the popper props the consumer actually set: spreading `props` would
+// hand PopperContent `avoidCollisions: false` (Vue's cast for an absent
+// Boolean) and switch collision handling off.
+const forwardedProps = useForwardProps(props);
 </script>
 
 <template>
   <PopperContent
     :ref="forwardRef"
-    v-bind="{ ...props, ...$attrs }"
+    v-bind="{ ...forwardedProps, ...$attrs }"
     :side="props.side ?? 'bottom'"
     :side-offset="props.sideOffset ?? 4"
     :align="props.align ?? 'start'"

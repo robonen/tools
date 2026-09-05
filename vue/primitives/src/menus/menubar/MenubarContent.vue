@@ -19,8 +19,12 @@ import { computed, ref } from 'vue';
 
 import { MenuContent } from '../menu';
 import { SUBTRIGGER_ATTR, useMenubarMenuContext, useMenubarRootContext } from './context';
+import { useForwardProps } from '@robonen/vue';
 
 const { align = 'start', ...props } = defineProps<MenubarContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<MenubarContentEmits>();
 
 const rootCtx = useMenubarRootContext();
@@ -68,7 +72,7 @@ function handleArrowNavigation(event: KeyboardEvent) {
 <template>
   <MenuContent
     :id="menuCtx.contentId.value"
-    v-bind="props"
+    v-bind="forwardedProps"
     :align="align"
     :aria-labelledby="menuCtx.triggerId.value"
     :style="contentStyle"

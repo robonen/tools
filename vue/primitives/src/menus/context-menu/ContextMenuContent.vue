@@ -18,6 +18,7 @@ import { shallowRef } from 'vue';
 
 import { MenuContent } from '../menu';
 import { useContextMenuRootContext } from './context';
+import { useForwardProps } from '@robonen/vue';
 
 const {
   sideOffset = 2,
@@ -28,6 +29,9 @@ const {
   hideWhenDetached = false,
   ...rest
 } = defineProps<ContextMenuContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(rest);
 const emit = defineEmits<ContextMenuContentEmits>();
 
 const rootCtx = useContextMenuRootContext();
@@ -63,7 +67,7 @@ function handleCloseAutoFocus(event: Event) {
 
 <template>
   <MenuContent
-    v-bind="rest"
+    v-bind="forwardedProps"
     side="right"
     :side-offset="sideOffset"
     align="start"

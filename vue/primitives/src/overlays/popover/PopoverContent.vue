@@ -20,10 +20,13 @@ export type PopoverContentEmits = PopoverContentImplEmits;
 import PopoverContentModal from './PopoverContentModal.vue';
 import PopoverContentNonModal from './PopoverContentNonModal.vue';
 import { Presence } from '../../utilities/presence';
-import { useForwardExpose } from '@robonen/vue';
+import { useForwardExpose, useForwardProps } from '@robonen/vue';
 import { usePopoverContext } from './context';
 
 const { forceMount = false, ...contentProps } = defineProps<PopoverContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(contentProps);
 const emit = defineEmits<PopoverContentEmits>();
 
 const ctx = usePopoverContext();
@@ -34,7 +37,7 @@ const { forwardRef } = useForwardExpose();
   <Presence :present="ctx.open.value" :force-mount="forceMount">
     <PopoverContentModal
       v-if="ctx.modal.value"
-      v-bind="contentProps"
+      v-bind="forwardedProps"
       :ref="forwardRef"
       @open-auto-focus="emit('openAutoFocus', $event)"
       @close-auto-focus="emit('closeAutoFocus', $event)"
@@ -48,7 +51,7 @@ const { forwardRef } = useForwardExpose();
     </PopoverContentModal>
     <PopoverContentNonModal
       v-else
-      v-bind="contentProps"
+      v-bind="forwardedProps"
       :ref="forwardRef"
       @open-auto-focus="emit('openAutoFocus', $event)"
       @close-auto-focus="emit('closeAutoFocus', $event)"

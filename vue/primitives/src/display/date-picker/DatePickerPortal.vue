@@ -12,12 +12,16 @@ export interface DatePickerPortalProps extends TeleportPrimitiveProps {}
 
 <script setup lang="ts">
 import PortalPrimitive from '../../utilities/teleport/Teleport.vue';
+import { useForwardProps } from '@robonen/vue';
 
 const props = defineProps<DatePickerPortalProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 </script>
 
 <template>
-  <PortalPrimitive v-bind="props">
+  <PortalPrimitive v-bind="forwardedProps">
     <slot />
   </PortalPrimitive>
 </template>

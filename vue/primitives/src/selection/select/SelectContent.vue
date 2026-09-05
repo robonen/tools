@@ -27,6 +27,7 @@ import { Presence } from '../../utilities/presence';
 import { useSelectRootContext } from './context';
 import SelectContentImpl from './SelectContentImpl.vue';
 import SelectProvider from './SelectProvider.vue';
+import { useForwardProps } from '@robonen/vue';
 
 // Neither branch below is a single element root (`Presence` wraps the panel,
 // the closed branch is a `Teleport`), so Vue cannot inherit `class`/`style` or
@@ -34,6 +35,9 @@ import SelectProvider from './SelectProvider.vue';
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<SelectContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<SelectContentEmits>();
 const rootCtx = useSelectRootContext();
 
@@ -62,7 +66,7 @@ onMounted(() => {
     :present="present"
   >
     <SelectContentImpl
-      v-bind="{ ...props, ...$attrs }"
+      v-bind="{ ...forwardedProps, ...$attrs }"
       @close-auto-focus="emit('closeAutoFocus', $event)"
       @escape-key-down="emit('escapeKeyDown', $event)"
       @pointer-down-outside="emit('pointerDownOutside', $event)"

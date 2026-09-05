@@ -17,8 +17,12 @@ import { ref } from 'vue';
 
 import { MenuContent } from '../menu';
 import { useDropdownMenuRootContext } from './context';
+import { useForwardProps } from '@robonen/vue';
 
 const props = defineProps<DropdownMenuContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<DropdownMenuContentEmits>();
 const ddCtx = useDropdownMenuRootContext();
 
@@ -63,7 +67,7 @@ function handleInteractOutside(event: PointerEvent | MouseEvent | FocusEvent) {
 
 <template>
   <MenuContent
-    v-bind="props"
+    v-bind="forwardedProps"
     :id="ddCtx.contentId.value"
     :aria-labelledby="ddCtx.triggerId.value"
     :style="contentStyle"

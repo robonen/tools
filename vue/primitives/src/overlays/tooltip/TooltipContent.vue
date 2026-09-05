@@ -21,8 +21,12 @@ import { Presence } from '../../utilities/presence';
 import TooltipContentHoverable from './TooltipContentHoverable.vue';
 import TooltipContentImpl from './TooltipContentImpl.vue';
 import { useTooltipContext } from './context';
+import { useForwardProps } from '@robonen/vue';
 
 const { forceMount = false, ...contentProps } = defineProps<TooltipContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(contentProps);
 const emit = defineEmits<TooltipContentEmits>();
 
 const ctx = useTooltipContext();
@@ -39,7 +43,7 @@ const contentComponent = computed(() =>
   <Presence :present="ctx.open.value" :force-mount="forceMount">
     <component
       :is="contentComponent"
-      v-bind="contentProps"
+      v-bind="forwardedProps"
       @escape-key-down="emit('escapeKeyDown', $event)"
       @pointer-down-outside="emit('pointerDownOutside', $event)"
     >

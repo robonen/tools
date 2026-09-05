@@ -21,8 +21,12 @@ import { Presence } from '../../utilities/presence';
 import { useMenuContext, useMenuRootContext, useMenuSubContext } from './context';
 import MenuContentImpl from './MenuContentImpl.vue';
 import { SUB_CLOSE_KEYS } from './utils';
+import { useForwardProps } from '@robonen/vue';
 
 const { forceMount = false, ...contentProps } = defineProps<MenuSubContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(contentProps);
 const emit = defineEmits<MenuSubContentEmits>();
 
 const menuCtx = useMenuContext();
@@ -58,7 +62,7 @@ function handleOpenAutoFocus(event: Event) {
   <Presence :present="forceMount || menuCtx.open.value">
     <MenuContentImpl
       :id="subCtx.contentId.value"
-      v-bind="contentProps"
+      v-bind="forwardedProps"
       :ref="(comp: any) => { subContentEl = comp?.$el ?? null }"
       :aria-labelledby="subCtx.triggerId.value"
       :trap-focus="false"

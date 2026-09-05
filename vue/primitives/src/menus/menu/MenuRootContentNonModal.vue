@@ -9,8 +9,12 @@ import { shallowRef, watchEffect } from 'vue';
 
 import MenuContentImpl from './MenuContentImpl.vue';
 import { useMenuContext } from './context';
+import { useForwardProps } from '@robonen/vue';
 
 const props = defineProps<MenuContentImplProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<MenuContentImplEmits>();
 const menuCtx = useMenuContext();
 const contentRef = shallowRef<HTMLElement | null>(null);
@@ -20,7 +24,7 @@ watchEffect(() => menuCtx.onContentChange(contentRef.value));
 
 <template>
   <MenuContentImpl
-    v-bind="props"
+    v-bind="forwardedProps"
     :ref="(comp: any) => { contentRef = comp?.$el ?? null }"
     :trap-focus="false"
     :disable-outside-pointer-events="false"

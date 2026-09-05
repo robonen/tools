@@ -6,12 +6,15 @@ import type { MenuContentImplEmits, MenuContentImplProps } from './MenuContentIm
 
 import { shallowRef, watchEffect } from 'vue';
 
-import { useBodyScrollLock, useFocusGuard } from '@robonen/vue';
+import { useBodyScrollLock, useFocusGuard, useForwardProps } from '@robonen/vue';
 import { useHideOthers } from '../../internal/utils/useHideOthers';
 import MenuContentImpl from './MenuContentImpl.vue';
 import { useMenuContext } from './context';
 
 const props = defineProps<MenuContentImplProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<MenuContentImplEmits>();
 
 const menuCtx = useMenuContext();
@@ -26,7 +29,7 @@ useHideOthers(contentRef);
 
 <template>
   <MenuContentImpl
-    v-bind="props"
+    v-bind="forwardedProps"
     :ref="(comp: any) => { contentRef = comp?.$el ?? null }"
     :trap-focus="menuCtx.open.value"
     :disable-outside-pointer-events="menuCtx.open.value"

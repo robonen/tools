@@ -12,10 +12,13 @@ export type DropdownMenuSubContentEmits = MenuSubContentEmits;
 <script setup lang="ts">
 import type { CSSProperties } from 'vue';
 
-import { useForwardExpose } from '@robonen/vue';
+import { useForwardExpose, useForwardProps } from '@robonen/vue';
 import { MenuSubContent } from '../menu';
 
 const props = defineProps<DropdownMenuSubContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<DropdownMenuSubContentEmits>();
 useForwardExpose();
 
@@ -30,7 +33,7 @@ const contentStyle: CSSProperties = {
 
 <template>
   <MenuSubContent
-    v-bind="props"
+    v-bind="forwardedProps"
     :style="contentStyle"
     @close-auto-focus="emit('closeAutoFocus', $event)"
     @escape-key-down="emit('escapeKeyDown', $event)"

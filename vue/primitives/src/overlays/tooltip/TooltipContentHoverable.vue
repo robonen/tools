@@ -16,11 +16,14 @@ export type TooltipContentHoverableEmits = TooltipContentImplEmits;
 <script setup lang="ts">
 import { watchEffect } from 'vue';
 import TooltipContentImpl from './TooltipContentImpl.vue';
-import { useForwardExpose } from '@robonen/vue';
+import { useForwardExpose, useForwardProps } from '@robonen/vue';
 import { useGraceArea } from '../../internal/utils/useGraceArea';
 import { useTooltipContext } from './context';
 
 const props = defineProps<TooltipContentHoverableProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<TooltipContentHoverableEmits>();
 
 const ctx = useTooltipContext();
@@ -38,7 +41,7 @@ onPointerExit(() => ctx.onClose());
 <template>
   <TooltipContentImpl
     :ref="forwardRef"
-    v-bind="props"
+    v-bind="forwardedProps"
     @escape-key-down="emit('escapeKeyDown', $event)"
     @pointer-down-outside="emit('pointerDownOutside', $event)"
   >

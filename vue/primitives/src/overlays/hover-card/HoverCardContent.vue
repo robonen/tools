@@ -17,10 +17,13 @@ export type HoverCardContentEmits = HoverCardContentImplEmits;
 <script setup lang="ts">
 import HoverCardContentImpl from './HoverCardContentImpl.vue';
 import { Presence } from '../../utilities/presence';
-import { useForwardExpose } from '@robonen/vue';
+import { useForwardExpose, useForwardProps } from '@robonen/vue';
 import { useHoverCardContext } from './context';
 
 const { forceMount = false, ...contentProps } = defineProps<HoverCardContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(contentProps);
 const emit = defineEmits<HoverCardContentEmits>();
 const ctx = useHoverCardContext();
 const { forwardRef } = useForwardExpose();
@@ -29,7 +32,7 @@ const { forwardRef } = useForwardExpose();
 <template>
   <Presence :present="ctx.open.value" :force-mount="forceMount">
     <HoverCardContentImpl
-      v-bind="contentProps"
+      v-bind="forwardedProps"
       :ref="forwardRef"
       @escape-key-down="emit('escapeKeyDown', $event)"
       @pointer-down-outside="emit('pointerDownOutside', $event)"

@@ -47,7 +47,7 @@ const POPOVER_CONTENT_STYLE = Object.freeze({
 import { DismissableLayer } from '../../utilities/dismissable-layer';
 import { FocusScope } from '../../utilities/focus-scope';
 import { PopperContent } from '../popper';
-import { useFocusGuard, useForwardExpose } from '@robonen/vue';
+import { useFocusGuard, useForwardExpose, useForwardProps } from '@robonen/vue';
 import { usePopoverContext } from './context';
 
 const {
@@ -61,6 +61,11 @@ const emit = defineEmits<PopoverContentImplEmits>();
 
 const ctx = usePopoverContext();
 const { forwardRef } = useForwardExpose();
+
+// Only the popper props the consumer actually set: a spread of the rest would
+// hand PopperContent `avoidCollisions: false` (Vue's cast for an absent
+// Boolean) and switch collision handling off.
+const forwardedPopperProps = useForwardProps(popperProps);
 
 // Insert tabbable focus-guard sentinels at the document edges so focusin/out
 // are caught consistently and Tab cannot escape into the browser chrome.
@@ -88,7 +93,7 @@ useFocusGuard();
         :id="ctx.contentId.value"
         :ref="forwardRef"
         :as="as"
-        v-bind="popperProps"
+        v-bind="forwardedPopperProps"
         :data-state="ctx.open.value ? 'open' : 'closed'"
         :aria-labelledby="ctx.triggerId.value"
         role="dialog"

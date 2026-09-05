@@ -11,14 +11,18 @@ export type ContextMenuSubContentEmits = MenuSubContentEmits;
 
 <script setup lang="ts">
 import { MenuSubContent } from '../menu';
+import { useForwardProps } from '@robonen/vue';
 
 const props = defineProps<ContextMenuSubContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 const emit = defineEmits<ContextMenuSubContentEmits>();
 </script>
 
 <template>
   <MenuSubContent
-    v-bind="props"
+    v-bind="forwardedProps"
     @close-auto-focus="emit('closeAutoFocus', $event)"
     @escape-key-down="emit('escapeKeyDown', $event)"
     @pointer-down-outside="emit('pointerDownOutside', $event)"

@@ -30,6 +30,7 @@ import { DismissableLayer } from '../../utilities/dismissable-layer';
 import { FocusScope } from '../../utilities/focus-scope';
 import { PopperContent } from '../../overlays/popper';
 import { Presence } from '../../utilities/presence';
+import { useForwardProps } from '@robonen/vue';
 import { useDatePickerRootContext } from './context';
 
 const {
@@ -41,6 +42,11 @@ const {
 const emit = defineEmits<DatePickerContentEmits>();
 
 const ctx = useDatePickerRootContext();
+
+// Only the popper props the consumer actually set: a spread of the rest would
+// hand PopperContent `avoidCollisions: false` (Vue's cast for an absent
+// Boolean) and switch collision handling off.
+const forwardedPopperProps = useForwardProps(popperProps);
 </script>
 
 <template>
@@ -67,7 +73,7 @@ const ctx = useDatePickerRootContext();
         <PopperContent
           :id="ctx.contentId.value"
           :as="as"
-          v-bind="popperProps"
+          v-bind="forwardedPopperProps"
           role="dialog"
           :aria-labelledby="ctx.triggerId.value"
           :data-state="ctx.open.value ? 'open' : 'closed'"

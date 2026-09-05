@@ -22,8 +22,12 @@ import { Presence } from '../../utilities/presence';
 import { useMenuContext, useMenuRootContext } from './context';
 import MenuRootContentModal from './MenuRootContentModal.vue';
 import MenuRootContentNonModal from './MenuRootContentNonModal.vue';
+import { useForwardProps } from '@robonen/vue';
 
 const { forceMount = false, ...contentProps } = defineProps<MenuContentProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(contentProps);
 const emit = defineEmits<MenuContentEmits>();
 
 const menuCtx = useMenuContext();
@@ -34,7 +38,7 @@ const rootCtx = useMenuRootContext();
   <Presence :present="forceMount || menuCtx.open.value">
     <MenuRootContentModal
       v-if="rootCtx.modal.value"
-      v-bind="contentProps"
+      v-bind="forwardedProps"
       @close-auto-focus="emit('closeAutoFocus', $event)"
       @escape-key-down="emit('escapeKeyDown', $event)"
       @pointer-down-outside="emit('pointerDownOutside', $event)"
@@ -48,7 +52,7 @@ const rootCtx = useMenuRootContext();
     </MenuRootContentModal>
     <MenuRootContentNonModal
       v-else
-      v-bind="contentProps"
+      v-bind="forwardedProps"
       @close-auto-focus="emit('closeAutoFocus', $event)"
       @escape-key-down="emit('escapeKeyDown', $event)"
       @pointer-down-outside="emit('pointerDownOutside', $event)"

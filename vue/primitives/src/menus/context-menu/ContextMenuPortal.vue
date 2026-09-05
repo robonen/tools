@@ -11,10 +11,14 @@ export interface ContextMenuPortalProps extends MenuPortalProps {}
 
 <script setup lang="ts">
 import { MenuPortal } from '../menu';
+import { useForwardProps } from '@robonen/vue';
 
 const props = defineProps<ContextMenuPortalProps>();
+// Forward only what the consumer set: a spread would also hand down Vue's
+// `false` for every absent Boolean and override the child's own defaults.
+const forwardedProps = useForwardProps(props);
 </script>
 
 <template>
-  <MenuPortal v-bind="props"><slot /></MenuPortal>
+  <MenuPortal v-bind="forwardedProps"><slot /></MenuPortal>
 </template>

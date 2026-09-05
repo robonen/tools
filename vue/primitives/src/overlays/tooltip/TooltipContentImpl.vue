@@ -46,10 +46,13 @@ import { DismissableLayer } from '../../utilities/dismissable-layer';
 import { PopperContent } from '../popper';
 import { TOOLTIP_OPEN_EVENT } from './utils';
 import { VisuallyHidden } from '../../utilities/visually-hidden';
-import { useEventListener, useForwardExpose } from '@robonen/vue';
+import { useEventListener, useForwardExpose, useForwardProps } from '@robonen/vue';
 import { useTooltipContext } from './context';
 
 const props = defineProps<TooltipContentImplProps>();
+// Only the props the consumer set: `props.avoidCollisions` reads `false` for an
+// absent Boolean, which would win over the Provider defaults below.
+const ownProps = useForwardProps(props);
 
 const emit = defineEmits<TooltipContentImplEmits>();
 
@@ -65,7 +68,7 @@ const popperProps = computed(() => {
     key: K,
     fallback: NonNullable<TooltipContentImplProps[K]>,
   ): NonNullable<TooltipContentImplProps[K]> =>
-    (props[key] ?? defaults?.[key] ?? fallback) as NonNullable<TooltipContentImplProps[K]>;
+    (ownProps.value[key] ?? defaults?.[key] ?? fallback) as NonNullable<TooltipContentImplProps[K]>;
 
   return {
     side: pick('side', 'top'),
@@ -75,13 +78,13 @@ const popperProps = computed(() => {
     alignOffset: pick('alignOffset', 0),
     alignFlip: pick('alignFlip', true),
     avoidCollisions: pick('avoidCollisions', true),
-    collisionBoundary: props.collisionBoundary ?? defaults?.collisionBoundary ?? [],
+    collisionBoundary: ownProps.value.collisionBoundary ?? defaults?.collisionBoundary ?? [],
     collisionPadding: pick('collisionPadding', 0),
     arrowPadding: pick('arrowPadding', 0),
     sticky: pick('sticky', 'partial'),
     hideWhenDetached: pick('hideWhenDetached', false),
-    positionStrategy: props.positionStrategy ?? defaults?.positionStrategy,
-    updatePositionStrategy: props.updatePositionStrategy ?? defaults?.updatePositionStrategy,
+    positionStrategy: ownProps.value.positionStrategy ?? defaults?.positionStrategy,
+    updatePositionStrategy: ownProps.value.updatePositionStrategy ?? defaults?.updatePositionStrategy,
   };
 });
 

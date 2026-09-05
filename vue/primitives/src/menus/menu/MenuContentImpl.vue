@@ -50,7 +50,7 @@ import { DismissableLayer } from '../../utilities/dismissable-layer';
 import { FocusScope } from '../../utilities/focus-scope';
 import { PopperContent } from '../../overlays/popper';
 import { RovingFocusGroup } from '../../utilities/roving-focus';
-import { refAutoReset, useForwardExpose } from '@robonen/vue';
+import { refAutoReset, useForwardExpose, useForwardProps } from '@robonen/vue';
 import { provideMenuContentContext, provideMenuItemSelectContext, useMenuContext, useMenuRootContext } from './context';
 import type { GraceIntent, Side } from './utils';
 import { FIRST_LAST_KEYS, LAST_KEYS, focusFirst, getNextMatch, getOpenState, isMousePointer, isPointerInGraceArea } from './utils';
@@ -71,6 +71,11 @@ const emit = defineEmits<MenuContentImplEmits>();
 const menuCtx = useMenuContext();
 const rootCtx = useMenuRootContext();
 const { forwardRef, currentElement: contentElement } = useForwardExpose();
+
+// Only the popper props the consumer actually set: a spread of the rest would
+// hand PopperContent `avoidCollisions: false` (Vue's cast for an absent
+// Boolean) and switch collision handling off.
+const forwardedPopperProps = useForwardProps(popperProps);
 
 // Typeahead buffer that auto-clears 1s after the last keystroke — each write
 // restarts the idle timer (and it tears down on scope dispose). Mirrors the
@@ -225,7 +230,7 @@ function handleBlur(event: FocusEvent) {
           :side-offset="sideOffset"
           :align="align"
           :style="CONTENT_STYLE"
-          v-bind="popperProps"
+          v-bind="forwardedPopperProps"
           @keydown="handleKeyDown"
           @blur="handleBlur"
           @pointermove="handlePointerMove"

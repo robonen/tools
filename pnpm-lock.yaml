@@ -357,8 +357,8 @@ importers:
         specifier: ^7.2.0
         version: 7.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.1)(rollup@4.62.0)(terser@5.48.0)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2))(yaml@2.9.0)
       vitest-browser-vue:
-        specifier: ^2.1.0
-        version: 2.1.0(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vitest@4.1.10)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2))
+        specifier: ^3.1.0
+        version: 3.1.0(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vitest@4.1.10)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2))
       vue:
         specifier: 'catalog:'
         version: 3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
@@ -523,8 +523,8 @@ importers:
         specifier: ^7.2.0
         version: 7.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(rolldown@1.2.1)(rollup@4.62.0)(terser@5.48.0)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2))(yaml@2.9.0)
       vitest-browser-vue:
-        specifier: ^2.1.0
-        version: 2.1.0(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vitest@4.1.10)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2))
+        specifier: ^3.1.0
+        version: 3.1.0(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vitest@4.1.10)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2))
       vue:
         specifier: 'catalog:'
         version: 3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
@@ -621,6 +621,9 @@ packages:
   '@aws-sdk/core@3.977.3':
     resolution: {integrity: sha512-6YZTpF5Zzl0KdSrztM0l6ErKdnXrnnodIDYfayHE9SFfZU8Ubxls7H2XnfWT121jgwiG+WP1z5kyfVDsH5V4qA==}
     engines: {node: '>=20.0.0'}
+    deprecated: |-
+      Deprecated due to Document number parsing bug in JSON, see
+        https://github.com/aws/aws-sdk-js-v3/issues/8246. Newer version available.
 
   '@aws-sdk/credential-provider-cognito-identity@3.972.63':
     resolution: {integrity: sha512-OyxiJkQ8woF00jZrjYmOoufc2RXyaL02K1v4JwavFluHoU31qL188Gw610S4GfWqkcInDRFJB/QPZTxBeM/FXA==}
@@ -8052,10 +8055,10 @@ packages:
       yaml:
         optional: true
 
-  vitest-browser-vue@2.1.0:
-    resolution: {integrity: sha512-K3H/oxIOY4EjXx2bxwrLsPg4jTMvzpRW6Jb6T8XZRoxUvmDVwGkd8mua130F8GZezE7H5QYoXd/S8hYijw7j5g==}
+  vitest-browser-vue@3.1.0:
+    resolution: {integrity: sha512-HTWGzixoI9sSPb9LVuPOKtGy7URS6ipAIOiLD9ofdW/zgT3XGngXbMAJ3U9H/w1A6LWj4waGpYZsd3RPm8zPkw==}
     peerDependencies:
-      vitest: ^4.0.0-0
+      vitest: ^4.0.0 || ^5.0.0
       vue: ^3.0.0
 
   vitest@4.1.10:
@@ -16834,7 +16837,7 @@ snapshots:
       terser: 5.48.0
       yaml: 2.9.0
 
-  vitest-browser-vue@2.1.0(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vitest@4.1.10)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)):
+  vitest-browser-vue@3.1.0(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vitest@4.1.10)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)):
     dependencies:
       '@vue/test-utils': 2.4.11(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vue@3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2))
       vitest: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@26.1.2)(@vitest/browser-playwright@4.1.10)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(jsdom@30.0.1)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))

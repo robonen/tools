@@ -67,7 +67,12 @@ const forwardedPopperProps = useForwardProps(popperProps);
         @escape-key-down="emit('escapeKeyDown', $event)"
         @pointer-down-outside="emit('pointerDownOutside', $event)"
         @focus-outside="emit('focusOutside', $event)"
-        @interact-outside="emit('interactOutside', $event)"
+        @interact-outside="(event: PointerEvent | MouseEvent | FocusEvent) => {
+          // The trigger owns toggling: a press on it must not dismiss here,
+          // or its click would reopen the picker it just closed.
+          if (ctx.triggerElement.value?.contains(event.target as Node)) event.preventDefault();
+          emit('interactOutside', event);
+        }"
         @dismiss="() => { ctx.onOpenChange(false); emit('dismiss'); }"
       >
         <PopperContent

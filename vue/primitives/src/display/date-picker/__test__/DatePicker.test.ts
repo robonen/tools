@@ -404,3 +404,52 @@ describe('DatePicker form validation input', () => {
     expect(input!.max).toBe('2024-12-31T18:00');
   });
 });
+
+describe('DatePicker trigger toggling', () => {
+  let w: ReturnType<typeof mount> | undefined;
+
+  afterEach(() => {
+    w?.unmount();
+    w = undefined;
+    document.body.innerHTML = '';
+  });
+
+  function mountPicker() {
+    return mount(defineComponent({
+      setup: () => () => h(DatePickerRoot, null, {
+        default: () => [
+          h(DatePickerTrigger, { 'data-testid': 'trigger' }, { default: () => 'Pick' }),
+          h(DatePickerContent, null, { default: () => h('div', { 'data-testid': 'panel' }, 'calendar') }),
+        ],
+      }),
+    }), { attachTo: document.body });
+  }
+
+  /** What a mouse does on a click: the press the dismissable layer sees, then the click the trigger toggles on. */
+  function click(el: Element) {
+    const init = { bubbles: true, cancelable: true, button: 0 };
+    el.dispatchEvent(new PointerEvent('pointerdown', { ...init, pointerId: 1, pointerType: 'mouse' }));
+    el.dispatchEvent(new MouseEvent('mousedown', init));
+    el.dispatchEvent(new PointerEvent('pointerup', { ...init, pointerId: 1, pointerType: 'mouse' }));
+    el.dispatchEvent(new MouseEvent('mouseup', init));
+    el.dispatchEvent(new MouseEvent('click', init));
+  }
+
+  it('a second click on the trigger closes the picker instead of reopening it', async () => {
+    w = mountPicker();
+    const trigger = document.querySelector<HTMLElement>('[data-testid="trigger"]')!;
+
+    click(trigger);
+    await nextTick();
+    expect(document.querySelector('[data-testid="panel"]')).toBeTruthy();
+
+    // The outside-press dismiss (window capture) runs before the trigger's
+    // click — without the content-side guard the picker closes on the press
+    // and the click's toggle opens it again.
+    click(trigger);
+    await nextTick();
+    await nextTick();
+    expect(document.querySelector('[data-testid="panel"]')).toBeNull();
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  });
+});

@@ -1,36 +1,11 @@
 import type { Inline, InlineNode, Mark } from '../../model';
 import { normalizeInline, normalizeMarks } from '../../model';
 import type { Registry } from '../../registry';
+import { compiledRules, matchMarks } from '../clipboard/rules';
 import { FILLER_ATTR } from './render';
 
 // Zero-width space, built without embedding the literal character in source.
 const ZWSP = new RegExp(String.fromCharCode(0x200B), 'g');
-
-/** Marks contributed by a single element, via each mark's `parseDOM` rules. */
-function marksForElement(el: HTMLElement, registry: Registry): Mark[] {
-  const marks: Mark[] = [];
-
-  for (const def of registry.allMarks()) {
-    for (const rule of def.spec.parseDOM) {
-      if (!rule.tag || !el.matches(rule.tag))
-        continue;
-
-      let attrs = rule.attrs;
-
-      if (rule.getAttrs) {
-        const got = rule.getAttrs(el);
-        if (got === false || got === null)
-          continue;
-        attrs = { ...(rule.attrs ?? {}), ...got };
-      }
-
-      marks.push(attrs && Object.keys(attrs).length > 0 ? { type: def.type, attrs } : { type: def.type });
-      break; // first matching rule wins for this mark
-    }
-  }
-
-  return marks;
-}
 
 function walk(node: Node, marks: readonly Mark[], out: InlineNode[], registry: Registry): void {
   for (const child of Array.from(node.childNodes)) {
@@ -52,13 +27,15 @@ function walk(node: Node, marks: readonly Mark[], out: InlineNode[], registry: R
       continue;
     }
 
-    walk(el, normalizeMarks([...marks, ...marksForElement(el, registry)]), out, registry);
+    walk(el, normalizeMarks([...marks, ...matchMarks(el, compiledRules(registry))]), out, registry);
   }
 }
 
 /**
- * Parse a contenteditable host (or any DOM subtree, e.g. pasted HTML) back into
- * normalized inline runs, resolving marks from the registry's `parseDOM` rules.
+ * Parse a contenteditable host back into normalized inline runs, resolving
+ * marks from the registry's `parseDOM` rules. This is the typing path — one
+ * block, the DOM writekit painted itself; foreign HTML goes through
+ * `view/clipboard`, which also knows about blocks.
  */
 export function parseRuns(host: HTMLElement, registry: Registry): Inline {
   const out: InlineNode[] = [];

@@ -53,6 +53,20 @@ export function lastBlock(doc: WritekitDocument): Node | null {
   return doc.content[doc.content.length - 1] ?? null;
 }
 
+/**
+ * The block order after moving `ids` (in document order) to sit before the
+ * block currently at `toIndex`; `content.length` means the end. What a drop
+ * and `moveBlocks` agree on, so the indicator never promises a move the
+ * command would refuse.
+ */
+export function moveBefore(content: readonly Node[], ids: readonly string[], toIndex: number): readonly Node[] {
+  const moving = content.filter(block => ids.includes(block.id));
+  const rest = content.filter(block => !ids.includes(block.id));
+  const boundary = content.slice(toIndex).find(block => !ids.includes(block.id));
+  const at = boundary ? rest.findIndex(block => block.id === boundary.id) : rest.length;
+  return [...rest.slice(0, at), ...moving, ...rest.slice(at)];
+}
+
 /** Return a copy of `doc` with a different block list. */
 export function replaceBlocks(doc: WritekitDocument, content: readonly Node[]): WritekitDocument {
   return { ...doc, content };

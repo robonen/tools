@@ -10,5 +10,6 @@ export const divider = defineBlock({
     parseDOM: [{ tag: 'hr' }],
   },
   component: DividerBlock,
+  inputRules: [{ match: /^---\s$/ }],
   meta: { title: 'Divider', icon: 'minus', keywords: ['divider', 'hr', 'rule', 'separator'], group: 'media', description: 'A horizontal rule between sections.' },
 });

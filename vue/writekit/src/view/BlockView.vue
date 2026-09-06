@@ -5,7 +5,7 @@ import type { Attrs, Node } from '../model';
 <script setup lang="ts">
 import type { Component, IntrinsicElementAttributes } from 'vue';
 import type { BlockDefinition } from '../registry';
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, onBeforeUnmount } from 'vue';
 import { nodeSelection } from '../model';
 import { createTransaction } from '../state';
 import { Primitive } from './primitive';
@@ -52,6 +52,15 @@ const isSelected = computed(() => {
   return sel.kind === 'node' && sel.ids.includes(block.id);
 });
 
+/** The wrapper is what the gutter, the drag sensor and node selection address. */
+function setWrapper(el: unknown): void {
+  const node = (el as HTMLElement | null) ?? null;
+  if (node)
+    ctx.blockViews.set(block.id, node);
+}
+
+onBeforeUnmount(() => ctx.blockViews.delete(block.id));
+
 function updateAttrs(attrs: Attrs): void {
   ctx.dispatch(createTransaction(ctx.writekit.state).setAttrs(block.id, attrs).setSelection(ctx.writekit.state.selection));
 }
@@ -71,54 +80,18 @@ function onMousedown(event: MouseEvent): void {
   ctx.dispatch(createTransaction(ctx.writekit.state).setSelection(nodeSelection([block.id])));
   ctx.contentRoot.value?.focus({ preventScroll: true });
 }
-
-const DND_TYPE = 'application/x-robonen-writekit-block';
-
-function onDragStart(event: DragEvent): void {
-  event.dataTransfer?.setData(DND_TYPE, block.id);
-  if (event.dataTransfer)
-    event.dataTransfer.effectAllowed = 'move';
-}
-
-function onDragOver(event: DragEvent): void {
-  if (event.dataTransfer?.types.includes(DND_TYPE))
-    event.preventDefault(); // allow drop
-}
-
-function onDrop(event: DragEvent): void {
-  const draggedId = event.dataTransfer?.getData(DND_TYPE);
-  if (!draggedId || draggedId === block.id)
-    return;
-
-  event.preventDefault();
-  const toIndex = ctx.writekit.state.doc.content.findIndex(candidate => candidate.id === block.id);
-  if (toIndex !== -1)
-    ctx.dispatch(createTransaction(ctx.writekit.state).moveBlock(draggedId, toIndex).setSelection(ctx.writekit.state.selection));
-}
 </script>
 
 <template>
   <Primitive
+    :ref="setWrapper"
     :as="wrapperTag"
     :data-block-id="block.id"
     :data-block-type="block.type"
     :data-selected="isSelected ? '' : undefined"
-    :data-draggable="ctx.config.draggable ? '' : undefined"
     :contenteditable="isText ? undefined : 'false'"
     @mousedown="onMousedown"
-    @dragover="onDragOver"
-    @drop="onDrop"
   >
-    <span
-      v-if="ctx.config.draggable"
-      class="writekit-drag-handle"
-      data-writekit-drag-handle=""
-      contenteditable="false"
-      draggable="true"
-      aria-label="Drag to reorder"
-      @mousedown.stop
-      @dragstart="onDragStart"
-    >⠿</span>
     <TextBlockHost
       v-if="isText && def"
       :block="block"

@@ -25,24 +25,25 @@ function buildDoc() {
   document.body.replaceChildren(root);
 
   const registry = createBlockElementRegistry();
+  const views = createBlockElementRegistry();
   registry.set('a', a);
   registry.set('b', b);
 
-  return { root, a, b, registry };
+  return { root, a, b, registry, views };
 }
 
 describe('selection bridge (jsdom)', () => {
   it('round-trips offset ↔ DOM point within a block', () => {
-    const { root, a, registry } = buildDoc();
-    const bridge = createSelectionBridge(() => root, registry);
+    const { root, a, registry, views } = buildDoc();
+    const bridge = createSelectionBridge(() => root, registry, views);
 
     const point = bridge.offsetToDomPoint(a, 3);
     expect(bridge.domPointToOffset(a, point.node, point.offset)).toBe(3);
   });
 
   it('reads a cross-block native selection as a cross-block model range', () => {
-    const { root, a, b, registry } = buildDoc();
-    const bridge = createSelectionBridge(() => root, registry);
+    const { root, a, b, registry, views } = buildDoc();
+    const bridge = createSelectionBridge(() => root, registry, views);
 
     const sel = globalThis.getSelection!()!;
     sel.removeAllRanges();

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { caret, createDoc, createNode, nodeSelection, nodeText } from '../../model';
-import { deleteSelection } from '../../commands';
+import { caret, createDoc, createNode, createSlice, nodeSelection, nodeText } from '../../model';
+import { deleteSelection, replaceSelection } from '../../commands';
 import { createDefaultRegistry } from '../../preset';
 import { createTransaction, createWritekit, createWritekitState } from '../../state';
 import { bindCrdt } from '../binding';
@@ -171,5 +171,25 @@ describe('crdt convergence (two writekits)', () => {
     a.writekit.dispatch(createTransaction(a.writekit.state).insertText({ blockId: 'p', offset: 5 }, '!', []).setSelection(caret('p', 6)));
     expect(text(a)).toBe('Hello!');
     expect(text(b)).toBe('Hello!');
+  });
+
+  it('a multi-block paste (split + inserts + merges in one transaction) reaches the peer intact', () => {
+    const doc = createDoc([createNode('paragraph', { id: 'p', content: [{ text: 'helloworld', marks: [] }] })]);
+    const a = makePeer(doc);
+    const b = makePeer();
+    b.provider.applyUpdate(a.provider.encodeDelta());
+    connect(a, b);
+
+    a.writekit.dispatch(createTransaction(a.writekit.state).setSelection(caret('p', 5)));
+    a.writekit.command(replaceSelection(createSlice([
+      createNode('paragraph', { id: '1', content: [{ text: 'A', marks: [{ type: 'bold' }] }] }),
+      createNode('divider', { id: '2' }),
+      createNode('paragraph', { id: '3', content: [{ text: 'C', marks: [] }] }),
+    ], true, true)));
+
+    expect(text(a)).toBe('helloA\n\nCworld');
+    expect(text(b)).toBe(text(a));
+    expect(b.writekit.state.doc.content.map(block => block.type)).toEqual(['paragraph', 'divider', 'paragraph']);
+    expect(b.writekit.state.doc.content.map(block => block.id)).toEqual(a.writekit.state.doc.content.map(block => block.id));
   });
 });

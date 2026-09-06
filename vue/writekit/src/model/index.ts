@@ -6,3 +6,4 @@ export * from './node';
 export * from './document';
 export * from './position';
 export * from './selection';
+export * from './slice';

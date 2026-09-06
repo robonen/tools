@@ -29,7 +29,11 @@ All of these are **DOM-free and Vue-free** (typecheck/test under plain Node):
 
 Vue layer (only this knows about the DOM):
 
-- `view/` — `WritekitRoot` (provider + keydown/selectionchange owner), `WritekitContent` (THE contenteditable; owns beforeinput/input/composition), `BlockView` (resolves the block def; text → `TextBlockHost`, atom → the def's component), `TextBlockHost` (renders runs **imperatively** for caret stability), `inline-content/` (render/parse runs ↔ DOM), `selection/` (DOM ↔ model selection bridge), `ui/` (slash menu, bubble menu, remote cursors).
+- `view/` — `WritekitRoot` (provider + keydown/selectionchange owner), `WritekitContent` (THE contenteditable; owns beforeinput/input/composition/**clipboard/drop**), `BlockView` (resolves the block def; text → `TextBlockHost`, atom → the def's component; the wrapper element registers in `blockViews`), `TextBlockHost` (renders runs **imperatively** for caret stability), `inline-content/` (render/parse runs ↔ DOM), `selection/` (DOM ↔ model selection bridge + `positionFromPoint`), `input/` (the native-edit contract), `clipboard/` (HTML/text/JSON ↔ `Slice`, registry `parseDOM` compiled once), `dnd/` (pointer-driven block drag: pure `geometry` + `use-block-drag` sensor), `ui/` (slash menu, bubble menu, remote cursors, `gutter/` = block handle + inserter + menu).
+
+## The input contract (the #2 contenteditable risk)
+
+One contenteditable spans every block, so a native edit that crosses a block boundary rewrites DOM the model never agreed to. `view/input/native-edits.ts` is the closed allowlist: the browser may only do intra-block inline edits (`insertText`, intra-block `delete*`); structural edits, the clipboard, drops, history and formatting are each a command over the model or `preventDefault()`. Paste/copy/cut never touch the DOM — they read/write a `Slice` (`model/slice.ts`) through the registry's `parseDOM` rules, so foreign markup and styling cannot reach the editable. `onInput` refuses to sync when the edited host is detached, is not the one writekit painted, or has block markup inside it (a browser paste that slipped through) — it repaints from the model instead. Preserve all of this: it is what stopped paste from destroying documents.
 - `blocks/` — concrete blocks (+ `.vue` for atoms). `marks/` — concrete marks (data-only `toDOM`/`parseDOM`).
 - `crdt/` — CRDT-agnostic `CrdtProvider` + `bindCrdt`; `native/` = the adapter over `@robonen/crdt`.
 - `preset.ts` — `createDefaultRegistry()` / `createBasicRegistry()`.

@@ -57,3 +57,16 @@ export function isBlockActive(state: WritekitState, type: string, attrs?: Attrs)
 
   return Object.keys(attrs).every(key => block.attrs[key] === attrs[key]);
 }
+
+/** The block type a fresh line gets: `paragraph` when registered, else the first text block. */
+export function defaultTextType(state: WritekitState): string {
+  if (state.registry.hasBlock('paragraph'))
+    return 'paragraph';
+
+  for (const def of state.registry.listBlocks()) {
+    if (def.spec.content.kind === 'text')
+      return def.type;
+  }
+
+  return state.registry.listBlocks()[0]?.type ?? 'paragraph';
+}

@@ -12,8 +12,6 @@ export interface WritekitConfig {
   dir: 'ltr' | 'rtl';
   /** Native spellcheck on the contenteditable hosts. */
   spellcheck: boolean;
-  /** Show per-block drag handles for reordering. */
-  draggable: boolean;
 }
 
 /**
@@ -32,6 +30,5 @@ export function resolveConfig(partial?: Partial<WritekitConfig>): WritekitConfig
     platform: partial?.platform ?? detectPlatform(),
     dir: partial?.dir ?? 'ltr',
     spellcheck: partial?.spellcheck ?? true,
-    draggable: partial?.draggable ?? false,
   };
 }

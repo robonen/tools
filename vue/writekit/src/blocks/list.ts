@@ -1,4 +1,4 @@
-import type { Node } from '../model';
+import type { Attrs, Node } from '../model';
 import type { AttrsSpec } from '../schema';
 import { defineBlock } from '../registry';
 
@@ -6,6 +6,28 @@ type ListType = 'bullet' | 'ordered' | 'todo';
 
 function indentOf(node: Node): number {
   return typeof node.attrs['indent'] === 'number' ? node.attrs['indent'] : 0;
+}
+
+/**
+ * A pasted `<li>` belongs to the variant its nearest list decides: `<ul>` →
+ * bullet, `<ol>` → ordered, either with a checkbox inside → to-do. Depth is
+ * the number of enclosing lists, which is what the flat `indent` encodes.
+ */
+function listItemAttrs(el: HTMLElement, listType: ListType): Attrs | false {
+  const checkbox = el.querySelector<HTMLInputElement>(':scope > input[type="checkbox"], :scope > * > input[type="checkbox"]');
+  const list = el.closest('ul, ol');
+  const actual: ListType = checkbox ? 'todo' : list?.tagName === 'OL' ? 'ordered' : 'bullet';
+
+  if (actual !== listType)
+    return false;
+
+  let indent = -1;
+  for (let node = list; node; node = node.parentElement?.closest('ul, ol') ?? null)
+    indent++;
+
+  return listType === 'todo'
+    ? { indent: Math.max(indent, 0), checked: checkbox?.checked ?? false }
+    : { indent: Math.max(indent, 0) };
 }
 
 /**
@@ -40,7 +62,10 @@ function defineListBlock(options: { type: string; listType: ListType; title: str
         style: `margin-left:${indentOf(node) * 1.5}em;padding-left:1.5em`,
         ...(todo ? { 'data-checked': node.attrs['checked'] ? 'true' : 'false' } : {}),
       }, 0],
-      parseDOM: [{ tag: `[data-list='${options.listType}']` }],
+      parseDOM: [
+        { tag: `[data-list='${options.listType}']` },
+        { tag: 'li', getAttrs: (el: HTMLElement) => listItemAttrs(el, options.listType) },
+      ],
     },
     inputRules,
     meta: {

@@ -4,4 +4,5 @@ export * from './marks';
 export * from './structure';
 export * from './blocks';
 export * from './selection';
+export * from './slice';
 export * from './input-rules';

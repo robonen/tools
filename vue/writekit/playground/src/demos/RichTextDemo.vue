@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { WritekitBubbleMenu, WritekitContent, WritekitRoot, WritekitSlashMenu } from '@writekit';
+import { WritekitBlockGutter, WritekitBlockHandle, WritekitBlockInserter, WritekitBubbleMenu, WritekitContent, WritekitRoot, WritekitSlashMenu } from '@writekit';
 import { h, makeWritekit, p, t } from '../lib';
 import Toolbar from '../Toolbar.vue';
 
@@ -27,6 +27,10 @@ const docJson = computed(() => (rev.value, JSON.stringify(writekit.state.doc, nu
       <WritekitContent />
       <WritekitBubbleMenu />
       <WritekitSlashMenu />
+      <WritekitBlockGutter>
+        <WritekitBlockInserter />
+        <WritekitBlockHandle />
+      </WritekitBlockGutter>
     </WritekitRoot>
     <details><summary>document JSON</summary><pre>{{ docJson }}</pre></details>
   </section>

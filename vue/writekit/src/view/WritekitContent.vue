@@ -3,13 +3,16 @@ import type { PrimitiveProps } from './primitive';
 </script>
 
 <script setup lang="ts">
-import { blockById, caret, createNode, inlineLength, isCollapsed, nodeInline } from '../model';
-import { applyInputRule, deleteSelection, exitAtom, insertHardBreak, joinBackward, joinForward, splitBlock } from '../commands';
+import { blockById, caret, createNode, inlineLength, inlineSlice, isCollapsed, nodeInline, sliceFromSelection } from '../model';
+import { applyInputRule, deleteSelection, exitAtom, joinBackward, joinForward, replaceSelection } from '../commands';
 import { createTransaction } from '../state';
 import { Primitive } from './primitive';
 import { useWritekitContext } from './context';
 import { isInteractiveTarget } from './interactive';
-import { parseRuns } from './inline-content';
+import { parseRuns, renderRuns } from './inline-content';
+import { closestBlockHost, positionFromPoint } from './selection';
+import { readSlice, writeSlice } from './clipboard';
+import { deletionDirection, isNativeInlineEdit, isTextInsertion, ownedEdit } from './input/native-edits';
 import BlockView from './BlockView.vue';
 
 export interface WritekitContentProps extends PrimitiveProps {}
@@ -17,34 +20,39 @@ export interface WritekitContentProps extends PrimitiveProps {}
 const { as = 'div' } = defineProps<WritekitContentProps>();
 const ctx = useWritekitContext();
 
+const history = {
+  undo: () => ctx.writekit.undo(),
+  redo: () => ctx.writekit.redo(),
+};
+
 function setContentRoot(el: unknown): void {
   ctx.contentRoot.value = (el as HTMLElement | null) ?? null;
 }
 
 /**
- * Intercept content mutations that the browser would handle incorrectly across
- * the single editable root: ranged edits (which could corrupt cross-block DOM)
- * and structural edits at block boundaries. Plain intra-block typing/deletion is
- * left to the browser and synced from the DOM on `input`.
+ * The contract with the browser: it may edit inline text inside one block on
+ * its own (synced from the DOM on `input`); everything else — structure, the
+ * clipboard, drops, history, formatting — is either a command over the model
+ * or cancelled. A single contenteditable spans every block, so any native
+ * edit that crosses a block boundary rewrites DOM the model never agreed to.
  */
 function onBeforeInput(event: InputEvent): void {
   if (ctx.composing.value || isInteractiveTarget(event.target))
     return;
 
   const type = event.inputType;
-  if (!type.startsWith('insert') && !type.startsWith('delete'))
-    return;
+  const owned = ownedEdit(type, history);
 
-  // With an atom selected the native range wraps the block element; letting the
-  // browser edit through it would rewrite DOM the model never agreed to.
-  const modelSel = ctx.writekit.state.selection;
-  if (modelSel.kind === 'node') {
+  // With an atom selected the native range wraps the block element.
+  if (ctx.writekit.state.selection.kind === 'node') {
     event.preventDefault();
 
     if (type.startsWith('delete'))
       ctx.writekit.command(deleteSelection);
     else if (type === 'insertParagraph')
       ctx.writekit.command(exitAtom);
+    else if (owned)
+      ctx.writekit.command(owned);
 
     return;
   }
@@ -53,61 +61,61 @@ function onBeforeInput(event: InputEvent): void {
   if (!sel || sel.kind !== 'text')
     return;
 
-  // Ranged selection — we own it so cross-block deletes/inserts stay consistent.
+  // A range: replaced, deleted or refused — never edited natively.
   if (!isCollapsed(sel)) {
     event.preventDefault();
-    ctx.writekit.command(deleteSelection);
 
-    const after = ctx.writekit.state.selection;
-    if (after.kind !== 'text')
-      return;
+    if (owned)
+      ctx.writekit.command(owned);
+    else if (isTextInsertion(type) && event.data)
+      ctx.writekit.command(replaceSelection(inlineSlice([{ text: event.data, marks: ctx.writekit.state.storedMarks ?? [] }], focusedType(sel.focus.blockId))));
+    else if (isTextInsertion(type) || type.startsWith('delete'))
+      ctx.writekit.command(deleteSelection);
 
-    if ((type === 'insertText' || type === 'insertReplacementText' || type === 'insertCompositionText') && event.data) {
-      ctx.writekit.dispatch(createTransaction(ctx.writekit.state)
-        .insertText(after.focus, event.data, ctx.writekit.state.storedMarks ?? [])
-        .setSelection(caret(after.focus.blockId, after.focus.offset + event.data.length)));
-    }
-    else if (type === 'insertParagraph') {
-      ctx.writekit.command(splitBlock);
-    }
-    else if (type === 'insertLineBreak') {
-      ctx.writekit.command(insertHardBreak);
-    }
     return;
   }
 
-  // Collapsed — take over only structural edits and block-boundary deletions.
-  const block = blockById(ctx.writekit.state.doc, sel.focus.blockId);
-  const atStart = sel.focus.offset === 0;
-  const atEnd = block ? sel.focus.offset === inlineLength(nodeInline(block)) : false;
+  if (owned) {
+    event.preventDefault();
+    ctx.writekit.command(owned);
+    return;
+  }
 
-  switch (type) {
-    case 'insertParagraph':
-      event.preventDefault();
-      ctx.writekit.command(splitBlock);
-      break;
-    case 'insertLineBreak':
-      event.preventDefault();
-      ctx.writekit.command(insertHardBreak);
-      break;
-    case 'deleteContentBackward':
-      if (atStart) {
-        event.preventDefault();
-        ctx.writekit.command(joinBackward);
-      }
-      break; // else: native deletes within the block, synced on `input`
-    case 'deleteContentForward':
-      if (atEnd) {
-        event.preventDefault();
-        ctx.writekit.command(joinForward);
-      }
-      break;
-    default:
-      break; // insertText etc. → native, synced on `input`
+  if (!isNativeInlineEdit(type)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Deleting across a block edge joins blocks — whatever the granularity.
+  const direction = deletionDirection(type);
+  if (!direction)
+    return;
+
+  const block = blockById(ctx.writekit.state.doc, sel.focus.blockId);
+  const length = block ? inlineLength(nodeInline(block)) : 0;
+
+  if (direction === 'backward' && sel.focus.offset === 0) {
+    event.preventDefault();
+    ctx.writekit.command(joinBackward);
+  }
+  else if (direction === 'forward' && sel.focus.offset === length) {
+    event.preventDefault();
+    ctx.writekit.command(joinForward);
   }
 }
 
-/** Sync the model from the DOM after a native intra-block edit (one block only). */
+/** The type of the block the caret is in — typed text continues that block, whatever it is. */
+function focusedType(blockId: string): string {
+  return blockById(ctx.writekit.state.doc, blockId)?.type ?? 'paragraph';
+}
+
+/**
+ * Sync the model from the DOM after a native intra-block edit. The DOM is
+ * trusted only while it is the DOM writekit painted: the host the selection
+ * sits in is the registered one, still attached, with no block markup inside.
+ * Anything else means the browser restructured the block — the model is not
+ * updated from the damage, and a host that is still attached is repainted.
+ */
 function onInput(event?: Event): void {
   if (ctx.composing.value || (event && isInteractiveTarget(event.target)))
     return;
@@ -121,6 +129,21 @@ function onInput(event?: Event): void {
   if (!host || !block || ctx.writekit.state.schema.nodeSpec(block.type)?.content.kind !== 'text')
     return;
 
+  const live = closestBlockHost(getSelection()?.anchorNode ?? null);
+  if (!host.isConnected || live !== host) {
+    if (__DEV__)
+      console.warn('[writekit] The edited block host is not the one writekit painted; the edit was not synced.', block.id);
+    return;
+  }
+
+  if (host.querySelector('[data-block-id], [data-block-content]')) {
+    if (__DEV__)
+      console.warn('[writekit] Foreign block markup inside a block host; repainting it from the model.', block.id);
+    renderRuns(host, nodeInline(block), ctx.registry);
+    ctx.selection.write(ctx.writekit.state.selection);
+    return;
+  }
+
   const runs = parseRuns(host, ctx.registry);
   ctx.writekit.dispatch(createTransaction(ctx.writekit.state)
     .setBlockContent(sel.focus.blockId, runs)
@@ -129,6 +152,83 @@ function onInput(event?: Event): void {
 
   // Markdown-style shortcuts: '# ' → heading, '- ' → list, '> ' → quote, …
   ctx.writekit.command(applyInputRule);
+}
+
+// ── clipboard ───────────────────────────────────────────────────
+
+function onCopy(event: ClipboardEvent, cut = false): void {
+  if (isInteractiveTarget(event.target) || !event.clipboardData)
+    return;
+
+  const slice = sliceFromSelection(ctx.writekit.state.doc, ctx.writekit.state.selection);
+  if (!slice)
+    return;
+
+  event.preventDefault();
+  writeSlice(event.clipboardData, slice, ctx.registry);
+
+  if (cut && ctx.config.editable)
+    ctx.writekit.command(deleteSelection);
+}
+
+function onPaste(event: ClipboardEvent): void {
+  if (!ctx.config.editable || ctx.composing.value || isInteractiveTarget(event.target) || !event.clipboardData)
+    return;
+
+  event.preventDefault();
+
+  const plain = ctx.pastePlain.value;
+  ctx.pastePlain.value = false;
+
+  insertPayload(event.clipboardData, plain);
+}
+
+/** A fragment from the payload into the selection; files go to the app. */
+function insertPayload(data: DataTransfer, plain = false): void {
+  const slice = readSlice(data, ctx.registry, { plain });
+
+  if (slice) {
+    ctx.writekit.command(replaceSelection(slice));
+    return;
+  }
+
+  const files = Array.from(data.files);
+  if (files.length > 0)
+    ctx.onPasteFiles(files, ctx.writekit.state.selection);
+}
+
+// ── native drag & drop ──────────────────────────────────────────
+
+/**
+ * Nothing inside the editor is draggable natively: a dragged text range
+ * would be deleted by the browser and re-inserted as foreign DOM. Blocks
+ * move through the gutter handle; drops from outside land as a paste.
+ */
+function onDragStart(event: DragEvent): void {
+  event.preventDefault();
+}
+
+function onDragOver(event: DragEvent): void {
+  if (!ctx.config.editable || !event.dataTransfer)
+    return;
+
+  event.preventDefault(); // required for `drop` to fire
+  event.dataTransfer.dropEffect = 'copy';
+}
+
+function onDrop(event: DragEvent): void {
+  if (!ctx.config.editable || !event.dataTransfer)
+    return;
+
+  event.preventDefault();
+
+  const root = ctx.contentRoot.value;
+  const at = root ? positionFromPoint(event.clientX, event.clientY, root, ctx.selection.domPointToOffset) : null;
+
+  if (at)
+    ctx.writekit.dispatch(createTransaction(ctx.writekit.state).setSelection(caret(at.blockId, at.offset)).setMeta('selectionOnly', true));
+
+  insertPayload(event.dataTransfer);
 }
 
 /**
@@ -145,7 +245,7 @@ function onRootPointerDown(event: PointerEvent): void {
   if (!last)
     return;
 
-  const lastEl = ctx.blockElements.get(last.id) ?? null;
+  const lastEl = ctx.blockViews.get(last.id) ?? null;
   if (lastEl && event.clientY <= lastEl.getBoundingClientRect().bottom)
     return;
 
@@ -192,6 +292,12 @@ function onCompositionEnd(event: CompositionEvent): void {
     :spellcheck="ctx.config.spellcheck"
     @beforeinput="onBeforeInput"
     @input="onInput"
+    @copy="onCopy($event)"
+    @cut="onCopy($event, true)"
+    @paste="onPaste"
+    @dragstart="onDragStart"
+    @dragover="onDragOver"
+    @drop="onDrop"
     @pointerdown="onRootPointerDown"
     @compositionstart="onCompositionStart"
     @compositionend="onCompositionEnd"

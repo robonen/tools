@@ -65,8 +65,9 @@ const registry = createRegistry({ blocks: defaultBlocks, marks: [...defaultMarks
 - **Slash menu** — `WritekitSlashMenu`: type `/` at the start of a line; items come from each block's `meta`.
 - **Bubble toolbar** — `WritekitBubbleMenu`: floats over a text selection (positioned with `@floating-ui/vue`); override the buttons via its default slot (`#default="{ active, toggle }"`).
 - **Markdown input rules** — `# `→heading, `- `/`* `→bulleted list, `1. `→numbered list, `> `→quote, `[] `→to-do.
-- **Drag to reorder** — pass `draggable` to `WritekitRoot` for per-block drag handles.
-- **Hotkeys** — `Mod-b/i/u`, `Mod-Shift-s` (strike), `Mod-e` (code), `Mod-z` / `Mod-Shift-z`, `Enter` (split), `Shift-Enter` (hard break), `Backspace`/`Delete` at edges (merge), `Mod-a` (progressive select), `Mod-Alt-1..6` (heading), `Tab`/`Shift-Tab` (list indent).
+- **Block gutter** — `WritekitBlockGutter` floats beside the hovered block; put a `WritekitBlockHandle` (drag to reorder, click for a block menu: turn into, duplicate, move, delete, plus your own items via `#menu`) and a `WritekitBlockInserter` (a "+" that opens a picker of every block type and inserts the choice below, or above with Alt) inside it. Replaces the old `draggable` prop.
+- **Clipboard** — copy/cut/paste go through the model: paste reads `text/html` (Google Docs, Word, browsers), plain text (markdown-style lines become blocks), and writekit's own lossless format, filtered to the registry's `parseDOM` rules so no foreign DOM or styling reaches the editable. `Mod-Shift-V` pastes as plain text; dropped text/HTML lands as a paste, and pasted/dropped files reach the `pasteFiles` event.
+- **Hotkeys** — `Mod-b/i/u`, `Mod-Shift-s` (strike), `Mod-e` (code), `Mod-z` / `Mod-Shift-z`, `Enter` (split), `Shift-Enter` (hard break), `Backspace`/`Delete` at edges (merge), `Mod-a` (progressive select), `Mod-Alt-1..6` (heading), `Tab`/`Shift-Tab` (list indent), `Mod-Shift-v` (paste as plain text).
 
 ## Commands
 
@@ -128,6 +129,8 @@ provider.gc(); // drops deleted characters / removed blocks safe to forget
 
 ### Known limitations (documented, deferred)
 
+- Dragging **text** with the mouse inside the editor is disabled: the browser would delete the range and re-insert it as foreign DOM across the single contenteditable. Blocks move via the gutter handle; drops from outside land as a paste. (Notion has the same limitation.)
+- Inline markdown in a plain-text paste (`**bold**`, `[x](url)`) is not parsed; only line-leading block markers (`# `, `- `, `> `) are.
 - A local caret does not auto-shift when a remote peer inserts text *before* it (the caret keeps its offset).
 - Concurrent split/merge of the exact same range can drop a mark recreated on the moved tail.
 - `gc()` is only safe at quiescence (no in-flight ops) — it has no built-in stability protocol; drive it from your sync layer.

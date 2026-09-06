@@ -27,6 +27,20 @@ export interface BlockMeta {
   readonly group?: string;
   /** One sentence for pickers (the slash menu shows it beside the list). */
   readonly description?: string;
+  /**
+   * Pickable flavours of one type, each a set of attrs — "Heading 1/2/3" for a
+   * `heading` with a `level`. Pickers list a variant per entry instead of the
+   * type; conversion applies the variant's attrs.
+   */
+  readonly variants?: readonly BlockVariant[];
+}
+
+/** One entry of {@link BlockMeta.variants}. */
+export interface BlockVariant {
+  readonly title: string;
+  readonly attrs: Attrs;
+  readonly keywords?: readonly string[];
+  readonly description?: string;
 }
 
 /** Optional block-specific behaviors used by core commands. */

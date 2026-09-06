@@ -68,7 +68,8 @@ body { margin: 0; font-family: system-ui, -apple-system, sans-serif; color: #1a1
 .toolbar button[data-active] { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
 .toolbar .sep { width: 1px; height: 20px; background: #ddd; margin: 0 4px; }
 
-.writekit { border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem; min-height: 120px; background: #fff; }
+/* The left padding is the gutter's home: the block controls sit inside the sheet, in its margin, like a page. */
+.writekit { border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem 1rem 4rem; min-height: 120px; background: #fff; }
 .writekit:focus-within { border-color: #999; }
 .writekit.scroll { max-height: 420px; overflow: auto; }
 .writekit [data-block-content] { outline: none; margin: 0.4em 0; line-height: 1.6; }
@@ -140,12 +141,31 @@ details pre { background: #f6f6f6; padding: 1rem; border-radius: 8px; overflow: 
 
 kbd { background: #eee; border: 1px solid #ddd; border-radius: 4px; padding: 1px 5px; font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-/* drag-to-reorder handle */
-.writekit [data-block-id] { position: relative; }
-.writekit-drag-handle { position: absolute; left: -1.2em; top: 0.25em; cursor: grab; color: #ccc; user-select: none; opacity: 0; transition: opacity 0.1s; line-height: 1.4; }
-.writekit [data-block-id]:hover > .writekit-drag-handle { opacity: 1; }
-.writekit-drag-handle:hover { color: #888; }
-.writekit-drag-handle:active { cursor: grabbing; }
+/* block gutter: inserter + drag/menu handle, floating beside the hovered block */
+.writekit-block-gutter { display: flex; align-items: center; gap: 2px; }
+.writekit-block-inserter, .writekit-block-handle { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 5px; background: transparent; color: #bbb; cursor: pointer; font-size: 15px; line-height: 1; user-select: none; }
+.writekit-block-inserter:hover, .writekit-block-handle:hover { background: #f0f0f0; color: #555; }
+.writekit-block-handle { cursor: grab; }
+.writekit-block-handle:active { cursor: grabbing; }
+.writekit [data-block-id][data-selected] { background: rgba(37, 99, 235, 0.08); border-radius: 4px; }
+[data-writekit-content][data-writekit-dragging] { cursor: grabbing; }
+
+/* drop indicator + drag ghost (teleported to body) */
+.writekit-drop-indicator { height: 2px; background: #2563eb; border-radius: 2px; box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3); }
+.writekit-drop-indicator::before { content: ''; position: absolute; left: -3px; top: -2px; width: 6px; height: 6px; border-radius: 50%; background: #2563eb; }
+.writekit-drag-ghost { max-width: 260px; padding: 4px 10px; border-radius: 6px; background: #1a1a1a; color: #fff; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); z-index: 60; }
+
+/* block menu (teleported to body) */
+.writekit-block-menu { min-width: 180px; padding: 4px; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14); z-index: 60; }
+.writekit-block-menu [data-writekit-menu-item] { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 6px; font-size: 14px; color: #333; cursor: pointer; outline: none; user-select: none; }
+.writekit-block-menu [data-writekit-menu-item][data-highlighted] { background: #f0f0f0; }
+.writekit-block-menu [data-writekit-menu-item][data-active]::after { content: '✓'; color: #2563eb; }
+.writekit-block-menu [data-writekit-menu-item][data-submenu]::after { content: '▸'; color: #aaa; }
+.writekit-block-menu [data-writekit-menu-item][data-danger] { color: #dc2626; }
+.writekit-block-menu [data-writekit-menu-item][data-disabled] { opacity: 0.4; cursor: default; }
+.writekit-block-menu [data-writekit-menu-separator] { height: 1px; margin: 4px 0; background: #eee; }
+.writekit-block-menu [data-writekit-menu-label] { padding: 6px 10px 2px; font-size: 11px; color: #999; text-transform: capitalize; }
+.writekit-block-menu[data-writekit-block-picker] { max-height: 360px; overflow: auto; }
 
 /* remote collaboration cursors */
 .writekit.collab { position: relative; }

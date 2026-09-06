@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { PrimitiveProps } from './primitive';
 import type { Keymap } from '../keymap';
+import type { Selection } from '../model';
 import type { Command, CommandView, Transaction, Writekit, WritekitState } from '../state';
 import type { Platform } from './config';
 </script>
@@ -8,7 +9,7 @@ import type { Platform } from './config';
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, shallowRef } from 'vue';
 import { blockById, caret, inlineLength, nodeInline, selectionEq } from '../model';
-import { compileKeymaps, defaultKeymap, runKeydown } from '../keymap';
+import { compileKeymaps, defaultKeymap, eventToCombo, normalizeCombo, runKeydown } from '../keymap';
 import { createTransaction } from '../state';
 import { Primitive } from './primitive';
 import { provideWritekitContext } from './context';
@@ -27,8 +28,6 @@ export interface WritekitRootProps extends PrimitiveProps {
   dir?: 'ltr' | 'rtl';
   spellcheck?: boolean;
   platform?: Platform;
-  /** Show per-block drag handles for reordering. */
-  draggable?: boolean;
   /** Focus the start of the document on mount. */
   autofocus?: boolean;
 }
@@ -41,19 +40,30 @@ const {
   dir = 'ltr',
   spellcheck = true,
   platform,
-  draggable = false,
   autofocus = false,
 } = defineProps<WritekitRootProps>();
+
+/**
+ * `pasteFiles`: files pasted or dropped into the editor, with the selection
+ * they arrived at. Writekit has no block for a file; the app turns them into
+ * whatever its registry offers (an image block, an upload) and inserts it.
+ */
+const emit = defineEmits<{ pasteFiles: [files: File[], selection: Selection] }>();
 
 const root = ref<HTMLElement | null>(null);
 const contentRoot = shallowRef<HTMLElement | null>(null);
 const state = shallowRef<WritekitState>(writekit.state);
 const composing = ref(false);
 const lastOrigin = ref<string | undefined>(undefined);
+const pastePlain = ref(false);
 const blockElements = createBlockElementRegistry();
-const selection = createSelectionBridge(() => contentRoot.value, blockElements);
-const config = resolveConfig({ editable, dir, spellcheck, platform, draggable });
+const blockViews = createBlockElementRegistry();
+const selection = createSelectionBridge(() => contentRoot.value, blockElements, blockViews);
+const config = resolveConfig({ editable, dir, spellcheck, platform });
 const compiled = compileKeymaps([...(keymaps ?? []), defaultKeymap(writekit)], config.platform);
+// Not a keymap entry: the key must reach the browser so the `paste` event
+// fires; it only arms the content's paste handler to take the text.
+const plainPasteCombo = normalizeCombo('Mod-Shift-v', config.platform);
 
 let suppressSelectionSync = false;
 
@@ -73,9 +83,12 @@ provideWritekitContext({
   config,
   contentRoot,
   blockElements,
+  blockViews,
   selection,
   composing,
   lastOrigin,
+  pastePlain,
+  onPasteFiles: (files, sel) => emit('pasteFiles', files, sel),
   dispatch: writekit.dispatch,
   exec: (command: Command) => writekit.command(command),
   focusBlock,
@@ -116,6 +129,11 @@ function onKeydown(event: KeyboardEvent): void {
   if (composing.value || event.isComposing || !editable || isInteractiveTarget(event.target))
     return; // let atom controls (e.g. image caption inputs) handle their own keys
 
+  if (eventToCombo(event) === plainPasteCombo) {
+    pastePlain.value = true;
+    return;
+  }
+
   if (runKeydown(event, compiled, writekit.state, writekit.dispatch, view)) {
     event.preventDefault();
     event.stopPropagation();
@@ -139,6 +157,10 @@ function onSelectionChange(): void {
 }
 
 useEventListener(root, 'keydown', onKeydown as (event: Event) => void, { capture: true });
+// A Mod-Shift-V that produced no paste (empty clipboard) must not linger.
+useEventListener(root, 'keyup', () => {
+  pastePlain.value = false;
+});
 useEventListener(() => (typeof document === 'undefined' ? undefined : document), 'selectionchange', onSelectionChange);
 
 if (autofocus) {

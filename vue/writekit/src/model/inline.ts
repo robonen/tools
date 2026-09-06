@@ -175,3 +175,18 @@ export function rangeHasMarkType(inline: Inline, from: number, to: number, markT
 
   return true;
 }
+
+/** Structural equality of two inline contents (same runs, same marks). */
+export function inlineEq(a: Inline, b: Inline): boolean {
+  if (a === b)
+    return true;
+  if (a.length !== b.length)
+    return false;
+
+  for (let i = 0; i < a.length; i++) {
+    if (a[i]!.text !== b[i]!.text || !marksEq(a[i]!.marks, b[i]!.marks))
+      return false;
+  }
+
+  return true;
+}

@@ -131,13 +131,15 @@ function selectItem(item: SlashItem): void {
   const def = writekit.state.registry.getBlock(item.type);
   const tr = createTransaction(writekit.state).deleteText(triggerBlockId, triggerStart, caretOffset);
 
+  const attrs = writekit.state.schema.coerceAttrs(item.type, item.attrs);
+
   if (def?.spec.content.kind === 'atom') {
-    const node = createNode(item.type, { attrs: writekit.state.schema.defaultAttrs(item.type) });
+    const node = createNode(item.type, { attrs });
     const index = writekit.state.doc.content.findIndex(candidate => candidate.id === triggerBlockId);
     tr.insertBlock(node, index + 1).setSelection(nodeSelection([node.id]));
   }
   else {
-    tr.setBlockType(triggerBlockId, item.type, writekit.state.schema.defaultAttrs(item.type));
+    tr.setBlockType(triggerBlockId, item.type, attrs);
     tr.setSelection(caret(triggerBlockId, triggerStart));
   }
 
@@ -230,7 +232,7 @@ onBeforeUnmount(() => ctx.writekit.off('transaction', refresh));
           >
             <button
               v-for="(item, index) in items"
-              :key="item.type"
+              :key="item.title"
               ref="options"
               type="button"
               role="option"

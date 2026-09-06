@@ -54,6 +54,7 @@ function getWindow(): Window | null {
 export function createSelectionBridge(
   getRoot: () => HTMLElement | null,
   blockElements: BlockElementRegistry,
+  blockViews: BlockElementRegistry,
 ): SelectionBridge {
   /** DOM point → model character offset within one block-content element. */
   function domPointToOffset(host: HTMLElement, node: Node, offset: number): number {
@@ -160,9 +161,7 @@ export function createSelectionBridge(
       domSel.removeAllRanges();
 
       const lastId = selection.ids.at(-1);
-      const el = lastId === undefined
-        ? null
-        : root.querySelector(`[data-block-id="${CSS.escape(lastId)}"]`);
+      const el = lastId === undefined ? null : blockViews.get(lastId) ?? null;
 
       if (el) {
         const range = root.ownerDocument.createRange();

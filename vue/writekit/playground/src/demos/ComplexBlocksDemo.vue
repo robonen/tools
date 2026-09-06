@@ -2,6 +2,9 @@
 import { computed, ref } from 'vue';
 import type { Node } from '@writekit';
 import {
+  WritekitBlockGutter,
+  WritekitBlockHandle,
+  WritekitBlockInserter,
   WritekitBubbleMenu,
   WritekitContent,
   WritekitRoot,
@@ -91,11 +94,15 @@ function addLink(): void {
       <button @mousedown.prevent="writekit.redo()">Redo</button>
     </div>
 
-    <p class="hint">Type <kbd>/</kbd> to insert a block; select text for the bubble toolbar; hover a block and drag the <span aria-hidden="true">⠿</span> handle to reorder. Markdown shortcuts work too: <kbd># </kbd>, <kbd>- </kbd>, <kbd>&gt; </kbd>, <kbd>1. </kbd>, <kbd>[] </kbd>.</p>
-    <WritekitRoot :writekit="writekit" autofocus draggable class="writekit">
+    <p class="hint">Type <kbd>/</kbd> to insert a block; select text for the bubble toolbar; hover a block, then drag the <span aria-hidden="true">⠿</span> handle to reorder or click it for the block menu; use <span aria-hidden="true">+</span> to insert below. Markdown shortcuts work too: <kbd># </kbd>, <kbd>- </kbd>, <kbd>&gt; </kbd>, <kbd>1. </kbd>, <kbd>[] </kbd>.</p>
+    <WritekitRoot :writekit="writekit" autofocus class="writekit">
       <WritekitContent />
       <WritekitBubbleMenu />
       <WritekitSlashMenu />
+      <WritekitBlockGutter>
+        <WritekitBlockInserter />
+        <WritekitBlockHandle />
+      </WritekitBlockGutter>
     </WritekitRoot>
     <details><summary>document JSON</summary><pre>{{ docJson }}</pre></details>
   </section>

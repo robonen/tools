@@ -1,7 +1,8 @@
 import { clamp } from '@robonen/stdlib';
 import type { Attrs, Inline, Mark, Marks, Node, Position, Selection, WritekitDocument } from '../model';
-import { blockById, caret, createId, firstBlock, inlineLength, nodeInline } from '../model';
+import { blockById, caret, createId, firstBlock, inlineEq, inlineLength, nodeInline } from '../model';
 import type { Schema } from '../schema';
+import { filterInlineMarks } from '../schema';
 import type { WritekitState } from './writekit-state';
 import type { Step } from './step';
 import { applyStep } from './step';
@@ -82,9 +83,25 @@ export class Transaction {
     return this.step({ type: 'setAttrs', blockId, attrs: { ...(block?.attrs ?? {}), ...attrs } });
   }
 
-  /** Convert a block to another type, preserving its inline content. */
+  /**
+   * Convert a block to another type, preserving its inline content — minus the
+   * marks the new type forbids (prose turned into a code block sheds its bold),
+   * recorded as a second step so undo restores them exactly.
+   */
   setBlockType(blockId: string, type: string, attrs?: Attrs): this {
-    return this.step({ type: 'setType', blockId, blockType: type, attrs: attrs ?? this.schema.defaultAttrs(type) });
+    this.step({ type: 'setType', blockId, blockType: type, attrs: attrs ?? this.schema.defaultAttrs(type) });
+
+    const block = blockById(this.doc, blockId);
+    const spec = this.schema.nodeSpec(type);
+
+    if (block && spec?.content.kind === 'text') {
+      const inline = nodeInline(block);
+      const kept = filterInlineMarks(inline, spec, this.schema);
+      if (!inlineEq(inline, kept))
+        this.step({ type: 'replaceInline', blockId, from: 0, to: inlineLength(inline), content: kept });
+    }
+
+    return this;
   }
 
   splitBlock(pos: Position, newType?: string, newAttrs?: Attrs, newId: string = createId()): this {

@@ -14,5 +14,16 @@ export const heading = defineBlock({
     parseDOM: LEVELS.map(level => ({ tag: `h${level}`, attrs: { level } })),
   },
   inputRules: LEVELS.map(level => ({ match: new RegExp(`^#{${level}}\\s$`), attrs: { level } })),
-  meta: { title: 'Heading', icon: 'heading', keywords: ['heading', 'title', 'h1', 'h2', 'h3'], group: 'basic', description: 'A section title, levels 1–6.' },
+  meta: {
+    title: 'Heading',
+    icon: 'heading',
+    keywords: ['heading', 'title'],
+    group: 'basic',
+    description: 'A section title, levels 1–6.',
+    variants: [
+      { title: 'Heading 1', attrs: { level: 1 }, keywords: ['h1'], description: 'The largest section title.' },
+      { title: 'Heading 2', attrs: { level: 2 }, keywords: ['h2'], description: 'A section title.' },
+      { title: 'Heading 3', attrs: { level: 3 }, keywords: ['h3'], description: 'A subsection title.' },
+    ],
+  },
 });

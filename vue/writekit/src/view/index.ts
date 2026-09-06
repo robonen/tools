@@ -3,6 +3,9 @@ export * from './config';
 export * from './context';
 export * from './inline-content';
 export * from './selection';
+export * from './clipboard';
+export * from './dnd';
+export * from './input/native-edits';
 export * from './ui';
 
 export { default as WritekitRoot } from './WritekitRoot.vue';

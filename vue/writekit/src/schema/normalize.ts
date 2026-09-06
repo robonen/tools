@@ -4,7 +4,8 @@ import type { NodeSpec } from './node-spec';
 import type { Schema } from './schema';
 import { marksAllowed } from './schema';
 
-function filterRunMarks(inline: Inline, spec: NodeSpec, schema: Schema): Inline {
+/** Drop the marks a block spec disallows (and any the schema does not know). */
+export function filterInlineMarks(inline: Inline, spec: NodeSpec, schema: Schema): Inline {
   return inline.map(run => ({
     text: run.text,
     marks: run.marks.filter(mark => schema.markSpec(mark.type) !== undefined && marksAllowed(spec, mark.type)),
@@ -30,7 +31,7 @@ export function normalizeDocument(doc: WritekitDocument, schema: Schema): Writek
 
     if (spec.content.kind === 'text') {
       const inline = isInlineContent(block.content) ? block.content : [];
-      content.push({ ...block, attrs, content: normalizeInline(filterRunMarks(inline, spec, schema)) });
+      content.push({ ...block, attrs, content: normalizeInline(filterInlineMarks(inline, spec, schema)) });
     }
     else if (spec.content.kind === 'atom') {
       content.push({ ...block, attrs, content: block.content ?? null });

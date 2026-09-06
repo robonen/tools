@@ -42,6 +42,23 @@ async function hover(id: string): Promise<HTMLElement> {
   return document.querySelector<HTMLElement>('[data-writekit-block-gutter]')!;
 }
 
+/** What a mouse does on a click, in order, with the focus move a press causes. */
+async function press(el: HTMLElement): Promise<void> {
+  const rect = el.getBoundingClientRect();
+  const init = { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2, bubbles: true, cancelable: true, pointerId: 1, button: 0, pointerType: 'mouse' as const };
+  el.dispatchEvent(new PointerEvent('pointermove', init));
+  el.dispatchEvent(new PointerEvent('pointerdown', init));
+  const down = new MouseEvent('mousedown', init);
+  el.dispatchEvent(down);
+  if (!down.defaultPrevented)
+    el.focus();
+  await nextTick();
+  el.dispatchEvent(new PointerEvent('pointerup', init));
+  el.dispatchEvent(new MouseEvent('mouseup', init));
+  el.dispatchEvent(new MouseEvent('click', init));
+  await nextTick();
+}
+
 async function frame(): Promise<void> {
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }
@@ -150,6 +167,53 @@ describe('block gutter', () => {
     heading2.click();
     await vi.waitFor(() => expect(w.state.doc.content[0]!.type).toBe('heading'));
     expect(w.state.doc.content[0]!.attrs).toEqual({ level: 2 });
+    await vi.waitFor(() => expect(document.querySelector('[data-writekit-block-menu]')).toBeNull());
+  });
+
+  // The full pointer sequence, not `element.click()`: the press re-renders the
+  // menu (roving focus), and its focus scope re-runs on that re-render and
+  // fires a spurious close-auto-focus. Moving focus out of the menu on it
+  // dismissed the menu under the pointer, before the click ever landed.
+  it('a pointer click on a picker entry inserts the block', async () => {
+    const w = mount([para('a', 'first'), para('b', 'second')]);
+    const gutter = await hover('a');
+    await press(gutter.querySelector<HTMLButtonElement>('[data-writekit-block-inserter]')!);
+    await vi.waitFor(() => expect(document.querySelector('[data-writekit-block-picker]')).not.toBeNull());
+
+    const quote = Array.from(document.querySelectorAll<HTMLElement>('[data-writekit-block-picker] [data-writekit-menu-item]')).find(el => el.textContent?.trim() === 'Quote')!;
+    await press(quote);
+
+    await vi.waitFor(() => expect(w.state.doc.content.map(block => block.type)).toEqual(['paragraph', 'blockquote', 'paragraph']));
+    expect(w.state.selection).toEqual(caret(w.state.doc.content[1]!.id, 0));
+    await vi.waitFor(() => expect(document.querySelector('[data-writekit-block-picker]')).toBeNull());
+  });
+
+  it('a second pointer click on the plus closes the picker instead of reopening it', async () => {
+    mount([para('a', 'first'), para('b', 'second')]);
+    const gutter = await hover('a');
+    const plus = gutter.querySelector<HTMLButtonElement>('[data-writekit-block-inserter]')!;
+
+    await press(plus);
+    await vi.waitFor(() => expect(document.querySelector('[data-writekit-block-picker]')).not.toBeNull());
+
+    // The press dismisses the layer as an outside press unless the picker
+    // exempts its own button; then the click's toggle would open it again.
+    await press(plus);
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(document.querySelector('[data-writekit-block-picker]')).toBeNull();
+    expect(plus.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('a pointer click on a handle menu item acts on the block', async () => {
+    const w = mount([para('a', 'first'), para('b', 'second')]);
+    const gutter = await hover('a');
+    await press(gutter.querySelector<HTMLButtonElement>('[data-writekit-block-handle]')!);
+    await vi.waitFor(() => expect(document.querySelector('[data-writekit-block-menu]:not([data-submenu])')).not.toBeNull());
+
+    const duplicate = Array.from(document.querySelectorAll<HTMLElement>('[data-writekit-menu-item]')).find(el => el.textContent?.trim() === 'Duplicate')!;
+    await press(duplicate);
+
+    await vi.waitFor(() => expect(texts(w)).toEqual(['first', 'first', 'second']));
     await vi.waitFor(() => expect(document.querySelector('[data-writekit-block-menu]')).toBeNull());
   });
 

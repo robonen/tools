@@ -45,17 +45,32 @@ const groups = computed(() => {
 watch(open, value => gutter.pin(value));
 
 /**
- * The picker opens on the next tick, after the gutter's own state has
- * settled, so the menu's auto-focus is the last word on focus.
+ * A click toggles. Opening waits a tick, after the gutter's own state has
+ * settled, so the menu's auto-focus is the last word on focus. Closing is
+ * immediate — and it is this handler's job alone: the picker's layer ignores
+ * a press on the button (see `keepOpenOnOwnButton`), otherwise the press
+ * would dismiss the picker and this click would open it again.
  */
-function openPicker(event: MouseEvent | KeyboardEvent): void {
+function togglePicker(event: MouseEvent | KeyboardEvent): void {
   if (!gutter.block.value)
     return;
+
+  if (open.value) {
+    open.value = false;
+    return;
+  }
 
   above = event.altKey;
   void nextTick(() => {
     open.value = true;
   });
+}
+
+/** The button owns its own toggling; a press on it is not an outside press. */
+function keepOpenOnOwnButton(event: PointerEvent | MouseEvent): void {
+  const target = event.target as Node | null;
+  if (target && button.value?.contains(target))
+    event.preventDefault();
 }
 
 /** Insert an empty block of the picked type beside the current one and go there. */
@@ -78,15 +93,21 @@ function pick(item: SlashItem): void {
 function onKeydown(event: KeyboardEvent): void {
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault();
-    openPicker(event);
+    togglePicker(event);
   }
 }
 
-// After a pick the caret is already in the new block; after a dismiss the
-// editor keeps focus. Never send focus back to the button.
+/**
+ * Never send focus back to the button. On a real close the editor gets it —
+ * after a pick the caret is already in the new block, after a dismiss the
+ * author is back in the text. The menu's focus scope also fires this while
+ * the menu is still open (its effect re-runs on the re-render a pointer
+ * press causes); moving focus then would read as focus leaving the menu and
+ * dismiss it under the pointer, before the click lands.
+ */
 function onCloseAutoFocus(event: Event): void {
   event.preventDefault();
-  if (!ctx.contentRoot.value?.contains(document.activeElement))
+  if (!open.value && !ctx.contentRoot.value?.contains(document.activeElement))
     ctx.contentRoot.value?.focus({ preventScroll: true });
 }
 </script>
@@ -101,7 +122,7 @@ function onCloseAutoFocus(event: Event): void {
       :aria-label="label"
       aria-haspopup="menu"
       :aria-expanded="open"
-      @click="openPicker"
+      @click="togglePicker"
       @keydown="onKeydown"
     >
       <slot>+</slot>
@@ -120,6 +141,7 @@ function onCloseAutoFocus(event: Event): void {
         :collision-padding="8"
         loop
         @close-auto-focus="onCloseAutoFocus"
+        @pointer-down-outside="keepOpenOnOwnButton"
       >
         <template v-for="(group, index) in groups" :key="group.name">
           <MenuSeparator v-if="index > 0" data-writekit-menu-separator="" />

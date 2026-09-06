@@ -139,11 +139,17 @@ function onKeydown(event: KeyboardEvent): void {
   }
 }
 
-// Closing hands focus back to the editor rather than to the handle, whose
-// only job is done; the block stays selected so Backspace still deletes it.
+/**
+ * Closing hands focus back to the editor rather than to the handle, whose
+ * only job is done; the block stays selected so Backspace still deletes it.
+ * Only on a real close: the menu's focus scope also fires this while the
+ * menu is open (its effect re-runs on the re-render a pointer press causes),
+ * and moving focus then would dismiss the menu under the pointer.
+ */
 function onCloseAutoFocus(event: Event): void {
   event.preventDefault();
-  ctx.contentRoot.value?.focus({ preventScroll: true });
+  if (!open.value)
+    ctx.contentRoot.value?.focus({ preventScroll: true });
 }
 
 /**

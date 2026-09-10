@@ -602,6 +602,45 @@ describe('Drawer / pointer capture', () => {
     expect(content.getAttribute('data-state')).toBe('open');
   });
 
+  it('captures on the element inside a shadow root, not on its host', async () => {
+    // A widget hosted in a shadow root inside the sheet. The drawer's listener
+    // sees the press retargeted to the host; capturing there would swallow
+    // `click` for every control in the widget, the way capturing on the
+    // drawer would for every control in the drawer.
+    mountDrawer({
+      defaultOpen: true,
+      extraContent: () => h('div', { 'data-testid': 'host' }),
+    });
+    await flush();
+
+    const content = $content()!;
+    const host = $<HTMLElement>('[data-testid="host"]')!;
+    const shadow = host.attachShadow({ mode: 'open' });
+    const inner = document.createElement('button');
+    shadow.appendChild(inner);
+    const captured: Element[] = [];
+
+    for (const el of [content, host, inner])
+      (el as any).setPointerCapture = () => captured.push(el);
+
+    inner.dispatchEvent(new PointerEvent('pointerdown', {
+      button: 0,
+      pointerId: 1,
+      isPrimary: true,
+      clientX: 100,
+      clientY: 300,
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    }));
+
+    expect(captured).toEqual([inner]);
+
+    pointer(host, 'pointerup', 100, 300);
+    await flush();
+    expect(content.getAttribute('data-state')).toBe('open');
+  });
+
   it('captures on the handle for handleOnly gestures', async () => {
     mountDrawer({ defaultOpen: true, handleOnly: true });
     await flush();

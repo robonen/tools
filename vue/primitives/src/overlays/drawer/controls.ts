@@ -387,6 +387,13 @@ export function useDrawer(props: UseDrawerProps & DialogEmitHandlers): DrawerRoo
     return true;
   }
 
+  /** The element under the pointer, through any open shadow root on the way. */
+  function pressedElement(event: PointerEvent): EventTarget {
+    const head = event.composedPath?.()[0];
+
+    return head instanceof Element ? head : (event.target as EventTarget);
+  }
+
   function onPress(event: PointerEvent, captureTarget?: HTMLElement) {
     // One gesture at a time; a second touch never steals an active drag. But a
     // gesture whose capture element left the DOM can never finish (its
@@ -417,7 +424,13 @@ export function useDrawer(props: UseDrawerProps & DialogEmitHandlers): DrawerRoo
     // Capture on the pressed element, never the drawer: while a capture is
     // active the compat mouse events retarget to the capturing element, so
     // capturing on the drawer would swallow `click` for every control inside it.
-    const capture = captureTarget ?? (event.target as Element);
+    //
+    // The pressed element is the head of the composed path, not `target`. By
+    // the time the event reaches the drawer, a press inside a shadow root has
+    // been retargeted to the shadow host; capturing on the host swallows
+    // `click` for everything inside that root exactly as capturing on the
+    // drawer would for everything inside the drawer.
+    const capture = captureTarget ?? (pressedElement(event) as Element);
 
     // Synthetic pointers (tests) and already-released pointers have no active
     // pointer id to capture — the drag still works, only retargeting is lost.

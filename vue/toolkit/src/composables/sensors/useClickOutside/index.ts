@@ -53,16 +53,32 @@ export function useClickOutside(
     const eventTarget = (path[0] ?? e.target) as Node | null;
 
     if (!el || !eventTarget) return;
-    if (el === eventTarget || el.contains(eventTarget)) return;
+    if (within(el, eventTarget, path)) return;
 
     const ignoreList = toValue(ignore) ?? [];
     for (const ref of ignoreList) {
       const node = unrefElement(ref) as HTMLElement | undefined;
-      if (node && (node === eventTarget || node.contains(eventTarget))) return;
+      if (node && within(node, eventTarget, path)) return;
     }
 
     handler(pe);
   };
 
-  return useEventListener(defaultWindow, event, listener, { passive: true, capture: true });
+  // Not passive: consumers (dismissable layers) call `preventDefault` on the
+  // event to keep a layer open, and a passive listener turns that into a
+  // console warning and a no-op. `pointerdown` is not a scroll-blocking event,
+  // so there is no jank to buy by promising not to prevent it.
+  return useEventListener(defaultWindow, event, listener, { capture: true });
+}
+
+/**
+ * Whether an event that started at `eventTarget` started inside `node`.
+ *
+ * `contains()` stops at a shadow boundary: a press on a button inside a
+ * widget's shadow root is not "contained" by the sheet around it, and the
+ * sheet would dismiss on it. The composed path crosses every open shadow root
+ * on the way up, so a node anywhere on it is an ancestor for this purpose.
+ */
+function within(node: Node, eventTarget: Node, path: Node[]): boolean {
+  return node === eventTarget || node.contains(eventTarget) || path.includes(node);
 }

@@ -1,6 +1,6 @@
 {
   "name": "@robonen/writekit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "Apache-2.0",
   "description": "Headless block-based rich-text writekit for Vue with a registry-driven schema and pluggable CRDT",
   "keywords": [
@@ -75,11 +75,11 @@
     "vue-tsc": "^3.3.8"
   },
   "dependencies": {
-    "@robonen/crdt": "workspace:*",
-    "@robonen/platform": "workspace:*",
-    "@robonen/primitives": "workspace:*",
-    "@robonen/stdlib": "workspace:*",
-    "@robonen/vue": "workspace:*",
+    "@robonen/crdt": "workspace:~",
+    "@robonen/platform": "workspace:~",
+    "@robonen/primitives": "workspace:~",
+    "@robonen/stdlib": "workspace:~",
+    "@robonen/vue": "workspace:~",
     "@vue/shared": "catalog:"
   },
   "peerDependencies": {

@@ -63,7 +63,7 @@
     "@robonen/tsconfig": "workspace:*",
     "@robonen/tsdown": "workspace:*",
     "@vitest/browser": "catalog:",
-    "@vitest/browser-playwright": "^4.1.10",
+    "@vitest/browser-playwright": "^5.0.0",
     "@vue/test-utils": "catalog:",
     "eslint": "catalog:",
     "jsdom": "catalog:",

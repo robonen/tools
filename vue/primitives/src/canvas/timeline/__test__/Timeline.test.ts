@@ -240,6 +240,42 @@ describe('TimelineClipHandle (trim)', () => {
   });
 });
 
+describe('TimelineClipHandle (drag)', () => {
+  const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+  const pointer = (target: EventTarget, type: string, clientX: number) =>
+    target.dispatchEvent(new PointerEvent(type, { pointerId: 1, button: 0, buttons: type === 'pointerup' ? 0 : 1, clientX, clientY: 10, bubbles: true }));
+
+  it('follows the pointer away from an edge it snapped to, and reports a trim', async () => {
+    const onChange = ref<any>(null);
+    // Two clips spanning the same time on two lanes: c1's end can snap onto c2's.
+    const w = mountTimeline(
+      {
+        clips: [
+          { id: 'c1', trackId: 't1', start: 1, duration: 2 },
+          { id: 'c2', trackId: 't2', start: 1, duration: 2 },
+        ],
+        onClipsChange: (c: any) => void (onChange.value = c),
+      },
+      () => h(TimelineClipHandle, { side: 'end' }),
+    );
+    await nextTick();
+    const handle = w.find('[data-clip-id="c1"] [data-side="end"]').element;
+
+    // Grab the end (3s = 300px), nudge onto c2's end, then pull it far left.
+    pointer(handle, 'pointerdown', 300);
+    pointer(handle, 'pointermove', 296);
+    await frame();
+    expect(w.find('[data-clip-id="c1"] [data-side="end"]').attributes('aria-valuenow')).toBe('3');
+    pointer(handle, 'pointermove', 250);
+    await frame();
+    pointer(handle, 'pointerup', 250);
+    await nextTick();
+
+    expect(Number(w.find('[data-clip-id="c1"] [data-side="end"]').attributes('aria-valuenow'))).toBeCloseTo(2.5, 2);
+    expect(onChange.value).toEqual([{ type: 'trim', id: 'c1', start: 1, duration: expect.closeTo(1.5, 2) }]);
+  });
+});
+
 describe('TimelineMarker', () => {
   it('renders a marker button with timecode label at its time', async () => {
     const w = mountTimeline();

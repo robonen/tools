@@ -453,17 +453,25 @@ function trimClip(id: string, start: number, dur: number, mutating: boolean): vo
 function commitMutation(): void {
   isMutating.value = false;
   draggingClipId.value = null;
+  // The next gesture starts unsnapped: a lock is one gesture's stickiness.
+  snapEngine.reset();
   if (dirtyClipIds.size === 0) return;
   const ids = [...dirtyClipIds];
   dirtyClipIds.clear();
 
+  // The model still holds the clips as they were before the gesture.
+  const before = new Map((clips.value ?? []).map(c => [c.id, c]));
   const changes: TimelineClipChange[] = [];
   const patchById = new Map<string, TimelineClip>();
   for (const id of ids) {
     const clip = clipLookup.value.get(id);
     if (!clip) continue;
     patchById.set(id, clip);
-    changes.push({ type: 'move', id, trackId: clip.trackId, start: clip.start });
+    // A gesture that changed the length was a trim; anything else moved the clip.
+    if (before.get(id)?.duration !== clip.duration)
+      changes.push({ type: 'trim', id, start: clip.start, duration: clip.duration });
+    else
+      changes.push({ type: 'move', id, trackId: clip.trackId, start: clip.start });
   }
   // Write the model immutably (only touched clips get a new object).
   clips.value = (clips.value ?? []).map(c => patchById.get(c.id) ?? c);

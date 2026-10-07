@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useDeviceOrientation } from './index';
 
-const { isSupported, isAbsolute, alpha, beta, gamma } = useDeviceOrientation();
+const { isSupported, requirePermissions, permissionGranted, ensurePermissions, isAbsolute, alpha, beta, gamma } = useDeviceOrientation();
 
 function fmt(value: number | null): string {
   return value == null ? '—' : `${value.toFixed(1)}°`;
@@ -27,6 +27,15 @@ const angles = computed(() => [
   <div class="demo-stack max-w-sm">
     <div v-if="!isSupported" class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-700 dark:text-amber-300">
       DeviceOrientationEvent is not supported in this browser.
+    </div>
+
+    <div v-else-if="requirePermissions && !permissionGranted" class="demo-card p-4 flex flex-col items-start gap-3">
+      <p class="text-sm text-fg-muted">
+        This browser asks before it shares the device's orientation.
+      </p>
+      <button type="button" class="demo-btn-primary" @click="ensurePermissions">
+        Enable orientation access
+      </button>
     </div>
 
     <template v-else>

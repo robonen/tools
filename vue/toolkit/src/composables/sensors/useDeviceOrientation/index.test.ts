@@ -30,6 +30,8 @@ describe(useDeviceOrientation, () => {
     });
 
     expect(result!.isSupported.value).toBeTruthy();
+    expect(result!.requirePermissions.value).toBeFalsy();
+    expect(result!.permissionGranted.value).toBeTruthy();
     expect(result!.isAbsolute.value).toBeFalsy();
     expect(result!.alpha.value).toBeNull();
     expect(result!.beta.value).toBeNull();
@@ -72,6 +74,7 @@ describe(useDeviceOrientation, () => {
 
   it('registers the listener with a passive option', () => {
     const target = {
+      DeviceOrientationEvent: class {},
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
     } as unknown as Window;
@@ -91,6 +94,7 @@ describe(useDeviceOrientation, () => {
 
   it('stops listening when the scope is disposed', () => {
     const target = {
+      DeviceOrientationEvent: class {},
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
     } as unknown as Window;
@@ -128,5 +132,105 @@ describe(useDeviceOrientation, () => {
     expect(result!.beta.value).toBeNull();
     expect(result!.gamma.value).toBeNull();
     scope.stop();
+  });
+
+  describe('iOS permission flow', () => {
+    type Listener = (event: Event) => void;
+
+    function makeIosWindow(response: 'granted' | 'denied' | Error) {
+      const listeners = new Map<string, Set<Listener>>();
+      const ctor = class {} as unknown as { requestPermission: () => Promise<'granted' | 'denied'> };
+      ctor.requestPermission = vi.fn(() =>
+        response instanceof Error ? Promise.reject(response) : Promise.resolve(response));
+
+      const target = {
+        DeviceOrientationEvent: ctor,
+        addEventListener: (type: string, cb: Listener) => {
+          if (!listeners.has(type))
+            listeners.set(type, new Set());
+          listeners.get(type)!.add(cb);
+        },
+        removeEventListener: (type: string, cb: Listener) => listeners.get(type)?.delete(cb),
+        dispatchEvent: (event: Event) => {
+          for (const cb of listeners.get(event.type) ?? []) cb(event);
+          return true;
+        },
+      } as unknown as Window;
+
+      return { ctor, target, listeners };
+    }
+
+    it('defers binding until permission is granted', async () => {
+      const { ctor, target, listeners } = makeIosWindow('granted');
+      const scope = effectScope();
+      let result: ReturnType<typeof useDeviceOrientation>;
+      scope.run(() => {
+        result = useDeviceOrientation({ window: target });
+      });
+
+      expect(result!.requirePermissions.value).toBeTruthy();
+      expect(result!.permissionGranted.value).toBeFalsy();
+      expect(listeners.get('deviceorientation')).toBeUndefined();
+
+      await result!.ensurePermissions();
+
+      expect(ctor.requestPermission).toHaveBeenCalledTimes(1);
+      expect(result!.permissionGranted.value).toBeTruthy();
+
+      dispatchOrientation(target, { absolute: false, alpha: 10, beta: 80, gamma: 5 });
+      expect(result!.beta.value).toBe(80);
+
+      // A second call does not ask again.
+      await result!.ensurePermissions();
+      expect(ctor.requestPermission).toHaveBeenCalledTimes(1);
+      scope.stop();
+    });
+
+    it('requests eagerly when requestPermissions is true', async () => {
+      const { ctor, target, listeners } = makeIosWindow('granted');
+      const scope = effectScope();
+      let result: ReturnType<typeof useDeviceOrientation>;
+      scope.run(() => {
+        result = useDeviceOrientation({ window: target, requestPermissions: true });
+      });
+
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(ctor.requestPermission).toHaveBeenCalled();
+      expect(result!.permissionGranted.value).toBeTruthy();
+      expect(listeners.get('deviceorientation')?.size).toBe(1);
+      scope.stop();
+    });
+
+    it('leaves the listener unbound when permission is denied', async () => {
+      const { target, listeners } = makeIosWindow('denied');
+      const scope = effectScope();
+      let result: ReturnType<typeof useDeviceOrientation>;
+      scope.run(() => {
+        result = useDeviceOrientation({ window: target });
+      });
+
+      await result!.ensurePermissions();
+
+      expect(result!.permissionGranted.value).toBeFalsy();
+      expect(listeners.get('deviceorientation')).toBeUndefined();
+      scope.stop();
+    });
+
+    it('routes a rejected request through onError without throwing', async () => {
+      const { target } = makeIosWindow(new Error('blocked'));
+      const onError = vi.fn();
+      const scope = effectScope();
+      let result: ReturnType<typeof useDeviceOrientation>;
+      scope.run(() => {
+        result = useDeviceOrientation({ window: target, onError });
+      });
+
+      await expect(result!.ensurePermissions()).resolves.toBeUndefined();
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(result!.permissionGranted.value).toBeFalsy();
+      scope.stop();
+    });
   });
 });

@@ -21,8 +21,15 @@ const POINTER_TRANSIT_TIMEOUT = 300;
 export function useGraceArea(
   triggerElement: Ref<HTMLElement | undefined>,
   containerElement: Ref<HTMLElement | undefined>,
+  /**
+   * Where the transit flag lives, when someone else reads it — a tooltip
+   * provider, a hover card root. Written here directly, and set back to
+   * `false` when this scope ends: a copy made by a watcher in the content
+   * would be stopped by the content's unmount before it ran, and the flag
+   * would stay `true` — every trigger reading it then refuses to open.
+   */
+  isPointerInTransit: Ref<boolean> = ref(false),
 ) {
-  const isPointerInTransit = ref(false);
   const pointerGraceArea = ref<Polygon | null>(null);
 
   let resetTimer = 0;

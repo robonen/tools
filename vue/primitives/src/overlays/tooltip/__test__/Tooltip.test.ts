@@ -309,6 +309,27 @@ describe('Tooltip hoverable content', () => {
     expect(tip!.textContent).toContain('Tooltip body');
   });
 
+  it('opens again after it closed while the pointer was on its way out', async () => {
+    mountTooltip({ delayDuration: 0, skipDelayDuration: 0 });
+    const trigger = getTrigger();
+
+    trigger.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', bubbles: true }));
+    await vi.waitFor(() => expect(getTooltip()).toBeTruthy());
+
+    // The pointer leaves the trigger — a grace area opens toward the content —
+    // then leaves the grace area as well: the tooltip closes mid-transit.
+    const rect = trigger.getBoundingClientRect();
+    trigger.dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'mouse', clientX: rect.left - 1, clientY: rect.top + rect.height / 2 }));
+    await nextTick();
+    document.body.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', bubbles: true, clientX: rect.left - 300, clientY: rect.top + 300 }));
+    await nextTick();
+    expect(trigger.getAttribute('data-state')).toBe('closed');
+
+    // Hovering the trigger again opens it again — the transit is over.
+    trigger.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', bubbles: true }));
+    await vi.waitFor(() => expect(trigger.getAttribute('data-state')).not.toBe('closed'));
+  });
+
   it('renders without grace area when disableHoverableContent is set', async () => {
     mountTooltip({ defaultOpen: true, disableHoverableContent: true });
     await nextTick();

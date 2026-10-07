@@ -91,8 +91,12 @@ describe('HoverCard', () => {
     await nextTick();
     expect(trigger.getAttribute('data-state')).toBe('open');
 
-    trigger.dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'mouse' }));
-    // pointerleave defers close via setTimeout(0) then closeDelay
+    // Leaving the trigger opens a grace area toward the content; the card
+    // closes once the pointer moves on outside it — after closeDelay.
+    const rect = trigger.getBoundingClientRect();
+    trigger.dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'mouse', clientX: rect.left - 1, clientY: rect.top + rect.height / 2 }));
+    await nextTick();
+    document.body.dispatchEvent(new PointerEvent('pointermove', { pointerType: 'mouse', bubbles: true, clientX: rect.left - 300, clientY: rect.top + 300 }));
     vi.advanceTimersByTime(0);
     vi.advanceTimersByTime(100);
     await nextTick();

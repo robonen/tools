@@ -14,7 +14,6 @@ export type TooltipContentHoverableEmits = TooltipContentImplEmits;
 </script>
 
 <script setup lang="ts">
-import { watchEffect } from 'vue';
 import TooltipContentImpl from './TooltipContentImpl.vue';
 import { useForwardExpose, useForwardProps } from '@robonen/vue';
 import { useGraceArea } from '../../internal/utils/useGraceArea';
@@ -29,11 +28,9 @@ const emit = defineEmits<TooltipContentHoverableEmits>();
 const ctx = useTooltipContext();
 const { forwardRef, currentElement } = useForwardExpose();
 
-const { isPointerInTransit, onPointerExit } = useGraceArea(ctx.trigger, currentElement);
-
-watchEffect(() => {
-  ctx.isPointerInTransitRef.value = isPointerInTransit.value;
-});
+// The provider's flag itself: the triggers under it read it, and it must be
+// `false` again the moment this content is gone.
+const { onPointerExit } = useGraceArea(ctx.trigger, currentElement, ctx.isPointerInTransitRef);
 
 onPointerExit(() => ctx.onClose());
 </script>

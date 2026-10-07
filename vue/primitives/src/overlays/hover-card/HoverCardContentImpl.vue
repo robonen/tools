@@ -74,11 +74,8 @@ const emit = defineEmits<HoverCardContentImplEmits>();
 const ctx = useHoverCardContext();
 const { forwardRef, currentElement } = useForwardExpose();
 
-const { isPointerInTransit, onPointerExit } = useGraceArea(ctx.trigger, currentElement);
-
-watchEffect(() => {
-  ctx.isPointerInTransit.value = isPointerInTransit.value;
-});
+// The root's flag itself, so it is `false` again the moment this content is gone.
+const { onPointerExit } = useGraceArea(ctx.trigger, currentElement, ctx.isPointerInTransit);
 
 onPointerExit(() => ctx.onClose());
 

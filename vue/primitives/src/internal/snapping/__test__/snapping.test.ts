@@ -290,4 +290,27 @@ describe('useSnapping', () => {
     // Use a value where b is NOT strictly closer to prove stickiness:
     expect(engine.snap1d(104).target?.id).toBe('a'); // a dist 4, b dist 4 -> keep a
   });
+
+  it('lets go of a lock that left its band, even when the new best has no id', () => {
+    // A rect's edges share its id; grid lines have none.
+    const pool: SnapTarget[] = [
+      ...edgeTargets([{ left: 0, right: 100, top: 0, bottom: 0, id: 'clip' }], 'x', v => v),
+      ...gridTargets(0, 200, 1, v => v, 'x'),
+    ];
+    const engine = useSnapping({ targets: pool, thresholdPx: 8, priority: { order: ['edge', 'center', 'grid'], relaxPx: 4 } });
+    expect(engine.snap1d(101).target?.kind).toBe('edge'); // the right edge, 100
+    // Far away only the grid is in reach — never the rect's other edge.
+    expect(engine.snap1d(150.2).value).toBe(150);
+  });
+
+  it('holds the very target it locked, not the first one sharing its id', () => {
+    const pool: SnapTarget[] = [
+      { axis: 'x', px: 107, value: 107, kind: 'grid' },
+      ...edgeTargets([{ left: 0, right: 100, top: 0, bottom: 0, id: 'clip' }], 'x', v => v),
+    ];
+    const engine = useSnapping({ targets: pool, thresholdPx: 8 });
+    expect(engine.snap1d(100).value).toBe(100);
+    // Equally far from the grid line and the held right edge: the edge holds.
+    expect(engine.snap1d(103.5).value).toBe(100);
+  });
 });

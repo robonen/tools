@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter, Ref } from 'vue';
 import { readonly, ref, toValue } from 'vue';
 import type { Point, SnapPriority, SnapResult1D, SnapResult2D, SnapTarget } from './types';
-import { applyHysteresis, findNearestTarget } from './snap';
+import { findNearestTarget, isExcluded, isSameTarget } from './snap';
 
 /**
  * Axis mode for {@link useSnapping}:
@@ -78,9 +78,10 @@ export function useSnapping(options: SnappingOptions = {}): UseSnappingReturn {
   const isSnappedRef = ref(false);
   const activeTargetsRef = ref<SnapTarget[]>([]);
 
-  // Locked target ids per axis power the hysteresis stickiness across calls.
-  let lockedX: string | undefined;
-  let lockedY: string | undefined;
+  // The target each axis is locked to powers the hysteresis stickiness across
+  // calls. The target itself, not its id: a rect's edges share their rect's id.
+  let lockedX: SnapTarget | undefined;
+  let lockedY: SnapTarget | undefined;
 
   // Pre-allocated result objects mutated in place — the no-match hot path must
   // not allocate.
@@ -106,8 +107,8 @@ export function useSnapping(options: SnappingOptions = {}): UseSnappingReturn {
     priority: SnapPriority | undefined,
     hysteresisRatio: number,
     exclude: string | Set<string> | undefined,
-    locked: string | undefined,
-  ): { snapped: boolean; target: SnapTarget | null; deltaPx: number; nextLocked: string | undefined } {
+    locked: SnapTarget | undefined,
+  ): { snapped: boolean; target: SnapTarget | null; deltaPx: number; nextLocked: SnapTarget | undefined } {
     const candidatePx = projectValue(value, axis);
     const hysteresisPx = thresholdPx * hysteresisRatio;
 
@@ -127,35 +128,30 @@ export function useSnapping(options: SnappingOptions = {}): UseSnappingReturn {
     }
 
     const best = targets[index]!;
-    const bestDistPx = deltaPx < 0 ? -deltaPx : deltaPx;
 
-    // Distance of the prior lock this frame (Infinity if it left range / is gone).
-    let prevDistPx = Infinity;
-    if (locked !== undefined) {
+    if (locked !== undefined && !isSameTarget(best, locked)) {
+      // The locked target in this frame's pool, if it is still there.
+      let held: SnapTarget | undefined;
       for (let i = 0; i < targets.length; i++) {
         const t = targets[i]!;
-        if (t.id === locked) {
-          const d = t.px - candidatePx;
-          prevDistPx = d < 0 ? -d : d;
+        if (isSameTarget(t, locked) && !isExcluded(t.id, exclude)) {
+          held = t;
           break;
         }
       }
-    }
 
-    const steal = applyHysteresis(locked, best.id, bestDistPx, prevDistPx, thresholdPx, hysteresisRatio);
+      if (held !== undefined) {
+        const heldDelta = held.px - candidatePx;
+        const heldDistPx = heldDelta < 0 ? -heldDelta : heldDelta;
+        const bestDistPx = deltaPx < 0 ? -deltaPx : deltaPx;
 
-    if (!steal && locked !== undefined) {
-      // Keep the prior lock if it is still a valid (in-range) target.
-      for (let i = 0; i < targets.length; i++) {
-        const t = targets[i]!;
-        if (t.id === locked) {
-          const heldDelta = t.px - candidatePx;
-          return { snapped: true, target: t, deltaPx: heldDelta, nextLocked: locked };
-        }
+        // Inside its release band the lock yields only to a strictly closer target.
+        if (heldDistPx <= thresholdPx * (1 + hysteresisRatio) && bestDistPx >= heldDistPx)
+          return { snapped: true, target: held, deltaPx: heldDelta, nextLocked: held };
       }
     }
 
-    return { snapped: true, target: best, deltaPx, nextLocked: best.id };
+    return { snapped: true, target: best, deltaPx, nextLocked: best };
   }
 
   function snap1d(value: number, ctx?: SnapCallContext): SnapResult1D {

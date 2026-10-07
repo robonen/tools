@@ -10,8 +10,17 @@ function priorityRank(kind: SnapKind, order: SnapKind[] | undefined): number {
   return i === -1 ? order.length : i;
 }
 
+/**
+ * Whether two targets are the same target: same kind, same id, same value. The
+ * id alone does not say it — a rect's left, right and center edges share their
+ * rect's id, and grid lines have none.
+ */
+export function isSameTarget(a: SnapTarget, b: SnapTarget): boolean {
+  return a.kind === b.kind && a.id === b.id && a.value === b.value;
+}
+
 /** Whether `id` is excluded, accepting a single id or a set of ids. */
-function isExcluded(id: string | undefined, exclude: string | Set<string> | undefined): boolean {
+export function isExcluded(id: string | undefined, exclude: string | Set<string> | undefined): boolean {
   if (id === undefined || exclude === undefined) return false;
   return typeof exclude === 'string' ? id === exclude : exclude.has(id);
 }
@@ -22,9 +31,10 @@ function isExcluded(id: string | undefined, exclude: string | Set<string> | unde
  * farther than the closest candidate, bounded by `priority.relaxPx`. Targets
  * whose `id` is in `excludeId` are skipped (e.g. a clip snapping to itself).
  *
- * When `lockedId` matches a candidate, its effective threshold is widened by
- * `hysteresisPx` so an already-snapped handle stays sticky and resists
- * flickering as the pointer drifts near the edge of the snap band.
+ * The locked target's effective threshold is widened by `hysteresisPx` so an
+ * already-snapped handle stays sticky and resists flickering as the pointer
+ * drifts near the edge of the snap band. Pass the locked target itself to widen
+ * only that target; an id widens every target carrying it.
  *
  * Allocation-free. Returns `{ index: -1, deltaPx: Infinity }` when no target is
  * in range.
@@ -34,7 +44,7 @@ function isExcluded(id: string | undefined, exclude: string | Set<string> | unde
  * @param thresholdPx Base snap radius in pixels.
  * @param priority Optional kind ordering + relax band for tie-breaking.
  * @param excludeId Id (or set) to skip.
- * @param lockedId Currently locked target id, widened by `hysteresisPx`.
+ * @param locked Currently locked target (or a target id), widened by `hysteresisPx`.
  * @param hysteresisPx Extra radius granted to the locked target. @default 0
  */
 export function findNearestTarget(
@@ -43,7 +53,7 @@ export function findNearestTarget(
   thresholdPx: number,
   priority?: SnapPriority,
   excludeId?: string | Set<string>,
-  lockedId?: string,
+  locked?: SnapTarget | string,
   hysteresisPx = 0,
 ): { index: number; deltaPx: number } {
   const order = priority?.order;
@@ -59,9 +69,9 @@ export function findNearestTarget(
     if (isExcluded(t.id, excludeId)) continue;
 
     // Sticky targets earn a wider capture radius while they hold the lock.
-    const reach = lockedId !== undefined && t.id === lockedId
-      ? thresholdPx + hysteresisPx
-      : thresholdPx;
+    const isLocked = locked !== undefined
+      && (typeof locked === 'string' ? t.id === locked : isSameTarget(t, locked));
+    const reach = isLocked ? thresholdPx + hysteresisPx : thresholdPx;
 
     const signedDelta = t.px - targetPx;
     const dist = signedDelta < 0 ? -signedDelta : signedDelta;

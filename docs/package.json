@@ -23,7 +23,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@nuxt/fonts": "^0.14.0",
+    "@nuxt/fonts": "^1.0.1",
     "@nuxt/kit": "^4.5.1",
     "@robonen/eslint": "workspace:*",
     "@tailwindcss/vite": "^4.3.3",

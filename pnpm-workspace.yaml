@@ -22,7 +22,7 @@ catalog:
   '@vue/shared': ^3.5.40
   '@vue/test-utils': ^2.4.11
   eslint: ^10.8.0
-  jsdom: ^30.0.1
+  jsdom: ^31.0.0
   nuxt: ^4.5.1
   tsdown: ^0.22.14
   typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2

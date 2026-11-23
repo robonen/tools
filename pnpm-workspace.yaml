@@ -15,7 +15,7 @@ allowBuilds:
   unrs-resolver: true
 
 catalog:
-  '@stylistic/eslint-plugin': ^5.10.0
+  '@stylistic/eslint-plugin': ^6.0.1
   '@vitest/browser': ^5.0.0
   '@vitest/coverage-v8': ^5.0.0
   '@vitest/ui': ^5.0.0
